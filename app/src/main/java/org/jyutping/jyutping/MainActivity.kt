@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
                         val navController = rememberNavController()
                         JyutpingTheme {
                                 Scaffold(
-                                        topBar = { TopAppBar(title = { Text(text = "Home") }) },
+                                        topBar = { TopAppBar(title = { Text(text = stringResource(id = R.string.screen_title_home)) }) },
                                         bottomBar = { AppBottomBar(navController = navController) },
                                         containerColor = Color(red = 226, green = 226, blue = 226)
                                 ) { padding ->
@@ -92,8 +93,8 @@ fun AppBottomBar(navController: NavController) {
                                                 restoreState = true
                                         }
                                 },
-                                icon = { Icon(imageVector = screen.icon, contentDescription = screen.title) },
-                                label = { Text(text = screen.title) },
+                                icon = { Icon(imageVector = screen.icon, contentDescription = stringResource(id = screen.title)) },
+                                label = { Text(text = stringResource(id = screen.title)) }
                         )
                 }
         }

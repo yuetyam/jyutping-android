@@ -1,3 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Jyutping</string>
+    <string name="screen_title_home">Home</string>
+    <string name="screen_title_jyutping">Jyutping</string>
+    <string name="screen_title_cantonese">Cantonese</string>
+    <string name="screen_title_about">About</string>
+    <string name="home_heading_tones_input">Tones Input</string>
+    <string name="home_content_tones_input">v = 1, High Level (陰平)\nx = 2, Medium Rising (陰上)\nq = 3, Medium Level (陰去)\nvv = 4, Low Falling (陽平)\nxx = 5, Low Rising (陽上)\nqq = 6, Low Level (陽去)</string>
+    <string name="home_heading_cangjie_reverse_lookup">Lookup Jyutping with Cangjie</string>
+    <string name="home_heading_pinyin_reverse_lookup">Lookup Jyutping with Pinyin</string>
+    <string name="home_heading_stroke_reverse_lookup">Lookup Jyutping with Stroke</string>
+    <string name="home_heading_stroke_code">Stroke Code</string>
+    <string name="home_heading_compose_reverse_lookup">Lookup Jyutping with Loengfan</string>
+    <string name="home_content_cangjie_reverse_lookup">Start with “v”, then enter Cangjie5 code. For example, enter “vdam”, candidate “查” will appear. Candidates will be displayed with the corresponding Jyutping.</string>
+    <string name="home_content_pinyin_reverse_lookup">Start with “r”, then enter Pinyin code. For example, enter “rcha”, candidate “查” will appear. Candidates will be displayed with the corresponding Jyutping.</string>
+    <string name="home_content_stroke_reverse_lookup">Start with “x”, then enter Stroke code. For example, enter “xwsad”, candidate “木” will appear. Candidates will be displayed with the corresponding Jyutping.</string>
+    <string name="home_content_compose_reverse_lookup">Start with “q”, then enter two Jyutping syllables. For example, enter “qmukdaan”, candidate “查” will appear. Candidates will be displayed with the corresponding Jyutping.</string>
+    <string name="home_label_more_introductions">More Introductions</string>
 </resources>

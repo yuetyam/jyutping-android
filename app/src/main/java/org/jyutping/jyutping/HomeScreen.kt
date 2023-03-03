@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -29,15 +30,32 @@ fun HomeScreen() {
         ) {
                 item {
                         TextCard(
-                                heading = "Tones Input",
-                                content = "v = 1, vv = 4\nx = 2, xx = 5\nq = 3, qq = 6",
+                                heading = stringResource(id = R.string.home_heading_tones_input),
+                                content = stringResource(id = R.string.home_content_tones_input),
                                 monospace = true
                         )
                 }
                 item {
                         TextCard(
-                                heading = "Reverse Lookup Jyutping by Cangjie",
-                                content = "以 v 開始，再輸入倉頡碼即可。"
+                                heading = stringResource(id = R.string.home_heading_pinyin_reverse_lookup),
+                                content = stringResource(id = R.string.home_content_pinyin_reverse_lookup)
+                        )
+                }
+                item {
+                        TextCard(
+                                heading = stringResource(id = R.string.home_heading_stroke_reverse_lookup),
+                                content = stringResource(id = R.string.home_content_stroke_reverse_lookup)
+                        )
+                        TextCard(
+                                heading = stringResource(id = R.string.home_heading_stroke_code),
+                                content = "w = 橫(waang)\ns = 豎(syu)\na = 撇\nd = 點(dim)\nz = 折(zit)",
+                                monospace = true
+                        )
+                }
+                item {
+                        TextCard(
+                                heading = stringResource(id = R.string.home_heading_compose_reverse_lookup),
+                                content = stringResource(id = R.string.home_content_compose_reverse_lookup)
                         )
                 }
                 item {
@@ -50,15 +68,15 @@ fun HomeScreen() {
                         ) {
                                 Icon(
                                         Icons.Outlined.Info,
-                                        contentDescription = "",
+                                        contentDescription = null,
                                 )
                                 Text(
-                                        text = "More Introduction",
+                                        text = stringResource(id = R.string.home_label_more_introductions),
                                         modifier = Modifier.padding(horizontal = 16.dp)
                                 )
                                 Icon(
                                         Icons.Rounded.ArrowForward,
-                                        contentDescription = "",
+                                        contentDescription = null,
                                         tint = Color.Gray
                                 )
                                 Spacer(modifier = Modifier.fillMaxSize())
