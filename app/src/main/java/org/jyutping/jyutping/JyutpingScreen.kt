@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.TextUnit
 
 @Composable
@@ -21,7 +22,7 @@ fun JyutpingScreen() {
                         .wrapContentSize(Alignment.Center)
         ) {
                 Text(
-                        text = "Jyutping",
+                        text = stringResource(id = R.string.screen_title_jyutping),
                         color = Color.Black,
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         fontSize = TextUnit.Unspecified
