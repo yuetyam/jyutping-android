@@ -44,15 +44,15 @@ fun JyutpingTheme(
         dynamicColor: Boolean = true,
         content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        val colorScheme = when {
+                dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+                        val context = LocalContext.current
+                        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+                }
+                darkTheme -> DarkColorScheme
+                else -> LightColorScheme
         }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-    val view = LocalView.current
+        val view = LocalView.current
         if (!view.isInEditMode) {
                 val currentWindow = (view.context as? Activity)?.window ?: throw Exception("Not in an activity")
                 SideEffect {
@@ -64,9 +64,9 @@ fun JyutpingTheme(
                 }
         }
 
-    MaterialTheme(
-            colorScheme = colorScheme,
-            typography = Typography,
-            content = content
-    )
+        MaterialTheme(
+                colorScheme = colorScheme,
+                typography = Typography,
+                content = content
+        )
 }
