@@ -32,9 +32,12 @@ class MainActivity : ComponentActivity() {
                 super.onCreate(savedInstanceState)
                 setContent {
                         val navController = rememberNavController()
+                        val entry by navController.currentBackStackEntryAsState()
+                        val route: String? = entry?.destination?.route
+                        val topTitle: String = stringResource(id = titleOf(route = route))
                         JyutpingTheme {
                                 Scaffold(
-                                        topBar = { TopAppBar(title = { Text(text = stringResource(id = R.string.screen_title_home)) }) },
+                                        topBar = { TopAppBar(title = { Text(text = topTitle) }) },
                                         bottomBar = { AppBottomBar(navController = navController) },
                                         containerColor = Color(red = 226, green = 226, blue = 226)
                                 ) { padding ->
@@ -43,6 +46,16 @@ class MainActivity : ComponentActivity() {
                                         }
                                 }
                         }
+                }
+        }
+
+        private fun titleOf(route: String?): Int {
+                return when (route) {
+                        "home" -> R.string.screen_title_home
+                        "jyutping" -> R.string.screen_title_jyutping
+                        "cantonese" -> R.string.screen_title_cantonese
+                        "about" -> R.string.screen_title_about
+                        else -> R.string.screen_title_home
                 }
         }
 }
