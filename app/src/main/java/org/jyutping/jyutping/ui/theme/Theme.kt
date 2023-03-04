@@ -15,6 +15,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+private val DarkColorScheme = darkColorScheme()
+private val LightColorScheme = lightColorScheme()
+
 @Composable
 fun JyutpingTheme(
         darkTheme: Boolean = isSystemInDarkTheme(),
@@ -27,8 +30,8 @@ fun JyutpingTheme(
                         val context = LocalContext.current
                         if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
                 }
-                darkTheme -> darkColorScheme()
-                else -> lightColorScheme()
+                darkTheme -> DarkColorScheme
+                else -> LightColorScheme
         }
         val view = LocalView.current
         if (!view.isInEditMode) {
@@ -40,7 +43,6 @@ fun JyutpingTheme(
         }
         MaterialTheme(
                 colorScheme = colorScheme,
-                typography = Typography,
                 content = content
         )
 }
