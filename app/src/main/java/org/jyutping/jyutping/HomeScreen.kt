@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import org.jyutping.jyutping.ui.common.Label
+import org.jyutping.jyutping.ui.common.NavigationLabel
 import org.jyutping.jyutping.ui.common.TextCard
 
 @Composable
@@ -48,7 +48,7 @@ fun HomeScreen(navController: NavHostController) {
                         )
                 }
                 item {
-                        Label(icon = Icons.Outlined.Info, text = stringResource(id = R.string.home_label_more_introductions), symbol = Icons.Rounded.ArrowForward) {
+                        NavigationLabel(icon = Icons.Outlined.Info, text = stringResource(id = R.string.home_label_more_introductions)) {
                                 navController.navigate(route = Screen.Introductions.route)
                         }
                 }

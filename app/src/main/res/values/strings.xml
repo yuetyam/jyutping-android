@@ -18,4 +18,13 @@
     <string name="home_content_compose_reverse_lookup">Start with “q”, then enter two Jyutping syllables. For example, enter “qmukdaan”, candidate “查” will appear. Candidates will be displayed with the corresponding Jyutping.</string>
     <string name="home_label_more_introductions">More Introductions</string>
     <string name="screen_title_introductions">More Introductions</string>
+    <string name="about_label_version">Version</string>
+    <string name="about_label_website">Website</string>
+    <string name="about_label_source_code">Source Code</string>
+    <string name="about_label_privacy_policy">Privacy Policy</string>
+    <string name="about_label_faq">FAQ</string>
+    <string name="about_label_telegram">Join Telegram Group</string>
+    <string name="about_label_qq">Join QQ Group</string>
+    <string name="about_label_twitter">Follow us on Twitter</string>
+    <string name="about_label_instagram">Follow us on Instagram</string>
 </resources>

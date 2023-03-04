@@ -18,4 +18,13 @@
     <string name="home_content_compose_reverse_lookup">兩分即係將一個字分成兩部份。例如「查」字可以分成「木、旦」。以 q 開始，再輸入兩個字嘅粵拼即可反查。例如輸入 qmukdaan 就會出「查」等。候選詞會帶顯示對應嘅粵拼。</string>
     <string name="home_label_more_introductions">更多介紹</string>
     <string name="screen_title_introductions">更多介紹</string>
+    <string name="about_label_version">版本</string>
+    <string name="about_label_website">網站</string>
+    <string name="about_label_source_code">源碼</string>
+    <string name="about_label_privacy_policy">私隱政策</string>
+    <string name="about_label_faq">常問問題（FAQ）</string>
+    <string name="about_label_telegram">加入 Telegram 交流羣</string>
+    <string name="about_label_qq">加入 QQ 交流羣</string>
+    <string name="about_label_twitter">關注 Twitter</string>
+    <string name="about_label_instagram">關注 Instagram</string>
 </resources>
