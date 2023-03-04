@@ -13,4 +13,7 @@ sealed class Screen(val route: String, val icon: ImageVector = Icons.Outlined.In
         object Cantonese : Screen(route = "cantonese", icon = Icons.Outlined.Public, title = R.string.screen_title_cantonese)
         object About : Screen(route = "about", icon = Icons.Outlined.Info, title = R.string.screen_title_about)
         object Introductions : Screen(route = "introductions", title = R.string.screen_title_introductions)
+        object JyutpingInitials: Screen(route = "initials", title = R.string.jyutping_screen_title_initials)
+        object JyutpingFinals: Screen(route = "finals", title = R.string.jyutping_screen_title_finals)
+        object JyutpingTones: Screen(route = "tones", title = R.string.jyutping_screen_title_tones)
 }

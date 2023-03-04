@@ -28,6 +28,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import org.jyutping.jyutping.ui.romanization.*
 import org.jyutping.jyutping.ui.theme.JyutpingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,7 +40,7 @@ class MainActivity : ComponentActivity() {
                         val entry by navController.currentBackStackEntryAsState()
                         val route: String? = entry?.destination?.route
                         val topTitle: String = stringResource(id = titleOf(route = route))
-                        val canNavigateUp: Boolean = shouldNavigateUp(route = route) // navController.previousBackStackEntry != null
+                        val canNavigateUp: Boolean = canNavigateUp(route = route) // navController.previousBackStackEntry != null
                         JyutpingTheme {
                                 Scaffold(
                                         topBar = {
@@ -79,10 +80,13 @@ class MainActivity : ComponentActivity() {
                         Screen.Cantonese.route -> Screen.Cantonese.title
                         Screen.About.route -> Screen.About.title
                         Screen.Introductions.route -> Screen.Introductions.title
+                        Screen.JyutpingInitials.route -> Screen.JyutpingInitials.title
+                        Screen.JyutpingFinals.route -> Screen.JyutpingFinals.title
+                        Screen.JyutpingTones.route -> Screen.JyutpingTones.title
                         else -> Screen.Home.title
                 }
         }
-        private fun shouldNavigateUp(route: String?): Boolean {
+        private fun canNavigateUp(route: String?): Boolean {
                 return when (route) {
                         Screen.Home.route -> false
                         Screen.Jyutping.route -> false
@@ -103,7 +107,7 @@ fun AppContent(navController: NavHostController) {
                         HomeScreen(navController = navController)
                 }
                 composable(route = Screen.Jyutping.route) {
-                        JyutpingScreen()
+                        JyutpingScreen(navController = navController)
                 }
                 composable(route = Screen.Cantonese.route) {
                         CantoneseScreen()
@@ -113,6 +117,15 @@ fun AppContent(navController: NavHostController) {
                 }
                 composable(route = Screen.Introductions.route) {
                         IntroductionsScreen()
+                }
+                composable(route = Screen.JyutpingInitials.route) {
+                        JyutpingInitialsScreen()
+                }
+                composable(route = Screen.JyutpingFinals.route) {
+                        JyutpingFinalsScreen()
+                }
+                composable(route = Screen.JyutpingTones.route) {
+                        JyutpingTonesScreen()
                 }
         }
 }
