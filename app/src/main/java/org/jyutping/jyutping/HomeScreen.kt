@@ -1,13 +1,15 @@
 package org.jyutping.jyutping
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
@@ -18,14 +20,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 
 @Composable
-fun HomeScreen() {
+fun IntroductionsScreen() {
+        LazyColumn(
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+        ) {
+                item {
+                        Text(text = "Introductions")
+                }
+        }
+}
+
+@Composable
+fun HomeScreen(navController: NavHostController) {
         LazyColumn(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
         ) {
@@ -60,27 +74,8 @@ fun HomeScreen() {
                         )
                 }
                 item {
-                        Row(
-                                modifier = Modifier
-                                        .padding(vertical = 8.dp)
-                                        .clip(shape = RoundedCornerShape(size = 8.dp))
-                                        .background(color = colorScheme.secondaryContainer)
-                                        .padding(8.dp)
-                        ) {
-                                Icon(
-                                        Icons.Outlined.Info,
-                                        contentDescription = null,
-                                )
-                                Text(
-                                        text = stringResource(id = R.string.home_label_more_introductions),
-                                        modifier = Modifier.padding(horizontal = 16.dp)
-                                )
-                                Icon(
-                                        Icons.Rounded.ArrowForward,
-                                        contentDescription = null,
-                                        tint = Color.Gray
-                                )
-                                Spacer(modifier = Modifier.fillMaxSize())
+                        Label(icon = Icons.Outlined.Info, text = stringResource(id = R.string.home_label_more_introductions), symbol = Icons.Rounded.ArrowForward) {
+                                navController.navigate(route = Screen.Introductions.route)
                         }
                 }
         }
@@ -91,21 +86,39 @@ fun TextCard(heading: String, content: String, monospace: Boolean = false) {
         Row(
                 modifier = Modifier
                         .padding(vertical = 8.dp)
+                        .fillMaxWidth()
                         .clip(shape = RoundedCornerShape(size = 8.dp))
-                        .background(color = colorScheme.secondaryContainer)
+                        .background(color = colorScheme.background)
                         .padding(8.dp)
         ) {
-                Column {
-                        Text(
-                                text = heading,
-                                modifier = Modifier.padding(bottom = 8.dp),
-                                fontWeight = FontWeight.Medium,
-                        )
-                        Text(
-                                text = content,
-                                fontFamily = if (monospace) FontFamily.Monospace else FontFamily.Default
-                        )
+                Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                        Text(text = heading, fontWeight = FontWeight.Medium)
+                        if (monospace) {
+                                Text(text = content, fontFamily = FontFamily.Monospace)
+                        } else {
+                                Text(text = content)
+                        }
                 }
-                Spacer(modifier = Modifier.fillMaxSize())
+        }
+}
+
+@Composable
+fun Label(icon: ImageVector, text: String, symbol: ImageVector, onClick: () -> Unit = {}) {
+        Row(
+                modifier = Modifier
+                        .padding(vertical = 8.dp)
+                        .fillMaxWidth()
+                        .clip(shape = RoundedCornerShape(size = 8.dp))
+                        .background(color = colorScheme.background)
+                        .clickable { onClick() }
+                        .padding(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+                Icon(imageVector = icon, contentDescription = null)
+                Text(text = text)
+                Spacer(modifier = Modifier.weight(1.0f))
+                Icon(imageVector = symbol, contentDescription = null)
         }
 }
