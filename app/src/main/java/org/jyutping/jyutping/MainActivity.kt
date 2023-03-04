@@ -15,7 +15,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -39,7 +38,6 @@ class MainActivity : ComponentActivity() {
                                 Scaffold(
                                         topBar = { TopAppBar(title = { Text(text = topTitle) }) },
                                         bottomBar = { AppBottomBar(navController = navController) },
-                                        containerColor = Color(red = 226, green = 226, blue = 226)
                                 ) { padding ->
                                         Box(modifier = Modifier.padding(padding)) {
                                                 AppContent(navController = navController)

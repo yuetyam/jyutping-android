@@ -10,9 +10,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -63,7 +64,7 @@ fun HomeScreen() {
                                 modifier = Modifier
                                         .padding(vertical = 8.dp)
                                         .clip(shape = RoundedCornerShape(size = 8.dp))
-                                        .background(color = Color.White)
+                                        .background(color = colorScheme.secondaryContainer)
                                         .padding(8.dp)
                         ) {
                                 Icon(
@@ -91,7 +92,7 @@ fun TextCard(heading: String, content: String, monospace: Boolean = false) {
                 modifier = Modifier
                         .padding(vertical = 8.dp)
                         .clip(shape = RoundedCornerShape(size = 8.dp))
-                        .background(color = Color.White)
+                        .background(color = colorScheme.secondaryContainer)
                         .padding(8.dp)
         ) {
                 Column {
