@@ -1,4 +1,4 @@
-package org.jyutping.jyutping
+package org.jyutping.jyutping.ui.home
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn

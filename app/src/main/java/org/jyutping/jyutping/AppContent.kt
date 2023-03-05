@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import org.jyutping.jyutping.ui.about.*
 import org.jyutping.jyutping.ui.cantonese.*
+import org.jyutping.jyutping.ui.home.*
 import org.jyutping.jyutping.ui.romanization.*
 
 @Composable

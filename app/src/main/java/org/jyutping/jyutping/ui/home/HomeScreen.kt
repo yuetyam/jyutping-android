@@ -1,14 +1,15 @@
-package org.jyutping.jyutping
+package org.jyutping.jyutping.ui.home
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import org.jyutping.jyutping.R
+import org.jyutping.jyutping.Screen
 import org.jyutping.jyutping.ui.common.NavigationLabel
 import org.jyutping.jyutping.ui.common.TextCard
 
