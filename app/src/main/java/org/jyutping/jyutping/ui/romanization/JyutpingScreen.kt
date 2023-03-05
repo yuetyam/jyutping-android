@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FormatListBulleted
+import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -54,8 +54,8 @@ fun JyutpingScreen(navController: NavHostController) {
                                 modifier = Modifier.padding(vertical = 8.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                                WebLinkLabel(icon = Icons.Outlined.Public, text = "粵拼 Jyutping", uri = "https://jyutping.org")
-                                WebLinkLabel(icon = Icons.Outlined.Public, text = "粵語拼音速遞 - CUHK", uri = "https://www.ilc.cuhk.edu.hk/workshop/Chinese/Cantonese/Romanization")
+                                WebLinkLabel(icon = Icons.Outlined.Link, text = "粵拼 Jyutping", uri = "https://jyutping.org")
+                                WebLinkLabel(icon = Icons.Outlined.Link, text = "粵語拼音速遞 - CUHK", uri = "https://www.ilc.cuhk.edu.hk/workshop/Chinese/Cantonese/Romanization")
                         }
                 }
         }

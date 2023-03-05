@@ -39,7 +39,7 @@ fun AboutScreen() {
                                 modifier = Modifier.padding(vertical = 32.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                                WebLinkLabel(icon = Icons.Outlined.Public, text = stringResource(id = R.string.about_label_website), uri = AppMaster.websiteAddress)
+                                WebLinkLabel(icon = Icons.Outlined.Link, text = stringResource(id = R.string.about_label_website), uri = AppMaster.websiteAddress)
                                 WebLinkLabel(icon = Icons.Outlined.Code, text = stringResource(id = R.string.about_label_source_code), uri = AppMaster.sourceCodeAddress)
                                 WebLinkLabel(icon = Icons.Outlined.Lock, text = stringResource(id = R.string.about_label_privacy_policy), uri = AppMaster.privacyPolicyAddress)
                                 WebLinkLabel(icon = Icons.Outlined.HelpOutline, text = stringResource(id = R.string.about_label_faq), uri = AppMaster.faqAddress)

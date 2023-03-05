@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Public
+import androidx.compose.material.icons.outlined.Link
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,9 +22,9 @@ fun CantoneseScreen() {
                                 modifier = Modifier.padding(vertical = 8.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                                WebLinkLabel(icon = Icons.Outlined.Public, text = "冚唪唥粵文", uri = "https://hambaanglaang.hk")
-                                WebLinkLabel(icon = Icons.Outlined.Public, text = "學識 Hok6", uri = "https://www.hok6.com")
-                                WebLinkLabel(icon = Icons.Outlined.Public, text = "迴響", uri = "https://resonate.hk")
+                                WebLinkLabel(icon = Icons.Outlined.Link, text = "冚唪唥粵文", uri = "https://hambaanglaang.hk")
+                                WebLinkLabel(icon = Icons.Outlined.Link, text = "學識 Hok6", uri = "https://www.hok6.com")
+                                WebLinkLabel(icon = Icons.Outlined.Link, text = "迴響", uri = "https://resonate.hk")
 
                         }
                 }
