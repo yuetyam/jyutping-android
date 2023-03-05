@@ -29,15 +29,15 @@ import org.jyutping.jyutping.ui.common.*
 @Composable
 fun AboutScreen() {
         LazyColumn(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
         ) {
                 item {
                         VersionLabel()
                 }
                 item {
                         Column(
-                                modifier = Modifier.padding(vertical = 12.dp),
-                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                                modifier = Modifier.padding(vertical = 32.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                                 WebLinkLabel(icon = Icons.Outlined.Public, text = stringResource(id = R.string.about_label_website), uri = AppMaster.websiteAddress)
                                 WebLinkLabel(icon = Icons.Outlined.Code, text = stringResource(id = R.string.about_label_source_code), uri = AppMaster.sourceCodeAddress)
@@ -47,8 +47,7 @@ fun AboutScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.padding(vertical = 12.dp),
-                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                                 OpenAppLabel(icon = Icons.Outlined.Group, text = stringResource(id = R.string.about_label_telegram), uri = AppMaster.telegramWebAddress)
                                 OpenAppLabel(icon = Icons.Outlined.Group, text = stringResource(id = R.string.about_label_qq), uri = AppMaster.qqWebAddress)
@@ -64,7 +63,6 @@ private fun VersionLabel() {
         val version: String = BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")"
         Row(
                 modifier = Modifier
-                        .padding(vertical = 8.dp)
                         .fillMaxWidth()
                         .clip(shape = RoundedCornerShape(size = 8.dp))
                         .background(color = MaterialTheme.colorScheme.background)
