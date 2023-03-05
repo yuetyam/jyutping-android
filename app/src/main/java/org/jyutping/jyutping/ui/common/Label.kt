@@ -34,7 +34,8 @@ fun NavigationLabel(icon: ImageVector, text: String, onClick: () -> Unit) {
                         .background(color = colorScheme.background)
                         .clickable { onClick() }
                         .padding(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
         ) {
                 Icon(imageVector = icon, contentDescription = null)
                 Text(text = text)
@@ -42,6 +43,7 @@ fun NavigationLabel(icon: ImageVector, text: String, onClick: () -> Unit) {
                 Icon(
                         imageVector = Icons.Rounded.ArrowForward,
                         contentDescription = null,
+                        modifier = Modifier.size(18.dp),
                         tint = colorScheme.tertiary
                 )
         }
