@@ -22,7 +22,7 @@ fun AppContent(navController: NavHostController) {
                         JyutpingScreen(navController = navController)
                 }
                 composable(route = Screen.Cantonese.route) {
-                        CantoneseScreen()
+                        CantoneseScreen(navController = navController)
                 }
                 composable(route = Screen.About.route) {
                         AboutScreen()
@@ -38,6 +38,9 @@ fun AppContent(navController: NavHostController) {
                 }
                 composable(route = Screen.JyutpingTones.route) {
                         JyutpingTonesScreen()
+                }
+                composable(route = Screen.Expressions.route) {
+                        ExpressionsScreen()
                 }
         }
 }

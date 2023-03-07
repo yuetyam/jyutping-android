@@ -24,6 +24,8 @@
     <string name="jyutping_screen_title_initials">Jyutping Initials</string>
     <string name="jyutping_screen_title_finals">Jyutping Finals</string>
     <string name="jyutping_screen_title_tones">Jyutping Tones</string>
+    <string name="cantonese_label_expressions">Cantonese Expressions</string>
+    <string name="cantonese_screen_title_expressions">Cantonese Expressions</string>
     <string name="about_label_version">Version</string>
     <string name="about_label_website">Website</string>
     <string name="about_label_source_code">Source Code</string>

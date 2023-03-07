@@ -24,6 +24,8 @@
     <string name="jyutping_screen_title_initials">粵拼聲母表</string>
     <string name="jyutping_screen_title_finals">粵拼韻母表</string>
     <string name="jyutping_screen_title_tones">粵拼聲調表</string>
+    <string name="cantonese_label_expressions">粵語用字參攷</string>
+    <string name="cantonese_screen_title_expressions">粵語用字參攷</string>
     <string name="about_label_version">版本</string>
     <string name="about_label_website">網站</string>
     <string name="about_label_source_code">源碼</string>
