@@ -42,7 +42,6 @@ private fun generateFinalEntries(): List<Syllable> {
                 悲 bei1,[ ei ],ei
                 掉 deu6,[ ɛːu ],eu
                 𦧷 lem2,[ ɛːm ],em
-                ？,[ en ],en
                 鄭 zeng6,[ ɛːŋ ],eng
                 夾 gep6,[ ɛːp̚ ],ep
                 坺 pet6,[ ɛːt̚ ],et
@@ -64,15 +63,12 @@ private fun generateFinalEntries(): List<Syllable> {
                 作 zok3,[ ɔːk̚ ],ok
                 夫 fu1,[ uː ],u
                 灰 fui1,[ uːi ],ui
-                ？,[ om ],um
                 寬 fun1,[ uːn ],un
                 封 fung1,[ oŋ ],ung
-                ？,[ op̚ ],up
                 闊 fut3,[ uːt̚ ],ut
                 福 fuk1,[ ok̚ ],uk
                 靴 hoe1,[ œː ],oe
                 香 hoeng1,[ œːŋ ],oeng
-                ？,[ œːt̚ ],oet
                 腳 goek3,[ œːk̚ ],oek
                 追 zeoi1,[ ɵy ],eoi
                 津 zeon1,[ ɵn ],eon
