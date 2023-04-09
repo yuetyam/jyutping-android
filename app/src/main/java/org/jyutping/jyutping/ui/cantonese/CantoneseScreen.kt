@@ -33,10 +33,9 @@ fun CantoneseScreen(navController: NavHostController) {
                                 modifier = Modifier.padding(vertical = 24.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
+                                WebLinkLabel(icon = Icons.Outlined.Link, text = "懶音診療室 - PolyU", uri = "https://www.polyu.edu.hk/cbs/pronunciation")
                                 WebLinkLabel(icon = Icons.Outlined.Link, text = "冚唪唥粵文", uri = "https://hambaanglaang.hk")
-                                WebLinkLabel(icon = Icons.Outlined.Link, text = "學識 Hok6", uri = "https://www.hok6.com")
                                 WebLinkLabel(icon = Icons.Outlined.Link, text = "迴響", uri = "https://resonate.hk")
-
                         }
                 }
         }

@@ -15,6 +15,8 @@ import org.jyutping.jyutping.ui.common.TextCard
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
+        // TODO: Implement Introductions
+        val shouldShowIntroductions: Boolean = false
         LazyColumn(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
         ) {
@@ -48,9 +50,11 @@ fun HomeScreen(navController: NavHostController) {
                                 content = stringResource(id = R.string.home_content_compose_reverse_lookup)
                         )
                 }
-                item {
-                        NavigationLabel(icon = Icons.Outlined.Info, text = stringResource(id = R.string.home_label_more_introductions)) {
-                                navController.navigate(route = Screen.Introductions.route)
+                if (shouldShowIntroductions) {
+                        item {
+                                NavigationLabel(icon = Icons.Outlined.Info, text = stringResource(id = R.string.home_label_more_introductions)) {
+                                        navController.navigate(route = Screen.Introductions.route)
+                                }
                         }
                 }
         }

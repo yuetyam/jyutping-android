@@ -66,13 +66,14 @@ class MainActivity : ComponentActivity() {
         private fun titleOf(route: String?): Int {
                 return when (route) {
                         Screen.Home.route -> Screen.Home.title
-                        Screen.Jyutping.route -> Screen.Jyutping.title
-                        Screen.Cantonese.route -> Screen.Cantonese.title
-                        Screen.About.route -> Screen.About.title
                         Screen.Introductions.route -> Screen.Introductions.title
+                        Screen.Jyutping.route -> Screen.Jyutping.title
                         Screen.JyutpingInitials.route -> Screen.JyutpingInitials.title
                         Screen.JyutpingFinals.route -> Screen.JyutpingFinals.title
                         Screen.JyutpingTones.route -> Screen.JyutpingTones.title
+                        Screen.Cantonese.route -> Screen.Cantonese.title
+                        Screen.Expressions.route -> Screen.Expressions.title
+                        Screen.About.route -> Screen.About.title
                         else -> Screen.Home.title
                 }
         }
