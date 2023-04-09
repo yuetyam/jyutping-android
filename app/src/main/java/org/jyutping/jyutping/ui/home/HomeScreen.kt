@@ -5,21 +5,28 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.Screen
 import org.jyutping.jyutping.ui.common.NavigationLabel
+import org.jyutping.jyutping.ui.common.SearchField
 import org.jyutping.jyutping.ui.common.TextCard
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
-        // TODO: Implement Introductions
+        val textState = remember { mutableStateOf(TextFieldValue(text = "")) }
         val shouldShowIntroductions: Boolean = false
         LazyColumn(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
         ) {
+                item {
+                        SearchField(state = textState, verticalPadding = 8.dp)
+                }
                 item {
                         TextCard(
                                 heading = stringResource(id = R.string.home_heading_tones_input),
