@@ -36,7 +36,7 @@ fun ExpressionsScreen() {
                                 heading = "第一人稱代詞",
                                 labels = listOf(
                                         LabelEntry(type = LabelType.CHECKED, text = "單數：我"),
-                                        LabelEntry(type = LabelType.CHECKED, text = "複數：我哋／我等"),
+                                        LabelEntry(type = LabelType.CHECKED, text = "複數：我哋（我等）"),
                                         LabelEntry(type = LabelType.WARNING, text = "毋用「咱、咱們」")
                                 )
                         )
@@ -46,7 +46,7 @@ fun ExpressionsScreen() {
                                 heading = "第二人稱代詞",
                                 labels = listOf(
                                         LabelEntry(type = LabelType.CHECKED, text = "單數：你"),
-                                        LabelEntry(type = LabelType.CHECKED, text = "複數：你哋／你等"),
+                                        LabelEntry(type = LabelType.CHECKED, text = "複數：你哋（你等）"),
                                         LabelEntry(type = LabelType.WARNING, text = "毋用「您」。「您」係北京方言用字，好少見於其他漢語。如果要用敬詞，粵語一般用「閣下」。"),
                                         LabelEntry(type = LabelType.WARNING, text = "毋推薦用「妳」，冇必要畫蛇添足。")
                                 )
@@ -57,7 +57,7 @@ fun ExpressionsScreen() {
                                 heading = "第三人稱代詞",
                                 labels = listOf(
                                         LabelEntry(type = LabelType.CHECKED, text = "單數：佢"),
-                                        LabelEntry(type = LabelType.CHECKED, text = "複數：佢哋／佢等"),
+                                        LabelEntry(type = LabelType.CHECKED, text = "複數：佢哋（佢等）"),
                                         LabelEntry(type = LabelType.INFO, text = "毋分性別、人、物，一律用佢。"),
                                         LabelEntry(type = LabelType.INFO, text = "佢 亦作 渠、⿰亻渠")
                                 )
