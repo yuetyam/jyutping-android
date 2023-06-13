@@ -39,7 +39,7 @@ fun SearchField(
                 modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = horizontalPadding, vertical = verticalPadding),
-                placeholder = { Text(text = stringResource(id = R.string.search_field_placeholder)) },
+                placeholder = { Text(text = stringResource(id = R.string.search_field_placeholder), color = Color.Gray) },
                 leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = null) },
                 trailingIcon = {
                         if (state.value != empty) {
