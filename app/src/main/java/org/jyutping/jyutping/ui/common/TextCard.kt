@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TextCard(heading: String, content: String, monospace: Boolean = false) {
+fun TextCard(heading: String, content: String, subContent: String? = null, shouldContentMonospaced: Boolean = false, shouldSubContentMonospaced: Boolean = false) {
         Row(
                 modifier = Modifier
                         .padding(vertical = 8.dp)
@@ -30,10 +30,17 @@ fun TextCard(heading: String, content: String, monospace: Boolean = false) {
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                         Text(text = heading, fontWeight = FontWeight.Medium)
-                        if (monospace) {
+                        if (shouldContentMonospaced) {
                                 Text(text = content, fontFamily = FontFamily.Monospace)
                         } else {
                                 Text(text = content)
+                        }
+                        if (subContent != null) {
+                                if (shouldSubContentMonospaced) {
+                                        Text(text = subContent, fontFamily = FontFamily.Monospace)
+                                } else {
+                                        Text(text = subContent)
+                                }
                         }
                 }
         }

@@ -31,7 +31,8 @@ fun HomeScreen(navController: NavHostController) {
                         TextCard(
                                 heading = stringResource(id = R.string.home_heading_tones_input),
                                 content = stringResource(id = R.string.home_content_tones_input),
-                                monospace = true
+                                subContent = stringResource(id = R.string.home_subcontent_tones_input_examples),
+                                shouldContentMonospaced = true
                         )
                 }
                 item {
@@ -54,7 +55,7 @@ fun HomeScreen(navController: NavHostController) {
                         TextCard(
                                 heading = stringResource(id = R.string.home_heading_stroke_code),
                                 content = "w = 橫(waang)\ns = 豎(syu)\na = 撇\nd = 點(dim)\nz = 折(zit)",
-                                monospace = true
+                                shouldContentMonospaced = true
                         )
                 }
                 item {
