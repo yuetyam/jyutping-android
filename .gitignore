@@ -120,3 +120,12 @@ obj/
 ### AndroidStudio Patch ###
 
 !/gradle/wrapper/gradle-wrapper.jar
+
+
+### SQLite ###
+*.sqlite
+*.sqlite3
+
+
+### Editors ###
+.vscode/
