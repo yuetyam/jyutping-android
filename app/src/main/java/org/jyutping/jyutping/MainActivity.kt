@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
                                                         navigationIcon = {
                                                                 if (canNavigateUp) {
                                                                         IconButton(onClick = { navController.navigateUp() }) {
-                                                                                Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null)
+                                                                                Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
                                                                         }
                                                                 }
                                                         },
