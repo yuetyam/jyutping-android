@@ -1,92 +1,183 @@
 package org.jyutping.jyutping.ui.romanization
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun JyutpingFinalsScreen() {
         LazyColumn(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-                items(entries) {
-                        SyllableCell(syllable = it)
+                item {
+                        Row(
+                                modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 8.dp)
+                        ) {
+                                Text(text = "例字", modifier = Modifier.weight(0.4f))
+                                Text(text = "韻母", modifier = Modifier.weight(0.3f))
+                                Text(text = "國際音標", modifier = Modifier.weight(0.3f))
+                        }
+                }
+                item {
+                        Column(
+                                modifier = Modifier
+                                        .clip(shape = RoundedCornerShape(size = 8.dp))
+                                        .background(color = MaterialTheme.colorScheme.background)
+                        ) {
+                                FinalLabel(word = "駕", syllable = "gaa3", jyutping = "aa", ipa = "[ aː ]")
+                                FinalLabel(word = "界", syllable = "gaai3", jyutping = "aai", ipa = "[ aːi ]")
+                                FinalLabel(word = "教", syllable = "gaau3", jyutping = "aau", ipa = "[ aːu ]")
+                                FinalLabel(word = "鑑", syllable = "gaam3", jyutping = "aam", ipa = "[ aːm ]")
+                                FinalLabel(word = "諫", syllable = "gaan3", jyutping = "aan", ipa = "[ aːn ]")
+                                FinalLabel(word = "耕", syllable = "gaang1", jyutping = "aang", ipa = "[ aːŋ ]")
+                                FinalLabel(word = "甲", syllable = "gaap3", jyutping = "aap", ipa = "[ aːp̚ ]")
+                                FinalLabel(word = "戛", syllable = "gaat3", jyutping = "aat", ipa = "[ aːt̚ ]")
+                                FinalLabel(word = "格", syllable = "gaak3", jyutping = "aak", ipa = "[ aːk̚ ]")
+                        }
+                }
+                item {
+                        Column(
+                                modifier = Modifier
+                                        .clip(shape = RoundedCornerShape(size = 8.dp))
+                                        .background(color = MaterialTheme.colorScheme.background)
+                        ) {
+                                FinalLabel(word = "㗎", syllable = "ga3", jyutping = "a", ipa = "[ ɐ ]")
+                                FinalLabel(word = "計", syllable = "gai3", jyutping = "ai", ipa = "[ ɐi ]")
+                                FinalLabel(word = "救", syllable = "gau3", jyutping = "au", ipa = "[ ɐu ]")
+                                FinalLabel(word = "禁", syllable = "gam3", jyutping = "am", ipa = "[ ɐm ]")
+                                FinalLabel(word = "斤", syllable = "gan1", jyutping = "an", ipa = "[ ɐn ]")
+                                FinalLabel(word = "庚", syllable = "gang1", jyutping = "ang", ipa = "[ ɐŋ ]")
+                                FinalLabel(word = "急", syllable = "gap1", jyutping = "ap", ipa = "[ ɐp̚ ]")
+                                FinalLabel(word = "吉", syllable = "gat1", jyutping = "at", ipa = "[ ɐt̚ ]")
+                                FinalLabel(word = "北", syllable = "bak1", jyutping = "ak", ipa = "[ ɐk̚ ]")
+                        }
+                }
+                item {
+                        Column(
+                                modifier = Modifier
+                                        .clip(shape = RoundedCornerShape(size = 8.dp))
+                                        .background(color = MaterialTheme.colorScheme.background)
+                        ) {
+                                FinalLabel(word = "嘅", syllable = "ge3", jyutping = "e", ipa = "[ ɛː ]")
+                                FinalLabel(word = "記", syllable = "gei3", jyutping = "ei", ipa = "[ ei ]")
+                                FinalLabel(word = "掉", syllable = "deu6", jyutping = "eu", ipa = "[ ɛːu ]")
+                                FinalLabel(word = "𦧷", syllable = "lem2", jyutping = "em", ipa = "[ ɛːm ]")
+                                FinalLabel(word = "鏡", syllable = "geng3", jyutping = "eng", ipa = "[ ɛːŋ ]")
+                                FinalLabel(word = "夾", syllable = "gep6", jyutping = "ep", ipa = "[ ɛːp̚ ]")
+                                FinalLabel(word = "坺", syllable = "pet6", jyutping = "et", ipa = "[ ɛːt̚ ]")
+                                FinalLabel(word = "踢", syllable = "tek3", jyutping = "ek", ipa = "[ ɛːk̚ ]")
+                        }
+                }
+                item {
+                        Column(
+                                modifier = Modifier
+                                        .clip(shape = RoundedCornerShape(size = 8.dp))
+                                        .background(color = MaterialTheme.colorScheme.background)
+                        ) {
+                                FinalLabel(word = "意", syllable = "ji3", jyutping = "i", ipa = "[ iː ]")
+                                FinalLabel(word = "叫", syllable = "giu3", jyutping = "iu", ipa = "[ iːu ]")
+                                FinalLabel(word = "劍", syllable = "gim3", jyutping = "im", ipa = "[ iːm ]")
+                                FinalLabel(word = "見", syllable = "gin3", jyutping = "in", ipa = "[ iːn ]")
+                                FinalLabel(word = "敬", syllable = "ging3", jyutping = "ing", ipa = "[ eŋ ]")
+                                FinalLabel(word = "劫", syllable = "gip3", jyutping = "ip", ipa = "[ iːp̚ ]")
+                                FinalLabel(word = "結", syllable = "git3", jyutping = "it", ipa = "[ iːt̚ ]")
+                                FinalLabel(word = "極", syllable = "gik6", jyutping = "ik", ipa = "[ ek̚ ]")
+                        }
+                }
+                item {
+                        Column(
+                                modifier = Modifier
+                                        .clip(shape = RoundedCornerShape(size = 8.dp))
+                                        .background(color = MaterialTheme.colorScheme.background)
+                        ) {
+                                FinalLabel(word = "個", syllable = "go3", jyutping = "o", ipa = "[ ɔː ]")
+                                FinalLabel(word = "菜", syllable = "coi3", jyutping = "oi", ipa = "[ ɔːi ]")
+                                FinalLabel(word = "告", syllable = "gou3", jyutping = "ou", ipa = "[ ɔːu ]")
+                                FinalLabel(word = "幹", syllable = "gon3", jyutping = "on", ipa = "[ ɔːn ]")
+                                FinalLabel(word = "鋼", syllable = "gong3", jyutping = "ong", ipa = "[ ɔːŋ ]")
+                                FinalLabel(word = "割", syllable = "got3", jyutping = "ot", ipa = "[ ɔːt̚ ]")
+                                FinalLabel(word = "各", syllable = "gok3", jyutping = "ok", ipa = "[ ɔːk̚ ]")
+                        }
+                }
+                item {
+                        Column(
+                                modifier = Modifier
+                                        .clip(shape = RoundedCornerShape(size = 8.dp))
+                                        .background(color = MaterialTheme.colorScheme.background)
+                        ) {
+                                FinalLabel(word = "夫", syllable = "fu1", jyutping = "u", ipa = "[ uː ]")
+                                FinalLabel(word = "灰", syllable = "fui1", jyutping = "ui", ipa = "[ uːi ]")
+                                FinalLabel(word = "寬", syllable = "fun1", jyutping = "un", ipa = "[ uːn ]")
+                                FinalLabel(word = "封", syllable = "fung1", jyutping = "ung", ipa = "[ oːŋ ]")
+                                FinalLabel(word = "闊", syllable = "fut3", jyutping = "ut", ipa = "[ uːt̚ ]")
+                                FinalLabel(word = "福", syllable = "fuk1", jyutping = "uk", ipa = "[ oːk̚ ]")
+                        }
+                }
+                item {
+                        Column(
+                                modifier = Modifier
+                                        .clip(shape = RoundedCornerShape(size = 8.dp))
+                                        .background(color = MaterialTheme.colorScheme.background)
+                        ) {
+                                FinalLabel(word = "鋸", syllable = "goe3", jyutping = "oe", ipa = "[ œː ]")
+                                FinalLabel(word = "姜", syllable = "goeng1", jyutping = "oeng", ipa = "[ œːŋ ]")
+                                FinalLabel(word = "*", syllable = "goet4", jyutping = "oet", ipa = "[ œːt̚ ]")
+                                FinalLabel(word = "腳", syllable = "goek3", jyutping = "oek", ipa = "[ œːk̚ ]")
+                        }
+                }
+                item {
+                        Column(
+                                modifier = Modifier
+                                        .clip(shape = RoundedCornerShape(size = 8.dp))
+                                        .background(color = MaterialTheme.colorScheme.background)
+                        ) {
+                                FinalLabel(word = "歲", syllable = "seoi3", jyutping = "eoi", ipa = "[ ɵːi ]")
+                                FinalLabel(word = "信", syllable = "seon3", jyutping = "eon", ipa = "[ ɵːn ]")
+                                FinalLabel(word = "術", syllable = "seot6", jyutping = "eot", ipa = "[ ɵːt̚ ]")
+                        }
+                }
+                item {
+                        Column(
+                                modifier = Modifier
+                                        .clip(shape = RoundedCornerShape(size = 8.dp))
+                                        .background(color = MaterialTheme.colorScheme.background)
+                        ) {
+                                FinalLabel(word = "恕", syllable = "syu3", jyutping = "yu", ipa = "[ yː ]")
+                                FinalLabel(word = "算", syllable = "syun3", jyutping = "yun", ipa = "[ yːn ]")
+                                FinalLabel(word = "雪", syllable = "syut3", jyutping = "yut", ipa = "[ yːt̚ ]")
+                        }
                 }
         }
 }
 
-private fun generateFinalEntries(): List<Syllable> {
-
-val textContent: String = """
-例字,國際音標,粵拼
-駕 gaa3,[ aː ],aa
-界 gaai3,[ aːi ],aai
-教 gaau3,[ aːu ],aau
-鑑 gaam3,[ aːm ],aam
-諫 gaan3,[ aːn ],aan
-耕 gaang1,[ aːŋ ],aang
-甲 gaap3,[ aːp̚ ],aap
-戛 gaat3,[ aːt̚ ],aat
-格 gaak3,[ aːk̚ ],aak
-㗎 ga3,[ ɐ ],a
-計 gai3,[ ɐi ],ai
-救 gau3,[ ɐu ],au
-禁 gam3,[ ɐm ],am
-斤 gan1,[ ɐn ],an
-庚 gang1,[ ɐŋ ],ang
-急 gap1,[ ɐp̚ ],ap
-吉 gat1,[ ɐt̚ ],at
-北 bak1,[ ɐk̚ ],ak
-嘅 ge3,[ ɛː ],e
-記 gei3,[ ei ],ei
-掉 deu6,[ ɛːu ],eu
-𦧷 lem2,[ ɛːm ],em
-鏡 geng3,[ ɛːŋ ],eng
-夾 gep6,[ ɛːp̚ ],ep
-坺 pet6,[ ɛːt̚ ],et
-踢 tek3,[ ɛːk̚ ],ek
-意 ji3,[ iː ],i
-叫 giu3,[ iːu ],iu
-劍 gim3,[ iːm ],im
-見 gin3,[ iːn ],in
-敬 ging3,[ eŋ ],ing
-劫 gip3,[ iːp̚ ],ip
-結 git3,[ iːt̚ ],it
-極 gik6,[ ek̚ ],ik
-個 go3,[ ɔː ],o
-菜 coi3,[ ɔːi ],oi
-告 gou3,[ ou ],ou
-幹 gon3,[ ɔːn ],on
-鋼 gong3,[ ɔːŋ ],ong
-割 got3,[ ɔːt̚ ],ot
-各 gok3,[ ɔːk̚ ],ok
-夫 fu1,[ uː ],u
-灰 fui1,[ uːi ],ui
-寬 fun1,[ uːn ],un
-封 fung1,[ oŋ ],ung
-闊 fut3,[ uːt̚ ],ut
-福 fuk1,[ ok̚ ],uk
-鋸 goe3,[ œː ],oe
-姜 goeng1,[ œːŋ ],oeng
-腳 goek3,[ œːk̚ ],oek
-歲 seoi3,[ ɵy ],eoi
-信 seon3,[ ɵn ],eon
-術 seot6,[ ɵt̚ ],eot
-恕 syu3,[ yː ],yu
-算 syun3,[ yːn ],yun
-雪 syut3,[ yːt̚ ],yut
-""".trimIndent()
-
-        val textLines = textContent.split("\n")
-        var entryList: List<Syllable> = listOf()
-        textLines.forEach { line ->
-                val parts = line.split(",")
-                val entry = Syllable(text = parts[0], ipa = parts[1], jyutping = parts[2])
-                entryList = entryList + entry
+@Composable
+private fun FinalLabel(word: String, syllable: String, jyutping: String, ipa: String) {
+        SelectionContainer {
+                Row(
+                        modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 5.dp)
+                ) {
+                        Text(text = "$word $syllable", modifier = Modifier.weight(0.4f))
+                        Text(text = jyutping, modifier = Modifier.weight(0.3f), fontFamily = FontFamily.Monospace)
+                        Text(text = ipa, modifier = Modifier.weight(0.3f))
+                }
         }
-        return entryList
 }
-
-private val entries: List<Syllable> = generateFinalEntries()
