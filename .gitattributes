@@ -3,24 +3,26 @@
 *.sqlite3 binary
 
 # Image
-*.png binary
-*.heic binary
-*.jpg binary
-*.jpeg binary
-*.gif binary
-*.webp binary
 *.apng binary
+*.avif binary
+*.gif binary
+*.heic binary
+*.heif binary
+*.jpeg binary
+*.jpg binary
+*.pdf binary
+*.png binary
+*.svg binary
+*.webp binary
 
 # Video
-*.mp4 binary
+*.av1 binary
 *.mov binary
+*.mp4 binary
 *.webm binary
 
-# PDF
-*.pdf binary
-
 # Font
-*.otf binary
-*.ttf binary
-*.ttc binary
 *.otc binary
+*.otf binary
+*.ttc binary
+*.ttf binary
