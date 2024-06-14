@@ -11,30 +11,20 @@ import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.Screen
 import org.jyutping.jyutping.ui.common.NavigationLabel
-import org.jyutping.jyutping.ui.common.SearchField
 import org.jyutping.jyutping.ui.common.WebLinkLabel
 
 @Composable
 fun JyutpingScreen(navController: NavHostController) {
-        val textState = remember { mutableStateOf(TextFieldValue(text = "")) }
         LazyColumn(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
         ) {
-                item {
-                        Column {
-                                SearchField(state = textState, verticalPadding = 8.dp)
-                        }
-                }
                 item {
                         Column(
                                 modifier = Modifier.padding(vertical = 16.dp),

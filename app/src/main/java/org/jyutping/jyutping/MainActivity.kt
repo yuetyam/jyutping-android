@@ -26,6 +26,7 @@ import org.jyutping.jyutping.ui.theme.JyutpingTheme
 class MainActivity : ComponentActivity() {
         override fun onCreate(savedInstanceState: Bundle?) {
                 super.onCreate(savedInstanceState)
+                DatabasePreparer.prepare(this)
                 setContent {
                         val navController = rememberNavController()
                         val entry by navController.currentBackStackEntryAsState()

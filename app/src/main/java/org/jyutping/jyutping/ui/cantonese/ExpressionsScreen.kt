@@ -140,7 +140,7 @@ fun ExpressionsScreen() {
                 }
                 item {
                         Expression(
-                                heading = "推薦【而家（而今）】，避免【宜家】",
+                                heading = "推薦【而家】，避免【宜家】",
                                 labels = listOf(
                                         LabelEntry(type = LabelType.CHECKED, text = "我而家食緊飯。"),
                                         LabelEntry(type = LabelType.MISTAKE, text = "我宜家食緊飯。")
