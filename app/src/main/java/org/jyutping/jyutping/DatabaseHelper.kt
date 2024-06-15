@@ -1,7 +1,6 @@
 package org.jyutping.jyutping
 
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
@@ -16,19 +15,99 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 db.execSQL("PRAGMA foreign_keys=ON;")
         }
 
-        fun listTables(): Cursor? {
-                val command: String = "SELECT name FROM sqlite_schema WHERE type='table';"
-                val db = this.readableDatabase
-                return db.rawQuery(command, null)
+        fun search(text: String): CantoneseLexicon? {
+                when (text.count()) {
+                        0 -> return null
+                        1 -> {
+                                val romanizations = fetchRomanizations(text)
+                                if (romanizations.isNotEmpty()) {
+                                        val pronunciations = romanizations.map { romanization ->
+                                                val homophones = fetchHomophones(romanization)
+                                                val collocations = fetchCollocations(word = text, romanization = romanization)
+                                                Pronunciation(romanization = romanization, homophones = homophones, collocations = collocations)
+                                        }
+                                        return  CantoneseLexicon(text = text, pronunciations = pronunciations)
+                                } else {
+                                        val convertedText = text.convertedS2T()
+                                        val altRomanizations = fetchRomanizations(convertedText)
+                                        if (altRomanizations.isNotEmpty()) {
+                                                val pronunciations = altRomanizations.map { romanization ->
+                                                        val homophones = fetchHomophones(romanization)
+                                                        val collocations = fetchCollocations(word = convertedText, romanization = romanization)
+                                                        Pronunciation(romanization = romanization, homophones = homophones, collocations = collocations)
+                                                }
+                                                return CantoneseLexicon(text = convertedText, pronunciations = pronunciations)
+                                        } else {
+                                                return CantoneseLexicon(text)
+                                        }
+                                }
+                        }
+                        else -> {
+                                val romanizations = fetchRomanizations(text)
+                                if (romanizations.isNotEmpty()) {
+                                        val pronunciations: List<Pronunciation> = romanizations.map { Pronunciation(it) }
+                                        return CantoneseLexicon(text = text, pronunciations = pronunciations)
+                                } else {
+                                        val convertedText = text.convertedS2T()
+                                        val altRomanizations = fetchRomanizations(convertedText)
+                                        if (altRomanizations.isNotEmpty()) {
+                                                val pronunciations: List<Pronunciation> = altRomanizations.map { Pronunciation(it) }
+                                                return CantoneseLexicon(text = convertedText, pronunciations = pronunciations)
+                                        } else {
+                                                // TODO: Advanced Search
+                                                return CantoneseLexicon(text)
+                                        }
+                                }
+                        }
+                }
         }
-        fun fetchRomanizations(text: String): Cursor? {
-                val command: String = "SELECT romanization FROM jyutpingtable WHERE word = '$text';"
-                val db = this.readableDatabase
-                return db.rawQuery(command, null)
+
+        fun fetchWords(romanization: String): List<String> {
+                val words: MutableList<String> = mutableListOf()
+                val command: String = "SELECT word FROM jyutpingtable WHERE romanization = '$romanization';"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val word = cursor.getString(0)
+                        words.add(word)
+                }
+                cursor.close()
+                return words
         }
-        fun fetchWords(text: String): Cursor? {
-                val command: String = "SELECT word FROM jyutpingtable WHERE romanization = '$text';"
-                val db = this.readableDatabase
-                return db.rawQuery(command, null)
+        fun fetchRomanizations(word: String): List<String> {
+                val romanizations: MutableList<String> = mutableListOf()
+                val command: String = "SELECT romanization FROM jyutpingtable WHERE word = '$word';"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val romanization = cursor.getString(0)
+                        romanizations.add(romanization)
+                }
+                cursor.close()
+                return romanizations
+        }
+        fun fetchHomophones(romanization: String): List<String> {
+                val words: MutableList<String> = mutableListOf()
+                val command: String = "SELECT word FROM jyutpingtable WHERE romanization = '$romanization' LIMIT 11;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val word = cursor.getString(0)
+                        words.add(word)
+                }
+                cursor.close()
+                return words
+        }
+        fun fetchCollocations(word: String, romanization: String): List<String> {
+                val command: String = "SELECT collocation FROM collocationtable WHERE word = '$word' AND romanization = '$romanization' LIMIT 1;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                if (cursor.moveToFirst()) {
+                        val text = cursor.getString(0)
+                        cursor.close()
+                        if (text == "X") {
+                                return listOf()
+                        } else {
+                                return text.split(";")
+                        }
+                } else {
+                        return listOf()
+                }
         }
 }
