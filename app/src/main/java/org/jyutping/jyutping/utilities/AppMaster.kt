@@ -1,4 +1,4 @@
-package org.jyutping.jyutping
+package org.jyutping.jyutping.utilities
 
 object AppMaster {
         const val websiteAddress: String = "https://jyutping.app"

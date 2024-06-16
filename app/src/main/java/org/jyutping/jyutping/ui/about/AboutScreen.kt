@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import org.jyutping.jyutping.AppMaster
+import org.jyutping.jyutping.utilities.AppMaster
 import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.ui.common.*

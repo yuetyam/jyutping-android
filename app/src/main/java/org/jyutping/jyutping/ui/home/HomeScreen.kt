@@ -2,22 +2,20 @@ package org.jyutping.jyutping.ui.home
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import org.jyutping.jyutping.CantoneseLexicon
-import org.jyutping.jyutping.DatabaseHelper
-import org.jyutping.jyutping.DatabasePreparer
+import org.jyutping.jyutping.search.CantoneseLexicon
+import org.jyutping.jyutping.utilities.DatabaseHelper
+import org.jyutping.jyutping.utilities.DatabasePreparer
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.Screen
+import org.jyutping.jyutping.search.CantoneseLexiconView
 import org.jyutping.jyutping.ui.common.NavigationLabel
 import org.jyutping.jyutping.ui.common.SearchField
 import org.jyutping.jyutping.ui.common.TextCard
@@ -25,25 +23,16 @@ import org.jyutping.jyutping.ui.common.TextCard
 @Composable
 fun HomeScreen(navController: NavHostController) {
         val lexiconState = remember { mutableStateOf<CantoneseLexicon?>(null) }
+        val helper: DatabaseHelper by lazy { DatabaseHelper(navController.context, DatabasePreparer.DATABASE_NAME) }
         LazyColumn(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
         ) {
                 item {
-                        SearchField(onSubmit = {
-                                val helper = DatabaseHelper(navController.context, DatabasePreparer.DATABASE_NAME)
-                                lexiconState.value = helper.search(it)
-                        })
+                        SearchField { lexiconState.value = helper.search(it) }
                 }
-                lexiconState.value?.let { lexicon ->
+                lexiconState.value?.let {
                         item {
-                                Row {
-                                        Text(text = "文字")
-                                        Text(text = ": ")
-                                        Text(text = lexicon.text)
-                                }
-                        }
-                        items(lexicon.pronunciations) {
-                                Text(text = it.romanization)
+                                CantoneseLexiconView(it)
                         }
                 }
                 item {

@@ -1,4 +1,4 @@
-package org.jyutping.jyutping
+package org.jyutping.jyutping.search
 
 data class Pronunciation(
         val romanization: String,

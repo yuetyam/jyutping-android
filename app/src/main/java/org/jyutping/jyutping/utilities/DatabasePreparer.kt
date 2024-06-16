@@ -1,4 +1,4 @@
-package org.jyutping.jyutping
+package org.jyutping.jyutping.utilities
 
 import android.content.Context
 import java.io.File

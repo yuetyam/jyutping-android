@@ -1,8 +1,11 @@
-package org.jyutping.jyutping
+package org.jyutping.jyutping.utilities
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import org.jyutping.jyutping.extensions.convertedS2T
+import org.jyutping.jyutping.search.CantoneseLexicon
+import org.jyutping.jyutping.search.Pronunciation
 
 class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(context, databaseName, null, 3) {
 
@@ -22,7 +25,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                 val romanizations = fetchRomanizations(text)
                                 if (romanizations.isNotEmpty()) {
                                         val pronunciations = romanizations.map { romanization ->
-                                                val homophones = fetchHomophones(romanization)
+                                                val homophones = fetchHomophones(romanization).filter { it != text }
                                                 val collocations = fetchCollocations(word = text, romanization = romanization)
                                                 Pronunciation(romanization = romanization, homophones = homophones, collocations = collocations)
                                         }
@@ -32,7 +35,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                         val altRomanizations = fetchRomanizations(convertedText)
                                         if (altRomanizations.isNotEmpty()) {
                                                 val pronunciations = altRomanizations.map { romanization ->
-                                                        val homophones = fetchHomophones(romanization)
+                                                        val homophones = fetchHomophones(romanization).filter { it != convertedText }
                                                         val collocations = fetchCollocations(word = convertedText, romanization = romanization)
                                                         Pronunciation(romanization = romanization, homophones = homophones, collocations = collocations)
                                                 }
