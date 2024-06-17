@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 fun NavigationLabel(icon: ImageVector, text: String, onClick: () -> Unit) {
         Row(
                 modifier = Modifier
-                        .padding(vertical = 8.dp)
                         .fillMaxWidth()
                         .clip(shape = RoundedCornerShape(size = 8.dp))
                         .background(color = colorScheme.background)

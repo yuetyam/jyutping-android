@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,20 +30,20 @@ import org.jyutping.jyutping.ui.common.*
 @Composable
 fun AboutScreen() {
         LazyColumn(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
                 item {
                         VersionLabel()
                 }
                 item {
                         Column(
-                                modifier = Modifier.padding(vertical = 32.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                                 WebLinkLabel(icon = Icons.Outlined.Link, text = stringResource(id = R.string.about_label_website), uri = AppMaster.websiteAddress)
                                 WebLinkLabel(icon = Icons.Outlined.Code, text = stringResource(id = R.string.about_label_source_code), uri = AppMaster.sourceCodeAddress)
                                 WebLinkLabel(icon = Icons.Outlined.Lock, text = stringResource(id = R.string.about_label_privacy_policy), uri = AppMaster.privacyPolicyAddress)
-                                WebLinkLabel(icon = Icons.Outlined.HelpOutline, text = stringResource(id = R.string.about_label_faq), uri = AppMaster.faqAddress)
+                                WebLinkLabel(icon = Icons.AutoMirrored.Outlined.HelpOutline, text = stringResource(id = R.string.about_label_faq), uri = AppMaster.faqAddress)
                         }
                 }
                 item {

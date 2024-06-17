@@ -13,7 +13,14 @@ object DatabasePreparer {
         const val DATABASE_NAME = "tmpdb.sqlite3"
 
         fun prepare(context: Context) {
-                copyDatabase(context)
+                if (!doesDatabaseExists(context)) {
+                        copyDatabase(context)
+                }
+        }
+
+        private fun doesDatabaseExists(context: Context): Boolean {
+                val dbFile = context.getDatabasePath(DATABASE_NAME)
+                return dbFile.exists()
         }
 
         @Throws(IOException::class)

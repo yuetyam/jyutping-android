@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 @Composable
 fun PronunciationLabel(pronunciation: Pronunciation) {
         val homophoneText: String? = if (pronunciation.homophones.isEmpty()) null else pronunciation.homophones.joinToString(separator = " ")
-        val collocationText: String? = when (pronunciation.collocations.count()) {
+        val collocationText: String? = when (pronunciation.collocations.size) {
                 0 -> null
                 in 1..5 -> pronunciation.collocations.joinToString(separator = " ")
                 else -> pronunciation.collocations.take(5).joinToString(separator = " ")

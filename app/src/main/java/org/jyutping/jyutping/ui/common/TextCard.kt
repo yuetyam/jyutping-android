@@ -26,7 +26,6 @@ fun TextCard(
 ) {
         Column(
                 modifier = Modifier
-                        .padding(vertical = 8.dp)
                         .fillMaxWidth()
                         .clip(shape = RoundedCornerShape(size = 8.dp))
                         .background(color = MaterialTheme.colorScheme.background)
@@ -47,5 +46,4 @@ fun TextCard(
                         }
                 }
         }
-
 }

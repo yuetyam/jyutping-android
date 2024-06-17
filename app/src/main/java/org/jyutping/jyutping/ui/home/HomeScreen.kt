@@ -1,5 +1,6 @@
 package org.jyutping.jyutping.ui.home
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
@@ -15,7 +16,10 @@ import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.Screen
+import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.search.CantoneseLexiconView
+import org.jyutping.jyutping.search.YingWaaFanWan
+import org.jyutping.jyutping.search.YingWaaView
 import org.jyutping.jyutping.ui.common.NavigationLabel
 import org.jyutping.jyutping.ui.common.SearchField
 import org.jyutping.jyutping.ui.common.TextCard
@@ -23,16 +27,35 @@ import org.jyutping.jyutping.ui.common.TextCard
 @Composable
 fun HomeScreen(navController: NavHostController) {
         val lexiconState = remember { mutableStateOf<CantoneseLexicon?>(null) }
+        val yingWaaEntries = remember { mutableStateOf<List<YingWaaFanWan>>(listOf()) }
         val helper: DatabaseHelper by lazy { DatabaseHelper(navController.context, DatabasePreparer.DATABASE_NAME) }
+        fun searchYingWan(text: String): List<YingWaaFanWan> {
+                if (text.isBlank()) return listOf()
+                val char = text.first()
+                val matched = helper.matchYingWaaFanWan(char)
+                if (matched.isNotEmpty()) return YingWaaFanWan.process(matched)
+                val traditionalChar = text.convertedS2T().firstOrNull() ?: char
+                val traditionalMatched = helper.matchYingWaaFanWan(traditionalChar)
+                return YingWaaFanWan.process(traditionalMatched)
+        }
         LazyColumn(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
                 item {
-                        SearchField { lexiconState.value = helper.search(it) }
+                        SearchField {
+                                lexiconState.value = helper.search(it)
+                                yingWaaEntries.value = searchYingWan(it)
+                        }
                 }
                 lexiconState.value?.let {
                         item {
                                 CantoneseLexiconView(it)
+                        }
+                }
+                if (yingWaaEntries.value.isNotEmpty()) {
+                        item {
+                                YingWaaView(yingWaaEntries.value)
                         }
                 }
                 item {
@@ -60,6 +83,8 @@ fun HomeScreen(navController: NavHostController) {
                                 heading = stringResource(id = R.string.home_heading_stroke_reverse_lookup),
                                 content = stringResource(id = R.string.home_content_stroke_reverse_lookup)
                         )
+                }
+                item {
                         TextCard(
                                 heading = stringResource(id = R.string.home_heading_stroke_code),
                                 content = "w = 橫(waang)\ns = 豎(syu)\na = 撇\nd = 點(dim)\nz = 折(zit)",
