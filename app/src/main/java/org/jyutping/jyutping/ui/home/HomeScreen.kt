@@ -22,6 +22,8 @@ import org.jyutping.jyutping.search.ChoHokView
 import org.jyutping.jyutping.search.ChoHokYuetYamCitYiu
 import org.jyutping.jyutping.search.FanWanCuetYiu
 import org.jyutping.jyutping.search.FanWanView
+import org.jyutping.jyutping.search.GwongWanCharacter
+import org.jyutping.jyutping.search.GwongWanView
 import org.jyutping.jyutping.search.YingWaaFanWan
 import org.jyutping.jyutping.search.YingWaaView
 import org.jyutping.jyutping.ui.common.NavigationLabel
@@ -30,10 +32,12 @@ import org.jyutping.jyutping.ui.common.TextCard
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
+        val textState = remember { mutableStateOf<String>("") }
         val lexiconState = remember { mutableStateOf<CantoneseLexicon?>(null) }
         val yingWaaEntries = remember { mutableStateOf<List<YingWaaFanWan>>(listOf()) }
         val choHokEntries = remember { mutableStateOf<List<ChoHokYuetYamCitYiu>>(listOf()) }
         val fanWanEntries = remember { mutableStateOf<List<FanWanCuetYiu>>(listOf()) }
+        val gwongWanEntries = remember { mutableStateOf<List<GwongWanCharacter>>(listOf()) }
         val helper: DatabaseHelper by lazy { DatabaseHelper(navController.context, DatabasePreparer.DATABASE_NAME) }
         fun searchYingWan(text: String): List<YingWaaFanWan> {
                 if (text.isBlank()) return listOf()
@@ -60,16 +64,26 @@ fun HomeScreen(navController: NavHostController) {
                 val traditionalChar = text.convertedS2T().firstOrNull() ?: char
                 return helper.matchFanWanCuetYiu(traditionalChar)
         }
+        fun searchGwongWan(text: String): List<GwongWanCharacter> {
+                if (text.isBlank()) return listOf()
+                val char = text.first()
+                val matched = helper.matchGwongWan(char)
+                if (matched.isNotEmpty()) return matched
+                val traditionalChar = text.convertedS2T().firstOrNull() ?: char
+                return helper.matchGwongWan(traditionalChar)
+        }
         LazyColumn(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
                 item {
-                        SearchField {
-                                lexiconState.value = helper.search(it)
-                                yingWaaEntries.value = searchYingWan(it)
-                                choHokEntries.value = searchChoHok(it)
-                                fanWanEntries.value = searchFanWan(it)
+                        SearchField(textState = textState) {
+                                val text = textState.value
+                                lexiconState.value = helper.search(text)
+                                yingWaaEntries.value = searchYingWan(text)
+                                choHokEntries.value = searchChoHok(text)
+                                fanWanEntries.value = searchFanWan(text)
+                                gwongWanEntries.value = searchGwongWan(text)
                         }
                 }
                 lexiconState.value?.let {
@@ -90,6 +104,11 @@ fun HomeScreen(navController: NavHostController) {
                 if (fanWanEntries.value.isNotEmpty()) {
                         item {
                                 FanWanView(fanWanEntries.value)
+                        }
+                }
+                if (gwongWanEntries.value.isNotEmpty()) {
+                        item {
+                                GwongWanView(gwongWanEntries.value)
                         }
                 }
                 item {

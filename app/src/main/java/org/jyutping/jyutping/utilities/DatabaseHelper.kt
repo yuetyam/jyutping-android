@@ -7,6 +7,7 @@ import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.search.CantoneseLexicon
 import org.jyutping.jyutping.search.ChoHokYuetYamCitYiu
 import org.jyutping.jyutping.search.FanWanCuetYiu
+import org.jyutping.jyutping.search.GwongWanCharacter
 import org.jyutping.jyutping.search.Pronunciation
 import org.jyutping.jyutping.search.YingWaaFanWan
 
@@ -242,5 +243,44 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
                 cursor.close()
                 return homophones
+        }
+
+        fun matchGwongWan(char: Char): List<GwongWanCharacter> {
+                val entries: MutableList<GwongWanCharacter> = mutableListOf()
+                val code = char.code
+                val command = "SELECT * FROM gwongwantable WHERE code = $code;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        // val code = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val rhyme = cursor.getString(2)
+                        // val subRime = cursor.getString(3)
+                        // val subRhymeSerial = cursor.getInt(4)
+                        // val subRhymeNumber = cursor.getInt(5)
+                        val upper = cursor.getString(6)
+                        val lower = cursor.getString(7)
+                        val initial = cursor.getString(8)
+                        val rounding = cursor.getString(9)
+                        val division = cursor.getString(10)
+                        // val rhymeClass = cursor.getString(11)
+                        // val repeating = cursor.getString(12)
+                        val tone = cursor.getString(13)
+                        val interpretation = cursor.getString(14)
+                        val faancit = upper + lower + "切"
+                        val hasDivision = division != "X"
+                        val hasRounding = rounding != "X"
+                        val tailText: String = when {
+                                hasDivision && hasRounding -> "　${division}等　${rounding}口"
+                                hasDivision && !hasRounding -> "　${division}等"
+                                !hasDivision && hasRounding -> "　${rounding}口"
+                                else -> ""
+                        }
+                        val hierarchy = "${initial}母　${rhyme}韻　${tone}聲${tailText}"
+                        val pronunciation = "$faancit　$hierarchy"
+                        val instance = GwongWanCharacter(word = word, pronunciation = pronunciation, interpretation = interpretation)
+                        entries.add(instance)
+                }
+                cursor.close()
+                return entries
         }
 }

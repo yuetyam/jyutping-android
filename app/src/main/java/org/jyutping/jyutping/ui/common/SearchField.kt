@@ -15,8 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
@@ -32,13 +31,13 @@ import org.jyutping.jyutping.R
 fun SearchField(
         horizontalPadding: Dp = 0.dp,
         verticalPadding: Dp = 0.dp,
-        onSubmit: (String) -> Unit
+        textState: MutableState<String>,
+        submit: () -> Unit
 ) {
         val focusManager = LocalFocusManager.current
-        val textState = remember { mutableStateOf("") }
         TextField(
                 value = textState.value,
-                onValueChange = { newText -> textState.value = newText },
+                onValueChange = { textState.value = it },
                 modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = horizontalPadding, vertical = verticalPadding),
@@ -54,10 +53,10 @@ fun SearchField(
                         }
                 },
                 keyboardActions = KeyboardActions(
-                        onDone = { focusManager.clearFocus(); onSubmit(textState.value) },
-                        onGo = { focusManager.clearFocus(); onSubmit(textState.value) },
-                        onSearch = { focusManager.clearFocus(); onSubmit(textState.value) },
-                        onSend = { focusManager.clearFocus(); onSubmit(textState.value) }
+                        onDone = { focusManager.clearFocus(); submit() },
+                        onGo = { focusManager.clearFocus(); submit() },
+                        onSearch = { focusManager.clearFocus(); submit() },
+                        onSend = { focusManager.clearFocus(); submit() }
                 ),
                 keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
