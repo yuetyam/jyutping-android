@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.search.CantoneseLexicon
 import org.jyutping.jyutping.search.ChoHokYuetYamCitYiu
+import org.jyutping.jyutping.search.FanWanCuetYiu
 import org.jyutping.jyutping.search.Pronunciation
 import org.jyutping.jyutping.search.YingWaaFanWan
 
@@ -188,6 +189,52 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         private fun fetchChoHokHomophones(romanization: String): List<String> {
                 val homophones: MutableList<String> = mutableListOf()
                 val command = "SELECT word FROM chohoktable WHERE romanization = '$romanization' LIMIT 11;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val word = cursor.getString(0)
+                        homophones.add(word)
+                }
+                cursor.close()
+                return homophones
+        }
+
+        fun matchFanWanCuetYiu(char: Char): List<FanWanCuetYiu> {
+                val entries: MutableList<FanWanCuetYiu> = mutableListOf()
+                val code = char.code
+                val command = "SELECT * FROM fanwantable WHERE code = $code;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        // val code = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val romanization = cursor.getString(2)
+                        val initial = cursor.getString(3)
+                        val final = cursor.getString(4)
+                        val yamyeung = cursor.getString(5)
+                        val tone = cursor.getString(6)
+                        val rhyme = cursor.getString(7)
+                        val interpretation = cursor.getString(8)
+                        val pronunciation = "${initial}母　${final}韻　$yamyeung$tone ${rhyme}小韻"
+                        val convertedRomanization = romanization
+                                .replace(Regex("7$"), "1")
+                                .replace(Regex("8$"), "3")
+                                .replace(Regex("9$"), "6")
+                        val homophones = fetchFanWanHomophones(romanization).filter { it != word }
+                        val processedInterpretation = if (interpretation == "X") "(None)" else interpretation
+                        val instance = FanWanCuetYiu(
+                                word = word,
+                                pronunciation = pronunciation,
+                                romanization = convertedRomanization,
+                                homophones = homophones,
+                                interpretation = processedInterpretation
+                        )
+                        entries.add(instance)
+                }
+                cursor.close()
+                return entries
+        }
+        private fun fetchFanWanHomophones(romanization: String): List<String> {
+                val homophones: MutableList<String> = mutableListOf()
+                val command = "SELECT word FROM fanwantable WHERE romanization = '$romanization' LIMIT 11;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val word = cursor.getString(0)
