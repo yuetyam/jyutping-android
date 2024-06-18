@@ -18,6 +18,8 @@ import org.jyutping.jyutping.R
 import org.jyutping.jyutping.Screen
 import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.search.CantoneseLexiconView
+import org.jyutping.jyutping.search.ChoHokView
+import org.jyutping.jyutping.search.ChoHokYuetYamCitYiu
 import org.jyutping.jyutping.search.YingWaaFanWan
 import org.jyutping.jyutping.search.YingWaaView
 import org.jyutping.jyutping.ui.common.NavigationLabel
@@ -28,6 +30,7 @@ import org.jyutping.jyutping.ui.common.TextCard
 fun HomeScreen(navController: NavHostController) {
         val lexiconState = remember { mutableStateOf<CantoneseLexicon?>(null) }
         val yingWaaEntries = remember { mutableStateOf<List<YingWaaFanWan>>(listOf()) }
+        val choHokEntries = remember { mutableStateOf<List<ChoHokYuetYamCitYiu>>(listOf()) }
         val helper: DatabaseHelper by lazy { DatabaseHelper(navController.context, DatabasePreparer.DATABASE_NAME) }
         fun searchYingWan(text: String): List<YingWaaFanWan> {
                 if (text.isBlank()) return listOf()
@@ -38,6 +41,14 @@ fun HomeScreen(navController: NavHostController) {
                 val traditionalMatched = helper.matchYingWaaFanWan(traditionalChar)
                 return YingWaaFanWan.process(traditionalMatched)
         }
+        fun searchChoHok(text: String): List<ChoHokYuetYamCitYiu> {
+                if (text.isBlank()) return listOf()
+                val char = text.first()
+                val matched = helper.matchChoHokYuetYamCitYiu(char)
+                if (matched.isNotEmpty()) return matched
+                val traditionalChar = text.convertedS2T().firstOrNull() ?: char
+                return helper.matchChoHokYuetYamCitYiu(traditionalChar)
+        }
         LazyColumn(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -46,6 +57,7 @@ fun HomeScreen(navController: NavHostController) {
                         SearchField {
                                 lexiconState.value = helper.search(it)
                                 yingWaaEntries.value = searchYingWan(it)
+                                choHokEntries.value = searchChoHok(it)
                         }
                 }
                 lexiconState.value?.let {
@@ -56,6 +68,11 @@ fun HomeScreen(navController: NavHostController) {
                 if (yingWaaEntries.value.isNotEmpty()) {
                         item {
                                 YingWaaView(yingWaaEntries.value)
+                        }
+                }
+                if (choHokEntries.value.isNotEmpty()) {
+                        item {
+                                ChoHokView(choHokEntries.value)
                         }
                 }
                 item {

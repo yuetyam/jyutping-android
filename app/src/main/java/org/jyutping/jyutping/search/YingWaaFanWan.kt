@@ -8,6 +8,16 @@ data class YingWaaFanWan(
         val interpretation: String?,
         val homophones: List<String>
 ) {
+        override fun equals(other: Any?): Boolean {
+                if (this === other) return true
+                if (other !is YingWaaFanWan) return false
+                if (this.word == other.word && this.romanization == other.romanization) return true
+                return false
+        }
+        override fun hashCode(): Int {
+                return word.hashCode() * 31 + romanization.hashCode()
+        }
+
         companion object {
                 fun process(entries: List<YingWaaFanWan>): List<YingWaaFanWan> {
                         if (entries.isEmpty()) return entries

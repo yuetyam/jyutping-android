@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.search.CantoneseLexicon
+import org.jyutping.jyutping.search.ChoHokYuetYamCitYiu
 import org.jyutping.jyutping.search.Pronunciation
 import org.jyutping.jyutping.search.YingWaaFanWan
 
@@ -144,6 +145,49 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         private fun fetchYingWaaHomophones(romanization: String): List<String> {
                 val homophones: MutableList<String> = mutableListOf()
                 val command = "SELECT word FROM yingwaatable WHERE romanization = '$romanization' LIMIT 11;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val word = cursor.getString(0)
+                        homophones.add(word)
+                }
+                cursor.close()
+                return homophones
+        }
+
+        fun matchChoHokYuetYamCitYiu(char: Char): List<ChoHokYuetYamCitYiu> {
+                val entries: MutableList<ChoHokYuetYamCitYiu> = mutableListOf()
+                val code = char.code
+                val command = "SELECT * FROM chohoktable WHERE code = $code;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        // val code = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val romanization = cursor.getString(2)
+                        val initial = cursor.getString(3)
+                        val final = cursor.getString(4)
+                        val tone = cursor.getString(5)
+                        val faancit = cursor.getString(6)
+                        val homophones = fetchChoHokHomophones(romanization).filter { it != word }
+                        val convertedInitial: String = if (initial == "X") "" else initial
+                        val convertedFinal: String = if (final == "X") "" else final
+                        val pronunciation: String = convertedInitial + convertedFinal
+                        val faancitText: String = faancit + "切"
+                        val instance = ChoHokYuetYamCitYiu(
+                                word = word,
+                                pronunciation = pronunciation,
+                                tone = tone,
+                                faancit = faancitText,
+                                romanization = romanization,
+                                homophones = homophones
+                        )
+                        entries.add(instance)
+                }
+                cursor.close()
+                return entries
+        }
+        private fun fetchChoHokHomophones(romanization: String): List<String> {
+                val homophones: MutableList<String> = mutableListOf()
+                val command = "SELECT word FROM chohoktable WHERE romanization = '$romanization' LIMIT 11;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val word = cursor.getString(0)
