@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun ChoHokView(entries: List<ChoHokYuetYamCitYiu>) {
@@ -40,10 +41,10 @@ fun ChoHokView(entries: List<ChoHokYuetYamCitYiu>) {
 @Composable
 private fun ChoHokWordLabel(word: String) {
         Row {
-                Text(text = "檢索")
+                Text(text = "文字")
                 Text(text = ": ")
                 Text(text = word)
-                Text(text = "《初學粵音切要》 湛約翰 1855 香港", color = MaterialTheme.colorScheme.secondary)
+                Text(text = "《初學粵音切要》 湛約翰 1855 香港", fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary)
         }
 }
 

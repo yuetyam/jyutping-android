@@ -214,7 +214,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                         val tone = cursor.getString(6)
                         val rhyme = cursor.getString(7)
                         val interpretation = cursor.getString(8)
-                        val pronunciation = "${initial}母　${final}韻　$yamyeung$tone ${rhyme}小韻"
+                        val pronunciation = "${initial}母　${final}韻　$yamyeung$tone　${rhyme}小韻"
                         val convertedRomanization = romanization
                                 .replace(Regex("7$"), "1")
                                 .replace(Regex("8$"), "3")

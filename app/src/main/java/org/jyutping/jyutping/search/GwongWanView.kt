@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun GwongWanView(entries: List<GwongWanCharacter>) {
@@ -40,10 +41,10 @@ fun GwongWanView(entries: List<GwongWanCharacter>) {
 @Composable
 private fun GwongWanWordLabel(word: String) {
         Row {
-                Text(text = "檢索")
+                Text(text = "文字")
                 Text(text = ": ")
                 Text(text = word)
-                Text(text = "《大宋重修廣韻》", color = MaterialTheme.colorScheme.secondary)
+                Text(text = "《大宋重修廣韻》 陳彭年等 北宋", fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary)
         }
 }
 

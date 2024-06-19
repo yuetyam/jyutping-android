@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun YingWaaView(entries: List<YingWaaFanWan>) {
@@ -41,10 +42,10 @@ fun YingWaaView(entries: List<YingWaaFanWan>) {
 @Composable
 private fun YingWaaWordLabel(word: String) {
         Row {
-                Text(text = "檢索")
+                Text(text = "文字")
                 Text(text = ": ")
                 Text(text = word)
-                Text(text = "《英華分韻撮要》衛三畏 1856 廣州", color = MaterialTheme.colorScheme.secondary)
+                Text(text = "《英華分韻撮要》衛三畏 1856 廣州", fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary)
         }
 }
 

@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun FanWanView(entries: List<FanWanCuetYiu>) {
@@ -40,10 +41,10 @@ fun FanWanView(entries: List<FanWanCuetYiu>) {
 @Composable
 private fun FanWanWordLabel(word: String) {
         Row {
-                Text(text = "檢索")
+                Text(text = "文字")
                 Text(text = ": ")
                 Text(text = word)
-                Text(text = "《分韻撮要》", color = MaterialTheme.colorScheme.secondary)
+                Text(text = "《分韻撮要》 佚名 清初 廣州府", fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary)
         }
 }
 
