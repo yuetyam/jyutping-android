@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jyutping.jyutping.linguistics.OldCantonese
 
 @Composable
 fun ChoHokView(entries: List<ChoHokYuetYamCitYiu>) {
@@ -50,6 +51,7 @@ private fun ChoHokWordLabel(word: String) {
 
 @Composable
 private fun ChoHokPronunciationView(entry: ChoHokYuetYamCitYiu) {
+        val ipaText = OldCantonese.IPAText(entry.romanization)
         val homophoneText = if (entry.homophones.isEmpty()) null else entry.homophones.joinToString(separator = " ")
         Column {
                 Row(
@@ -71,7 +73,7 @@ private fun ChoHokPronunciationView(entry: ChoHokYuetYamCitYiu) {
                                 Text(text = ": ")
                                 Text(text = entry.romanization)
                         }
-                        Text(text = "ipa", color = MaterialTheme.colorScheme.secondary) // TODO: Fix IPA
+                        Text(text = ipaText, color = MaterialTheme.colorScheme.secondary)
                 }
                 homophoneText?.let {
                         Row {

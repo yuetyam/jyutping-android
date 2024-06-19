@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jyutping.jyutping.linguistics.OldCantonese
 
 @Composable
 fun YingWaaView(entries: List<YingWaaFanWan>) {
@@ -51,6 +52,7 @@ private fun YingWaaWordLabel(word: String) {
 
 @Composable
 private fun YingWaaPronunciationView(entry: YingWaaFanWan) {
+        val ipaText = OldCantonese.IPAText(entry.romanization)
         val pronunciationMark = entry.pronunciationMark?.let { YingWaaFanWan.processPronunciationMark(it) }
         val homophoneText = if (entry.homophones.isEmpty()) null else entry.homophones.joinToString(separator = " ")
         Column {
@@ -77,7 +79,7 @@ private fun YingWaaPronunciationView(entry: YingWaaFanWan) {
                                 Text(text = ": ")
                                 Text(text = entry.romanization)
                         }
-                        Text(text = "ipa", color = MaterialTheme.colorScheme.secondary) // TODO: Fix IPA
+                        Text(text = ipaText, color = MaterialTheme.colorScheme.secondary)
                 }
                 homophoneText?.let {
                         Row {
