@@ -1,7 +1,7 @@
 Jyutping
 ======
 
-(Work in progress | 目前正在開發，即將推出。)
+(Work in progress | 目前正在開發)
 <br>
 <br>
 
