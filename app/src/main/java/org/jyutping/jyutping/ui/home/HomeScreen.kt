@@ -78,7 +78,7 @@ fun HomeScreen(navController: NavHostController) {
         ) {
                 item {
                         SearchField(textState = textState) {
-                                val text = textState.value
+                                val text = textState.value.trim()
                                 lexiconState.value = helper.search(text)
                                 yingWaaEntries.value = searchYingWan(text)
                                 choHokEntries.value = searchChoHok(text)

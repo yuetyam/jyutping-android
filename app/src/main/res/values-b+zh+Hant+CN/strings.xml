@@ -35,6 +35,6 @@
     <string name="about_label_faq">常問問題（FAQ）</string>
     <string name="about_label_telegram">加入 Telegram 交流羣</string>
     <string name="about_label_qq">加入 QQ 交流羣</string>
-    <string name="about_label_twitter">關注 Twitter</string>
+    <string name="about_label_twitter">關注 X (Twitter)</string>
     <string name="about_label_instagram">關注 Instagram</string>
 </resources>

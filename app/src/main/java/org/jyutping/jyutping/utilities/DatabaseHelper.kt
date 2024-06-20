@@ -10,6 +10,7 @@ import org.jyutping.jyutping.search.FanWanCuetYiu
 import org.jyutping.jyutping.search.GwongWanCharacter
 import org.jyutping.jyutping.search.Pronunciation
 import org.jyutping.jyutping.search.YingWaaFanWan
+import kotlin.math.max
 
 class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(context, databaseName, null, 3) {
 
@@ -34,42 +35,83 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                                 Pronunciation(romanization = romanization, homophones = homophones, collocations = collocations)
                                         }
                                         return  CantoneseLexicon(text = text, pronunciations = pronunciations)
-                                } else {
-                                        val convertedText = text.convertedS2T()
-                                        val altRomanizations = fetchRomanizations(convertedText)
-                                        if (altRomanizations.isNotEmpty()) {
-                                                val pronunciations = altRomanizations.map { romanization ->
-                                                        val homophones = fetchHomophones(romanization).filter { it != convertedText }
-                                                        val collocations = fetchCollocations(word = convertedText, romanization = romanization)
-                                                        Pronunciation(romanization = romanization, homophones = homophones, collocations = collocations)
-                                                }
-                                                return CantoneseLexicon(text = convertedText, pronunciations = pronunciations)
-                                        } else {
-                                                return CantoneseLexicon(text)
-                                        }
                                 }
+                                val convertedText = text.convertedS2T()
+                                val altRomanizations = fetchRomanizations(convertedText)
+                                if (altRomanizations.isNotEmpty()) {
+                                        val pronunciations = altRomanizations.map { romanization ->
+                                                val homophones = fetchHomophones(romanization).filter { it != convertedText }
+                                                val collocations = fetchCollocations(word = convertedText, romanization = romanization)
+                                                Pronunciation(romanization = romanization, homophones = homophones, collocations = collocations)
+                                        }
+                                        return CantoneseLexicon(text = convertedText, pronunciations = pronunciations)
+                                }
+                                return CantoneseLexicon(text)
                         }
                         else -> {
                                 val romanizations = fetchRomanizations(text)
                                 if (romanizations.isNotEmpty()) {
                                         val pronunciations: List<Pronunciation> = romanizations.map { Pronunciation(it) }
                                         return CantoneseLexicon(text = text, pronunciations = pronunciations)
-                                } else {
-                                        val convertedText = text.convertedS2T()
-                                        val altRomanizations = fetchRomanizations(convertedText)
-                                        if (altRomanizations.isNotEmpty()) {
-                                                val pronunciations: List<Pronunciation> = altRomanizations.map { Pronunciation(it) }
-                                                return CantoneseLexicon(text = convertedText, pronunciations = pronunciations)
+                                }
+                                val convertedText = text.convertedS2T()
+                                val altRomanizations = fetchRomanizations(convertedText)
+                                if (altRomanizations.isNotEmpty()) {
+                                        val pronunciations: List<Pronunciation> = altRomanizations.map { Pronunciation(it) }
+                                        return CantoneseLexicon(text = convertedText, pronunciations = pronunciations)
+                                }
+                                var chars = text
+                                val fetches: MutableList<String> = mutableListOf()
+                                var newText = ""
+                                while (chars.isNotEmpty()) {
+                                        val leading = fetchLeading(chars)
+                                        val leadingRomanization = leading.first
+                                        if (leadingRomanization != null) {
+                                                fetches.add(leadingRomanization)
+                                                val leadLength: Int = max(1, leading.second)
+                                                val tailLength = chars.length - leadLength
+                                                newText += chars.dropLast(tailLength)
+                                                chars = chars.drop(leadLength)
                                         } else {
-                                                // TODO: Advanced Search
-                                                return CantoneseLexicon(text)
+                                                val traditionalChars = chars.convertedS2T()
+                                                val anotherLeading = fetchLeading(traditionalChars)
+                                                val anotherRomanization = anotherLeading.first
+                                                if (anotherRomanization != null) {
+                                                        fetches.add(anotherRomanization)
+                                                        val leadLength: Int = max(1, anotherLeading.second)
+                                                        val tailLength = traditionalChars.length - leadLength
+                                                        newText += traditionalChars.dropLast(tailLength)
+                                                        chars = traditionalChars.drop(leadLength)
+                                                } else {
+                                                        fetches.add("?")
+                                                        newText += chars.first()
+                                                        chars = chars.drop(1)
+                                                }
                                         }
                                 }
+                                if (fetches.isEmpty()) return CantoneseLexicon(text)
+                                val romanization = fetches.joinToString(separator = " ")
+                                val pronunciation = Pronunciation(romanization)
+                                return CantoneseLexicon(text = newText, pronunciations = listOf(pronunciation))
                         }
                 }
         }
-
-        fun fetchWords(romanization: String): List<String> {
+        private fun fetchLeading(text: String): Pair<String?, Int> {
+                var chars = text
+                var romanization: String? = null
+                var matchedCount = 0
+                while (romanization == null && chars.isNotEmpty()) {
+                        romanization = fetchRomanizations(chars).firstOrNull()
+                        matchedCount = chars.length
+                        chars = chars.dropLast(1)
+                }
+                if (romanization != null) {
+                        return Pair(romanization, matchedCount)
+                }
+                return Pair(null, 0)
+        }
+        /* // Unused
+        private fun fetchWords(romanization: String): List<String> {
                 val words: MutableList<String> = mutableListOf()
                 val command = "SELECT word FROM jyutpingtable WHERE romanization = '$romanization';"
                 val cursor = this.readableDatabase.rawQuery(command, null)
@@ -80,7 +122,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 cursor.close()
                 return words
         }
-        fun fetchRomanizations(word: String): List<String> {
+        */
+        private fun fetchRomanizations(word: String): List<String> {
                 val romanizations: MutableList<String> = mutableListOf()
                 val command = "SELECT romanization FROM jyutpingtable WHERE word = '$word';"
                 val cursor = this.readableDatabase.rawQuery(command, null)
@@ -91,7 +134,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 cursor.close()
                 return romanizations
         }
-        fun fetchHomophones(romanization: String): List<String> {
+        private fun fetchHomophones(romanization: String): List<String> {
                 val words: MutableList<String> = mutableListOf()
                 val command = "SELECT word FROM jyutpingtable WHERE romanization = '$romanization' LIMIT 11;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
@@ -102,20 +145,16 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 cursor.close()
                 return words
         }
-        fun fetchCollocations(word: String, romanization: String): List<String> {
+        private fun fetchCollocations(word: String, romanization: String): List<String> {
                 val command = "SELECT collocation FROM collocationtable WHERE word = '$word' AND romanization = '$romanization' LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 if (cursor.moveToFirst()) {
                         val text = cursor.getString(0)
                         cursor.close()
-                        if (text == "X") {
-                                return listOf()
-                        } else {
-                                return text.split(";")
-                        }
-                } else {
-                        return listOf()
+                        if (text == "X") return listOf()
+                        return text.split(";")
                 }
+                return listOf()
         }
 
         fun matchYingWaaFanWan(char: Char): List<YingWaaFanWan> {
