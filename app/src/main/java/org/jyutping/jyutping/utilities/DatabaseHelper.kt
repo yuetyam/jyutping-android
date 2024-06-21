@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import org.jyutping.jyutping.extensions.convertedS2T
+import org.jyutping.jyutping.extensions.isIdeographic
 import org.jyutping.jyutping.search.CantoneseLexicon
 import org.jyutping.jyutping.search.ChoHokYuetYamCitYiu
 import org.jyutping.jyutping.search.FanWanCuetYiu
@@ -83,8 +84,10 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                                         newText += traditionalChars.dropLast(tailLength)
                                                         chars = traditionalChars.drop(leadLength)
                                                 } else {
-                                                        fetches.add("?")
-                                                        newText += chars.first()
+                                                        val leadingChar = chars.first()
+                                                        val symbol: String = if (leadingChar.isIdeographic()) "?" else leadingChar.toString()
+                                                        fetches.add(symbol)
+                                                        newText += leadingChar
                                                         chars = chars.drop(1)
                                                 }
                                         }
