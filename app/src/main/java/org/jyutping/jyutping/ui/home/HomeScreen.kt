@@ -24,6 +24,7 @@ import org.jyutping.jyutping.search.FanWanCuetYiu
 import org.jyutping.jyutping.search.FanWanView
 import org.jyutping.jyutping.search.GwongWanCharacter
 import org.jyutping.jyutping.search.GwongWanView
+import org.jyutping.jyutping.search.UnihanDefinition
 import org.jyutping.jyutping.search.YingWaaFanWan
 import org.jyutping.jyutping.search.YingWaaView
 import org.jyutping.jyutping.ui.common.NavigationLabel
@@ -34,11 +35,12 @@ import org.jyutping.jyutping.ui.common.TextCard
 fun HomeScreen(navController: NavHostController) {
         val textState = remember { mutableStateOf<String>("") }
         val lexiconState = remember { mutableStateOf<CantoneseLexicon?>(null) }
+        val unihanDefinition = remember { mutableStateOf< UnihanDefinition?>(null) }
         val yingWaaEntries = remember { mutableStateOf<List<YingWaaFanWan>>(listOf()) }
         val choHokEntries = remember { mutableStateOf<List<ChoHokYuetYamCitYiu>>(listOf()) }
         val fanWanEntries = remember { mutableStateOf<List<FanWanCuetYiu>>(listOf()) }
         val gwongWanEntries = remember { mutableStateOf<List<GwongWanCharacter>>(listOf()) }
-        val helper: DatabaseHelper by lazy { DatabaseHelper(navController.context, DatabasePreparer.DATABASE_NAME) }
+        val helper: DatabaseHelper by lazy { DatabaseHelper(navController.context, DatabasePreparer.databaseName) }
         fun searchYingWan(text: String): List<YingWaaFanWan> {
                 if (text.isBlank()) return listOf()
                 val char = text.first()
@@ -80,6 +82,8 @@ fun HomeScreen(navController: NavHostController) {
                         SearchField(textState = textState) {
                                 val text = textState.value.trim()
                                 lexiconState.value = helper.search(text)
+                                val text4definition = lexiconState.value?.text ?: text
+                                unihanDefinition.value = helper.matchUnihanDefinition(text4definition)
                                 yingWaaEntries.value = searchYingWan(text)
                                 choHokEntries.value = searchChoHok(text)
                                 fanWanEntries.value = searchFanWan(text)
@@ -88,7 +92,7 @@ fun HomeScreen(navController: NavHostController) {
                 }
                 lexiconState.value?.let {
                         item {
-                                CantoneseLexiconView(it)
+                                CantoneseLexiconView(lexicon = it, unihanDefinition = unihanDefinition.value)
                         }
                 }
                 if (yingWaaEntries.value.isNotEmpty()) {

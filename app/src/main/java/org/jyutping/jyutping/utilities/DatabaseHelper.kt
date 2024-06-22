@@ -10,6 +10,7 @@ import org.jyutping.jyutping.search.ChoHokYuetYamCitYiu
 import org.jyutping.jyutping.search.FanWanCuetYiu
 import org.jyutping.jyutping.search.GwongWanCharacter
 import org.jyutping.jyutping.search.Pronunciation
+import org.jyutping.jyutping.search.UnihanDefinition
 import org.jyutping.jyutping.search.YingWaaFanWan
 import kotlin.math.max
 
@@ -113,19 +114,6 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
                 return Pair(null, 0)
         }
-        /* // Unused
-        private fun fetchWords(romanization: String): List<String> {
-                val words: MutableList<String> = mutableListOf()
-                val command = "SELECT word FROM jyutpingtable WHERE romanization = '$romanization';"
-                val cursor = this.readableDatabase.rawQuery(command, null)
-                while (cursor.moveToNext()) {
-                        val word = cursor.getString(0)
-                        words.add(word)
-                }
-                cursor.close()
-                return words
-        }
-        */
         private fun fetchRomanizations(word: String): List<String> {
                 val romanizations: MutableList<String> = mutableListOf()
                 val command = "SELECT romanization FROM jyutpingtable WHERE word = '$word';"
@@ -324,5 +312,20 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
                 cursor.close()
                 return entries
+        }
+
+        fun matchUnihanDefinition(text: String): UnihanDefinition? {
+                if (text.length != 1) return null
+                val character = text.first()
+                val code = character.code
+                val command = "SELECT definition FROM definitiontable WHERE code = $code LIMIT 1;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                if (cursor.moveToFirst()) {
+                        val definition = cursor.getString(0)
+                        cursor.close()
+                        return UnihanDefinition(character = character, definition = definition)
+                }
+                cursor.close()
+                return null
         }
 }
