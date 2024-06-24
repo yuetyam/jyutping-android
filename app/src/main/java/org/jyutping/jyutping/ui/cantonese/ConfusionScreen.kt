@@ -25,19 +25,36 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.beust.klaxon.Klaxon
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
+
+@Throws(IOException::class)
+private fun fetchConfusionJsonContent(navController: NavHostController): String? {
+        val inputStream = navController.context.assets.open("confusion.json")
+        val reader = BufferedReader(InputStreamReader(inputStream))
+        var lineString: String?
+        val builder = StringBuilder()
+        try {
+                while (reader.readLine().also { lineString = it } != null) {
+                        builder.append(lineString)
+                        builder.append("\n")
+                }
+        } catch (e: IOException) {
+                throw Error(e.message)
+        } finally {
+                reader.close()
+        }
+        if (builder.isEmpty()) return null
+        return builder.toString()
+}
 
 @Composable
 fun ConfusionScreen(navController: NavHostController) {
         val entries = remember { mutableStateOf<List<Confusion>>(listOf()) }
         LaunchedEffect(Unit) {
-                val inputStream = navController.context.assets.open("confusion.json")
-                val bufferReader = BufferedReader(InputStreamReader(inputStream))
-                val jsonString = bufferReader.readText()
-                val parsed = Klaxon().parseArray<Confusion>(jsonString)
-                parsed?.let {
-                        entries.value = it
-                }
+                val fetched = fetchConfusionJsonContent(navController)
+                val parsed = fetched?.let { Klaxon().parseArray<Confusion>(it) }
+                parsed?.let { entries.value = it }
         }
         LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -49,7 +66,7 @@ fun ConfusionScreen(navController: NavHostController) {
                         }
                 } else {
                         item {
-                                Text(text = "loading...")
+                                Text(text = "No data")
                         }
                 }
         }

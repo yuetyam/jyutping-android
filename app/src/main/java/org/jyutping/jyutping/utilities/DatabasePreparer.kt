@@ -42,11 +42,10 @@ object DatabasePreparer {
                 }
         }
         private fun doesDatabaseExists(context: Context): Boolean {
-                val dbPath = context.applicationInfo.dataDir + DATABASES_DIR + databaseName
-                val dbFile = File(dbPath)
-                return dbFile.exists()
-                // val dbFile = context.getDatabasePath(DATABASE_NAME)
-                // return dbFile.exists()
+                val dbFile = context.getDatabasePath(databaseName)
+                val path = context.applicationInfo.dataDir + DATABASES_DIR + databaseName
+                val file = File(path)
+                return dbFile.exists() && file.exists()
         }
 
         @Throws(IOException::class)
@@ -54,7 +53,6 @@ object DatabasePreparer {
                 var inStream: InputStream? = null
                 var outStream: OutputStream? = null
                 val destinationPath = context.applicationInfo.dataDir + DATABASES_DIR + databaseName
-                // val destinationPath = context.getDatabasePath(SOURCE_DATABASE_NAME).path.dropLast(SOURCE_DATABASE_NAME.length) + DATABASE_NAME
                 val destinationFile = File(destinationPath)
                 try {
                         inStream = context.assets.open(SOURCE_DATABASE_NAME)
