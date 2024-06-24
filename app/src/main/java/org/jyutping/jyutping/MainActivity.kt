@@ -65,27 +65,25 @@ class MainActivity : ComponentActivity() {
                         }
                 }
         }
-        private fun titleOf(route: String?): Int {
-                return when (route) {
-                        Screen.Home.route -> Screen.Home.title
-                        Screen.Introductions.route -> Screen.Introductions.title
-                        Screen.Jyutping.route -> Screen.Jyutping.title
-                        Screen.JyutpingInitials.route -> Screen.JyutpingInitials.title
-                        Screen.JyutpingFinals.route -> Screen.JyutpingFinals.title
-                        Screen.JyutpingTones.route -> Screen.JyutpingTones.title
-                        Screen.Cantonese.route -> Screen.Cantonese.title
-                        Screen.Expressions.route -> Screen.Expressions.title
-                        Screen.About.route -> Screen.About.title
-                        else -> Screen.Home.title
-                }
+
+        private fun titleOf(route: String?): Int = when (route) {
+                Screen.Home.route -> Screen.Home.title
+                Screen.Introductions.route -> Screen.Introductions.title
+                Screen.Jyutping.route -> Screen.Jyutping.title
+                Screen.JyutpingInitials.route -> Screen.JyutpingInitials.title
+                Screen.JyutpingFinals.route -> Screen.JyutpingFinals.title
+                Screen.JyutpingTones.route -> Screen.JyutpingTones.title
+                Screen.Cantonese.route -> Screen.Cantonese.title
+                Screen.Expressions.route -> Screen.Expressions.title
+                Screen.Confusion.route -> Screen.Confusion.title
+                Screen.About.route -> Screen.About.title
+                else -> Screen.Home.title
         }
-        private fun canNavigateUp(route: String?): Boolean {
-                return when (route) {
-                        Screen.Home.route -> false
-                        Screen.Jyutping.route -> false
-                        Screen.Cantonese.route -> false
-                        Screen.About.route -> false
-                        else -> true
-                }
+        private fun canNavigateUp(route: String?): Boolean = when (route) {
+                Screen.Home.route -> false
+                Screen.Jyutping.route -> false
+                Screen.Cantonese.route -> false
+                Screen.About.route -> false
+                else -> true
         }
 }

@@ -17,4 +17,5 @@ sealed class Screen(val route: String, val icon: ImageVector = Icons.Outlined.In
         data object JyutpingFinals: Screen(route = "finals", title = R.string.jyutping_screen_title_finals)
         data object JyutpingTones: Screen(route = "tones", title = R.string.jyutping_screen_title_tones)
         data object Expressions: Screen(route = "expressions", title = R.string.cantonese_screen_title_expressions)
+        data object Confusion: Screen(route = "confusion", title = R.string.cantonese_screen_title_confusion)
 }

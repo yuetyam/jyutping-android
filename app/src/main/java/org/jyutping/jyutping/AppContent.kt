@@ -42,5 +42,8 @@ fun AppContent(navController: NavHostController) {
                 composable(route = Screen.Expressions.route) {
                         ExpressionsScreen()
                 }
+                composable(route = Screen.Confusion.route) {
+                        ConfusionScreen(navController = navController)
+                }
         }
 }

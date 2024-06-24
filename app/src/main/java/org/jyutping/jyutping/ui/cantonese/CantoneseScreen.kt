@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.runtime.Composable
@@ -23,8 +24,15 @@ fun CantoneseScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
                 item {
-                        NavigationLabel(icon = Icons.Outlined.Verified, text = stringResource(id = R.string.cantonese_label_expressions)) {
-                                navController.navigate(route = Screen.Expressions.route)
+                        Column(
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                                NavigationLabel(icon = Icons.Outlined.Verified, text = stringResource(id = R.string.cantonese_label_expressions)) {
+                                        navController.navigate(route = Screen.Expressions.route)
+                                }
+                                NavigationLabel(icon = Icons.AutoMirrored.Outlined.List, text = stringResource(id = R.string.cantonese_label_confusion)) {
+                                        navController.navigate(route = Screen.Confusion.route)
+                                }
                         }
                 }
                 item {
