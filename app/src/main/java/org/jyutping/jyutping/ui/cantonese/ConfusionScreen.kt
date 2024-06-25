@@ -23,10 +23,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.beust.klaxon.Klaxon
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 @Throws(IOException::class)
 private fun fetchConfusionJsonContent(navController: NavHostController): String? {
@@ -50,10 +51,10 @@ private fun fetchConfusionJsonContent(navController: NavHostController): String?
 
 @Composable
 fun ConfusionScreen(navController: NavHostController) {
-        val entries = remember { mutableStateOf<List<Confusion>>(listOf()) }
+        val entries = remember { mutableStateOf<List<ConfusionElement>>(listOf()) }
         LaunchedEffect(Unit) {
                 val fetched = fetchConfusionJsonContent(navController)
-                val parsed = fetched?.let { Klaxon().parseArray<Confusion>(it) }
+                val parsed = fetched?.let { Json.decodeFromString<List<ConfusionElement>>(it) }
                 parsed?.let { entries.value = it }
         }
         LazyColumn(
@@ -62,7 +63,7 @@ fun ConfusionScreen(navController: NavHostController) {
         ) {
                 if (entries.value.isNotEmpty()) {
                         items(entries.value) {
-                                ConfusionView(confusion = it)
+                                ConfusionElementView(it)
                         }
                 } else {
                         item {
@@ -73,7 +74,7 @@ fun ConfusionScreen(navController: NavHostController) {
 }
 
 @Composable
-private fun ConfusionView(confusion: Confusion) {
+private fun ConfusionElementView(element: ConfusionElement) {
         Row(
                 modifier = Modifier
                         .clip(shape = RoundedCornerShape(size = 8.dp))
@@ -82,9 +83,9 @@ private fun ConfusionView(confusion: Confusion) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
-                Text(text = confusion.simplified)
+                Text(text = element.simplified)
                 Column {
-                        confusion.traditional.map {
+                        element.traditional.map {
                                 Row {
                                         Box {
                                                 Row(
@@ -111,10 +112,13 @@ private fun ConfusionView(confusion: Confusion) {
         }
 }
 
-private data class Confusion (
+@Serializable
+private data class ConfusionElement (
         val simplified: String,
         val traditional: List<ConfusionTraditional>
 )
+
+@Serializable
 private data class ConfusionTraditional (
         val character: String,
         val romanization: String,

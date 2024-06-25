@@ -10,11 +10,12 @@ import java.io.OutputStream
 import org.jyutping.jyutping.BuildConfig
 
 object DatabasePreparer {
-
         private const val SOURCE_DATABASE_NAME = "appdb.sqlite3"
         private val oldDatabaseNames: List<String> = listOf(
                 "tmpdb.sqlite3",
-                "tmpdb.sqlite3-journal"
+                "tmpdb.sqlite3-journal",
+                "appdb-v0.1.0-tmp.sqlite3",
+                "appdb-v0.1.0-tmp.sqlite3-journal",
         )
         val databaseName: String = run {
                 val version = BuildConfig.VERSION_NAME
@@ -24,23 +25,31 @@ object DatabasePreparer {
 
         fun prepare(context: Context) {
                 deleteOldDatabases(context)
-                if (!doesDatabaseExists(context)) {
+                val shouldCopyDatabase: Boolean = !(doesDatabaseExists(context))
+                if (shouldCopyDatabase) {
                         copyDatabase(context)
                 }
         }
+
+        @Throws(SecurityException::class)
         private fun deleteOldDatabases(context: Context) {
                 oldDatabaseNames.map {
-                        val path = context.applicationInfo.dataDir + DATABASES_DIR + it
-                        val file = File(path)
-                        if (file.exists()) {
-                                try {
-                                        file.delete()
-                                } catch (e: Exception) {
-                                        Log.e("DeleteDatabase", "Error deleting file: $path", e)
+                        try {
+                                val dbFile = context.getDatabasePath(it)
+                                if (dbFile.exists() && dbFile.isFile) {
+                                        dbFile.delete()
                                 }
+                                val path = context.applicationInfo.dataDir + DATABASES_DIR + it
+                                val file = File(path)
+                                if (file.exists() && file.isFile) {
+                                        file.delete()
+                                } else { }
+                        } catch (e: SecurityException) {
+                                Log.e("DeleteDatabase", "Error deleting file: $it", e)
                         }
                 }
         }
+
         private fun doesDatabaseExists(context: Context): Boolean {
                 val dbFile = context.getDatabasePath(databaseName)
                 val path = context.applicationInfo.dataDir + DATABASES_DIR + databaseName
