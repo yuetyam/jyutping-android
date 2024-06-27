@@ -117,7 +117,7 @@ fun HomeScreen(navController: NavHostController) {
                 }
                 item {
                         TextCard(
-                                heading = stringResource(id = R.string.home_heading_tones_input),
+                                heading = stringResource(id = R.string.home_heading_tone_input),
                                 content = stringResource(id = R.string.home_content_tones_input),
                                 subContent = stringResource(id = R.string.home_subcontent_tones_input_examples),
                                 shouldContentMonospaced = true

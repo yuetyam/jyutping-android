@@ -47,7 +47,7 @@ object DatabasePreparer {
                                         file.delete()
                                 } else { }
                         } catch (e: SecurityException) {
-                                Log.e("DeleteDatabase", "Error deleting file: $it", e)
+                                throw Error(e.message)
                         }
                 }
         }
