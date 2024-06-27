@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
 fun CantoneseLexiconView(lexicon: CantoneseLexicon, unihanDefinition: UnihanDefinition?) {
@@ -41,7 +42,7 @@ fun CantoneseLexiconView(lexicon: CantoneseLexicon, unihanDefinition: UnihanDefi
                                 HorizontalDivider()
                                 Row {
                                         Text(text = "英文")
-                                        Text(text = ": ")
+                                        SeparatorMark()
                                         Text(text = it.definition)
                                 }
                         }

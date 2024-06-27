@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.linguistics.OldCantonese
+import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
 fun ChoHokView(entries: List<ChoHokYuetYamCitYiu>) {
@@ -43,7 +44,7 @@ fun ChoHokView(entries: List<ChoHokYuetYamCitYiu>) {
 private fun ChoHokWordLabel(word: String) {
         Row {
                 Text(text = "文字")
-                Text(text = ": ")
+                SeparatorMark()
                 Text(text = word)
                 Text(text = "《初學粵音切要》 湛約翰 1855 香港", fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary)
         }
@@ -59,7 +60,7 @@ private fun ChoHokPronunciationView(entry: ChoHokYuetYamCitYiu) {
                 ) {
                         Row {
                                 Text(text = "原文")
-                                Text(text = ": ")
+                                SeparatorMark()
                                 Text(text = entry.pronunciation)
                         }
                         Text(text = entry.tone)
@@ -70,7 +71,7 @@ private fun ChoHokPronunciationView(entry: ChoHokYuetYamCitYiu) {
                 ) {
                         Row {
                                 Text(text = "轉寫")
-                                Text(text = ": ")
+                                SeparatorMark()
                                 Text(text = entry.romanization)
                         }
                         Text(text = ipaText, color = MaterialTheme.colorScheme.secondary)
@@ -78,7 +79,7 @@ private fun ChoHokPronunciationView(entry: ChoHokYuetYamCitYiu) {
                 homophoneText?.let {
                         Row {
                                 Text(text = "同音")
-                                Text(text = ": ")
+                                SeparatorMark()
                                 Text(text = it)
                         }
                 }

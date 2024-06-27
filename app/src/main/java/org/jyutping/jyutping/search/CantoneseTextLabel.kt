@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
 fun CantoneseTextLabel(text: String) {
@@ -20,7 +21,7 @@ fun CantoneseTextLabel(text: String) {
         ) {
                 Row {
                         Text(text = "文字")
-                        Text(text = ": ")
+                        SeparatorMark()
                         Text(text = text)
                 }
                 unicode?.let {

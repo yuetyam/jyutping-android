@@ -3,6 +3,8 @@ package org.jyutping.jyutping.ui.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.text.selection.DisableSelection
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.Composable
@@ -74,89 +76,93 @@ fun HomeScreen(navController: NavHostController) {
                 val traditionalChar = text.convertedS2T().firstOrNull() ?: char
                 return helper.matchGwongWan(traditionalChar)
         }
-        LazyColumn(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-                item {
-                        SearchField(textState = textState) {
-                                val text = textState.value.trim()
-                                lexiconState.value = helper.search(text)
-                                val text4definition = lexiconState.value?.text ?: text
-                                unihanDefinition.value = helper.matchUnihanDefinition(text4definition)
-                                yingWaaEntries.value = searchYingWan(text)
-                                choHokEntries.value = searchChoHok(text)
-                                fanWanEntries.value = searchFanWan(text)
-                                gwongWanEntries.value = searchGwongWan(text)
-                        }
-                }
-                lexiconState.value?.let {
+        SelectionContainer {
+                LazyColumn(
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                         item {
-                                CantoneseLexiconView(lexicon = it, unihanDefinition = unihanDefinition.value)
+                                SearchField(textState = textState) {
+                                        val text = textState.value.trim()
+                                        lexiconState.value = helper.search(text)
+                                        val text4definition = lexiconState.value?.text ?: text
+                                        unihanDefinition.value = helper.matchUnihanDefinition(text4definition)
+                                        yingWaaEntries.value = searchYingWan(text)
+                                        choHokEntries.value = searchChoHok(text)
+                                        fanWanEntries.value = searchFanWan(text)
+                                        gwongWanEntries.value = searchGwongWan(text)
+                                }
                         }
-                }
-                if (yingWaaEntries.value.isNotEmpty()) {
+                        lexiconState.value?.let {
+                                item {
+                                        CantoneseLexiconView(lexicon = it, unihanDefinition = unihanDefinition.value)
+                                }
+                        }
+                        if (yingWaaEntries.value.isNotEmpty()) {
+                                item {
+                                        YingWaaView(yingWaaEntries.value)
+                                }
+                        }
+                        if (choHokEntries.value.isNotEmpty()) {
+                                item {
+                                        ChoHokView(choHokEntries.value)
+                                }
+                        }
+                        if (fanWanEntries.value.isNotEmpty()) {
+                                item {
+                                        FanWanView(fanWanEntries.value)
+                                }
+                        }
+                        if (gwongWanEntries.value.isNotEmpty()) {
+                                item {
+                                        GwongWanView(gwongWanEntries.value)
+                                }
+                        }
                         item {
-                                YingWaaView(yingWaaEntries.value)
+                                TextCard(
+                                        heading = stringResource(id = R.string.home_heading_tone_input),
+                                        content = stringResource(id = R.string.home_content_tones_input),
+                                        subContent = stringResource(id = R.string.home_subcontent_tones_input_examples),
+                                        shouldContentMonospaced = true
+                                )
                         }
-                }
-                if (choHokEntries.value.isNotEmpty()) {
                         item {
-                                ChoHokView(choHokEntries.value)
+                                TextCard(
+                                        heading = stringResource(id = R.string.home_heading_pinyin_reverse_lookup),
+                                        content = stringResource(id = R.string.home_content_pinyin_reverse_lookup)
+                                )
                         }
-                }
-                if (fanWanEntries.value.isNotEmpty()) {
                         item {
-                                FanWanView(fanWanEntries.value)
+                                TextCard(
+                                        heading = stringResource(id = R.string.home_heading_cangjie_reverse_lookup),
+                                        content = stringResource(id = R.string.home_content_cangjie_reverse_lookup)
+                                )
                         }
-                }
-                if (gwongWanEntries.value.isNotEmpty()) {
                         item {
-                                GwongWanView(gwongWanEntries.value)
+                                TextCard(
+                                        heading = stringResource(id = R.string.home_heading_stroke_reverse_lookup),
+                                        content = stringResource(id = R.string.home_content_stroke_reverse_lookup)
+                                )
                         }
-                }
-                item {
-                        TextCard(
-                                heading = stringResource(id = R.string.home_heading_tone_input),
-                                content = stringResource(id = R.string.home_content_tones_input),
-                                subContent = stringResource(id = R.string.home_subcontent_tones_input_examples),
-                                shouldContentMonospaced = true
-                        )
-                }
-                item {
-                        TextCard(
-                                heading = stringResource(id = R.string.home_heading_pinyin_reverse_lookup),
-                                content = stringResource(id = R.string.home_content_pinyin_reverse_lookup)
-                        )
-                }
-                item {
-                        TextCard(
-                                heading = stringResource(id = R.string.home_heading_cangjie_reverse_lookup),
-                                content = stringResource(id = R.string.home_content_cangjie_reverse_lookup)
-                        )
-                }
-                item {
-                        TextCard(
-                                heading = stringResource(id = R.string.home_heading_stroke_reverse_lookup),
-                                content = stringResource(id = R.string.home_content_stroke_reverse_lookup)
-                        )
-                }
-                item {
-                        TextCard(
-                                heading = stringResource(id = R.string.home_heading_stroke_code),
-                                content = "w = 橫(waang)\ns = 豎(syu)\na = 撇\nd = 點(dim)\nz = 折(zit)",
-                                shouldContentMonospaced = true
-                        )
-                }
-                item {
-                        TextCard(
-                                heading = stringResource(id = R.string.home_heading_compose_reverse_lookup),
-                                content = stringResource(id = R.string.home_content_compose_reverse_lookup)
-                        )
-                }
-                item {
-                        NavigationLabel(icon = Icons.Outlined.Info, text = stringResource(id = R.string.home_label_more_introductions)) {
-                                navController.navigate(route = Screen.Introductions.route)
+                        item {
+                                TextCard(
+                                        heading = stringResource(id = R.string.home_heading_stroke_code),
+                                        content = "w = 橫(waang)\ns = 豎(syu)\na = 撇\nd = 點(dim)\nz = 折(zit)",
+                                        shouldContentMonospaced = true
+                                )
+                        }
+                        item {
+                                TextCard(
+                                        heading = stringResource(id = R.string.home_heading_compose_reverse_lookup),
+                                        content = stringResource(id = R.string.home_content_compose_reverse_lookup)
+                                )
+                        }
+                        item {
+                                DisableSelection {
+                                        NavigationLabel(icon = Icons.Outlined.Info, text = stringResource(id = R.string.home_label_more_introductions)) {
+                                                navController.navigate(route = Screen.Introductions.route)
+                                        }
+                                }
                         }
                 }
         }

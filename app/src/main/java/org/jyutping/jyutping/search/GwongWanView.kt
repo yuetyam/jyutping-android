@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
 fun GwongWanView(entries: List<GwongWanCharacter>) {
@@ -42,7 +43,7 @@ fun GwongWanView(entries: List<GwongWanCharacter>) {
 private fun GwongWanWordLabel(word: String) {
         Row {
                 Text(text = "文字")
-                Text(text = ": ")
+                SeparatorMark()
                 Text(text = word)
                 Text(text = "《大宋重修廣韻》 陳彭年等 北宋", fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary)
         }
@@ -53,12 +54,12 @@ private fun GwongWanPronunciationView(entry: GwongWanCharacter) {
         Column {
                 Row {
                         Text(text = "讀音")
-                        Text(text = ": ")
+                        SeparatorMark()
                         Text(text = entry.pronunciation)
                 }
                 Row {
                         Text(text = "釋義")
-                        Text(text = ": ")
+                        SeparatorMark()
                         Text(text = entry.interpretation)
                 }
         }

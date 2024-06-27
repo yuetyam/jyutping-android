@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.linguistics.Jyutping2IPA
+import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
 fun PronunciationLabel(pronunciation: Pronunciation) {
@@ -28,7 +29,7 @@ fun PronunciationLabel(pronunciation: Pronunciation) {
                 ) {
                         Row {
                                 Text(text = "讀音")
-                                Text(text = ": ")
+                                SeparatorMark()
                                 Text(text = romanization)
                         }
                         ipaText?.let {
@@ -38,14 +39,14 @@ fun PronunciationLabel(pronunciation: Pronunciation) {
                 homophoneText?.let {
                         Row {
                                 Text(text = "同音")
-                                Text(text = ": ")
+                                SeparatorMark()
                                 Text(text = it)
                         }
                 }
                 collocationText?.let {
                         Row {
                                 Text(text = "詞例")
-                                Text(text = ": ")
+                                SeparatorMark()
                                 Text(text = it)
                         }
                 }

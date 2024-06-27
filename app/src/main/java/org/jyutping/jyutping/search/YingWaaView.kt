@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.linguistics.OldCantonese
+import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
 fun YingWaaView(entries: List<YingWaaFanWan>) {
@@ -44,7 +45,7 @@ fun YingWaaView(entries: List<YingWaaFanWan>) {
 private fun YingWaaWordLabel(word: String) {
         Row {
                 Text(text = "文字")
-                Text(text = ": ")
+                SeparatorMark()
                 Text(text = word)
                 Text(text = "《英華分韻撮要》衛三畏 1856 廣州", fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary)
         }
@@ -61,7 +62,7 @@ private fun YingWaaPronunciationView(entry: YingWaaFanWan) {
                 ) {
                         Row {
                                 Text(text = "原文")
-                                Text(text = ": ")
+                                SeparatorMark()
                                 Text(text = entry.pronunciation)
                         }
                         pronunciationMark?.let {
@@ -76,7 +77,7 @@ private fun YingWaaPronunciationView(entry: YingWaaFanWan) {
                 ) {
                         Row {
                                 Text(text = "轉寫")
-                                Text(text = ": ")
+                                SeparatorMark()
                                 Text(text = entry.romanization)
                         }
                         Text(text = ipaText, color = MaterialTheme.colorScheme.secondary)
@@ -84,7 +85,7 @@ private fun YingWaaPronunciationView(entry: YingWaaFanWan) {
                 homophoneText?.let {
                         Row {
                                 Text(text = "同音")
-                                Text(text = ": ")
+                                SeparatorMark()
                                 Text(text = it)
                         }
                 }

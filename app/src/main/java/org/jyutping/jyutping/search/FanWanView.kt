@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.linguistics.OldCantonese
+import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
 fun FanWanView(entries: List<FanWanCuetYiu>) {
@@ -43,7 +44,7 @@ fun FanWanView(entries: List<FanWanCuetYiu>) {
 private fun FanWanWordLabel(word: String) {
         Row {
                 Text(text = "文字")
-                Text(text = ": ")
+                SeparatorMark()
                 Text(text = word)
                 Text(text = "《分韻撮要》 佚名 清初 廣州府", fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary)
         }
@@ -56,7 +57,7 @@ private fun FanWanPronunciationView(entry: FanWanCuetYiu) {
         Column {
                 Row {
                         Text(text = "讀音")
-                        Text(text = ": ")
+                        SeparatorMark()
                         Text(text = entry.pronunciation)
                 }
                 Row(
@@ -64,7 +65,7 @@ private fun FanWanPronunciationView(entry: FanWanCuetYiu) {
                 ) {
                         Row {
                                 Text(text = "轉寫")
-                                Text(text = ": ")
+                                SeparatorMark()
                                 Text(text = entry.romanization)
                         }
                         Text(text = ipaText, color = MaterialTheme.colorScheme.secondary)
@@ -72,13 +73,13 @@ private fun FanWanPronunciationView(entry: FanWanCuetYiu) {
                 homophoneText?.let {
                         Row {
                                 Text(text = "同音")
-                                Text(text = ": ")
+                                SeparatorMark()
                                 Text(text = it)
                         }
                 }
                 Row {
                         Text(text = "釋義")
-                        Text(text = ": ")
+                        SeparatorMark()
                         Text(text = entry.interpretation)
                 }
         }
