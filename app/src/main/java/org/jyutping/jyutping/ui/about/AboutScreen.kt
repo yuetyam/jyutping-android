@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.AlternateEmail
 import androidx.compose.material.icons.outlined.CenterFocusStrong
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Info
@@ -62,6 +63,17 @@ fun AboutScreen() {
                                 OpenAppLabel(icon = Icons.Outlined.CenterFocusStrong, text = stringResource(id = R.string.about_label_instagram), uri = AppMaster.instagramWebAddress)
                         }
                 }
+                item {
+                        Column(
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                                WebLinkLabel(icon = Icons.Outlined.CheckCircle, text = stringResource(id = R.string.about_label_google_forms), uri = AppMaster.GoogleFormsAddress)
+                                WebLinkLabel(icon = Icons.Outlined.CheckCircle, text = stringResource(id = R.string.about_label_tencent_survey), uri = AppMaster.TencentSurveyAddress)
+
+                                // TODO: Implement mailto
+                                // OpenAppLabel(icon = Icons.Outlined.Mail, text = stringResource(id = R.string.about_label_email), uri = AppMaster.EmailAddress)
+                        }
+                }
         }
 }
 
@@ -79,7 +91,7 @@ private fun VersionLabel() {
                 Icon(imageVector = Icons.Outlined.Info, contentDescription = null)
                 Text(text = stringResource(id = R.string.about_label_version))
                 Spacer(modifier = Modifier.weight(1.0f))
-                SelectionContainer() {
+                SelectionContainer {
                         Text(text = version)
                 }
         }

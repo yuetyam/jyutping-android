@@ -39,4 +39,7 @@
     <string name="about_label_qq">Join QQ Group</string>
     <string name="about_label_twitter">Follow us on X (Twitter)</string>
     <string name="about_label_instagram">Follow us on Instagram</string>
+    <string name="about_label_google_forms">Google Forms Feedback</string>
+    <string name="about_label_tencent_survey">Tencent Survey Feedback</string>
+    <string name="about_label_email">Email Feedback</string>
 </resources>

@@ -39,4 +39,7 @@
     <string name="about_label_qq">加入 QQ 交流羣</string>
     <string name="about_label_twitter">關注 X (Twitter)</string>
     <string name="about_label_instagram">關注 Instagram</string>
+    <string name="about_label_google_forms">Google Forms 反饋</string>
+    <string name="about_label_tencent_survey">騰訊問卷反饋</string>
+    <string name="about_label_email">電郵反饋</string>
 </resources>
