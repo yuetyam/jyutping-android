@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.CheckCircle
@@ -152,17 +153,19 @@ fun ExpressionsScreen() {
 
 @Composable
 private fun DifferentView(heading: String, lines: List<String>) {
-        Column(
-                modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxWidth()
-                        .clip(shape = RoundedCornerShape(size = 8.dp))
-                        .background(color = MaterialTheme.colorScheme.background)
-                        .padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-                Text(text = heading, fontWeight = FontWeight.SemiBold)
-                lines.onEach { Text(text = it) }
+        SelectionContainer {
+                Column(
+                        modifier = Modifier
+                                .padding(vertical = 8.dp)
+                                .fillMaxWidth()
+                                .clip(shape = RoundedCornerShape(size = 8.dp))
+                                .background(color = MaterialTheme.colorScheme.background)
+                                .padding(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                        Text(text = heading, fontWeight = FontWeight.SemiBold)
+                        lines.onEach { Text(text = it) }
+                }
         }
 }
 
@@ -185,7 +188,9 @@ private fun Expression(heading: String, labels: List<LabelEntry>) {
                         .padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-                Text(text = heading, fontWeight = FontWeight.SemiBold)
+                SelectionContainer {
+                        Text(text = heading, fontWeight = FontWeight.SemiBold)
+                }
                 labels.onEach {
                         IconLabel(entry = it)
                 }
@@ -205,6 +210,8 @@ private fun IconLabel(entry: LabelEntry) {
                 verticalAlignment = Alignment.CenterVertically
         ) {
                 Icon(imageVector = image, contentDescription = null, modifier = Modifier.size(16.dp))
-                Text(text = entry.text)
+                SelectionContainer {
+                        Text(text = entry.text)
+                }
         }
 }

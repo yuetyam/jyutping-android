@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -57,17 +58,19 @@ fun ConfusionScreen(navController: NavHostController) {
                 val parsed = fetched?.let { Json.decodeFromString<List<ConfusionElement>>(it) }
                 parsed?.let { entries.value = it }
         }
-        LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-        ) {
-                if (entries.value.isNotEmpty()) {
-                        items(entries.value) {
-                                ConfusionElementView(it)
-                        }
-                } else {
-                        item {
-                                Text(text = "No data")
+        SelectionContainer {
+                LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                ) {
+                        if (entries.value.isNotEmpty()) {
+                                items(entries.value) {
+                                        ConfusionElementView(it)
+                                }
+                        } else {
+                                item {
+                                        Text(text = "No data")
+                                }
                         }
                 }
         }
