@@ -57,6 +57,7 @@ val composeVersion = "1.6.8"
 dependencies {
         implementation("androidx.core:core-ktx:1.13.1")
         implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.2")
+        implementation("androidx.lifecycle:lifecycle-service:2.8.2")
         implementation("androidx.activity:activity-compose:1.9.0")
         implementation("androidx.compose.ui:ui:$composeVersion")
         implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
@@ -64,6 +65,8 @@ dependencies {
         implementation("androidx.compose.material3:material3:1.2.1")
         implementation("androidx.navigation:navigation-compose:2.7.7")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
+        implementation("com.louiscad.splitties:splitties-systemservices:3.0.0")
+        implementation("com.louiscad.splitties:splitties-views:3.0.0")
         testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
         androidTestImplementation("androidx.test.ext:junit:1.2.1")
         androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
