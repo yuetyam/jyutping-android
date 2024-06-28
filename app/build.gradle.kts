@@ -12,8 +12,8 @@ android {
                 applicationId = "org.jyutping.jyutping"
                 minSdk = 33
                 targetSdk = 34
-                versionCode = 3
-                versionName = "0.3.0"
+                versionCode = 4
+                versionName = "0.4.0"
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 vectorDrawables {
                         useSupportLibrary = true
@@ -65,8 +65,8 @@ dependencies {
         implementation("androidx.navigation:navigation-compose:2.7.7")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
         testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.2")
-        androidTestImplementation("androidx.test.ext:junit:1.2.0")
-        androidTestImplementation("androidx.test.espresso:espresso-core:3.6.0")
+        androidTestImplementation("androidx.test.ext:junit:1.2.1")
+        androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
         androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
         debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
         debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")

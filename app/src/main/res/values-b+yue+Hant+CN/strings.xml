@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">粵拼</string>
+    <string name="screen_title_home">首䈎</string>
+    <string name="screen_title_jyutping">粵拼</string>
+    <string name="screen_title_cantonese">粵語</string>
+    <string name="screen_title_about">關於</string>
+    <string name="search_field_placeholder">查字音</string>
+    <string name="home_heading_tone_input">聲調輸入</string>
+    <string name="home_content_tones_input">v = 1 陰平， vv = 4 陽平\nx = 2 陰上， xx = 5 陽上\nq = 3 陰去， qq = 6 陽去</string>
+    <string name="home_subcontent_tones_input_examples">例: sinq = sin3(線), sinqq = sin6(羨)</string>
+    <string name="home_heading_pinyin_reverse_lookup">用普通話拼音反查粵拼</string>
+    <string name="home_heading_cangjie_reverse_lookup">用倉頡／速成反查粵拼</string>
+    <string name="home_heading_stroke_reverse_lookup">用筆畫輸入反查粵拼</string>
+    <string name="home_heading_stroke_code">筆畫輸入</string>
+    <string name="home_heading_compose_reverse_lookup">用兩分反查粵拼</string>
+    <string name="home_content_pinyin_reverse_lookup">以 r 開始，再輸入普通話拼音即可。例如輸入 rcha 就會出「查」等。候選詞會帶顯示對應嘅粵拼。</string>
+    <string name="home_content_cangjie_reverse_lookup">以 v 開始，再輸入倉頡或速成碼即可。例如輸入 vdam 就會出「查」等。候選詞會帶顯示對應嘅粵拼。</string>
+    <string name="home_content_stroke_reverse_lookup">以 x 開始，再輸入筆畫碼即可。例如輸入 xwsad 就會出「木」等。候選詞會帶顯示對應嘅粵拼。</string>
+    <string name="home_content_compose_reverse_lookup">兩分即係將一個字分成兩部份。例如「查」字可以分成「木、旦」。以 q 開始，再輸入兩個字嘅粵拼即可反查。例如輸入 qmukdaan 就會出「查」等。候選詞會帶顯示對應嘅粵拼。</string>
+    <string name="home_label_more_introductions">更多介紹</string>
+    <string name="screen_title_introductions">更多介紹</string>
+    <string name="jyutping_label_initials">粵拼聲母表</string>
+    <string name="jyutping_label_finals">粵拼韻母表</string>
+    <string name="jyutping_label_tones">粵拼聲調表</string>
+    <string name="jyutping_screen_title_initials">粵拼聲母表</string>
+    <string name="jyutping_screen_title_finals">粵拼韻母表</string>
+    <string name="jyutping_screen_title_tones">粵拼聲調表</string>
+    <string name="cantonese_label_expressions">粵語用字參攷</string>
+    <string name="cantonese_screen_title_expressions">粵語用字參攷</string>
+    <string name="cantonese_label_confusion">簡化字常見混亂</string>
+    <string name="cantonese_screen_title_confusion">簡化字常見混亂</string>
+    <string name="about_label_version">版本</string>
+    <string name="about_label_website">網棧</string>
+    <string name="about_label_source_code">源碼</string>
+    <string name="about_label_privacy_policy">私隱政策</string>
+    <string name="about_label_faq">常問問題（FAQ）</string>
+    <string name="about_label_telegram">加入 Telegram 交流羣</string>
+    <string name="about_label_qq">加入 QQ 交流羣</string>
+    <string name="about_label_twitter">關注 X (Twitter)</string>
+    <string name="about_label_instagram">關注 Instagram</string>
+    <string name="about_label_google_forms">Google Forms 反饋</string>
+    <string name="about_label_tencent_survey">騰訊問卷反饋</string>
+    <string name="about_label_email">電郵反饋</string>
+</resources>
