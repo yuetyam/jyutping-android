@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.AbstractComposeView
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.AlphabeticKeyboard
@@ -14,14 +16,21 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
 
         @Composable
         override fun Content() {
-                val keyHeight = 58.dp // TODO: Responsive keyHeight
-                val ctx = context as JyutpingInputMethodService
-                val keyboardForm = remember { ctx.keyboardForm }
+                val keyboardForm = remember { (context as JyutpingInputMethodService).keyboardForm }
                 when (keyboardForm.value) {
-                        KeyboardForm.Alphabetic -> AlphabeticKeyboard(keyHeight = keyHeight)
-                        KeyboardForm.Numeric -> CantoneseNumericKeyboard(keyHeight = keyHeight)
-                        KeyboardForm.Symbolic -> CantoneseSymbolicKeyboard(keyHeight = keyHeight)
-                        else -> AlphabeticKeyboard(keyHeight = keyHeight)
+                        KeyboardForm.Alphabetic -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight())
+                        KeyboardForm.Numeric -> CantoneseNumericKeyboard(keyHeight = responsiveKeyHeight())
+                        KeyboardForm.Symbolic -> CantoneseSymbolicKeyboard(keyHeight = responsiveKeyHeight())
+                        else -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight())
                 }
+        }
+
+        @Composable
+        private fun responsiveKeyHeight(): Dp {
+                val screenWidth = LocalConfiguration.current.screenWidthDp
+                val screenHeight = LocalConfiguration.current.screenHeightDp
+                if (screenWidth > screenHeight) return 40.dp
+                val value = 50 + ((screenWidth - 300) / 20)
+                return value.dp
         }
 }
