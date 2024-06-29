@@ -9,27 +9,31 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowUpward
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 
 @Composable
-fun LetterKey(letter: String, modifier: Modifier) {
+fun ShiftKey(modifier: Modifier) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed = interactionSource.collectIsPressedAsState()
         val context = LocalContext.current as JyutpingInputMethodService
         val lightEmphatic = Color(0xFFACB1B9)
         Box(
                 modifier = modifier
-                        .clickable(interactionSource = interactionSource, indication = null) { context.process(letter) }
+                        .clickable(interactionSource = interactionSource, indication = null) {
+                                // TODO: Shift
+                        }
                         .fillMaxWidth()
                         .fillMaxHeight(),
                 contentAlignment = Alignment.Center
@@ -38,14 +42,15 @@ fun LetterKey(letter: String, modifier: Modifier) {
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(if (isPressed.value) lightEmphatic else Color.White)
+                                .background(if (isPressed.value) Color.White else lightEmphatic)
                                 .fillMaxWidth()
                                 .fillMaxHeight(),
                         contentAlignment = Alignment.Center
                 ) {
-                        Text(
-                                text = letter,
-                                fontSize = 22.sp
+                        Icon(
+                                imageVector = Icons.Outlined.ArrowUpward,
+                                contentDescription = null,
+                                modifier = Modifier.alpha(0f)
                         )
                 }
         }

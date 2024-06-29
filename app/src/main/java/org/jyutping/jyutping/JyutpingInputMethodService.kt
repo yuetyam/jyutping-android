@@ -1,6 +1,7 @@
 package org.jyutping.jyutping
 
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.Lifecycle
@@ -47,19 +48,27 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         override val savedStateRegistry: SavedStateRegistry get() = savedStateRegistryController.savedStateRegistry
 
-        var candidates: MutableState<List<Candidate>> = mutableStateOf(listOf())
+        val candidates: MutableState<List<Candidate>> = mutableStateOf(listOf())
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.databaseName) }
         private var bufferText: String = ""
                 set(value) {
                         field = value
                         if (value.isEmpty()) {
                                 candidates.value = listOf()
+                                currentInputConnection.setComposingText(value, value.length)
                                 currentInputConnection.finishComposingText()
+                                if (isBuffering.value) {
+                                        isBuffering.value = false
+                                }
                         } else {
                                 currentInputConnection.setComposingText(value, value.length)
                                 candidates.value = db.shortcut(value)
+                                if (!isBuffering.value) {
+                                        isBuffering.value = true
+                                }
                         }
                 }
+        val isBuffering: MutableState<Boolean> = mutableStateOf(false)
         fun process(text: String) {
                 bufferText += text
         }
@@ -87,6 +96,21 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         currentInputConnection.commitText(String.space, String.space.length)
                 } else {
                         select(candidates.value.first())
+                }
+        }
+        fun dismissKeyboard() {
+                requestHideSelf(InputMethodManager.HIDE_NOT_ALWAYS)
+        }
+        fun leftKey() {
+                if (!isBuffering.value) {
+                        val text = "，"
+                        currentInputConnection.commitText(text, text.length)
+                }
+        }
+        fun rightKey() {
+                if (!isBuffering.value) {
+                        val text = "。"
+                        currentInputConnection.commitText(text, text.length)
                 }
         }
 }

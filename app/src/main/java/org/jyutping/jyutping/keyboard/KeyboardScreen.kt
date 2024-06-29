@@ -7,18 +7,27 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
+import org.jyutping.jyutping.JyutpingInputMethodService
 
 @Composable
 fun KeyboardScreen(keyHeight: Dp) {
+        val context = LocalContext.current as JyutpingInputMethodService
+        val isBuffering = remember { context.isBuffering }
         Column(
                 modifier = Modifier
                         .background(Color(0xFFD6D8DD))
                         .fillMaxWidth()
         ) {
-                ToolBar()
+                if (isBuffering.value) {
+                        CandidateScrollBar()
+                } else {
+                        ToolBar()
+                }
                 Row(
                         modifier = Modifier
                                 .fillMaxWidth()
@@ -57,7 +66,8 @@ fun KeyboardScreen(keyHeight: Dp) {
                                 .fillMaxWidth()
                                 .height(keyHeight)
                 ) {
-                        LetterKey(letter = "⇧", modifier = Modifier.weight(1.5f))
+                        ShiftKey(modifier = Modifier.weight(1.3f))
+                        Spacer(modifier = Modifier.weight(0.2f))
                         LetterKey(letter = "z", modifier = Modifier.weight(1f))
                         LetterKey(letter = "x", modifier = Modifier.weight(1f))
                         LetterKey(letter = "c", modifier = Modifier.weight(1f))
@@ -65,18 +75,19 @@ fun KeyboardScreen(keyHeight: Dp) {
                         LetterKey(letter = "b", modifier = Modifier.weight(1f))
                         LetterKey(letter = "n", modifier = Modifier.weight(1f))
                         LetterKey(letter = "m", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "⌫", modifier = Modifier.weight(1.5f))
+                        Spacer(modifier = Modifier.weight(0.2f))
+                        BackspaceKey(modifier = Modifier.weight(1.3f))
                 }
                 Row(
                         modifier = Modifier
                                 .fillMaxWidth()
                                 .height(keyHeight)
                 ) {
-                        LetterKey(letter = "123", modifier = Modifier.weight(2f))
-                        LetterKey(letter = ",", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "space", modifier = Modifier.weight(4f))
-                        LetterKey(letter = ".", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "return", modifier = Modifier.weight(2f))
+                        TransformKey(modifier = Modifier.weight(2f))
+                        LeftKey(modifier = Modifier.weight(1f))
+                        SpaceKey(modifier = Modifier.weight(4f))
+                        RightKey(modifier = Modifier.weight(1f))
+                        ReturnKey(modifier = Modifier.weight(2f))
                 }
         }
 }
