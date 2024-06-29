@@ -31,14 +31,14 @@ import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 
 @Composable
-fun ToolBar() {
+fun ToolBar(modifier: Modifier) {
         val itemWidth = 50.dp
         val interactionSource = remember { MutableInteractionSource() }
         val context = LocalContext.current as JyutpingInputMethodService
         Row(
-                modifier = Modifier
-                        .height(60.dp)
-                        .fillMaxWidth(),
+                modifier = modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
                 horizontalArrangement = Arrangement.spacedBy(0.dp),
         ) {
                 Box (

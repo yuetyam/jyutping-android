@@ -15,6 +15,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import org.jyutping.jyutping.extensions.space
 import org.jyutping.jyutping.keyboard.Candidate
+import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
 
@@ -48,6 +49,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         override val savedStateRegistry: SavedStateRegistry get() = savedStateRegistryController.savedStateRegistry
 
+        val keyboardForm: MutableState<KeyboardForm> = mutableStateOf(KeyboardForm.Alphabetic)
+        fun transformTo(destination: KeyboardForm) {
+                keyboardForm.value = destination
+        }
+
         val candidates: MutableState<List<Candidate>> = mutableStateOf(listOf())
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.databaseName) }
         private var bufferText: String = ""
@@ -71,6 +77,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         val isBuffering: MutableState<Boolean> = mutableStateOf(false)
         fun process(text: String) {
                 bufferText += text
+        }
+        fun input(text: String) {
+                currentInputConnection.commitText(text, text.length)
         }
         fun select(candidate: Candidate) {
                 currentInputConnection.commitText(candidate.text, candidate.text.length)

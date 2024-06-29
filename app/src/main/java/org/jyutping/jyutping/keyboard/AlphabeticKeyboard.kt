@@ -1,6 +1,7 @@
 package org.jyutping.jyutping.keyboard
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,25 +9,32 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 
 @Composable
-fun KeyboardScreen(keyHeight: Dp) {
+fun AlphabeticKeyboard(keyHeight: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isBuffering = remember { context.isBuffering }
         Column(
                 modifier = Modifier
-                        .background(Color(0xFFD6D8DD))
                         .fillMaxWidth()
+                        .background(Color(0xFFD6D8DD))
         ) {
-                if (isBuffering.value) {
-                        CandidateScrollBar()
-                } else {
-                        ToolBar()
+                Box(
+                        modifier = Modifier
+                                .height(60.dp)
+                                .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                ) {
+                        ToolBar(modifier = Modifier.alpha(if (isBuffering.value) 0f else 1f))
+                        CandidateScrollBar(modifier = Modifier.alpha(if (isBuffering.value) 1f else 0f))
                 }
                 Row(
                         modifier = Modifier
@@ -83,7 +91,7 @@ fun KeyboardScreen(keyHeight: Dp) {
                                 .fillMaxWidth()
                                 .height(keyHeight)
                 ) {
-                        TransformKey(modifier = Modifier.weight(2f))
+                        TransformKey(destination = KeyboardForm.Numeric, modifier = Modifier.weight(2f))
                         LeftKey(modifier = Modifier.weight(1f))
                         SpaceKey(modifier = Modifier.weight(4f))
                         RightKey(modifier = Modifier.weight(1f))
