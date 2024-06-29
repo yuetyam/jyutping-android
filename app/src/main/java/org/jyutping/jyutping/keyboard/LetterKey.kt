@@ -20,22 +20,22 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.extensions.space
-import org.jyutping.jyutping.InputMethodService
+import org.jyutping.jyutping.JyutpingInputMethodService
 
 @Composable
 fun LetterKey(letter: String, modifier: Modifier) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed = interactionSource.collectIsPressedAsState()
-        val context = LocalContext.current as InputMethodService
+        val context = LocalContext.current as JyutpingInputMethodService
         val lightEmphatic = Color(0xFFACB1B9)
         Box(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
                                 when (letter) {
-                                        "⌫" -> context.currentInputConnection.deleteSurroundingText(1, 0)
-                                        "return" -> context.sendDefaultEditorAction(true)
-                                        "space" -> context.currentInputConnection.commitText(String.space, String.space.length)
-                                        else -> context.currentInputConnection.commitText(letter, letter.length)
+                                        "⌫" -> context.backspace()
+                                        "return" -> context.performReturn()
+                                        "space" -> context.space()
+                                        else -> context.process(letter)
                                 }
                         }
                         .fillMaxWidth()

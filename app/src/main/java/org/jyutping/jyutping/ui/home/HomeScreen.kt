@@ -37,7 +37,7 @@ import org.jyutping.jyutping.ui.common.TextCard
 fun HomeScreen(navController: NavHostController) {
         val textState = remember { mutableStateOf<String>("") }
         val lexiconState = remember { mutableStateOf<CantoneseLexicon?>(null) }
-        val unihanDefinition = remember { mutableStateOf< UnihanDefinition?>(null) }
+        val unihanDefinition = remember { mutableStateOf<UnihanDefinition?>(null) }
         val yingWaaEntries = remember { mutableStateOf<List<YingWaaFanWan>>(listOf()) }
         val choHokEntries = remember { mutableStateOf<List<ChoHokYuetYamCitYiu>>(listOf()) }
         val fanWanEntries = remember { mutableStateOf<List<FanWanCuetYiu>>(listOf()) }

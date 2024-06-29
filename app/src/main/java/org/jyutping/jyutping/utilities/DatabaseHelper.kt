@@ -3,8 +3,10 @@ package org.jyutping.jyutping.utilities
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import org.jyutping.jyutping.extensions.charcode
 import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.extensions.isIdeographic
+import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.search.CantoneseLexicon
 import org.jyutping.jyutping.search.ChoHokYuetYamCitYiu
 import org.jyutping.jyutping.search.FanWanCuetYiu
@@ -116,7 +118,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         private fun fetchRomanizations(word: String): List<String> {
                 val romanizations: MutableList<String> = mutableListOf()
-                val command = "SELECT romanization FROM jyutpingtable WHERE word = '$word';"
+                val command = "SELECT romanization FROM lexicontable WHERE word = '$word';"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val romanization = cursor.getString(0)
@@ -127,7 +129,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         private fun fetchHomophones(romanization: String): List<String> {
                 val words: MutableList<String> = mutableListOf()
-                val command = "SELECT word FROM jyutpingtable WHERE romanization = '$romanization' LIMIT 11;"
+                val command = "SELECT word FROM lexicontable WHERE romanization = '$romanization' LIMIT 11;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val word = cursor.getString(0)
@@ -327,5 +329,20 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
                 cursor.close()
                 return null
+        }
+
+        fun shortcut(text: String): List<Candidate> {
+                val candidates: MutableList<Candidate> = mutableListOf()
+                val command = "SELECT rowid, word, romanization FROM lexicontable WHERE shortcut = ${text.charcode()} LIMIT 50;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val order = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val romanization = cursor.getString(2)
+                        val candidate = Candidate(text = word, romanization = romanization, input = text, order = order)
+                        candidates.add(candidate)
+                }
+                cursor.close()
+                return candidates
         }
 }

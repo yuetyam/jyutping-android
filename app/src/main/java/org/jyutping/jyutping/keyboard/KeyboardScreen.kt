@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun KeyboardScreen(keyHeight: Dp) {
@@ -19,13 +18,7 @@ fun KeyboardScreen(keyHeight: Dp) {
                         .background(Color(0xFFD6D8DD))
                         .fillMaxWidth()
         ) {
-                Row(
-                        modifier = Modifier
-                                .fillMaxWidth()
-                                .height(60.dp)
-                ) {
-                        Color.Transparent
-                }
+                ToolBar()
                 Row(
                         modifier = Modifier
                                 .fillMaxWidth()
