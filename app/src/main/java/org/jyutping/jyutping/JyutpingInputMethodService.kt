@@ -86,7 +86,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                         } else {
                                 currentInputConnection.setComposingText(value, value.length)
-                                candidates.value = db.shortcut(value)
+                                candidates.value = (db.match(value) + db.shortcut(value)).distinct()
                                 if (!isBuffering.value) {
                                         isBuffering.value = true
                                 }

@@ -333,7 +333,25 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
 
         fun shortcut(text: String): List<Candidate> {
                 val candidates: MutableList<Candidate> = mutableListOf()
-                val command = "SELECT rowid, word, romanization FROM lexicontable WHERE shortcut = ${text.charcode()} LIMIT 50;"
+                if (text.isBlank()) return candidates
+                val code: Int = text.charcode() ?: 0
+                val command = "SELECT rowid, word, romanization FROM lexicontable WHERE shortcut = $code LIMIT 50;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val order = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val romanization = cursor.getString(2)
+                        val candidate = Candidate(text = word, romanization = romanization, input = text, order = order)
+                        candidates.add(candidate)
+                }
+                cursor.close()
+                return candidates
+        }
+        fun match(text: String): List<Candidate> {
+                val candidates: MutableList<Candidate> = mutableListOf()
+                if (text.isBlank()) return candidates
+                val code: Int = text.hashCode()
+                val command = "SELECT rowid, word, romanization FROM lexicontable WHERE ping = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val order = cursor.getInt(0)

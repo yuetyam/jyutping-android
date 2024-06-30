@@ -1,9 +1,11 @@
 package org.jyutping.jyutping.keyboard
 
 enum class CandidateType {
-        CANTONESE,
-        TEXT,
-        EMOJI,
-        SYMBOL,
-        COMPOSE
+        Cantonese,
+        Text,
+        Emoji,
+        Symbol,
+        Compose
 }
+
+fun CandidateType.isCantonese(): Boolean = (this == CandidateType.Cantonese)
