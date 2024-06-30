@@ -18,6 +18,7 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import org.jyutping.jyutping.extensions.keyboardLightBackground
 import org.jyutping.jyutping.extensions.space
 import org.jyutping.jyutping.keyboard.Candidate
+import org.jyutping.jyutping.keyboard.KeyboardCase
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
@@ -56,6 +57,19 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         val keyboardForm: MutableState<KeyboardForm> = mutableStateOf(KeyboardForm.Alphabetic)
         fun transformTo(destination: KeyboardForm) {
                 keyboardForm.value = destination
+        }
+
+        val keyboardCase: MutableState<KeyboardCase> = mutableStateOf(KeyboardCase.Lowercased)
+        private fun updateKeyboardCaseTo(case: KeyboardCase) {
+                keyboardCase.value = case
+        }
+        fun performShift() {
+                val newCase: KeyboardCase = when (keyboardCase.value) {
+                        KeyboardCase.Lowercased -> KeyboardCase.Uppercased
+                        KeyboardCase.Uppercased -> KeyboardCase.Lowercased
+                        KeyboardCase.CapsLocked -> KeyboardCase.Lowercased
+                }
+                updateKeyboardCaseTo(newCase)
         }
 
         val candidates: MutableState<List<Candidate>> = mutableStateOf(listOf())

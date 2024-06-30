@@ -21,13 +21,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.extensions.keyLight
+import org.jyutping.jyutping.extensions.keyLightEmphatic
 
 @Composable
 fun ReturnKey(modifier: Modifier) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed = interactionSource.collectIsPressedAsState()
         val context = LocalContext.current as JyutpingInputMethodService
-        val lightEmphatic = Color(0xFFACB1B9)
         Box(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) { context.performReturn() }
@@ -39,7 +40,7 @@ fun ReturnKey(modifier: Modifier) {
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(if (isPressed.value) Color.White else lightEmphatic)
+                                .background(if (isPressed.value) Color.keyLight else Color.keyLightEmphatic)
                                 .fillMaxWidth()
                                 .fillMaxHeight(),
                         contentAlignment = Alignment.Center

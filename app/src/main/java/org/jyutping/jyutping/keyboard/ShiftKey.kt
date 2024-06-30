@@ -9,30 +9,38 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.R
+import org.jyutping.jyutping.extensions.keyLight
+import org.jyutping.jyutping.extensions.keyLightEmphatic
 
 @Composable
 fun ShiftKey(modifier: Modifier) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed = interactionSource.collectIsPressedAsState()
         val context = LocalContext.current as JyutpingInputMethodService
-        val lightEmphatic = Color(0xFFACB1B9)
+        val keyboardCase = remember { context.keyboardCase }
+        val drawableId: Int = when (keyboardCase.value) {
+                KeyboardCase.Lowercased -> R.drawable.shift
+                KeyboardCase.Uppercased -> R.drawable.shifted
+                KeyboardCase.CapsLocked -> R.drawable.capslock
+        }
         Box(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
-                                // TODO: Shift
+                                // TODO: Double tapping to toggle capslock
+                                context.performShift()
                         }
                         .fillMaxWidth()
                         .fillMaxHeight(),
@@ -42,15 +50,14 @@ fun ShiftKey(modifier: Modifier) {
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(if (isPressed.value) Color.White else lightEmphatic)
+                                .background(if (isPressed.value) Color.keyLight else Color.keyLightEmphatic)
                                 .fillMaxWidth()
                                 .fillMaxHeight(),
                         contentAlignment = Alignment.Center
                 ) {
                         Icon(
-                                imageVector = Icons.Outlined.ArrowUpward, // TODO: Find a perfect icon
-                                contentDescription = null,
-                                modifier = Modifier.alpha(0f)
+                                imageVector = ImageVector.vectorResource(id = drawableId),
+                                contentDescription = null
                         )
                 }
         }

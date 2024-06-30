@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.extensions.keyLightEmphatic
 
 @Composable
 fun ToolBar(modifier: Modifier) {
@@ -110,7 +111,6 @@ fun ToolBar(modifier: Modifier) {
 private fun InputMethodModeSwitch() {
         val interactionSource = remember { MutableInteractionSource() }
         val context = LocalContext.current as JyutpingInputMethodService
-        val lightEmphatic = Color(0xFFACB1B9)
         Box(
                 modifier = Modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
@@ -124,7 +124,7 @@ private fun InputMethodModeSwitch() {
                 Box (
                         modifier = Modifier
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(lightEmphatic)
+                                .background(Color.keyLightEmphatic)
                                 .width(72.dp)
                                 .height(26.dp),
                         contentAlignment = Alignment.Center

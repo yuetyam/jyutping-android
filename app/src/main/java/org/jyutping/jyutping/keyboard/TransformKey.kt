@@ -20,13 +20,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.extensions.keyLight
+import org.jyutping.jyutping.extensions.keyLightEmphatic
 
 @Composable
 fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed = interactionSource.collectIsPressedAsState()
         val context = LocalContext.current as JyutpingInputMethodService
-        val lightEmphatic = Color(0xFFACB1B9)
         val keyText: String = when (destination) {
                 KeyboardForm.Alphabetic -> "ABC"
                 KeyboardForm.Numeric -> "123"
@@ -44,7 +45,7 @@ fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(if (isPressed.value) Color.White else lightEmphatic)
+                                .background(if (isPressed.value) Color.keyLight else Color.keyLightEmphatic)
                                 .fillMaxWidth()
                                 .fillMaxHeight(),
                         contentAlignment = Alignment.Center

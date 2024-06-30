@@ -15,9 +15,7 @@ android {
                 versionCode = 4
                 versionName = "0.4.0"
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-                vectorDrawables {
-                        useSupportLibrary = true
-                }
+                vectorDrawables.useSupportLibrary = true
         }
         buildTypes {
                 debug {
@@ -47,9 +45,7 @@ android {
                 kotlinCompilerExtensionVersion = "1.5.13"
         }
         packaging {
-                resources {
-                        excludes += "/META-INF/{AL2.0,LGPL2.1}"
-                }
+                resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
 }
 
