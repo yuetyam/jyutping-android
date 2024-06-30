@@ -4,6 +4,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
@@ -13,6 +15,7 @@ import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import org.jyutping.jyutping.extensions.keyboardLightBackground
 import org.jyutping.jyutping.extensions.space
 import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.KeyboardForm
@@ -25,6 +28,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         override fun onCreateInputView(): View {
                 val view = ComposeKeyboardView(this)
+                window?.window?.navigationBarColor = Color.keyboardLightBackground.toArgb()
                 window?.window?.decorView?.let { decorView ->
                         decorView.setViewTreeLifecycleOwner(this)
                         decorView.setViewTreeViewModelStoreOwner(this)

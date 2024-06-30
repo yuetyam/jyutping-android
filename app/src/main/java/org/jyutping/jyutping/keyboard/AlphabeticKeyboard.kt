@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.extensions.keyboardLightBackground
 
 @Composable
 fun AlphabeticKeyboard(keyHeight: Dp) {
@@ -25,7 +26,7 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
         Column(
                 modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFFD6D8DD))
+                        .background(Color.keyboardLightBackground)
         ) {
                 Box(
                         modifier = Modifier

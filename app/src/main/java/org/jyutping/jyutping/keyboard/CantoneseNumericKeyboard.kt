@@ -11,12 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.jyutping.jyutping.extensions.keyboardLightBackground
 
 @Composable
 fun CantoneseNumericKeyboard(keyHeight: Dp) {
         Column(
                 modifier = Modifier
-                        .background(Color(0xFFD6D8DD))
+                        .background(Color.keyboardLightBackground)
                         .fillMaxWidth()
         ) {
                 ToolBar(
