@@ -56,6 +56,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         val keyboardForm: MutableState<KeyboardForm> = mutableStateOf(KeyboardForm.Alphabetic)
         fun transformTo(destination: KeyboardForm) {
+                if (isBuffering.value) {
+                        bufferText = ""
+                }
                 keyboardForm.value = destination
         }
 

@@ -35,7 +35,7 @@ fun CandidateScrollBar(modifier: Modifier) {
                                         .clickable(interactionSource = interactionSource, indication = null) {
                                                 context.select(it)
                                         }
-                                        .padding(horizontal = 4.dp)
+                                        .padding(horizontal = 6.dp)
                                         .padding(bottom = 8.dp)
                         )
                 }
