@@ -21,6 +21,7 @@ import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.InputMethodMode
 import org.jyutping.jyutping.keyboard.KeyboardCase
 import org.jyutping.jyutping.keyboard.KeyboardForm
+import org.jyutping.jyutping.keyboard.isUppercased
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
 
@@ -70,19 +71,33 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         bufferText = ""
                 }
                 keyboardForm.value = destination
+                adjustKeyboardCase()
         }
 
         val keyboardCase: MutableState<KeyboardCase> = mutableStateOf(KeyboardCase.Lowercased)
         private fun updateKeyboardCase(case: KeyboardCase) {
                 keyboardCase.value = case
         }
-        fun performShift() {
+        fun shift() {
                 val newCase: KeyboardCase = when (keyboardCase.value) {
                         KeyboardCase.Lowercased -> KeyboardCase.Uppercased
                         KeyboardCase.Uppercased -> KeyboardCase.Lowercased
                         KeyboardCase.CapsLocked -> KeyboardCase.Lowercased
                 }
                 updateKeyboardCase(newCase)
+        }
+        fun doubleShift() {
+                val newCase: KeyboardCase = when (keyboardCase.value) {
+                        KeyboardCase.Lowercased -> KeyboardCase.CapsLocked
+                        KeyboardCase.Uppercased -> KeyboardCase.CapsLocked
+                        KeyboardCase.CapsLocked -> KeyboardCase.Lowercased
+                }
+                updateKeyboardCase(newCase)
+        }
+        private fun adjustKeyboardCase() {
+                if (keyboardCase.value.isUppercased()) {
+                        updateKeyboardCase(KeyboardCase.Lowercased)
+                }
         }
 
         val candidates: MutableState<List<Candidate>> = mutableStateOf(listOf())
@@ -99,7 +114,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                         } else {
                                 currentInputConnection.setComposingText(value, value.length)
-                                candidates.value = (db.match(value) + db.shortcut(value)).distinct()
+                                candidates.value = db.suggest(text = value)
                                 if (!isBuffering.value) {
                                         isBuffering.value = true
                                 }
@@ -115,9 +130,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 currentInputConnection.commitText(text, text.length)
                         }
                 }
+                adjustKeyboardCase()
         }
         fun input(text: String) {
                 currentInputConnection.commitText(text, text.length)
+                adjustKeyboardCase()
         }
         fun select(candidate: Candidate) {
                 currentInputConnection.commitText(candidate.text, candidate.text.length)

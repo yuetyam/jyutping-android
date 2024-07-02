@@ -27,7 +27,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 db.execSQL("PRAGMA foreign_keys=ON;")
         }
 
-        fun search(text: String): CantoneseLexicon? {
+        fun searchCantoneseLexicon(text: String): CantoneseLexicon? {
                 when (text.length) {
                         0 -> return null
                         1 -> {
@@ -64,6 +64,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                         val pronunciations: List<Pronunciation> = altRomanizations.map { Pronunciation(it) }
                                         return CantoneseLexicon(text = convertedText, pronunciations = pronunciations)
                                 }
+                                val firstIdeographic = text.firstOrNull { it.isIdeographic() }
+                                if (firstIdeographic == null) return CantoneseLexicon(text)
                                 var chars = text
                                 val fetches: MutableList<String> = mutableListOf()
                                 var newText = ""
@@ -331,7 +333,10 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return null
         }
 
-        fun shortcut(text: String): List<Candidate> {
+        fun suggest(text: String): List<Candidate> {
+                return (match(text) + shortcut(text)).distinct()
+        }
+        private fun shortcut(text: String): List<Candidate> {
                 val candidates: MutableList<Candidate> = mutableListOf()
                 if (text.isBlank()) return candidates
                 val code: Int = text.charcode() ?: 0
@@ -347,7 +352,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 cursor.close()
                 return candidates
         }
-        fun match(text: String): List<Candidate> {
+        private fun match(text: String): List<Candidate> {
                 val candidates: MutableList<Candidate> = mutableListOf()
                 if (text.isBlank()) return candidates
                 val code: Int = text.hashCode()

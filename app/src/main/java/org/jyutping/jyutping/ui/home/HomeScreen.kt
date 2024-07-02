@@ -84,7 +84,7 @@ fun HomeScreen(navController: NavHostController) {
                         item {
                                 SearchField(textState = textState) {
                                         val text = textState.value.trim()
-                                        lexiconState.value = helper.search(text)
+                                        lexiconState.value = helper.searchCantoneseLexicon(text)
                                         val text4definition = lexiconState.value?.text ?: text
                                         unihanDefinition.value = helper.matchUnihanDefinition(text4definition)
                                         yingWaaEntries.value = searchYingWan(text)

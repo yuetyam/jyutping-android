@@ -1,7 +1,7 @@
 package org.jyutping.jyutping.keyboard
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -39,9 +40,11 @@ fun ShiftKey(modifier: Modifier) {
         }
         Box(
                 modifier = modifier
-                        .clickable(interactionSource = interactionSource, indication = null) {
-                                // TODO: Double tapping to toggle capslock
-                                context.performShift()
+                        .pointerInput(Unit) {
+                                detectTapGestures(
+                                        onDoubleTap = { context.doubleShift() },
+                                        onTap = { context.shift() }
+                                )
                         }
                         .fillMaxWidth()
                         .fillMaxHeight(),
