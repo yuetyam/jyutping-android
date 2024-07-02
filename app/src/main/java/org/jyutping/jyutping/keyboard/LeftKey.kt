@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -22,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.extensions.keyLight
 import org.jyutping.jyutping.extensions.keyLightEmphatic
+import org.jyutping.jyutping.extensions.separator
 
 @Composable
 fun LeftKey(modifier: Modifier) {
@@ -29,9 +33,10 @@ fun LeftKey(modifier: Modifier) {
         val isPressed = interactionSource.collectIsPressedAsState()
         val context = LocalContext.current as JyutpingInputMethodService
         val inputMethodMode = remember { context.inputMethodMode }
-        val keyText: String = when (inputMethodMode.value) {
-                InputMethodMode.Cantonese -> "，"
-                InputMethodMode.ABC -> ","
+        val isBuffering = remember { context.isBuffering }
+        val keyForm: LeftKeyForm = when (inputMethodMode.value) {
+                InputMethodMode.Cantonese -> if (isBuffering.value) LeftKeyForm.Buffering else LeftKeyForm.Cantonese
+                InputMethodMode.ABC -> LeftKeyForm.ABC
         }
         Box(
                 modifier = modifier
@@ -49,10 +54,39 @@ fun LeftKey(modifier: Modifier) {
                                 .fillMaxHeight(),
                         contentAlignment = Alignment.Center
                 ) {
-                        Text(
-                                text = keyText,
-                                fontSize = 20.sp
-                        )
+                        if (keyForm.isBuffering()) {
+                                Column(
+                                        verticalArrangement = Arrangement.spacedBy(0.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                        Text(
+                                                text = keyForm.keyText(),
+                                                fontSize = 20.sp
+                                        )
+                                        Text(
+                                                text = "分隔",
+                                                modifier =Modifier.alpha(0.85f),
+                                                fontSize = 10.sp
+                                        )
+                                }
+                        } else {
+                                Text(
+                                        text = keyForm.keyText(),
+                                        fontSize = 20.sp
+                                )
+                        }
                 }
         }
+}
+
+private enum class LeftKeyForm {
+        Cantonese,
+        Buffering,
+        ABC
+}
+private fun LeftKeyForm.isBuffering(): Boolean = (this == LeftKeyForm.Buffering)
+private fun LeftKeyForm.keyText(): String = when (this) {
+        LeftKeyForm.Cantonese -> "，"
+        LeftKeyForm.Buffering -> String.separator
+        LeftKeyForm.ABC -> ","
 }

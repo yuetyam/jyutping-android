@@ -16,6 +16,7 @@ import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import org.jyutping.jyutping.extensions.keyboardLightBackground
+import org.jyutping.jyutping.extensions.separator
 import org.jyutping.jyutping.extensions.space
 import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.InputMethodMode
@@ -167,7 +168,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun leftKey() {
                 if (isBuffering.value) {
-                        // TODO: Separator
+                        bufferText += String.separator
                 } else {
                         val text: String = when (inputMethodMode.value) {
                                 InputMethodMode.Cantonese -> "，"
@@ -178,7 +179,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun rightKey() {
                 if (isBuffering.value) {
-                        // TODO: Separator
+                        bufferText += String.separator
                 } else {
                         val text: String = when (inputMethodMode.value) {
                                 InputMethodMode.Cantonese -> "。"

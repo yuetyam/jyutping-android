@@ -8,6 +8,9 @@ fun String.convertedT2S(): String = Transliterator.getInstance("Traditional-Simp
 val String.Companion.space: String
         get() = " "
 
+val String.Companion.separator: String
+        get() = "'"
+
 fun String.charcode(): Int? {
         if (this.length >= 10) return null
         val codes = this.mapNotNull { it.intercode() }
