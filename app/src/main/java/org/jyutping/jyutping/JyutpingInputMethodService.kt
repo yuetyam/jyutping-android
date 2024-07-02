@@ -18,6 +18,7 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import org.jyutping.jyutping.extensions.keyboardLightBackground
 import org.jyutping.jyutping.extensions.space
 import org.jyutping.jyutping.keyboard.Candidate
+import org.jyutping.jyutping.keyboard.InputMethodMode
 import org.jyutping.jyutping.keyboard.KeyboardCase
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.utilities.DatabaseHelper
@@ -54,6 +55,15 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         override val savedStateRegistry: SavedStateRegistry get() = savedStateRegistryController.savedStateRegistry
 
+        val inputMethodMode: MutableState<InputMethodMode> = mutableStateOf(InputMethodMode.Cantonese)
+        fun toggleInputMethodMode() {
+                val newMode: InputMethodMode = when (inputMethodMode.value) {
+                        InputMethodMode.Cantonese -> InputMethodMode.ABC
+                        InputMethodMode.ABC -> InputMethodMode.Cantonese
+                }
+                inputMethodMode.value = newMode
+        }
+
         val keyboardForm: MutableState<KeyboardForm> = mutableStateOf(KeyboardForm.Alphabetic)
         fun transformTo(destination: KeyboardForm) {
                 if (isBuffering.value) {
@@ -63,7 +73,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
 
         val keyboardCase: MutableState<KeyboardCase> = mutableStateOf(KeyboardCase.Lowercased)
-        private fun updateKeyboardCaseTo(case: KeyboardCase) {
+        private fun updateKeyboardCase(case: KeyboardCase) {
                 keyboardCase.value = case
         }
         fun performShift() {
@@ -72,7 +82,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         KeyboardCase.Uppercased -> KeyboardCase.Lowercased
                         KeyboardCase.CapsLocked -> KeyboardCase.Lowercased
                 }
-                updateKeyboardCaseTo(newCase)
+                updateKeyboardCase(newCase)
         }
 
         val candidates: MutableState<List<Candidate>> = mutableStateOf(listOf())
@@ -97,7 +107,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         val isBuffering: MutableState<Boolean> = mutableStateOf(false)
         fun process(text: String) {
-                bufferText += text
+                when (inputMethodMode.value) {
+                        InputMethodMode.Cantonese -> {
+                                bufferText += text
+                        }
+                        InputMethodMode.ABC -> {
+                                currentInputConnection.commitText(text, text.length)
+                        }
+                }
         }
         fun input(text: String) {
                 currentInputConnection.commitText(text, text.length)
@@ -114,11 +131,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
         fun performReturn() {
-                if (bufferText.isEmpty()) {
-                        sendDefaultEditorAction(true)
-                } else {
+                if (isBuffering.value) {
                         currentInputConnection.commitText(bufferText, bufferText.length)
                         bufferText = ""
+                } else {
+                        sendDefaultEditorAction(true)
                 }
         }
         fun space() {
@@ -132,14 +149,24 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 requestHideSelf(InputMethodManager.HIDE_NOT_ALWAYS)
         }
         fun leftKey() {
-                if (!isBuffering.value) {
-                        val text = "，"
+                if (isBuffering.value) {
+                        // TODO: Separator
+                } else {
+                        val text: String = when (inputMethodMode.value) {
+                                InputMethodMode.Cantonese -> "，"
+                                InputMethodMode.ABC -> ","
+                        }
                         currentInputConnection.commitText(text, text.length)
                 }
         }
         fun rightKey() {
-                if (!isBuffering.value) {
-                        val text = "。"
+                if (isBuffering.value) {
+                        // TODO: Separator
+                } else {
+                        val text: String = when (inputMethodMode.value) {
+                                InputMethodMode.Cantonese -> "。"
+                                InputMethodMode.ABC -> "."
+                        }
                         currentInputConnection.commitText(text, text.length)
                 }
         }

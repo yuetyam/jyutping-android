@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
@@ -34,8 +33,12 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                 ) {
-                        ToolBar(modifier = Modifier.alpha(if (isBuffering.value) 0f else 1f))
-                        CandidateScrollBar(modifier = Modifier.alpha(if (isBuffering.value) 1f else 0f))
+                        Color.keyboardLightBackground
+                        if (isBuffering.value) {
+                                CandidateScrollBar()
+                        } else {
+                                ToolBar()
+                        }
                 }
                 Row(
                         modifier = Modifier

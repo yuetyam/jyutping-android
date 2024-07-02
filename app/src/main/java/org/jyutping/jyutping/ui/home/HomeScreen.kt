@@ -118,7 +118,6 @@ fun HomeScreen(navController: NavHostController) {
                                         GwongWanView(gwongWanEntries.value)
                                 }
                         }
-                        /*
                         item {
                                 TextCard(
                                         heading = stringResource(id = R.string.home_heading_tone_input),
@@ -165,7 +164,6 @@ fun HomeScreen(navController: NavHostController) {
                                         }
                                 }
                         }
-                        */
                 }
         }
 }

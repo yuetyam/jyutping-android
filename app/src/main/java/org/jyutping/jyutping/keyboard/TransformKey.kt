@@ -52,7 +52,7 @@ fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
                 ) {
                         Text(
                                 text = keyText,
-                                fontSize = 20.sp
+                                fontSize = 18.sp
                         )
                 }
         }

@@ -17,12 +17,12 @@ import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 
 @Composable
-fun CandidateScrollBar(modifier: Modifier) {
+fun CandidateScrollBar() {
         val interactionSource = remember { MutableInteractionSource() }
         val context = LocalContext.current as JyutpingInputMethodService
         val candidates = remember { context.candidates }
         LazyRow(
-                modifier = modifier
+                modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight(),
                 horizontalArrangement = Arrangement.spacedBy(0.dp),

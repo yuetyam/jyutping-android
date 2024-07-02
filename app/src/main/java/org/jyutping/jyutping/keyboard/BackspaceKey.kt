@@ -8,9 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.Backspace
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -18,9 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.R
 import org.jyutping.jyutping.extensions.keyLight
 import org.jyutping.jyutping.extensions.keyLightEmphatic
 
@@ -46,8 +48,9 @@ fun BackspaceKey(modifier: Modifier) {
                         contentAlignment = Alignment.Center
                 ) {
                         Icon(
-                                imageVector = Icons.AutoMirrored.Outlined.Backspace,
-                                contentDescription = null
+                                imageVector = ImageVector.vectorResource(id = if (isPressed.value) R.drawable.key_backspacing else R.drawable.key_backspace),
+                                contentDescription = null,
+                                modifier = Modifier.size(22.dp)
                         )
                 }
         }

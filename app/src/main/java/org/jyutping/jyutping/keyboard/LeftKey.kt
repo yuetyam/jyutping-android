@@ -28,6 +28,11 @@ fun LeftKey(modifier: Modifier) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed = interactionSource.collectIsPressedAsState()
         val context = LocalContext.current as JyutpingInputMethodService
+        val inputMethodMode = remember { context.inputMethodMode }
+        val keyText: String = when (inputMethodMode.value) {
+                InputMethodMode.Cantonese -> "，"
+                InputMethodMode.ABC -> ","
+        }
         Box(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) { context.leftKey() }
@@ -45,7 +50,7 @@ fun LeftKey(modifier: Modifier) {
                         contentAlignment = Alignment.Center
                 ) {
                         Text(
-                                text = "，",
+                                text = keyText,
                                 fontSize = 20.sp
                         )
                 }

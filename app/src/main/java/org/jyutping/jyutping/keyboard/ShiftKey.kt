@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -32,9 +33,9 @@ fun ShiftKey(modifier: Modifier) {
         val context = LocalContext.current as JyutpingInputMethodService
         val keyboardCase = remember { context.keyboardCase }
         val drawableId: Int = when (keyboardCase.value) {
-                KeyboardCase.Lowercased -> R.drawable.shift
-                KeyboardCase.Uppercased -> R.drawable.shifted
-                KeyboardCase.CapsLocked -> R.drawable.capslock
+                KeyboardCase.Lowercased -> R.drawable.key_shift
+                KeyboardCase.Uppercased -> R.drawable.key_shifting
+                KeyboardCase.CapsLocked -> R.drawable.key_capslock
         }
         Box(
                 modifier = modifier
@@ -57,7 +58,8 @@ fun ShiftKey(modifier: Modifier) {
                 ) {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = drawableId),
-                                contentDescription = null
+                                contentDescription = null,
+                                modifier = Modifier.size(22.dp)
                         )
                 }
         }
