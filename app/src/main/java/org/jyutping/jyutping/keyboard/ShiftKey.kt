@@ -1,5 +1,7 @@
 package org.jyutping.jyutping.keyboard
 
+import android.view.HapticFeedbackConstants
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -20,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
@@ -31,6 +34,7 @@ import org.jyutping.jyutping.extensions.keyLightEmphatic
 fun ShiftKey(modifier: Modifier) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed = interactionSource.collectIsPressedAsState()
+        val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val keyboardCase = remember { context.keyboardCase }
         val drawableId: Int = when (keyboardCase.value) {
@@ -42,8 +46,16 @@ fun ShiftKey(modifier: Modifier) {
                 modifier = modifier
                         .pointerInput(Unit) {
                                 detectTapGestures(
-                                        onDoubleTap = { context.doubleShift() },
-                                        onTap = { context.shift() }
+                                        onDoubleTap = {
+                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                context.doubleShift()
+                                        },
+                                        onTap = {
+                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                context.shift()
+                                        }
                                 )
                         }
                         .fillMaxWidth()

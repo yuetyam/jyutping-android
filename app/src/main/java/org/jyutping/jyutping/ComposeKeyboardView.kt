@@ -11,6 +11,9 @@ import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.AlphabeticKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseNumericKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseSymbolicKeyboard
+import org.jyutping.jyutping.keyboard.EditingPanel
+import org.jyutping.jyutping.keyboard.EmojiBoard
+import org.jyutping.jyutping.keyboard.SettingsScreen
 
 class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
 
@@ -21,8 +24,18 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                         KeyboardForm.Alphabetic -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight())
                         KeyboardForm.Numeric -> CantoneseNumericKeyboard(keyHeight = responsiveKeyHeight())
                         KeyboardForm.Symbolic -> CantoneseSymbolicKeyboard(keyHeight = responsiveKeyHeight())
+                        KeyboardForm.Settings -> SettingsScreen(height = keyboardHeight())
+                        KeyboardForm.EmojiBoard -> EmojiBoard(height = keyboardHeight())
+                        KeyboardForm.EditingPanel -> EditingPanel(height = keyboardHeight())
                         else -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight())
                 }
+        }
+
+        @Composable
+        private fun keyboardHeight(): Dp {
+                val toolBarHeight = 60.dp
+                val keyRowsHeight = responsiveKeyHeight() * 4
+                return keyRowsHeight + toolBarHeight
         }
 
         @Composable

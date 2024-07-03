@@ -1,5 +1,7 @@
 package org.jyutping.jyutping.keyboard
 
+import android.view.HapticFeedbackConstants
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -13,12 +15,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 
 @Composable
 fun CandidateScrollBar() {
         val interactionSource = remember { MutableInteractionSource() }
+        val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val candidates = remember { context.candidates }
         LazyRow(
@@ -33,6 +37,8 @@ fun CandidateScrollBar() {
                                 candidate = it,
                                 modifier = Modifier
                                         .clickable(interactionSource = interactionSource, indication = null) {
+                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                 context.select(it)
                                         }
                                         .padding(horizontal = 6.dp)

@@ -1,5 +1,7 @@
 package org.jyutping.jyutping.keyboard
 
+import android.view.HapticFeedbackConstants
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -20,6 +22,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
@@ -31,6 +34,7 @@ import org.jyutping.jyutping.extensions.separator
 fun RightKey(modifier: Modifier) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed = interactionSource.collectIsPressedAsState()
+        val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val inputMethodMode = remember { context.inputMethodMode }
         val isBuffering = remember { context.isBuffering }
@@ -40,7 +44,11 @@ fun RightKey(modifier: Modifier) {
         }
         Box(
                 modifier = modifier
-                        .clickable(interactionSource = interactionSource, indication = null) { context.rightKey() }
+                        .clickable(interactionSource = interactionSource, indication = null) {
+                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                context.rightKey()
+                        }
                         .fillMaxWidth()
                         .fillMaxHeight(),
                 contentAlignment = Alignment.Center

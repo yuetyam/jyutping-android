@@ -1,5 +1,7 @@
 package org.jyutping.jyutping.keyboard
 
+import android.view.HapticFeedbackConstants
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
@@ -27,6 +30,7 @@ import org.jyutping.jyutping.extensions.keyLightEmphatic
 fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed = interactionSource.collectIsPressedAsState()
+        val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val keyText: String = when (destination) {
                 KeyboardForm.Alphabetic -> "ABC"
@@ -36,7 +40,11 @@ fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
         }
         Box(
                 modifier = modifier
-                        .clickable(interactionSource = interactionSource, indication = null) { context.transformTo(destination) }
+                        .clickable(interactionSource = interactionSource, indication = null) {
+                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                context.transformTo(destination)
+                        }
                         .fillMaxWidth()
                         .fillMaxHeight(),
                 contentAlignment = Alignment.Center

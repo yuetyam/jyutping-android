@@ -44,6 +44,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         override fun onCreate() {
                 super.onCreate()
                 savedStateRegistryController.performRestore(null)
+                DatabasePreparer.prepare(this)
         }
 
         override val viewModelStore: ViewModelStore
