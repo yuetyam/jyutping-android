@@ -17,6 +17,7 @@ import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import org.jyutping.jyutping.extensions.empty
 import org.jyutping.jyutping.extensions.keyboardLightBackground
 import org.jyutping.jyutping.extensions.separator
 import org.jyutping.jyutping.extensions.space
@@ -74,7 +75,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         val keyboardForm: MutableState<KeyboardForm> = mutableStateOf(KeyboardForm.Alphabetic)
         fun transformTo(destination: KeyboardForm) {
                 if (isBuffering.value) {
-                        bufferText = ""
+                        bufferText = String.empty
                 }
                 keyboardForm.value = destination
                 adjustKeyboardCase()
@@ -109,7 +110,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         val candidateState: MutableIntState = mutableIntStateOf(1)
         val candidates: MutableState<List<Candidate>> = mutableStateOf(listOf())
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.databaseName) }
-        private var bufferText: String = ""
+        private var bufferText: String = String.empty
                 set(value) {
                         field = value
                         when (value.firstOrNull()) {
@@ -138,6 +139,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         candidateState.intValue += 1
                 }
         val isBuffering: MutableState<Boolean> = mutableStateOf(false)
+        fun clearBuffer() {
+                bufferText = String.empty
+        }
         fun process(text: String) {
                 when (inputMethodMode.value) {
                         InputMethodMode.Cantonese -> {
@@ -167,7 +171,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun performReturn() {
                 if (isBuffering.value) {
                         currentInputConnection.commitText(bufferText, bufferText.length)
-                        bufferText = ""
+                        bufferText = String.empty
                 } else {
                         sendDefaultEditorAction(true)
                 }
