@@ -12,8 +12,8 @@ android {
                 applicationId = "org.jyutping.jyutping"
                 minSdk = 33
                 targetSdk = 34
-                versionCode = 6
-                versionName = "0.6.0"
+                versionCode = 7
+                versionName = "0.7.0"
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 vectorDrawables.useSupportLibrary = true
         }
@@ -53,8 +53,8 @@ val composeVersion = "1.6.8"
 dependencies {
         implementation("androidx.activity:activity-ktx:1.9.0")
         implementation("androidx.core:core-ktx:1.13.1")
-        implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.2")
-        implementation("androidx.lifecycle:lifecycle-service:2.8.2")
+        implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
+        implementation("androidx.lifecycle:lifecycle-service:2.8.3")
         implementation("androidx.activity:activity-compose:1.9.0")
         implementation("androidx.compose.ui:ui:$composeVersion")
         implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
