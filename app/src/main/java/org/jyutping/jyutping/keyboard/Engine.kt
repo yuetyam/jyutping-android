@@ -6,14 +6,18 @@ import org.jyutping.jyutping.utilities.DatabaseHelper
 
 object Engine {
         fun suggest(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
+                if (db.canProcess(text).not()) return emptyList()
+                if (segmentation.maxLength() < 1) return processVerbatim(text, db)
                 return process(text, segmentation, db)
         }
         private fun processVerbatim(text: String, db: DatabaseHelper): List<Candidate> {
-                val rounds = text.indices.map { number ->
+                val rounds: MutableList<List<Candidate>> = mutableListOf()
+                for (number in text.indices) {
                         val leading = text.dropLast(number)
-                        return db.match(text = leading, input = leading) + db.shortcut(text = leading)
+                        val round = db.match(text = leading, input = leading) + db.shortcut(text = leading)
+                        rounds.add(round)
                 }
-                return rounds.flatten<Candidate>().distinct()
+                return rounds.flatten().distinct()
         }
         private fun process(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
                 val primary = query(text, segmentation, db)

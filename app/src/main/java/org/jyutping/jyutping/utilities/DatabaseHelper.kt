@@ -5,7 +5,9 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import org.jyutping.jyutping.extensions.charcode
 import org.jyutping.jyutping.extensions.convertedS2T
+import org.jyutping.jyutping.extensions.intercode
 import org.jyutping.jyutping.extensions.isIdeographic
+import org.jyutping.jyutping.extensions.shortcutCharcode
 import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.SegmentToken
 import org.jyutping.jyutping.search.CantoneseLexicon
@@ -334,10 +336,23 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return null
         }
 
+        fun canProcess(text: String): Boolean {
+                val value = text.firstOrNull()?.intercode() ?: 0
+                if (value == 0) return false
+                val code = if (value == 44) 29 else value // Replace 'y' with 'j'
+                val command = "SELECT rowid FROM lexicontable WHERE shortcut = $code LIMIT 1;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                if (cursor.moveToFirst()) {
+                        cursor.close()
+                        return true
+                } else {
+                        return false
+                }
+        }
         fun shortcut(text: String): List<Candidate> {
+                val code: Int = text.shortcutCharcode() ?: 0
+                if (code == 0) return emptyList()
                 val candidates: MutableList<Candidate> = mutableListOf()
-                if (text.isBlank()) return candidates
-                val code: Int = text.charcode() ?: 0
                 val command = "SELECT rowid, word, romanization FROM lexicontable WHERE shortcut = $code LIMIT 50;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
@@ -350,10 +365,10 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 cursor.close()
                 return candidates
         }
-        fun match(text: String, input: String, mark: String? = null, limit: Int? = null): List<Candidate> {
-                val candidates: MutableList<Candidate> = mutableListOf()
-                if (text.isBlank()) return candidates
+        fun match(text: String, input: String, mark: String? = null): List<Candidate> {
+                if (text.isBlank()) return emptyList()
                 val code: Int = text.hashCode()
+                val candidates: MutableList<Candidate> = mutableListOf()
                 val command = "SELECT rowid, word, romanization FROM lexicontable WHERE ping = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
