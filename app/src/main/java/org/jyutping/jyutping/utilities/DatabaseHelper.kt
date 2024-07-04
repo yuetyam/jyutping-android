@@ -7,6 +7,7 @@ import org.jyutping.jyutping.extensions.charcode
 import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.extensions.isIdeographic
 import org.jyutping.jyutping.keyboard.Candidate
+import org.jyutping.jyutping.keyboard.SegmentToken
 import org.jyutping.jyutping.search.CantoneseLexicon
 import org.jyutping.jyutping.search.ChoHokYuetYamCitYiu
 import org.jyutping.jyutping.search.FanWanCuetYiu
@@ -333,10 +334,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return null
         }
 
-        fun suggest(text: String): List<Candidate> {
-                return (match(text) + shortcut(text)).distinct()
-        }
-        private fun shortcut(text: String): List<Candidate> {
+        fun shortcut(text: String): List<Candidate> {
                 val candidates: MutableList<Candidate> = mutableListOf()
                 if (text.isBlank()) return candidates
                 val code: Int = text.charcode() ?: 0
@@ -352,7 +350,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 cursor.close()
                 return candidates
         }
-        private fun match(text: String): List<Candidate> {
+        fun match(text: String, input: String, mark: String? = null, limit: Int? = null): List<Candidate> {
                 val candidates: MutableList<Candidate> = mutableListOf()
                 if (text.isBlank()) return candidates
                 val code: Int = text.hashCode()
@@ -362,10 +360,25 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                         val order = cursor.getInt(0)
                         val word = cursor.getString(1)
                         val romanization = cursor.getString(2)
-                        val candidate = Candidate(text = word, romanization = romanization, input = text, order = order)
+                        val markText = mark ?: input
+                        val candidate = Candidate(text = word, romanization = romanization, input = input, mark = markText, order = order)
                         candidates.add(candidate)
                 }
                 cursor.close()
                 return candidates
+        }
+        fun matchSyllable(text: String): SegmentToken? {
+                val code = text.charcode() ?: 0
+                if (code == 0) return null
+                var token: SegmentToken? = null
+                val command = "SELECT token, origin FROM syllabletable WHERE code = $code LIMIT 1;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                if (cursor.moveToFirst()) {
+                        val tokenText = cursor.getString(0)
+                        val origin = cursor.getString(1)
+                        token = SegmentToken(text = tokenText, origin = origin)
+                }
+                cursor.close()
+                return token
         }
 }

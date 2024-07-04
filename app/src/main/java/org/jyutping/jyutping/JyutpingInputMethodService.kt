@@ -19,9 +19,11 @@ import org.jyutping.jyutping.extensions.keyboardLightBackground
 import org.jyutping.jyutping.extensions.separator
 import org.jyutping.jyutping.extensions.space
 import org.jyutping.jyutping.keyboard.Candidate
+import org.jyutping.jyutping.keyboard.Engine
 import org.jyutping.jyutping.keyboard.InputMethodMode
 import org.jyutping.jyutping.keyboard.KeyboardCase
 import org.jyutping.jyutping.keyboard.KeyboardForm
+import org.jyutping.jyutping.keyboard.Segmentor
 import org.jyutping.jyutping.keyboard.isUppercased
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
@@ -107,18 +109,27 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         private var bufferText: String = ""
                 set(value) {
                         field = value
-                        if (value.isEmpty()) {
-                                candidates.value = listOf()
-                                currentInputConnection.setComposingText(value, value.length)
-                                currentInputConnection.finishComposingText()
-                                if (isBuffering.value) {
-                                        isBuffering.value = false
+                        when (value.firstOrNull()) {
+                                null -> {
+                                        candidates.value = listOf()
+                                        currentInputConnection.setComposingText(value, value.length)
+                                        currentInputConnection.finishComposingText()
+                                        if (isBuffering.value) {
+                                                isBuffering.value = false
+                                        }
                                 }
-                        } else {
-                                currentInputConnection.setComposingText(value, value.length)
-                                candidates.value = db.suggest(text = value)
-                                if (!isBuffering.value) {
-                                        isBuffering.value = true
+                                'r' -> {}
+                                'v' -> {}
+                                'x' -> {}
+                                'q' -> {}
+                                else -> {
+                                        currentInputConnection.setComposingText(value, value.length)
+                                        val segmentation = Segmentor.segment(value, db)
+                                        val suggestions = Engine.suggest(text = value, segmentation = segmentation, db = db)
+                                        candidates.value = suggestions
+                                        if (isBuffering.value.not()) {
+                                                isBuffering.value = true
+                                        }
                                 }
                         }
                 }
