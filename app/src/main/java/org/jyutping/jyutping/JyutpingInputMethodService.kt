@@ -2,7 +2,9 @@ package org.jyutping.jyutping
 
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -104,6 +106,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
+        val candidateState: MutableIntState = mutableIntStateOf(1)
         val candidates: MutableState<List<Candidate>> = mutableStateOf(listOf())
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.databaseName) }
         private var bufferText: String = ""
@@ -132,6 +135,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         }
                                 }
                         }
+                        candidateState.intValue += 1
                 }
         val isBuffering: MutableState<Boolean> = mutableStateOf(false)
         fun process(text: String) {

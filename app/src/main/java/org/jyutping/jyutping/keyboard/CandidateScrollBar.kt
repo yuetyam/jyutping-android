@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,15 +26,19 @@ fun CandidateScrollBar() {
         val interactionSource = remember { MutableInteractionSource() }
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        val candidates = remember { context.candidates }
+        val state = rememberLazyListState()
+        LaunchedEffect(context.candidateState.intValue) {
+                state.scrollToItem(index = 0, scrollOffset = 0)
+        }
         LazyRow(
                 modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight(),
+                state = state,
                 horizontalArrangement = Arrangement.spacedBy(0.dp),
                 verticalAlignment = Alignment.Bottom
         ) {
-                items(candidates.value) {
+                items(context.candidates.value) {
                         CandidateView(
                                 candidate = it,
                                 modifier = Modifier
