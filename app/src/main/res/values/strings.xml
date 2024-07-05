@@ -42,4 +42,10 @@
     <string name="about_label_google_forms">Google Forms Feedback</string>
     <string name="about_label_tencent_survey">Tencent Survey Feedback</string>
     <string name="about_label_email">Email Feedback</string>
+    <string name="keyboard_settings_navigation_hint">This page is scrollable</string>
+    <string name="keyboard_settings_character_standard_header">Character Set</string>
+    <string name="keyboard_settings_character_standard_traditional">Traditional</string>
+    <string name="keyboard_settings_character_standard_hongkong">Traditional, Hong Kong</string>
+    <string name="keyboard_settings_character_standard_taiwan">Traditional, Taiwan</string>
+    <string name="keyboard_settings_character_standard_simplified">Simplified</string>
 </resources>
