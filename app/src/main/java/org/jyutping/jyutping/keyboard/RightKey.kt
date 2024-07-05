@@ -9,6 +9,7 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -64,25 +65,23 @@ fun RightKey(modifier: Modifier) {
                 ) {
                         if (keyForm.isBuffering()) {
                                 Column(
-                                        verticalArrangement = Arrangement.spacedBy(0.dp),
+                                        verticalArrangement = Arrangement.Bottom,
                                         horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
-                                        Text(
-                                                text = keyForm.keyText(),
-                                                fontSize = 20.sp
-                                        )
+                                        Spacer(modifier = Modifier.weight(1f))
                                         Text(
                                                 text = "分隔",
-                                                modifier =Modifier.alpha(0.85f),
+                                                modifier = Modifier
+                                                        .alpha(0.85f)
+                                                        .padding(bottom = 2.dp),
                                                 fontSize = 10.sp
                                         )
                                 }
-                        } else {
-                                Text(
-                                        text = keyForm.keyText(),
-                                        fontSize = 20.sp
-                                )
                         }
+                        Text(
+                                text = keyForm.keyText(),
+                                fontSize = 20.sp
+                        )
                 }
         }
 }
