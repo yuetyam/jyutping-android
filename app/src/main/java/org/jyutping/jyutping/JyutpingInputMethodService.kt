@@ -121,10 +121,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.databaseName) }
         private var bufferText: String = String.empty
                 set(value) {
+                        candidates.value = emptyList()
                         field = value
                         when (value.firstOrNull()) {
                                 null -> {
-                                        candidates.value = listOf()
                                         currentInputConnection.setComposingText(value, value.length)
                                         currentInputConnection.finishComposingText()
                                         if (isBuffering.value) {
@@ -139,6 +139,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         currentInputConnection.setComposingText(value, value.length)
                                         val segmentation = Segmentor.segment(value, db)
                                         val suggestions = Engine.suggest(text = value, segmentation = segmentation, db = db)
+                                        val mark: String = run {
+                                                val firstCandidate = suggestions.firstOrNull()
+                                                if (firstCandidate != null && firstCandidate.input.length == value.length) firstCandidate.mark else value
+                                        }
+                                        currentInputConnection.setComposingText(mark, mark.length)
                                         candidates.value = suggestions.map { it.transformed(characterStandard.value) }.distinct()
                                         if (isBuffering.value.not()) {
                                                 isBuffering.value = true

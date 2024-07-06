@@ -375,7 +375,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                         val order = cursor.getInt(0)
                         val word = cursor.getString(1)
                         val romanization = cursor.getString(2)
-                        val markText = mark ?: input
+                        val markText = mark ?: romanization.filter { it.isDigit().not() }
                         val candidate = Candidate(text = word, romanization = romanization, input = input, mark = markText, order = order)
                         candidates.add(candidate)
                 }

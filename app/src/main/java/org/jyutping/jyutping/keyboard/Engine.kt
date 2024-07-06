@@ -36,7 +36,7 @@ object Engine {
                                 val text2mark = scheme.joinToString(separator = String.space) { it.text } + String.space + tail
                                 val shortcut = db.shortcut(anchors)
                                         .filter { candidate -> candidate.romanization.filter { it.isDigit().not() }.startsWith(text2mark) }
-                                        .map { Candidate(text = it.text, romanization = it.romanization, input = it.input, mark = text2mark) }
+                                        .map { Candidate(text = it.text, romanization = it.romanization, input = text, mark = text2mark) }
                                 shortcuts.add(shortcut)
                         }
                         shortcuts.flatten()
