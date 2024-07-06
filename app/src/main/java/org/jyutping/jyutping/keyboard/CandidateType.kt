@@ -9,3 +9,4 @@ enum class CandidateType {
 }
 
 fun CandidateType.isCantonese(): Boolean = (this == CandidateType.Cantonese)
+fun CandidateType.isNotCantonese(): Boolean = (this != CandidateType.Cantonese)

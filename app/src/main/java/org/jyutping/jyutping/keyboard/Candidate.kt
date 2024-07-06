@@ -1,5 +1,8 @@
 package org.jyutping.jyutping.keyboard
 
+import org.jyutping.jyutping.CharacterStandard
+import org.jyutping.jyutping.extensions.convertedT2S
+
 data class Candidate(
         val type: CandidateType = CandidateType.Cantonese,
         val text: String,
@@ -22,5 +25,18 @@ data class Candidate(
         override fun hashCode(): Int = when (type) {
                 CandidateType.Cantonese -> (text.hashCode() * 31 + romanization.hashCode())
                 else -> text.hashCode()
+        }
+}
+
+fun Candidate.transformed(characterStandard: CharacterStandard): Candidate {
+        if (this.type.isNotCantonese()) return this
+        return when (characterStandard) {
+                CharacterStandard.Traditional -> this
+                CharacterStandard.HongKong -> this // TODO: Candidate transform
+                CharacterStandard.Taiwan -> this // TODO: Candidate transform
+                CharacterStandard.Simplified -> {
+                        val convertedText = this.text.convertedT2S()
+                        Candidate(text = convertedText, lexiconText = this.lexiconText, romanization = this.romanization, input = this.input, mark = this.mark)
+                }
         }
 }

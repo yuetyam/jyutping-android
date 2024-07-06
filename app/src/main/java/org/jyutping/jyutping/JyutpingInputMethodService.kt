@@ -28,6 +28,7 @@ import org.jyutping.jyutping.keyboard.KeyboardCase
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.Segmentor
 import org.jyutping.jyutping.keyboard.isUppercased
+import org.jyutping.jyutping.keyboard.transformed
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
 
@@ -107,6 +108,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
+        val characterStandard: MutableState<CharacterStandard> = run {
+                // TODO: Fetch from Config
+                mutableStateOf(CharacterStandard.Traditional)
+        }
+        fun updateCharacterStandard(standard: CharacterStandard) {
+                characterStandard.value = standard
+                // TODO: Save to Config
+        }
         val candidateState: MutableIntState = mutableIntStateOf(1)
         val candidates: MutableState<List<Candidate>> = mutableStateOf(listOf())
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.databaseName) }
@@ -130,7 +139,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         currentInputConnection.setComposingText(value, value.length)
                                         val segmentation = Segmentor.segment(value, db)
                                         val suggestions = Engine.suggest(text = value, segmentation = segmentation, db = db)
-                                        candidates.value = suggestions
+                                        candidates.value = suggestions.map { it.transformed(characterStandard.value) }.distinct()
                                         if (isBuffering.value.not()) {
                                                 isBuffering.value = true
                                         }
