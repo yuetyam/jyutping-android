@@ -20,9 +20,28 @@ object Engine {
                 return rounds.flatten().distinct()
         }
         private fun process(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
+                val textLength = text.length
                 val primary = query(text, segmentation, db)
                 val firstInputLength = primary.firstOrNull()?.input?.length ?: 0
                 if (firstInputLength == 0) return processVerbatim(text, db)
+                if (firstInputLength == textLength) return primary
+                val prefixes: List<Candidate> = run {
+                        if (segmentation.maxLength() >= textLength) emptyList<Candidate>()
+                        val shortcuts: MutableList<List<Candidate>> = mutableListOf()
+                        for (scheme in segmentation) {
+                                val tail = text.drop(scheme.length())
+                                val lastAnchor = tail.firstOrNull() ?: continue
+                                val schemeAnchors = scheme.mapNotNull { it.text.firstOrNull() }
+                                val anchors: String = (schemeAnchors + lastAnchor).joinToString(separator = String.empty)
+                                val text2mark = scheme.joinToString(separator = String.space) { it.text } + String.space + tail
+                                val shortcut = db.shortcut(anchors)
+                                        .filter { candidate -> candidate.romanization.filter { it.isDigit().not() }.startsWith(text2mark) }
+                                        .map { Candidate(text = it.text, romanization = it.romanization, input = it.input, mark = text2mark) }
+                                shortcuts.add(shortcut)
+                        }
+                        shortcuts.flatten()
+                }
+                if (prefixes.isNotEmpty()) return prefixes + primary
                 return primary
         }
         private fun query(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
