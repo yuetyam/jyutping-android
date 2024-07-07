@@ -28,6 +28,7 @@ import org.jyutping.jyutping.keyboard.KeyboardCase
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.Segmentor
 import org.jyutping.jyutping.keyboard.isUppercased
+import org.jyutping.jyutping.keyboard.length
 import org.jyutping.jyutping.keyboard.transformed
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
@@ -134,9 +135,32 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 'r' -> {}
                                 'v' -> {}
                                 'x' -> {}
-                                'q' -> {}
+                                'q' -> {
+                                        if (value.length < 2) {
+                                                currentInputConnection.setComposingText(value, value.length)
+                                        } else {
+                                                val text = value.drop(1)
+                                                val segmentation = Segmentor.segment(text, db)
+                                                val tailMark: String = run {
+                                                        val bestScheme = segmentation.firstOrNull()
+                                                        val leadingLength: Int = bestScheme?.length() ?: 0
+                                                        val leadingText: String = bestScheme?.joinToString(separator = String.space) { it.text } ?: String.empty
+                                                        when (leadingLength) {
+                                                                0 -> text
+                                                                text.length -> leadingText
+                                                                else -> (leadingText + String.space + text.drop(leadingLength))
+                                                        }
+                                                }
+                                                val mark = "q $tailMark"
+                                                currentInputConnection.setComposingText(mark, mark.length)
+                                                val suggestions = Engine.structureReverseLookup(text, segmentation, db)
+                                                candidates.value = suggestions.map { it.transformed(characterStandard.value) }.distinct()
+                                        }
+                                        if (isBuffering.value.not()) {
+                                                isBuffering.value = true
+                                        }
+                                }
                                 else -> {
-                                        currentInputConnection.setComposingText(value, value.length)
                                         val segmentation = Segmentor.segment(value, db)
                                         val suggestions = Engine.suggest(text = value, segmentation = segmentation, db = db)
                                         val mark: String = run {
@@ -173,7 +197,22 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun select(candidate: Candidate) {
                 currentInputConnection.commitText(candidate.text, candidate.text.length)
-                bufferText = bufferText.drop(candidate.input.length)
+                when (bufferText.firstOrNull()) {
+                        null -> {}
+                        'q' -> {
+                                val inputLength = candidate.input.length
+                                val leadingLength = inputLength + 1
+                                if (bufferText.length > leadingLength) {
+                                        val tail = bufferText.drop(leadingLength)
+                                        bufferText = "q$tail"
+                                } else {
+                                        bufferText = String.empty
+                                }
+                        }
+                        else -> {
+                                bufferText = bufferText.drop(candidate.input.length)
+                        }
+                }
         }
         fun backspace() {
                 if (bufferText.isEmpty()) {

@@ -3,6 +3,7 @@ package org.jyutping.jyutping.utilities
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import androidx.compose.runtime.MutableState
 import org.jyutping.jyutping.extensions.charcode
 import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.extensions.intercode
@@ -395,5 +396,33 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
                 cursor.close()
                 return token
+        }
+
+        fun reverseLookup(text: String): List<String> {
+                if (text.isBlank()) return emptyList()
+                val romanizations: MutableList<String> = mutableListOf()
+                val command = "SELECT romanization FROM lexicontable WHERE word = '${text}';"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val romanization = cursor.getString(0)
+                        romanizations.add(romanization)
+                }
+                cursor.close()
+                return romanizations
+        }
+        fun structureMatch(text: String): List<Candidate> {
+                if (text.isBlank()) return emptyList()
+                val candidates: MutableList<Candidate> = mutableListOf()
+                val code = text.hashCode()
+                val command = "SELECT word, romanization FROM structuretable WHERE ping = ${code};"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val word = cursor.getString(0)
+                        val romanization = cursor.getString(1)
+                        val instance = Candidate(text = word, romanization = romanization, input = text)
+                        candidates.add(instance)
+                }
+                cursor.close()
+                return candidates
         }
 }
