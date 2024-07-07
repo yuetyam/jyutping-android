@@ -86,7 +86,7 @@ object Segmentor {
         private fun splitLeading(text: String, db: DatabaseHelper): SegmentScheme {
                 val maxLength = min(text.length, 6)
                 if (maxLength < 1) return emptyList()
-                return (maxLength downTo 1).mapNotNull { db.matchSyllable(text.take(it)) }
+                return (maxLength downTo 1).mapNotNull { db.syllableMatch(text.take(it)) }
         }
 
         private val letterA: Segmentation = listOf(listOf(SegmentToken(text = "a", origin = "aa")))

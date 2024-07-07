@@ -46,35 +46,35 @@ fun HomeScreen(navController: NavHostController) {
         fun searchYingWan(text: String): List<YingWaaFanWan> {
                 if (text.isBlank()) return listOf()
                 val char = text.first()
-                val matched = helper.matchYingWaaFanWan(char)
+                val matched = helper.yingWaaFanWanMatch(char)
                 if (matched.isNotEmpty()) return YingWaaFanWan.process(matched)
                 val traditionalChar = text.convertedS2T().firstOrNull() ?: char
-                val traditionalMatched = helper.matchYingWaaFanWan(traditionalChar)
+                val traditionalMatched = helper.yingWaaFanWanMatch(traditionalChar)
                 return YingWaaFanWan.process(traditionalMatched)
         }
         fun searchChoHok(text: String): List<ChoHokYuetYamCitYiu> {
                 if (text.isBlank()) return listOf()
                 val char = text.first()
-                val matched = helper.matchChoHokYuetYamCitYiu(char)
+                val matched = helper.choHokYuetYamCitYiuMatch(char)
                 if (matched.isNotEmpty()) return matched
                 val traditionalChar = text.convertedS2T().firstOrNull() ?: char
-                return helper.matchChoHokYuetYamCitYiu(traditionalChar)
+                return helper.choHokYuetYamCitYiuMatch(traditionalChar)
         }
         fun searchFanWan(text: String): List<FanWanCuetYiu> {
                 if (text.isBlank()) return listOf()
                 val char = text.first()
-                val matched = helper.matchFanWanCuetYiu(char)
+                val matched = helper.fanWanCuetYiuMatch(char)
                 if (matched.isNotEmpty()) return matched
                 val traditionalChar = text.convertedS2T().firstOrNull() ?: char
-                return helper.matchFanWanCuetYiu(traditionalChar)
+                return helper.fanWanCuetYiuMatch(traditionalChar)
         }
         fun searchGwongWan(text: String): List<GwongWanCharacter> {
                 if (text.isBlank()) return listOf()
                 val char = text.first()
-                val matched = helper.matchGwongWan(char)
+                val matched = helper.gwongWanMatch(char)
                 if (matched.isNotEmpty()) return matched
                 val traditionalChar = text.convertedS2T().firstOrNull() ?: char
-                return helper.matchGwongWan(traditionalChar)
+                return helper.gwongWanMatch(traditionalChar)
         }
         SelectionContainer {
                 LazyColumn(
@@ -86,7 +86,7 @@ fun HomeScreen(navController: NavHostController) {
                                         val text = textState.value.trim()
                                         lexiconState.value = helper.searchCantoneseLexicon(text)
                                         val text4definition = lexiconState.value?.text ?: text
-                                        unihanDefinition.value = helper.matchUnihanDefinition(text4definition)
+                                        unihanDefinition.value = helper.unihanDefinitionMatch(text4definition)
                                         yingWaaEntries.value = searchYingWan(text)
                                         choHokEntries.value = searchChoHok(text)
                                         fanWanEntries.value = searchFanWan(text)

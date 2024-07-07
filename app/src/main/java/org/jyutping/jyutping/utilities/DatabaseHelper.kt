@@ -155,7 +155,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return listOf()
         }
 
-        fun matchYingWaaFanWan(char: Char): List<YingWaaFanWan> {
+        fun yingWaaFanWanMatch(char: Char): List<YingWaaFanWan> {
                 val entries: MutableList<YingWaaFanWan> = mutableListOf()
                 val code = char.code
                 val command = "SELECT * FROM yingwaatable WHERE code = $code;"
@@ -193,7 +193,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return homophones
         }
 
-        fun matchChoHokYuetYamCitYiu(char: Char): List<ChoHokYuetYamCitYiu> {
+        fun choHokYuetYamCitYiuMatch(char: Char): List<ChoHokYuetYamCitYiu> {
                 val entries: MutableList<ChoHokYuetYamCitYiu> = mutableListOf()
                 val code = char.code
                 val command = "SELECT * FROM chohoktable WHERE code = $code;"
@@ -236,7 +236,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return homophones
         }
 
-        fun matchFanWanCuetYiu(char: Char): List<FanWanCuetYiu> {
+        fun fanWanCuetYiuMatch(char: Char): List<FanWanCuetYiu> {
                 val entries: MutableList<FanWanCuetYiu> = mutableListOf()
                 val code = char.code
                 val command = "SELECT * FROM fanwantable WHERE code = $code;"
@@ -282,7 +282,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return homophones
         }
 
-        fun matchGwongWan(char: Char): List<GwongWanCharacter> {
+        fun gwongWanMatch(char: Char): List<GwongWanCharacter> {
                 val entries: MutableList<GwongWanCharacter> = mutableListOf()
                 val code = char.code
                 val command = "SELECT * FROM gwongwantable WHERE code = $code;"
@@ -321,7 +321,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return entries
         }
 
-        fun matchUnihanDefinition(text: String): UnihanDefinition? {
+        fun unihanDefinitionMatch(text: String): UnihanDefinition? {
                 if (text.length != 1) return null
                 val character = text.first()
                 val code = character.code
@@ -382,7 +382,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 cursor.close()
                 return candidates
         }
-        fun matchSyllable(text: String): SegmentToken? {
+        fun syllableMatch(text: String): SegmentToken? {
                 val code = text.charcode() ?: 0
                 if (code == 0) return null
                 var token: SegmentToken? = null
