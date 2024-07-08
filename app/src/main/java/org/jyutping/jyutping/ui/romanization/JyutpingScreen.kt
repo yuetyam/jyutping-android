@@ -46,7 +46,6 @@ fun JyutpingScreen(navController: NavHostController) {
                                 WebLinkLabel(icon = Icons.Outlined.Search, text = "粵音資料集叢", uri = "https://jyut.net")
                                 WebLinkLabel(icon = Icons.Outlined.Search, text = "粵典", uri = "https://words.hk")
                                 WebLinkLabel(icon = Icons.Outlined.Search, text = "粵語審音配詞字庫", uri = "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-can")
-                                WebLinkLabel(icon = Icons.Outlined.Search, text = "泛粵典", uri = "https://www.jyutdict.org")
                                 WebLinkLabel(icon = Icons.Outlined.Search, text = "羊羊粵語", uri = "https://shyyp.net/hant")
                         }
                 }

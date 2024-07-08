@@ -1,5 +1,8 @@
 package org.jyutping.jyutping.extensions
 
+fun Char.isReverseLookupTrigger(): Boolean = reverseLookupTriggers.contains(this)
+private val reverseLookupTriggers: Set<Char> = setOf('r', 'v', 'x', 'q')
+
 /// is CJKV character
 fun Char.isIdeographic(): Boolean = when (this.code) {
         0x3007 -> true

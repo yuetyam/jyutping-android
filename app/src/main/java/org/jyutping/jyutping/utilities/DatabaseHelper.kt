@@ -3,7 +3,6 @@ package org.jyutping.jyutping.utilities
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import androidx.compose.runtime.MutableState
 import org.jyutping.jyutping.extensions.charcode
 import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.extensions.intercode
@@ -397,7 +396,18 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 cursor.close()
                 return token
         }
-
+        fun characterReverseLookup(text: String): List<String> {
+                if (text.length != 1) return emptyList()
+                val romanizations: MutableList<String> = mutableListOf()
+                val command = "SELECT romanization FROM lexicontable WHERE shortcut < 50 AND word = '${text}';"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val romanization = cursor.getString(0)
+                        romanizations.add(romanization)
+                }
+                cursor.close()
+                return romanizations
+        }
         fun reverseLookup(text: String): List<String> {
                 if (text.isBlank()) return emptyList()
                 val romanizations: MutableList<String> = mutableListOf()
@@ -409,6 +419,20 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
                 cursor.close()
                 return romanizations
+        }
+        fun pinyinSyllableMatch(text: String): String? {
+                val code = text.charcode() ?: 0
+                if (code == 0) return null
+                val command = "SELECT syllable FROM pinyinsyllabletable WHERE code = $code LIMIT 1;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                if (cursor.moveToFirst()) {
+                        val syllable = cursor.getString(0)
+                        cursor.close()
+                        return syllable
+                } else {
+                        cursor.close()
+                        return null
+                }
         }
         fun structureMatch(text: String): List<Candidate> {
                 if (text.isBlank()) return emptyList()
@@ -424,5 +448,37 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
                 cursor.close()
                 return candidates
+        }
+        fun pinyinShortcut(text: String, limit: Int? = null): List<PinyinLexicon> {
+                val code: Int = text.charcode() ?: 0
+                if (code == 0) return emptyList()
+                val items: MutableList<PinyinLexicon> = mutableListOf()
+                val limitValue: Int = limit ?: 50
+                val command = "SELECT rowid, word, pinyin FROM pinyintable WHERE shortcut = ${code} LIMIT ${limitValue};"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val rowID = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val pinyin = cursor.getString(2)
+                        val instance = PinyinLexicon(text = word, pinyin = pinyin, input = text, mark = text, order = rowID)
+                        items.add(instance)
+                }
+                cursor.close()
+                return items
+        }
+        fun pinyinMatch(text: String): List<PinyinLexicon> {
+                val items: MutableList<PinyinLexicon> = mutableListOf()
+                val code: Int = text.hashCode()
+                val command = "SELECT rowid, word, pinyin FROM pinyintable WHERE ping = ${code};"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val rowID = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val pinyin = cursor.getString(2)
+                        val instance = PinyinLexicon(text = word, pinyin = pinyin, input = text, mark = pinyin, order = rowID)
+                        items.add(instance)
+                }
+                cursor.close()
+                return items
         }
 }

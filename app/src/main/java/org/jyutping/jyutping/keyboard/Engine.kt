@@ -58,16 +58,14 @@ object Engine {
                 if (perfectSchemes.isNotEmpty()) {
                         val matches: MutableList<List<Candidate>> = mutableListOf()
                         for (scheme in perfectSchemes) {
-                                val queries: MutableList<List<Candidate>> = mutableListOf()
                                 for (number in scheme.indices) {
                                         val slice = scheme.dropLast(number)
                                         val pingText = slice.joinToString(separator = String.empty) { it.origin }
                                         val inputText = slice.joinToString(separator = String.empty) { it.text }
                                         val text2mark = slice.joinToString(separator = String.space) { it.text }
                                         val matched = db.match(text = pingText, input = inputText, mark = text2mark)
-                                        queries.add(matched)
+                                        matches.add(matched)
                                 }
-                                matches.add(queries.flatten())
                         }
                         return ordered(textLength, matches.flatten())
                 } else {
@@ -103,27 +101,5 @@ object Engine {
                         return@Comparator -(lhs.input.length.compareTo(rhs.input.length))
                 }
                 return candidates.sortedWith(comparator)
-        }
-
-        fun structureReverseLookup(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
-                return structureProcess(text, segmentation, db)
-                        .map { item ->
-                                db.reverseLookup(item.text)
-                                        .map { romanization -> Candidate(text = item.text, romanization = romanization, input = text, mark = romanization.filter { it.isLetter() }) }
-                        }
-                        .flatten()
-        }
-        private fun structureProcess(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
-                val fullMatched = db.structureMatch(text)
-                val textLength = text.length
-                val schemes = segmentation.filter { it.length() == textLength }
-                if (schemes.maxLength() < 1) return fullMatched
-                val matches: MutableList<List<Candidate>> = mutableListOf()
-                for (scheme in schemes) {
-                        val pingText = scheme.joinToString(separator = String.empty) { it.origin }
-                        val matched = db.structureMatch(pingText)
-                        matches.add(matched)
-                }
-                return fullMatched + matches.flatten()
         }
 }

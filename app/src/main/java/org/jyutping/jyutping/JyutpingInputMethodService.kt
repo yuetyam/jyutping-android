@@ -18,6 +18,7 @@ import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import org.jyutping.jyutping.extensions.empty
+import org.jyutping.jyutping.extensions.isReverseLookupTrigger
 import org.jyutping.jyutping.extensions.keyboardLightBackground
 import org.jyutping.jyutping.extensions.separator
 import org.jyutping.jyutping.extensions.space
@@ -26,7 +27,10 @@ import org.jyutping.jyutping.keyboard.Engine
 import org.jyutping.jyutping.keyboard.InputMethodMode
 import org.jyutping.jyutping.keyboard.KeyboardCase
 import org.jyutping.jyutping.keyboard.KeyboardForm
+import org.jyutping.jyutping.keyboard.Pinyin
+import org.jyutping.jyutping.keyboard.PinyinSegmentor
 import org.jyutping.jyutping.keyboard.Segmentor
+import org.jyutping.jyutping.keyboard.Structure
 import org.jyutping.jyutping.keyboard.isUppercased
 import org.jyutping.jyutping.keyboard.length
 import org.jyutping.jyutping.keyboard.transformed
@@ -132,7 +136,36 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 isBuffering.value = false
                                         }
                                 }
-                                'r' -> {}
+                                'r' -> {
+                                        if (value.length < 2) {
+                                                currentInputConnection.setComposingText(value, value.length)
+                                        } else {
+                                                val text = value.drop(1)
+                                                val segmentation = PinyinSegmentor.segment(text, db)
+                                                val suggestions = Pinyin.reverseLookup(text, segmentation, db)
+                                                val tailMark: String = run {
+                                                        val firstCandidate = suggestions.firstOrNull()
+                                                        if (firstCandidate != null && firstCandidate.input.length == text.length) {
+                                                                firstCandidate.mark
+                                                        } else {
+                                                                val bestScheme = segmentation.firstOrNull()
+                                                                val leadingLength: Int = bestScheme?.map { it.length }?.reduce { acc, i -> acc + i } ?: 0
+                                                                val leadingText: String = bestScheme?.joinToString(separator = String.space) ?: String.empty
+                                                                when (leadingLength) {
+                                                                        0 -> text
+                                                                        text.length -> leadingText
+                                                                        else -> (leadingText + String.space + text.drop(leadingLength))
+                                                                }
+                                                        }
+                                                }
+                                                val mark = "r $tailMark"
+                                                currentInputConnection.setComposingText(mark, mark.length)
+                                                candidates.value = suggestions.map { it.transformed(characterStandard.value) }.distinct()
+                                        }
+                                        if (isBuffering.value.not()) {
+                                                isBuffering.value = true
+                                        }
+                                }
                                 'v' -> {}
                                 'x' -> {}
                                 'q' -> {
@@ -153,7 +186,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 }
                                                 val mark = "q $tailMark"
                                                 currentInputConnection.setComposingText(mark, mark.length)
-                                                val suggestions = Engine.structureReverseLookup(text, segmentation, db)
+                                                val suggestions = Structure.reverseLookup(text, segmentation, db)
                                                 candidates.value = suggestions.map { it.transformed(characterStandard.value) }.distinct()
                                         }
                                         if (isBuffering.value.not()) {
@@ -197,14 +230,15 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun select(candidate: Candidate) {
                 currentInputConnection.commitText(candidate.text, candidate.text.length)
-                when (bufferText.firstOrNull()) {
-                        null -> {}
-                        'q' -> {
+                val firstChar = bufferText.firstOrNull()
+                when {
+                        (firstChar == null) -> {}
+                        firstChar.isReverseLookupTrigger() -> {
                                 val inputLength = candidate.input.length
                                 val leadingLength = inputLength + 1
                                 if (bufferText.length > leadingLength) {
                                         val tail = bufferText.drop(leadingLength)
-                                        bufferText = "q$tail"
+                                        bufferText = "${firstChar}${tail}"
                                 } else {
                                         bufferText = String.empty
                                 }
