@@ -10,7 +10,7 @@ android {
         compileSdk = 34
         defaultConfig {
                 applicationId = "org.jyutping.jyutping"
-                minSdk = 33
+                minSdk = 30
                 targetSdk = 34
                 versionCode = 7
                 versionName = "0.7.0"

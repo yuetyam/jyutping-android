@@ -118,6 +118,7 @@ fun HomeScreen(navController: NavHostController) {
                                         GwongWanView(gwongWanEntries.value)
                                 }
                         }
+                        /*
                         item {
                                 TextCard(
                                         heading = stringResource(id = R.string.home_heading_tone_input),
@@ -126,12 +127,14 @@ fun HomeScreen(navController: NavHostController) {
                                         shouldContentMonospaced = true
                                 )
                         }
+                        */
                         item {
                                 TextCard(
                                         heading = stringResource(id = R.string.home_heading_pinyin_reverse_lookup),
                                         content = stringResource(id = R.string.home_content_pinyin_reverse_lookup)
                                 )
                         }
+                        /*
                         item {
                                 TextCard(
                                         heading = stringResource(id = R.string.home_heading_cangjie_reverse_lookup),
@@ -151,12 +154,14 @@ fun HomeScreen(navController: NavHostController) {
                                         shouldContentMonospaced = true
                                 )
                         }
+                        */
                         item {
                                 TextCard(
                                         heading = stringResource(id = R.string.home_heading_compose_reverse_lookup),
                                         content = stringResource(id = R.string.home_content_compose_reverse_lookup)
                                 )
                         }
+                        /*
                         item {
                                 DisableSelection {
                                         NavigationLabel(icon = Icons.Outlined.Info, text = stringResource(id = R.string.home_label_more_introductions)) {
@@ -164,6 +169,7 @@ fun HomeScreen(navController: NavHostController) {
                                         }
                                 }
                         }
+                        */
                 }
         }
 }
