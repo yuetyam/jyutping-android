@@ -28,6 +28,9 @@ private fun SegmentScheme.isValid(): Boolean {
         if (tokenNumber < 1) return false
         return originNumber == tokenNumber
 }
+
+private fun Segmentation.descended(): Segmentation = this.sortedWith(compareBy({-it.length()}, {it.size}))
+/*
 private fun Segmentation.descended(): Segmentation = run {
         val comparator = Comparator<SegmentScheme> { lhs, rhs ->
                 val lengthComparison = lhs.length().compareTo(rhs.length())
@@ -37,6 +40,7 @@ private fun Segmentation.descended(): Segmentation = run {
         }
         return this.sortedWith(comparator)
 }
+*/
 
 object Segmentor {
         fun segment(text: String, db: DatabaseHelper): Segmentation {

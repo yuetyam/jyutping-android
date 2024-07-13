@@ -3,6 +3,7 @@ package org.jyutping.jyutping.keyboard
 import org.jyutping.jyutping.extensions.empty
 import org.jyutping.jyutping.extensions.space
 import org.jyutping.jyutping.utilities.DatabaseHelper
+import kotlin.math.max
 
 object Engine {
         fun suggest(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
@@ -82,24 +83,31 @@ object Engine {
         }
 
         private fun preferred(text: String, candidates: List<Candidate>): List<Candidate> {
-                val comparator = Comparator<Candidate> { lhs, rhs ->
-                        val inputComparison = lhs.input.length.compareTo(rhs.input.length)
-                        if (inputComparison != 0) return@Comparator -inputComparison
-                        val textComparison = lhs.text.length.compareTo(rhs.text.length)
-                        return@Comparator -textComparison
-                }
-                val sorted = candidates.sortedWith(comparator)
+                val sorted = candidates.sortedWith(compareBy({-it.input.length}, {-it.text.length}))
                 val matched = sorted.filter { candidate -> candidate.romanization.filter { it.isLetter() } == text }
                 return matched.ifEmpty { sorted }
         }
         private fun ordered(textLength: Int, candidates: List<Candidate>): List<Candidate> {
+                val perfectCandidates = candidates.filter { it.input.length == textLength }.sortedBy { it.order }
+                // val imperfectCandidates = candidates.filter { it.input.length != textLength }.sortedBy { -(it.input.length) }
+                val leadingCandidates = candidates.filter { it.order < 40000 && it.input.length != textLength }.sortedBy { -(it.input.length) }
+                val trailingCandidates = candidates.filter { it.order > 40000 && it.input.length != textLength }.sortedBy { -(it.input.length) }
+                return perfectCandidates + leadingCandidates + trailingCandidates
+                // TODO: Candidate sorting
+                /*
                 val comparator = Comparator<Candidate> { lhs, rhs ->
-                        val isFullInput = lhs.input.length == textLength && rhs.input.length != textLength
-                        if (isFullInput) return@Comparator -1
-                        val isBetterOrder = lhs.order < (rhs.order - 50000)
-                        if (isBetterOrder) return@Comparator -1
-                        return@Comparator -(lhs.input.length.compareTo(rhs.input.length))
+                        val lhsInputLength = lhs.input.length
+                        val rhsInputLength = rhs.input.length
+                        val lhsOrder = lhs.order
+                        val rhsOrder = max(0, rhs.order - 5000)
+                        val shouldCompareOrder = lhsInputLength != textLength && rhsInputLength != textLength && (lhsOrder < rhsOrder)
+                        if (shouldCompareOrder) {
+                                return@Comparator lhsOrder.compareTo(rhsOrder)
+                        } else {
+                                return@Comparator rhsInputLength.compareTo(lhsInputLength)
+                        }
                 }
                 return candidates.sortedWith(comparator)
+                */
         }
 }
