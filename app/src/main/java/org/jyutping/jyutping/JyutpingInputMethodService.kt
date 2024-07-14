@@ -31,7 +31,6 @@ import org.jyutping.jyutping.keyboard.Pinyin
 import org.jyutping.jyutping.keyboard.PinyinSegmentor
 import org.jyutping.jyutping.keyboard.Segmentor
 import org.jyutping.jyutping.keyboard.Structure
-import org.jyutping.jyutping.keyboard.isUppercased
 import org.jyutping.jyutping.keyboard.length
 import org.jyutping.jyutping.keyboard.transformed
 import org.jyutping.jyutping.utilities.DatabaseHelper
@@ -249,10 +248,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
         fun backspace() {
-                if (bufferText.isEmpty()) {
-                        currentInputConnection.deleteSurroundingText(1, 0)
-                } else {
+                if (isBuffering.value) {
                         bufferText = bufferText.dropLast(1)
+                } else {
+                        currentInputConnection.deleteSurroundingText(1, 0)
                 }
         }
         fun performReturn() {
@@ -264,10 +263,16 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
         fun space() {
-                if (candidates.value.isEmpty()) {
-                        currentInputConnection.commitText(String.space, String.space.length)
+                if (isBuffering.value) {
+                        val firstCandidate = candidates.value.firstOrNull()
+                        if (firstCandidate == null) {
+                                currentInputConnection.commitText(bufferText, bufferText.length)
+                                bufferText = String.empty
+                        } else {
+                                select(firstCandidate)
+                        }
                 } else {
-                        select(candidates.value.first())
+                        currentInputConnection.commitText(String.space, String.space.length)
                 }
         }
         fun dismissKeyboard() {

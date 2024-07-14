@@ -39,7 +39,6 @@ import org.jyutping.jyutping.CharacterStandard
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.extensions.keyboardLightBackground
-import org.jyutping.jyutping.isSimplified
 
 @Composable
 fun SettingsScreen(height: Dp) {

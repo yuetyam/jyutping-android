@@ -5,8 +5,7 @@ enum class CandidateType {
         Text,
         Emoji,
         Symbol,
-        Compose
+        Compose;
+        fun isCantonese(): Boolean = (this == Cantonese)
+        fun isNotCantonese(): Boolean = (this != Cantonese)
 }
-
-fun CandidateType.isCantonese(): Boolean = (this == CandidateType.Cantonese)
-fun CandidateType.isNotCantonese(): Boolean = (this != CandidateType.Cantonese)

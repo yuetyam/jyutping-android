@@ -10,14 +10,15 @@ enum class CharacterStandard {
         /// Traditional, Taiwan
         Taiwan,
 
-        Simplified
-}
+        Simplified;
 
-fun CharacterStandard.idValue(): Int = when (this) {
-        CharacterStandard.Traditional -> 1
-        CharacterStandard.HongKong -> 2
-        CharacterStandard.Taiwan -> 3
-        CharacterStandard.Simplified -> 4
-}
+        fun idValue(): Int = when (this) {
+                Traditional -> 1
+                HongKong -> 2
+                Taiwan -> 3
+                Simplified -> 4
+        }
 
-fun CharacterStandard.isSimplified(): Boolean = (this == CharacterStandard.Simplified)
+        fun isSimplified(): Boolean = (this == Simplified)
+        fun isNotSimplified(): Boolean = (this != Simplified)
+}
