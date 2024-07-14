@@ -16,7 +16,7 @@ object Structure {
                 val fullMatched = db.structureMatch(text)
                 val textLength = text.length
                 val schemes = segmentation.filter { it.length() == textLength }
-                if (schemes.maxLength() < 1) return fullMatched
+                if (schemes.maxSchemeLength() < 1) return fullMatched
                 val matches: MutableList<List<Candidate>> = mutableListOf()
                 for (scheme in schemes) {
                         val pingText = scheme.joinToString(separator = String.empty) { it.origin }

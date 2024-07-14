@@ -3,12 +3,11 @@ package org.jyutping.jyutping.keyboard
 import org.jyutping.jyutping.extensions.empty
 import org.jyutping.jyutping.extensions.space
 import org.jyutping.jyutping.utilities.DatabaseHelper
-import kotlin.math.max
 
 object Engine {
         fun suggest(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
                 if (db.canProcess(text).not()) return emptyList()
-                if (segmentation.maxLength() < 1) return processVerbatim(text, db)
+                if (segmentation.maxSchemeLength() < 1) return processVerbatim(text, db)
                 return process(text, segmentation, db)
         }
         private fun processVerbatim(text: String, db: DatabaseHelper): List<Candidate> {
@@ -27,7 +26,7 @@ object Engine {
                 if (firstInputLength == 0) return processVerbatim(text, db)
                 if (firstInputLength == textLength) return primary
                 val prefixes: List<Candidate> = run {
-                        if (segmentation.maxLength() >= textLength) emptyList<Candidate>()
+                        if (segmentation.maxSchemeLength() >= textLength) emptyList<Candidate>()
                         val shortcuts: MutableList<List<Candidate>> = mutableListOf()
                         for (scheme in segmentation) {
                                 val tail = text.drop(scheme.length())
@@ -90,7 +89,7 @@ object Engine {
         private fun ordered(textLength: Int, candidates: List<Candidate>): List<Candidate> {
                 val perfectCandidates = candidates.filter { it.input.length == textLength }.sortedBy { it.order }
                 // val imperfectCandidates = candidates.filter { it.input.length != textLength }.sortedBy { -(it.input.length) }
-                val leadingCandidates = candidates.filter { it.order < 40000 && it.input.length != textLength }.sortedBy { -(it.input.length) }
+                val leadingCandidates = candidates.filter { it.order <= 40000 && it.input.length != textLength }.sortedBy { -(it.input.length) }
                 val trailingCandidates = candidates.filter { it.order > 40000 && it.input.length != textLength }.sortedBy { -(it.input.length) }
                 return perfectCandidates + leadingCandidates + trailingCandidates
                 // TODO: Candidate sorting

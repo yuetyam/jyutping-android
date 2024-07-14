@@ -14,11 +14,11 @@ object PinyinSegmentor {
                 if (leadingTokens.isEmpty()) return emptyList()
                 val textLength = text.length
                 var segmentation = leadingTokens.map { listOf(it) }
-                var previousSubelementCount = segmentation.map { scheme -> scheme.map { it.length } }.flatten().reduce { acc, i -> acc + i }
+                var previousSubelementCount = segmentation.syllableCount()
                 var shouldContinue = true
                 while (shouldContinue) {
                         for (scheme in segmentation) {
-                                val schemeLength = scheme.map { it.length }.reduce { acc, i -> acc + i }
+                                val schemeLength = scheme.length()
                                 if (schemeLength >= textLength) continue
                                 val tailText = text.drop(schemeLength)
                                 val tailTokens = splitLeading(tailText, db)
@@ -27,28 +27,17 @@ object PinyinSegmentor {
                                 segmentation += newSegmentation
                         }
                         segmentation = segmentation.distinct()
-                        val currentSubelementCount = segmentation.map { scheme -> scheme.map { it.length } }.flatten().reduce { acc, i -> acc + i }
+                        val currentSubelementCount = segmentation.syllableCount()
                         if (currentSubelementCount != previousSubelementCount) {
                                 previousSubelementCount = currentSubelementCount
                         } else {
                                 shouldContinue = false
                         }
                 }
-                val sortedSegmentation: List<List<String>> = run {
-                        val comparator = Comparator<List<String>> { lhs, rhs ->
-                                val lhsLength = lhs.map { it.length }.reduce { acc, i -> acc + i }
-                                val rhsLength = rhs.map { it.length }.reduce { acc, i -> acc + i }
-                                if (lhsLength == rhsLength) {
-                                        val sizeCompare = lhs.size.compareTo(rhs.size)
-                                        return@Comparator -sizeCompare
-                                } else {
-                                        val lengthCompare = lhsLength.compareTo(rhsLength)
-                                        return@Comparator -lengthCompare
-                                }
-                        }
-                        segmentation.sortedWith(comparator)
-                }
-                return sortedSegmentation
+                return segmentation.sortedWith(compareBy(
+                        { -(it.length()) },
+                        { -(it.size) }
+                ))
         }
         private fun splitLeading(text: String, db: DatabaseHelper): List<String> {
                 val maxLength = min(text.length, 6)
@@ -57,3 +46,6 @@ object PinyinSegmentor {
                 return syllables
         }
 }
+
+private fun List<String>.length(): Int = this.map { it.length }.reduce { acc, i -> acc + i }
+private fun List<List<String>>.syllableCount(): Int = this.map { it.size }.reduce { acc, i -> acc + i }

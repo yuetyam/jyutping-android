@@ -14,8 +14,14 @@ data class SegmentToken(
 typealias SegmentScheme = List<SegmentToken>
 typealias Segmentation = List<SegmentScheme>
 
+/// All token text character count
 fun SegmentScheme.length(): Int = this.map { it.text.length }.reduce { acc, i -> acc + i }
-fun Segmentation.maxLength(): Int = this.firstOrNull()?.length() ?: 0
+
+/// Longest scheme token text character count
+fun Segmentation.maxSchemeLength(): Int = this.firstOrNull()?.length() ?: 0
+
+/// All token count
+private fun Segmentation.tokenCount(): Int = this.map { it.size }.reduce { acc, i -> acc + i }
 
 private fun SegmentScheme.isValid(): Boolean {
         // REASON: *am => [*aa, m] => *aam
@@ -65,7 +71,7 @@ object Segmentor {
                 if (leadingTokens.isEmpty()) return emptyList()
                 val textLength = text.length
                 var segmentation = leadingTokens.map { listOf(it) }
-                var previousSubelementCount = segmentation.map { it.length() }.reduce { acc, i -> acc + i }
+                var previousSubelementCount = segmentation.tokenCount()
                 var shouldContinue = true
                 while (shouldContinue) {
                         for (scheme in segmentation) {
@@ -78,7 +84,7 @@ object Segmentor {
                                 segmentation += newSegmentation
                         }
                         segmentation = segmentation.distinct()
-                        val currentSubelementCount = segmentation.map { it.length() }.reduce { acc, i -> acc + i }
+                        val currentSubelementCount = segmentation.tokenCount()
                         if (currentSubelementCount != previousSubelementCount) {
                                 previousSubelementCount = currentSubelementCount
                         } else {
