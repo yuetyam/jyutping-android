@@ -2,6 +2,7 @@ package org.jyutping.jyutping.keyboard
 
 import org.jyutping.jyutping.CharacterStandard
 import org.jyutping.jyutping.extensions.convertedT2S
+import org.jyutping.jyutping.extensions.space
 
 data class Candidate(
         val type: CandidateType = CandidateType.Cantonese,
@@ -25,6 +26,13 @@ data class Candidate(
         override fun hashCode(): Int = when (type) {
                 CandidateType.Cantonese -> (text.hashCode() * 31 + romanization.hashCode())
                 else -> text.hashCode()
+        }
+        operator fun plus(another: Candidate): Candidate {
+                val newText = this.text + another.text
+                val newRomanization = this.romanization + String.space + another.romanization
+                val newInput = this.input + another.input
+                val newMark = this.mark + String.space + another.mark
+                return Candidate(text = newText, romanization = newRomanization, input = newInput, mark = newMark)
         }
 }
 
