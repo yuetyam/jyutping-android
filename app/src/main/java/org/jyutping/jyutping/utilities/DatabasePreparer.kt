@@ -1,7 +1,6 @@
 package org.jyutping.jyutping.utilities
 
 import android.content.Context
-import android.util.Log
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -14,8 +13,6 @@ object DatabasePreparer {
         private val oldDatabaseNames: List<String> = listOf(
                 "tmpdb.sqlite3",
                 "tmpdb.sqlite3-journal",
-                "appdb-v0.1.0-tmp.sqlite3",
-                "appdb-v0.1.0-tmp.sqlite3-journal",
                 "appdb-v0.2.0-tmp.sqlite3",
                 "appdb-v0.2.0-tmp.sqlite3-journal",
                 "appdb-v0.3.0-tmp.sqlite3",
@@ -28,6 +25,8 @@ object DatabasePreparer {
                 "appdb-v0.6.0-tmp.sqlite3-journal",
                 "appdb-v0.7.0-tmp.sqlite3",
                 "appdb-v0.7.0-tmp.sqlite3-journal",
+                "appdb-v0.8.0-tmp.sqlite3",
+                "appdb-v0.8.0-tmp.sqlite3-journal",
         )
         val databaseName: String = run {
                 val version = BuildConfig.VERSION_NAME

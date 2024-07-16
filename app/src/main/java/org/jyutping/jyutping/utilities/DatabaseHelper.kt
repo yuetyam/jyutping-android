@@ -118,8 +118,9 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
                 if (romanization != null) {
                         return Pair(romanization, matchedCount)
+                } else {
+                        return Pair(null, 0)
                 }
-                return Pair(null, 0)
         }
         private fun fetchRomanizations(word: String): List<String> {
                 val romanizations: MutableList<String> = mutableListOf()

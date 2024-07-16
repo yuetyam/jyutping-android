@@ -44,8 +44,7 @@ fun HomeScreen(navController: NavHostController) {
         val gwongWanEntries = remember { mutableStateOf<List<GwongWanCharacter>>(listOf()) }
         val helper: DatabaseHelper by lazy { DatabaseHelper(navController.context, DatabasePreparer.databaseName) }
         fun searchYingWan(text: String): List<YingWaaFanWan> {
-                if (text.isBlank()) return listOf()
-                val char = text.first()
+                val char = text.firstOrNull() ?: return emptyList()
                 val matched = helper.yingWaaFanWanMatch(char)
                 if (matched.isNotEmpty()) return YingWaaFanWan.process(matched)
                 val traditionalChar = text.convertedS2T().firstOrNull() ?: char
@@ -53,24 +52,21 @@ fun HomeScreen(navController: NavHostController) {
                 return YingWaaFanWan.process(traditionalMatched)
         }
         fun searchChoHok(text: String): List<ChoHokYuetYamCitYiu> {
-                if (text.isBlank()) return listOf()
-                val char = text.first()
+                val char = text.firstOrNull() ?: return emptyList()
                 val matched = helper.choHokYuetYamCitYiuMatch(char)
                 if (matched.isNotEmpty()) return matched
                 val traditionalChar = text.convertedS2T().firstOrNull() ?: char
                 return helper.choHokYuetYamCitYiuMatch(traditionalChar)
         }
         fun searchFanWan(text: String): List<FanWanCuetYiu> {
-                if (text.isBlank()) return listOf()
-                val char = text.first()
+                val char = text.firstOrNull() ?: return emptyList()
                 val matched = helper.fanWanCuetYiuMatch(char)
                 if (matched.isNotEmpty()) return matched
                 val traditionalChar = text.convertedS2T().firstOrNull() ?: char
                 return helper.fanWanCuetYiuMatch(traditionalChar)
         }
         fun searchGwongWan(text: String): List<GwongWanCharacter> {
-                if (text.isBlank()) return listOf()
-                val char = text.first()
+                val char = text.firstOrNull() ?: return emptyList()
                 val matched = helper.gwongWanMatch(char)
                 if (matched.isNotEmpty()) return matched
                 val traditionalChar = text.convertedS2T().firstOrNull() ?: char
