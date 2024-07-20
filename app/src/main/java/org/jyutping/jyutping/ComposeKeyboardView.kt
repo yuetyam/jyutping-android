@@ -43,7 +43,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                 val screenWidth = LocalConfiguration.current.screenWidthDp
                 val screenHeight = LocalConfiguration.current.screenHeightDp
                 if (screenWidth > screenHeight) return 40.dp
-                val value = 50 + ((screenWidth - 300) / 20)
+                val value: Int = 50 + ((screenWidth - 300) / 20)
                 return value.dp
         }
 }
