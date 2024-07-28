@@ -114,16 +114,14 @@ fun HomeScreen(navController: NavHostController) {
                                         GwongWanView(gwongWanEntries.value)
                                 }
                         }
-                        /*
                         item {
                                 TextCard(
                                         heading = stringResource(id = R.string.home_heading_tone_input),
                                         content = stringResource(id = R.string.home_content_tones_input),
                                         subContent = stringResource(id = R.string.home_subcontent_tones_input_examples),
-                                        shouldContentMonospaced = true
+                                        shouldMonospaceContent = true
                                 )
                         }
-                        */
                         item {
                                 TextCard(
                                         heading = stringResource(id = R.string.home_heading_pinyin_reverse_lookup),
@@ -147,7 +145,7 @@ fun HomeScreen(navController: NavHostController) {
                                 TextCard(
                                         heading = stringResource(id = R.string.home_heading_stroke_code),
                                         content = "w = 橫(waang)\ns = 豎(syu)\na = 撇\nd = 點(dim)\nz = 折(zit)",
-                                        shouldContentMonospaced = true
+                                        shouldMonospaceContent = true
                                 )
                         }
                         */

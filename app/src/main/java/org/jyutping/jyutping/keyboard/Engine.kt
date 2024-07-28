@@ -1,16 +1,205 @@
 package org.jyutping.jyutping.keyboard
 
 import org.jyutping.jyutping.extensions.empty
+import org.jyutping.jyutping.extensions.isSeparatorChar
+import org.jyutping.jyutping.extensions.separatorChar
 import org.jyutping.jyutping.extensions.space
 import org.jyutping.jyutping.utilities.DatabaseHelper
 
 object Engine {
         fun suggest(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
-                if (segmentation.maxSchemeLength() < 1) {
-                        return processVerbatim(text, db)
-                } else {
-                        return process(text, segmentation, db)
+                return when (text.length) {
+                        0 -> emptyList()
+                        1 -> when (text) {
+                                "a" -> db.match(text, input = text) + db.match(text = "aa", input = text) + db.shortcut(text)
+                                "o", "m", "e" -> db.match(text = text, input = text) + db.shortcut(text)
+                                else -> db.shortcut(text)
+                        }
+                        else -> dispatch(text, segmentation, db)
                 }
+        }
+        private fun dispatch(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
+                val hasSeparators: Boolean = text.contains(Char.separatorChar)
+                val hasTones: Boolean = text.contains(Regex("[1-6]"))
+                return when {
+                        hasSeparators && hasTones -> {
+                                val syllable = text.filter { it.isLetter() }
+                                db.match(text = syllable, input = text, mark = text).filter { text.startsWith(it.romanization) }
+                        }
+                        !hasSeparators && hasTones -> processWithTones(text, segmentation, db)
+                        hasSeparators && !hasTones -> processWithSeparators(text, segmentation, db)
+                        else -> {
+                                if (segmentation.maxSchemeLength() < 1) {
+                                        processVerbatim(text, db)
+                                } else {
+                                        process(text, segmentation, db)
+                                }
+                        }
+                }
+        }
+        private fun processWithTones(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
+                val textTones = text.filter { it.isDigit() }
+                val textToneCount = textTones.length
+                val rawText: String = text.filterNot { it.isDigit() }
+                val candidates= search(rawText, segmentation, db)
+                val qualified: MutableList<Candidate> = mutableListOf()
+                for (item in candidates) {
+                        val continuous = item.romanization.filterNot { it.isWhitespace() }
+                        val continuousTones = continuous.filter { it.isDigit() }
+                        val continuousToneCount = continuousTones.length
+                        when {
+                                textToneCount == 1 && continuousToneCount == 1 -> {
+                                        if (textTones != continuousTones) continue
+                                        val isCorrectPosition: Boolean = text.drop(item.input.length).firstOrNull()?.isDigit() ?: false
+                                        if (!isCorrectPosition) continue
+                                        val combinedInput = item.input + textTones
+                                        val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
+                                        qualified.add(newItem)
+                                }
+                                textToneCount == 1 && continuousToneCount == 2 -> {
+                                        val isToneLast: Boolean = text.lastOrNull()?.isDigit() ?: false
+                                        if (isToneLast) {
+                                                if (!(continuousTones.endsWith(textTones))) continue
+                                                val isCorrectPosition: Boolean = text.drop(item.input.length).firstOrNull()?.isDigit() ?: false
+                                                if (!isCorrectPosition) continue
+                                                val newItem = Candidate(text = item.text, romanization = item.romanization, input = text)
+                                                qualified.add(newItem)
+                                        } else {
+                                                if (!(continuousTones.startsWith(textTones))) continue
+                                                val combinedInput = item.input + textTones
+                                                val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
+                                                qualified.add(newItem)
+                                        }
+                                }
+                                textToneCount == 2 && continuousToneCount == 1 -> {
+                                        if (!(textTones.startsWith(continuousTones))) continue
+                                        val isCorrectPosition: Boolean = text.drop(item.input.length).firstOrNull()?.isDigit() ?: false
+                                        if (!isCorrectPosition) continue
+                                        val combinedInput = item.input + continuousTones
+                                        val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
+                                        qualified.add(newItem)
+                                }
+                                textToneCount == 2 && continuousToneCount == 2 -> {
+                                        if (textTones != continuousTones) continue
+                                        val isLastTone: Boolean = text.lastOrNull()?.isDigit() ?: false
+                                        if (isLastTone) {
+                                                if (item.input.length != (text.length - 2)) continue
+                                                val newItem = Candidate(text = item.text, romanization = item.romanization, input = text, mark = text)
+                                                qualified.add(newItem)
+                                        } else {
+                                                val tail = text.drop(item.input.length + 1)
+                                                val isCorrectPosition: Boolean = tail.firstOrNull() == textTones.lastOrNull()
+                                                if (!isCorrectPosition) continue
+                                                val combinedInput = item.input + textTones
+                                                val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput, mark = item.input)
+                                                qualified.add(newItem)
+                                        }
+                                }
+                                else -> {
+                                        if (continuous.startsWith(text)) {
+                                                val newItem = Candidate(text = item.text, romanization = item.romanization, input = text)
+                                                qualified.add(newItem)
+                                        } else if (text.startsWith(continuous)) {
+                                                val newItem = Candidate(text = item.text, romanization = item.romanization, input = continuous, mark = item.input)
+                                                qualified.add(newItem)
+                                        } else {
+                                                continue
+                                        }
+                                }
+                        }
+                }
+                return qualified
+        }
+        private fun processWithSeparators(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
+                val separatorCount = text.count { it.isSeparatorChar() }
+                val textParts = text.split(Char.separatorChar).filter { it.isNotEmpty() }
+                val isHeadingSeparator: Boolean = text.firstOrNull()?.isSeparatorChar() ?: false
+                val isTrailingSeparator: Boolean = text.lastOrNull()?.isSeparatorChar() ?: false
+                val rawText = text.filter { !(it.isSeparatorChar()) }
+                val candidates = search(rawText, segmentation, db)
+                val qualified: MutableList<Candidate> = mutableListOf()
+                for (item in candidates) {
+                        val syllables = item.romanization.filterNot { it.isDigit() }.split(' ')
+                        if (syllables == textParts) {
+                                val newItem = Candidate(text = item.text, romanization = item.romanization, input = text)
+                                qualified.add(newItem)
+                                continue
+                        }
+                        if (isHeadingSeparator) continue
+                        when {
+                                separatorCount == 1 && isTrailingSeparator -> {
+                                        if (syllables.size != 1) continue
+                                        val isLengthNotMatched: Boolean = item.input.length != (text.length - 1)
+                                        if (isLengthNotMatched) continue
+                                        val newItem = Candidate(text = item.text, romanization = item.romanization, input = text, mark = text)
+                                        qualified.add(newItem)
+                                }
+                                separatorCount == 1 -> {
+                                        when (syllables.size) {
+                                                1 -> {
+                                                        if (item.input != textParts.firstOrNull()) continue
+                                                        val combinedInput: String = item.input + Char.separatorChar
+                                                        val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
+                                                        qualified.add(newItem)
+                                                }
+                                                2 -> {
+                                                        if (syllables.firstOrNull() != textParts.firstOrNull()) continue
+                                                        val combinedInput: String = item.input + Char.separatorChar
+                                                        val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
+                                                        qualified.add(newItem)
+                                                }
+                                                else -> continue
+                                        }
+                                }
+                                separatorCount == 2 && isTrailingSeparator -> {
+                                        when (syllables.size) {
+                                                1 -> {
+                                                        if (item.input != textParts.firstOrNull()) continue
+                                                        val combinedInput: String = item.input + Char.separatorChar
+                                                        val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
+                                                        qualified.add(newItem)
+                                                }
+                                                2 -> {
+                                                        val isLengthNotMatched: Boolean = item.input.length != (text.length - 2)
+                                                        if (isLengthNotMatched) continue
+                                                        if (syllables.firstOrNull() != textParts.firstOrNull()) continue
+                                                        val newItem = Candidate(text = item.text, romanization = item.romanization, input = text)
+                                                        qualified.add(newItem)
+                                                }
+                                                 else -> continue
+                                        }
+                                }
+                                else -> {
+                                        if (syllables.size >= textParts.size) continue
+                                        val checks = syllables.indices.map { syllables[it] == textParts[it] }
+                                        val isMatched = checks.reduce { acc, b -> acc && b }
+                                        if (!isMatched) continue
+                                        val tail = List(syllables.size - 1) { 'i' }
+                                        val combinedInput = item.input + tail
+                                        val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
+                                        qualified.add(newItem)
+                                }
+                        }
+                }
+                if (qualified.isNotEmpty()) return qualified
+                val anchors = textParts.mapNotNull { it.firstOrNull() }
+                return db.shortcut(anchors.toString())
+                        .filter { item ->
+                                val syllables = item.romanization.filterNot { it.isDigit() }.split(' ')
+                                if (syllables.size != anchors.size) {
+                                        false
+                                } else {
+                                        val checks = anchors.indices.map { index ->
+                                                val part = textParts[index]
+                                                val isAnchorOnly = (part.length == 1)
+                                                if (isAnchorOnly) syllables[index].startsWith(part) else syllables[index] == part
+                                        }
+                                        checks.reduce { acc, b -> acc && b }
+                                }
+                        }
+                        .map {
+                                Candidate(text = it.text, romanization = it.romanization, input = text)
+                        }
         }
         private fun processVerbatim(text: String, db: DatabaseHelper, limit: Int? = null): List<Candidate> {
                 val rounds: MutableList<List<Candidate>> = mutableListOf()

@@ -21,7 +21,9 @@ import org.jyutping.jyutping.extensions.empty
 import org.jyutping.jyutping.extensions.isReverseLookupTrigger
 import org.jyutping.jyutping.extensions.keyboardLightBackground
 import org.jyutping.jyutping.extensions.separator
+import org.jyutping.jyutping.extensions.separatorChar
 import org.jyutping.jyutping.extensions.space
+import org.jyutping.jyutping.extensions.toneConverted
 import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.Engine
 import org.jyutping.jyutping.keyboard.InputMethodMode
@@ -193,11 +195,12 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         }
                                 }
                                 else -> {
-                                        val segmentation = Segmentor.segment(value, db)
-                                        val suggestions = Engine.suggest(text = value, segmentation = segmentation, db = db)
+                                        val processingText: String = value.toneConverted()
+                                        val segmentation = Segmentor.segment(processingText, db)
+                                        val suggestions = Engine.suggest(text = processingText, segmentation = segmentation, db = db)
                                         val mark: String = run {
                                                 val firstCandidate = suggestions.firstOrNull()
-                                                if (firstCandidate != null && firstCandidate.input.length == value.length) firstCandidate.mark else value
+                                                if (firstCandidate != null && firstCandidate.input.length == processingText.length) firstCandidate.mark else processingText
                                         }
                                         currentInputConnection.setComposingText(mark, mark.length)
                                         candidates.value = suggestions.map { it.transformed(characterStandard.value) }.distinct()
@@ -243,7 +246,12 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                         }
                         else -> {
-                                bufferText = bufferText.drop(candidate.input.length)
+                                val inputLength: Int = candidate.input.replace(Regex("([456])"), "RR").length
+                                var tail = bufferText.drop(inputLength)
+                                while (tail.startsWith(Char.separatorChar)) {
+                                        tail = tail.drop(1)
+                                }
+                                bufferText = tail
                         }
                 }
         }

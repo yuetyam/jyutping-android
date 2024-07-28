@@ -36,34 +36,32 @@ private fun SegmentScheme.isValid(): Boolean {
 }
 
 private fun Segmentation.descended(): Segmentation = this.sortedWith(compareBy({-it.length()}, {it.size}))
-/*
-private fun Segmentation.descended(): Segmentation = run {
-        val comparator = Comparator<SegmentScheme> { lhs, rhs ->
-                val lengthComparison = lhs.length().compareTo(rhs.length())
-                if (lengthComparison != 0) return@Comparator -lengthComparison
-                val elementSizeComparison = lhs.size.compareTo(rhs.size)
-                return@Comparator elementSizeComparison
-        }
-        return this.sortedWith(comparator)
-}
-*/
 
 object Segmentor {
         fun segment(text: String, db: DatabaseHelper): Segmentation {
-                return when (text.length) {
-                        0 -> emptyList()
-                        1 -> when (text) {
+                val textLength = text.length
+                return when {
+                        textLength == 0 -> emptyList()
+                        textLength == 1 -> when (text) {
                                 "a" -> letterA
                                 "o" -> letterO
                                 "m" -> letterM
                                 else -> emptyList()
                         }
-                        4 -> when (text) {
-                                "mama" -> mama
-                                "mami" -> mami
-                                else -> split(text, db)
+                        textLength == 4 && text == "mama" -> mama
+                        textLength == 4 && text == "mami" -> mami
+                        else -> {
+                                val rawText: String = text.filter { it.isLetter() }
+                                val key: Int = rawText.hashCode()
+                                val cached = cachedSegmentations[key]
+                                if (cached != null) {
+                                        cached
+                                } else {
+                                        val segmented = split(rawText, db)
+                                        cache(key, segmented)
+                                        segmented
+                                }
                         }
-                        else -> split(text, db)
                 }
         }
         private fun split(text: String, db: DatabaseHelper): Segmentation {
@@ -104,4 +102,13 @@ object Segmentor {
         private val letterM: Segmentation = listOf(listOf(SegmentToken(text = "m", origin = "m")))
         private val mama: Segmentation = listOf(listOf(SegmentToken(text = "ma", origin = "maa"), SegmentToken(text = "ma", origin = "maa")))
         private val mami: Segmentation = listOf(listOf(SegmentToken(text = "ma", origin = "maa"), SegmentToken(text = "mi", origin = "mi")))
+
+        private const val maxCachedCount: Int = 5000
+        private val cachedSegmentations: HashMap<Int, Segmentation> = hashMapOf()
+        private fun cache(key: Int, segmentation: Segmentation) {
+                if (cachedSegmentations.size > maxCachedCount) {
+                        cachedSegmentations.clear()
+                }
+                cachedSegmentations[key] = segmentation
+        }
 }

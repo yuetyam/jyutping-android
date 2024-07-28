@@ -13,3 +13,15 @@ val String.Companion.space: String
 
 val String.Companion.separator: String
         get() = "'"
+
+/**
+ * Convert v/x/q to the tone digits
+ * @return Converted text with digital tones
+ */
+fun String.toneConverted(): String = this
+        .replace("vv", "4")
+        .replace("xx", "5")
+        .replace("qq", "6")
+        .replace('v', '1')
+        .replace('x', '2')
+        .replace('q', '3')
