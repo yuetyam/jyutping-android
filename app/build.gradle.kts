@@ -10,7 +10,7 @@ android {
         compileSdk = 34
         defaultConfig {
                 applicationId = "org.jyutping.jyutping"
-                minSdk = 30
+                minSdk = 29
                 targetSdk = 34
                 versionCode = 9
                 versionName = "0.9.0"
@@ -51,11 +51,11 @@ android {
 
 val composeVersion = "1.6.8"
 dependencies {
-        implementation("androidx.activity:activity-ktx:1.9.0")
+        implementation("androidx.activity:activity-ktx:1.9.1")
         implementation("androidx.core:core-ktx:1.13.1")
-        implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
-        implementation("androidx.lifecycle:lifecycle-service:2.8.3")
-        implementation("androidx.activity:activity-compose:1.9.0")
+        implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
+        implementation("androidx.lifecycle:lifecycle-service:2.8.4")
+        implementation("androidx.activity:activity-compose:1.9.1")
         implementation("androidx.compose.ui:ui:$composeVersion")
         implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
         implementation("androidx.compose.material:material-icons-extended:$composeVersion")
