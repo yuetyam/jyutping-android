@@ -48,7 +48,7 @@ fun CandidateScrollBar() {
                                                 context.select(it)
                                         }
                                         .padding(horizontal = 6.dp)
-                                        .padding(bottom = 8.dp)
+                                        .padding(bottom = 12.dp)
                         )
                 }
         }
