@@ -13,7 +13,7 @@
     <string name="home_heading_cangjie_reverse_lookup">用倉頡／速成反查粵拼</string>
     <string name="home_heading_stroke_reverse_lookup">用筆畫輸入反查粵拼</string>
     <string name="home_heading_stroke_code">筆畫輸入</string>
-    <string name="home_heading_compose_reverse_lookup">用兩分反查粵拼</string>
+    <string name="home_heading_compose_reverse_lookup">用兩分拆字反查粵拼</string>
     <string name="home_content_pinyin_reverse_lookup">以 r 開始，再輸入普通話拼音即可。例如輸入 rcha 就會出「查」等。候選詞會帶顯示對應嘅粵拼。</string>
     <string name="home_content_cangjie_reverse_lookup">以 v 開始，再輸入倉頡或速成碼即可。例如輸入 vdam 就會出「查」等。候選詞會帶顯示對應嘅粵拼。</string>
     <string name="home_content_stroke_reverse_lookup">以 x 開始，再輸入筆畫碼即可。例如輸入 xwsad 就會出「木」等。候選詞會帶顯示對應嘅粵拼。</string>
