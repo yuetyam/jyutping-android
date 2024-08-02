@@ -32,7 +32,7 @@ fun SpaceKey(modifier: Modifier) {
         val isPressed = interactionSource.collectIsPressedAsState()
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        val inputMethodMode = remember { context.inputMethodMode }
+        val keyForm = remember { context.spaceKeyForm }
         Box(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
@@ -54,8 +54,8 @@ fun SpaceKey(modifier: Modifier) {
                         contentAlignment = Alignment.Center
                 ) {
                         Text(
-                                text = if (inputMethodMode.value.isCantonese()) "粵拼" else "space",
-                                fontSize = 17.sp
+                                text = keyForm.value.text(),
+                                fontSize = 15.sp
                         )
                 }
         }

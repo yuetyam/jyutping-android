@@ -32,7 +32,9 @@ import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.Pinyin
 import org.jyutping.jyutping.keyboard.PinyinSegmentor
 import org.jyutping.jyutping.keyboard.Segmentor
+import org.jyutping.jyutping.keyboard.SpaceKeyForm
 import org.jyutping.jyutping.keyboard.Structure
+import org.jyutping.jyutping.keyboard.isABC
 import org.jyutping.jyutping.keyboard.length
 import org.jyutping.jyutping.keyboard.transformed
 import org.jyutping.jyutping.utilities.DatabaseHelper
@@ -50,6 +52,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         decorView.setViewTreeViewModelStoreOwner(this)
                         decorView.setViewTreeSavedStateRegistryOwner(this)
                 }
+                updateSpaceKeyForm()
                 return view
         }
 
@@ -70,6 +73,32 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         override val savedStateRegistry: SavedStateRegistry get() = savedStateRegistryController.savedStateRegistry
 
+        val spaceKeyForm: MutableState<SpaceKeyForm> = mutableStateOf(SpaceKeyForm.Fallback)
+        private fun updateSpaceKeyForm() {
+                val newForm: SpaceKeyForm = when {
+                        inputMethodMode.value.isABC() -> SpaceKeyForm.English
+                        keyboardForm.value == KeyboardForm.TenKeyNumeric -> SpaceKeyForm.Fallback
+                        else -> {
+                                val isSimplified: Boolean = characterStandard.value.isSimplified()
+                                if (isBuffering.value) {
+                                        if (candidates.value.isEmpty()) {
+                                                if (isSimplified) SpaceKeyForm.ConfirmSimplified else SpaceKeyForm.Confirm
+                                        } else {
+                                                if (isSimplified) SpaceKeyForm.SelectSimplified else SpaceKeyForm.Select
+                                        }
+                                } else {
+                                        when (keyboardCase.value) {
+                                                KeyboardCase.Lowercased -> if (isSimplified) SpaceKeyForm.LowercasedSimplified else SpaceKeyForm.Lowercased
+                                                KeyboardCase.Uppercased -> if (isSimplified) SpaceKeyForm.UppercasedSimplified else SpaceKeyForm.Uppercased
+                                                KeyboardCase.CapsLocked -> if (isSimplified) SpaceKeyForm.CapsLockedSimplified else SpaceKeyForm.CapsLocked
+                                        }
+                                }
+                        }
+                }
+                if (spaceKeyForm.value != newForm) {
+                        spaceKeyForm.value = newForm
+                }
+        }
         val inputMethodMode: MutableState<InputMethodMode> = mutableStateOf(InputMethodMode.Cantonese)
         fun toggleInputMethodMode() {
                 val newMode: InputMethodMode = when (inputMethodMode.value) {
@@ -77,6 +106,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         InputMethodMode.ABC -> InputMethodMode.Cantonese
                 }
                 inputMethodMode.value = newMode
+                updateSpaceKeyForm()
         }
 
         val keyboardForm: MutableState<KeyboardForm> = mutableStateOf(KeyboardForm.Alphabetic)
@@ -86,11 +116,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
                 keyboardForm.value = destination
                 adjustKeyboardCase()
+                updateSpaceKeyForm()
         }
 
         val keyboardCase: MutableState<KeyboardCase> = mutableStateOf(KeyboardCase.Lowercased)
         private fun updateKeyboardCase(case: KeyboardCase) {
                 keyboardCase.value = case
+                updateSpaceKeyForm()
         }
         fun shift() {
                 val newCase: KeyboardCase = when (keyboardCase.value) {
@@ -121,6 +153,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun updateCharacterStandard(standard: CharacterStandard) {
                 characterStandard.value = standard
                 // TODO: Save to Config
+                updateSpaceKeyForm()
         }
         val candidateState: MutableIntState = mutableIntStateOf(1)
         val candidates: MutableState<List<Candidate>> = mutableStateOf(listOf())
@@ -210,6 +243,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                         }
                         candidateState.intValue += 1
+                        updateSpaceKeyForm()
                 }
         val isBuffering: MutableState<Boolean> = mutableStateOf(false)
         fun clearBuffer() {
