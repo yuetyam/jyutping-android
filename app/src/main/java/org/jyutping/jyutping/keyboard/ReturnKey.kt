@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.extensions.keyLight
@@ -46,7 +48,7 @@ fun ReturnKey(modifier: Modifier) {
                         .fillMaxHeight(),
                 contentAlignment = Alignment.Center
         ) {
-                Box (
+                Box(
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
                                 .clip(RoundedCornerShape(6.dp))
@@ -55,11 +57,18 @@ fun ReturnKey(modifier: Modifier) {
                                 .fillMaxHeight(),
                         contentAlignment = Alignment.Center
                 ) {
-                        Icon(
-                                imageVector = ImageVector.vectorResource(id = R.drawable.key_return),
-                                contentDescription = null,
-                                modifier = Modifier.size(22.dp)
-                        )
+                        if (context.isBuffering.value) {
+                                Text(
+                                        text = context.returnKeyForm.value.text() ?: "return",
+                                        fontSize = 15.sp
+                                )
+                        } else {
+                                Icon(
+                                        imageVector = ImageVector.vectorResource(id = R.drawable.key_return),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(22.dp)
+                                )
+                        }
                 }
         }
 }

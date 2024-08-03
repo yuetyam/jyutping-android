@@ -31,6 +31,7 @@ import org.jyutping.jyutping.keyboard.KeyboardCase
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.Pinyin
 import org.jyutping.jyutping.keyboard.PinyinSegmentor
+import org.jyutping.jyutping.keyboard.ReturnKeyForm
 import org.jyutping.jyutping.keyboard.Segmentor
 import org.jyutping.jyutping.keyboard.SpaceKeyForm
 import org.jyutping.jyutping.keyboard.Structure
@@ -53,6 +54,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         decorView.setViewTreeSavedStateRegistryOwner(this)
                 }
                 updateSpaceKeyForm()
+                updateReturnKeyForm()
                 return view
         }
 
@@ -99,6 +101,24 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         spaceKeyForm.value = newForm
                 }
         }
+
+        val returnKeyForm: MutableState<ReturnKeyForm> = mutableStateOf(ReturnKeyForm.StandbyTraditional)
+        private fun updateReturnKeyForm() {
+                val newForm: ReturnKeyForm = when (inputMethodMode.value) {
+                        InputMethodMode.ABC -> ReturnKeyForm.StandbyABC
+                        InputMethodMode.Cantonese -> {
+                                if (isBuffering.value) {
+                                        if (characterStandard.value.isSimplified()) ReturnKeyForm.BufferingSimplified else ReturnKeyForm.BufferingTraditional
+                                } else {
+                                        if (characterStandard.value.isSimplified()) ReturnKeyForm.StandbySimplified else ReturnKeyForm.StandbyTraditional
+                                }
+                        }
+                }
+                if (returnKeyForm.value != newForm) {
+                        returnKeyForm.value = newForm
+                }
+        }
+
         val inputMethodMode: MutableState<InputMethodMode> = mutableStateOf(InputMethodMode.Cantonese)
         fun toggleInputMethodMode() {
                 val newMode: InputMethodMode = when (inputMethodMode.value) {
@@ -107,6 +127,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
                 inputMethodMode.value = newMode
                 updateSpaceKeyForm()
+                updateReturnKeyForm()
         }
 
         val keyboardForm: MutableState<KeyboardForm> = mutableStateOf(KeyboardForm.Alphabetic)
@@ -154,6 +175,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 characterStandard.value = standard
                 // TODO: Save to Config
                 updateSpaceKeyForm()
+                updateReturnKeyForm()
         }
         val candidateState: MutableIntState = mutableIntStateOf(1)
         val candidates: MutableState<List<Candidate>> = mutableStateOf(listOf())
@@ -244,6 +266,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         candidateState.intValue += 1
                         updateSpaceKeyForm()
+                        updateReturnKeyForm()
                 }
         val isBuffering: MutableState<Boolean> = mutableStateOf(false)
         fun clearBuffer() {
