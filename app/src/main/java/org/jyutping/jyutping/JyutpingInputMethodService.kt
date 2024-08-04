@@ -78,7 +78,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         private val sharedPreferences by lazy { getSharedPreferences(UserSettingsKey.PreferencesFileName, Context.MODE_PRIVATE) }
 
-        val spaceKeyForm: MutableState<SpaceKeyForm> = mutableStateOf(SpaceKeyForm.Fallback)
+        val spaceKeyForm: MutableState<SpaceKeyForm> by lazy { mutableStateOf(SpaceKeyForm.Fallback) }
         private fun updateSpaceKeyForm() {
                 val newForm: SpaceKeyForm = when {
                         inputMethodMode.value.isABC() -> SpaceKeyForm.English
@@ -105,7 +105,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
-        val returnKeyForm: MutableState<ReturnKeyForm> = mutableStateOf(ReturnKeyForm.StandbyTraditional)
+        val returnKeyForm: MutableState<ReturnKeyForm> by lazy { mutableStateOf(ReturnKeyForm.StandbyTraditional) }
         private fun updateReturnKeyForm() {
                 val newForm: ReturnKeyForm = when (inputMethodMode.value) {
                         InputMethodMode.ABC -> ReturnKeyForm.StandbyABC
@@ -122,7 +122,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
-        val inputMethodMode: MutableState<InputMethodMode> = mutableStateOf(InputMethodMode.Cantonese)
+        val inputMethodMode: MutableState<InputMethodMode> by lazy { mutableStateOf(InputMethodMode.Cantonese) }
         fun toggleInputMethodMode() {
                 val newMode: InputMethodMode = when (inputMethodMode.value) {
                         InputMethodMode.Cantonese -> InputMethodMode.ABC
@@ -133,7 +133,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 updateReturnKeyForm()
         }
 
-        val keyboardForm: MutableState<KeyboardForm> = mutableStateOf(KeyboardForm.Alphabetic)
+        val keyboardForm: MutableState<KeyboardForm> by lazy { mutableStateOf(KeyboardForm.Alphabetic) }
         fun transformTo(destination: KeyboardForm) {
                 if (isBuffering.value) {
                         bufferText = String.empty
@@ -143,7 +143,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 updateSpaceKeyForm()
         }
 
-        val keyboardCase: MutableState<KeyboardCase> = mutableStateOf(KeyboardCase.Lowercased)
+        val keyboardCase: MutableState<KeyboardCase> by lazy { mutableStateOf(KeyboardCase.Lowercased) }
         private fun updateKeyboardCase(case: KeyboardCase) {
                 keyboardCase.value = case
                 updateSpaceKeyForm()
@@ -184,8 +184,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.apply()
         }
 
-        val candidateState: MutableIntState = mutableIntStateOf(1)
-        val candidates: MutableState<List<Candidate>> = mutableStateOf(listOf())
+        val candidateState: MutableIntState by lazy { mutableIntStateOf(1) }
+        val candidates: MutableState<List<Candidate>> by lazy { mutableStateOf(listOf()) }
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.databaseName) }
         private var bufferText: String = String.empty
                 set(value) {
@@ -275,7 +275,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         updateSpaceKeyForm()
                         updateReturnKeyForm()
                 }
-        val isBuffering: MutableState<Boolean> = mutableStateOf(false)
+        val isBuffering: MutableState<Boolean> by lazy { mutableStateOf(false) }
         fun clearBuffer() {
                 bufferText = String.empty
         }
