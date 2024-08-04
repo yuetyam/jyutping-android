@@ -1,5 +1,6 @@
 package org.jyutping.jyutping
 
+import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.compose.runtime.MutableIntState
@@ -74,6 +75,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         private val savedStateRegistryController = SavedStateRegistryController.create(this)
 
         override val savedStateRegistry: SavedStateRegistry get() = savedStateRegistryController.savedStateRegistry
+
+        private val sharedPreferences by lazy { getSharedPreferences(UserSettingsKey.PreferencesFileName, Context.MODE_PRIVATE) }
 
         val spaceKeyForm: MutableState<SpaceKeyForm> = mutableStateOf(SpaceKeyForm.Fallback)
         private fun updateSpaceKeyForm() {
@@ -167,16 +170,20 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
-        val characterStandard: MutableState<CharacterStandard> = run {
-                // TODO: Fetch from Config
-                mutableStateOf(CharacterStandard.Traditional)
+        val characterStandard: MutableState<CharacterStandard> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CharacterStandard, CharacterStandard.Traditional.identifier())
+                val standard: CharacterStandard = CharacterStandard.standardOf(savedValue)
+                mutableStateOf(standard)
         }
         fun updateCharacterStandard(standard: CharacterStandard) {
                 characterStandard.value = standard
-                // TODO: Save to Config
                 updateSpaceKeyForm()
                 updateReturnKeyForm()
+                val editor = sharedPreferences.edit()
+                editor.putInt(UserSettingsKey.CharacterStandard, standard.identifier())
+                editor.apply()
         }
+
         val candidateState: MutableIntState = mutableIntStateOf(1)
         val candidates: MutableState<List<Candidate>> = mutableStateOf(listOf())
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.databaseName) }
