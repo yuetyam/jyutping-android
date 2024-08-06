@@ -337,6 +337,19 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return null
         }
 
+        fun t2s(char: Char): String {
+                val code = char.code
+                val query = "SELECT simplified FROM t2stable WHERE traditional = ${code};"
+                val cursor = this.readableDatabase.rawQuery(query, null)
+                if (cursor.moveToFirst()) {
+                        val simplified = cursor.getString(0)
+                        cursor.close()
+                        return simplified
+                } else {
+                        return char.toString()
+                }
+        }
+
         fun canProcess(text: String): Boolean {
                 val value: Int = text.firstOrNull()?.intercode() ?: return false
                 val code: Int = if (value == 44) 29 else value // Replace 'y' with 'j'

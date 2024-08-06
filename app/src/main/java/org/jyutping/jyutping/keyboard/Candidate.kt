@@ -1,8 +1,11 @@
 package org.jyutping.jyutping.keyboard
 
 import org.jyutping.jyutping.CharacterStandard
-import org.jyutping.jyutping.extensions.convertedT2S
 import org.jyutping.jyutping.extensions.space
+import org.jyutping.jyutping.utilities.DatabaseHelper
+import org.jyutping.jyutping.utilities.HongKongVariantConverter
+import org.jyutping.jyutping.utilities.Simplifier
+import org.jyutping.jyutping.utilities.TaiwanVariantConverter
 
 data class Candidate(
         val type: CandidateType = CandidateType.Cantonese,
@@ -36,15 +39,12 @@ data class Candidate(
         }
 }
 
-fun Candidate.transformed(characterStandard: CharacterStandard): Candidate {
+fun Candidate.transformed(standard: CharacterStandard, db: DatabaseHelper): Candidate {
         if (this.type.isNotCantonese()) return this
-        return when (characterStandard) {
+        return when (standard) {
                 CharacterStandard.Traditional -> this
-                CharacterStandard.HongKong -> this // TODO: Candidate transform
-                CharacterStandard.Taiwan -> this // TODO: Candidate transform
-                CharacterStandard.Simplified -> {
-                        val convertedText = this.text.convertedT2S()
-                        Candidate(text = convertedText, lexiconText = this.lexiconText, romanization = this.romanization, input = this.input, mark = this.mark)
-                }
+                CharacterStandard.HongKong -> Candidate(text = HongKongVariantConverter.convert(this.text), lexiconText = this.lexiconText, romanization = this.romanization, input = this.input, mark = this.mark)
+                CharacterStandard.Taiwan -> Candidate(text = TaiwanVariantConverter.convert(this.text), lexiconText = this.lexiconText, romanization = this.romanization, input = this.input, mark = this.mark)
+                CharacterStandard.Simplified -> Candidate(text = Simplifier.convert(this.text, db), lexiconText = this.lexiconText, romanization = this.romanization, input = this.input, mark = this.mark)
         }
 }

@@ -223,7 +223,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 }
                                                 val mark = "r $tailMark"
                                                 currentInputConnection.setComposingText(mark, mark.length)
-                                                candidates.value = suggestions.map { it.transformed(characterStandard.value) }.distinct()
+                                                candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
                                         }
                                         if (isBuffering.value.not()) {
                                                 isBuffering.value = true
@@ -250,7 +250,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 val mark = "q $tailMark"
                                                 currentInputConnection.setComposingText(mark, mark.length)
                                                 val suggestions = Structure.reverseLookup(text, segmentation, db)
-                                                candidates.value = suggestions.map { it.transformed(characterStandard.value) }.distinct()
+                                                candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
                                         }
                                         if (isBuffering.value.not()) {
                                                 isBuffering.value = true
@@ -265,7 +265,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 if (firstCandidate != null && firstCandidate.input.length == processingText.length) firstCandidate.mark else processingText
                                         }
                                         currentInputConnection.setComposingText(mark, mark.length)
-                                        candidates.value = suggestions.map { it.transformed(characterStandard.value) }.distinct()
+                                        candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
                                         if (isBuffering.value.not()) {
                                                 isBuffering.value = true
                                         }
