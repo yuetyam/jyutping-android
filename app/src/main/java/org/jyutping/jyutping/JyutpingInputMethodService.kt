@@ -212,7 +212,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                                 firstCandidate.mark
                                                         } else {
                                                                 val bestScheme = segmentation.firstOrNull()
-                                                                val leadingLength: Int = bestScheme?.map { it.length }?.reduce { acc, i -> acc + i } ?: 0
+                                                                val leadingLength: Int = bestScheme?.map { it.length }?.fold(0) { acc, i -> acc + i } ?: 0
                                                                 val leadingText: String = bestScheme?.joinToString(separator = String.space) ?: String.empty
                                                                 when (leadingLength) {
                                                                         0 -> text

@@ -86,7 +86,7 @@ object Pinyin {
         private fun search(text: String, schemes: List<List<String>>, db: DatabaseHelper): List<PinyinLexicon> {
                 val textLength = text.length
                 val perfectSchemes = schemes.filter { scheme ->
-                        val schemeLength = scheme.map { it.length }.reduce { acc, i -> acc + i }
+                        val schemeLength = scheme.map { it.length }.fold(0) { acc, i -> acc + i }
                         schemeLength == textLength
                 }
                 if (perfectSchemes.isNotEmpty()) {
@@ -111,4 +111,4 @@ object Pinyin {
         }
 }
 
-private fun List<String>.length(): Int = this.map { it.length }.reduce { acc, i -> acc + i }
+private fun List<String>.length(): Int = this.map { it.length }.fold(0) { acc, i -> acc + i }

@@ -363,8 +363,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
         }
         fun shortcut(text: String, limit: Int? = null): List<Candidate> {
-                val code: Int = text.shortcutCharcode() ?: 0
-                if (code == 0) return emptyList()
+                val code = text.shortcutCharcode() ?: return emptyList()
                 val limitValue: Int = limit ?: 50
                 val candidates: MutableList<Candidate> = mutableListOf()
                 val command = "SELECT rowid, word, romanization FROM lexicontable WHERE shortcut = $code LIMIT ${limitValue};"
@@ -398,8 +397,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return candidates
         }
         fun syllableMatch(text: String): SegmentToken? {
-                val code = text.charcode() ?: 0
-                if (code == 0) return null
+                val code = text.charcode() ?: return null
                 var token: SegmentToken? = null
                 val command = "SELECT token, origin FROM syllabletable WHERE code = $code LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
@@ -436,8 +434,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return romanizations
         }
         fun pinyinSyllableMatch(text: String): String? {
-                val code = text.charcode() ?: 0
-                if (code == 0) return null
+                val code = text.charcode() ?: return null
                 val command = "SELECT syllable FROM pinyinsyllabletable WHERE code = $code LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 if (cursor.moveToFirst()) {
@@ -465,8 +462,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return candidates
         }
         fun pinyinShortcut(text: String, limit: Int? = null): List<PinyinLexicon> {
-                val code: Int = text.charcode() ?: 0
-                if (code == 0) return emptyList()
+                val code = text.charcode() ?: return emptyList()
                 val items: MutableList<PinyinLexicon> = mutableListOf()
                 val limitValue: Int = limit ?: 50
                 val command = "SELECT rowid, word, pinyin FROM pinyintable WHERE shortcut = $code LIMIT ${limitValue};"

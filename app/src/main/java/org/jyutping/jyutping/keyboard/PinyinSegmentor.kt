@@ -47,5 +47,5 @@ object PinyinSegmentor {
         }
 }
 
-private fun List<String>.length(): Int = this.map { it.length }.reduce { acc, i -> acc + i }
-private fun List<List<String>>.syllableCount(): Int = this.map { it.size }.reduce { acc, i -> acc + i }
+private fun List<String>.length(): Int = this.map { it.length }.fold(0) { acc, i -> acc + i }
+private fun List<List<String>>.syllableCount(): Int = this.map { it.size }.fold(0) { acc, i -> acc + i }

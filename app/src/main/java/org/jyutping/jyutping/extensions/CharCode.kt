@@ -1,12 +1,12 @@
 package org.jyutping.jyutping.extensions
 
-fun String.charcode(): Int? {
+fun String.charcode(): Long? {
         if (this.length >= 10) return null
         val codes = this.mapNotNull { it.intercode() }
         if (codes.size != this.length) return null
         return codes.combined()
 }
-fun String.shortcutCharcode(): Int? {
+fun String.shortcutCharcode(): Long? {
         if (this.length >= 10) return null
         val codes = this.mapNotNull { it.intercode() }
         if (codes.size != this.length) return null
@@ -16,7 +16,7 @@ fun String.shortcutCharcode(): Int? {
         return code
 }
 
-fun Iterable<Int>.combined(): Int {
+fun Iterable<Int>.combined(): Long {
         if (this.count() >= 10) return 0
         return this.fold(0) { acc, i -> acc * 100 + i }
 }

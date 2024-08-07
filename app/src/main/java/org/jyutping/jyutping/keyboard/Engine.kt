@@ -172,7 +172,7 @@ object Engine {
                                 else -> {
                                         if (syllables.size >= textParts.size) continue
                                         val checks = syllables.indices.map { syllables[it] == textParts[it] }
-                                        val isMatched = checks.reduce { acc, b -> acc && b }
+                                        val isMatched = checks.fold(true) { acc, b -> acc && b }
                                         if (!isMatched) continue
                                         val tail = List(syllables.size - 1) { 'i' }
                                         val combinedInput = item.input + tail
@@ -194,7 +194,7 @@ object Engine {
                                                 val isAnchorOnly = (part.length == 1)
                                                 if (isAnchorOnly) syllables[index].startsWith(part) else syllables[index] == part
                                         }
-                                        checks.reduce { acc, b -> acc && b }
+                                        checks.fold(true) { acc, b -> acc && b }
                                 }
                         }
                         .map {

@@ -15,13 +15,13 @@ typealias SegmentScheme = List<SegmentToken>
 typealias Segmentation = List<SegmentScheme>
 
 /// All token text character count
-fun SegmentScheme.length(): Int = this.map { it.text.length }.reduce { acc, i -> acc + i }
+fun SegmentScheme.length(): Int = this.map { it.text.length }.fold(0) { acc, i -> acc + i }
 
 /// Longest scheme token text character count
 fun Segmentation.maxSchemeLength(): Int = this.firstOrNull()?.length() ?: 0
 
 /// All token count
-private fun Segmentation.tokenCount(): Int = this.map { it.size }.reduce { acc, i -> acc + i }
+private fun Segmentation.tokenCount(): Int = this.map { it.size }.fold(0) { acc, i -> acc + i }
 
 private fun SegmentScheme.isValid(): Boolean {
         // REASON: *am => [*aa, m] => *aam
