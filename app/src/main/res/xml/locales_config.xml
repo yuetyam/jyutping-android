@@ -5,6 +5,7 @@
     <locale android:name="yue-Hant"/>
     <locale android:name="yue-Hant-CN"/>
     <locale android:name="yue-Hant-HK"/>
+    <locale android:name="yue-Hant-MO"/>
     <locale android:name="zh"/>
     <locale android:name="zh-Hans"/>
     <locale android:name="zh-Hans-CN"/>
