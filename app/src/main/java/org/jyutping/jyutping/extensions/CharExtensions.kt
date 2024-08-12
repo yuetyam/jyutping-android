@@ -3,6 +3,9 @@ package org.jyutping.jyutping.extensions
 val Char.Companion.separatorChar: Char
         get() = '\''
 
+val Char.Companion.spaceChar: Char
+        get() = ' '
+
 fun Char.isSeparatorChar(): Boolean = this == Char.separatorChar
 
 fun Char.isReverseLookupTrigger(): Boolean = reverseLookupTriggers.contains(this)

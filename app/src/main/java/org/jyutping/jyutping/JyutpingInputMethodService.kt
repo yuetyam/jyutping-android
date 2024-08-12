@@ -41,6 +41,7 @@ import org.jyutping.jyutping.keyboard.length
 import org.jyutping.jyutping.keyboard.transformed
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
+import org.jyutping.jyutping.utilities.UserLexiconHelper
 
 class JyutpingInputMethodService: LifecycleInputMethodService(),
         ViewModelStoreOwner,
@@ -186,6 +187,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         val candidateState: MutableIntState by lazy { mutableIntStateOf(1) }
         val candidates: MutableState<List<Candidate>> by lazy { mutableStateOf(listOf()) }
+        private val selectedCandidates: MutableList<Candidate> by lazy { mutableListOf() }
+        private val userDB by lazy { UserLexiconHelper(this) }
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.databaseName) }
         private var bufferText: String = String.empty
                 set(value) {
@@ -197,6 +200,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         currentInputConnection.finishComposingText()
                                         if (isBuffering.value) {
                                                 isBuffering.value = false
+                                                if (selectedCandidates.isNotEmpty()) {
+                                                        userDB.process(selectedCandidates)
+                                                        selectedCandidates.clear()
+                                                }
                                         }
                                 }
                                 'r' -> {
@@ -259,13 +266,19 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 else -> {
                                         val processingText: String = value.toneConverted()
                                         val segmentation = Segmentor.segment(processingText, db)
+                                        val userLexiconSuggestions = userDB.suggest(text = processingText, segmentation = segmentation)
                                         val suggestions = Engine.suggest(text = processingText, segmentation = segmentation, db = db)
                                         val mark: String = run {
-                                                val firstCandidate = suggestions.firstOrNull()
-                                                if (firstCandidate != null && firstCandidate.input.length == processingText.length) firstCandidate.mark else processingText
+                                                val userLexiconMark = userLexiconSuggestions.firstOrNull()?.mark
+                                                if (userLexiconMark != null) {
+                                                        userLexiconMark
+                                                } else {
+                                                        val firstCandidate = suggestions.firstOrNull()
+                                                        if (firstCandidate != null && firstCandidate.input.length == processingText.length) firstCandidate.mark else processingText
+                                                }
                                         }
                                         currentInputConnection.setComposingText(mark, mark.length)
-                                        candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
+                                        candidates.value = (userLexiconSuggestions + suggestions).map { it.transformed(characterStandard.value, db) }.distinct()
                                         if (isBuffering.value.not()) {
                                                 isBuffering.value = true
                                         }
@@ -296,6 +309,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun select(candidate: Candidate) {
                 currentInputConnection.commitText(candidate.text, candidate.text.length)
+                selectedCandidates.add(candidate)
                 val firstChar = bufferText.firstOrNull()
                 when {
                         (firstChar == null) -> {}

@@ -40,7 +40,7 @@ object DatabasePreparer {
 
         fun prepare(context: Context) {
                 deleteOldDatabases(context)
-                val shouldCopyDatabase: Boolean = !(doesDatabaseExists(context))
+                val shouldCopyDatabase: Boolean = !(doesDatabaseExist(context))
                 if (shouldCopyDatabase) {
                         copyDatabase(context)
                 }
@@ -65,7 +65,7 @@ object DatabasePreparer {
                 }
         }
 
-        private fun doesDatabaseExists(context: Context): Boolean {
+        private fun doesDatabaseExist(context: Context): Boolean {
                 val dbFile = context.getDatabasePath(databaseName)
                 val path = context.applicationInfo.dataDir + DATABASES_DIR + databaseName
                 val file = File(path)
