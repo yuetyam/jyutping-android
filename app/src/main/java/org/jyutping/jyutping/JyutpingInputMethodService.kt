@@ -185,10 +185,27 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.apply()
         }
 
-        val candidateState: MutableIntState by lazy { mutableIntStateOf(1) }
-        val candidates: MutableState<List<Candidate>> by lazy { mutableStateOf(listOf()) }
+        val isInputMemoryOn: MutableState<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.InputMemory, 1)
+                val isOn: Boolean = (savedValue == 1)
+                mutableStateOf(isOn)
+        }
+        fun updateInputMemoryState(isOn: Boolean) {
+                isInputMemoryOn.value = isOn
+                val value2save: Int = if (isOn) 1 else 2
+                val editor = sharedPreferences.edit()
+                editor.putInt(UserSettingsKey.InputMemory, value2save)
+                editor.apply()
+        }
+
         private val selectedCandidates: MutableList<Candidate> by lazy { mutableListOf() }
         private val userDB by lazy { UserLexiconHelper(this) }
+        fun clearUserLexicon() {
+                userDB.deleteAll()
+        }
+
+        val candidateState: MutableIntState by lazy { mutableIntStateOf(1) }
+        val candidates: MutableState<List<Candidate>> by lazy { mutableStateOf(listOf()) }
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.databaseName) }
         private var bufferText: String = String.empty
                 set(value) {
@@ -200,10 +217,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         currentInputConnection.finishComposingText()
                                         if (isBuffering.value) {
                                                 isBuffering.value = false
-                                                if (selectedCandidates.isNotEmpty()) {
+                                                if (isInputMemoryOn.value && selectedCandidates.isNotEmpty()) {
                                                         userDB.process(selectedCandidates)
-                                                        selectedCandidates.clear()
                                                 }
+                                                selectedCandidates.clear()
                                         }
                                 }
                                 'r' -> {
@@ -266,7 +283,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 else -> {
                                         val processingText: String = value.toneConverted()
                                         val segmentation = Segmentor.segment(processingText, db)
-                                        val userLexiconSuggestions = userDB.suggest(text = processingText, segmentation = segmentation)
+                                        val userLexiconSuggestions: List<Candidate> = if (isInputMemoryOn.value) userDB.suggest(text = processingText, segmentation = segmentation) else emptyList()
                                         val suggestions = Engine.suggest(text = processingText, segmentation = segmentation, db = db)
                                         val mark: String = run {
                                                 val userLexiconMark = userLexiconSuggestions.firstOrNull()?.mark

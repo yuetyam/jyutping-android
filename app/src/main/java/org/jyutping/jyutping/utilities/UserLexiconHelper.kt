@@ -67,6 +67,10 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                         return null
                 }
         }
+        fun deleteAll() {
+                val command: String = "DELETE FROM memory;"
+                this.writableDatabase.execSQL(command)
+        }
 
         fun suggest(text: String, segmentation: Segmentation): List<Candidate> {
                 val matches = query(text = text, input = text, isShortcut = false)

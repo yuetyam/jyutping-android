@@ -22,6 +22,7 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -35,6 +36,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.CharacterStandard
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
@@ -45,7 +47,9 @@ fun SettingsScreen(height: Dp) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val characterStandard = remember { context.characterStandard }
+        val isInputMemoryOn = remember { context.isInputMemoryOn }
         val buttonColors = ButtonColors(Color.White, Color.Black, Color.White, Color.White)
+        val version: String by lazy { BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")" }
         Column(
                 modifier = Modifier
                         .background(Color.keyboardLightBackground)
@@ -177,10 +181,64 @@ fun SettingsScreen(height: Dp) {
                                 }
                         }
                         item {
-                                Text(text = "更多設定尚未實現")
+                                Column(
+                                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                                ) {
+                                        Text(
+                                                text = stringResource(id = R.string.keyboard_settings_user_lexicon_header),
+                                                modifier = Modifier.padding(horizontal = 8.dp)
+                                        )
+                                        Column(
+                                                modifier = Modifier
+                                                        .clip(RoundedCornerShape(8.dp))
+                                                        .background(Color.White)
+                                                        .padding(horizontal = 8.dp)
+                                                        .fillMaxWidth()
+                                        ) {
+                                                Row(
+                                                        verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                        Text(text = stringResource(id = R.string.keyboard_settings_input_memory_switch_title))
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Switch(
+                                                                checked = isInputMemoryOn.value,
+                                                                onCheckedChange = {
+                                                                        isInputMemoryOn.value = it
+                                                                        context.updateInputMemoryState(it)
+                                                                }
+                                                        )
+                                                }
+                                                HorizontalDivider(thickness = 1.dp)
+                                                Button(
+                                                        onClick = {
+                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.clearUserLexicon()
+                                                        },
+                                                        shape = RoundedCornerShape(4.dp),
+                                                        colors = ButtonColors(Color.White, Color.Red, Color.White, Color.Red),
+                                                        contentPadding = PaddingValues(0.dp)
+                                                ) {
+                                                        Text(text = stringResource(id = R.string.keyboard_settings_clear_user_lexicon))
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                }
+                                        }
+                                }
                         }
                         item {
-                                Text(text = "More settings are yet to be implemented")
+                                Button(
+                                        onClick = {
+                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                        },
+                                        shape = RoundedCornerShape(8.dp),
+                                        colors = buttonColors,
+                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                ) {
+                                        Text(text = stringResource(id = R.string.about_label_version))
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        Text(text = version)
+                                }
                         }
                 }
         }

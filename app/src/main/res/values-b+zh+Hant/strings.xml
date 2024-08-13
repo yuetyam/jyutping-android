@@ -48,4 +48,7 @@
     <string name="keyboard_settings_character_standard_hongkong">傳統漢字・香港</string>
     <string name="keyboard_settings_character_standard_taiwan">傳統漢字・臺灣</string>
     <string name="keyboard_settings_character_standard_simplified">简化字</string>
+    <string name="keyboard_settings_user_lexicon_header">個人詞庫</string>
+    <string name="keyboard_settings_input_memory_switch_title">記憶輸入</string>
+    <string name="keyboard_settings_clear_user_lexicon">清空個人詞庫</string>
 </resources>
