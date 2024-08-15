@@ -92,7 +92,7 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
         }
         private fun query(text: String, input: String, mark: String? = null, isShortcut: Boolean): List<Candidate> {
                 val candidates: MutableList<Candidate> = mutableListOf()
-                val code: Int = if (isShortcut) { text.replace("y", "j").hashCode() } else text.hashCode()
+                val code: Int = if (isShortcut) text.replace("y", "j").hashCode() else text.hashCode()
                 val column: String = if (isShortcut) "shortcut" else "ping"
                 val command: String = "SELECT word, romanization FROM memory WHERE $column = $code ORDER BY frequency DESC LIMIT 5;"
                 val cursor = this.readableDatabase.rawQuery(command, null)

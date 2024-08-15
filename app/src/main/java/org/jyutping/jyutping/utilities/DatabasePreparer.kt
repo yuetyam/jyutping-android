@@ -31,6 +31,8 @@ object DatabasePreparer {
                 "appdb-v0.9.0-tmp.sqlite3-journal",
                 "appdb-v0.10.0-tmp.sqlite3",
                 "appdb-v0.10.0-tmp.sqlite3-journal",
+                "appdb-v0.11.0-tmp.sqlite3",
+                "appdb-v0.11.0-tmp.sqlite3-journal",
         )
         val databaseName: String = run {
                 val version = BuildConfig.VERSION_NAME
@@ -39,9 +41,9 @@ object DatabasePreparer {
         private const val DATABASES_DIR = "/databases/"
 
         fun prepare(context: Context) {
-                deleteOldDatabases(context)
-                val shouldCopyDatabase: Boolean = !(doesDatabaseExist(context))
-                if (shouldCopyDatabase) {
+                val databaseExists: Boolean = doesDatabaseExist(context)
+                if (!databaseExists) {
+                        deleteOldDatabases(context)
                         copyDatabase(context)
                 }
         }
