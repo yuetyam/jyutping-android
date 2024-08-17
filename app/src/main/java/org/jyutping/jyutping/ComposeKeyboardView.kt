@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.AlphabeticKeyboard
+import org.jyutping.jyutping.keyboard.CandidateBoard
 import org.jyutping.jyutping.keyboard.CantoneseNumericKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseSymbolicKeyboard
 import org.jyutping.jyutping.keyboard.EditingPanel
@@ -22,6 +23,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                 val keyboardForm = remember { (context as JyutpingInputMethodService).keyboardForm }
                 when (keyboardForm.value) {
                         KeyboardForm.Alphabetic -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight())
+                        KeyboardForm.CandidateBoard -> CandidateBoard(height = keyboardHeight())
                         KeyboardForm.Numeric -> CantoneseNumericKeyboard(keyHeight = responsiveKeyHeight())
                         KeyboardForm.Symbolic -> CantoneseSymbolicKeyboard(keyHeight = responsiveKeyHeight())
                         KeyboardForm.Settings -> SettingsScreen(height = keyboardHeight())

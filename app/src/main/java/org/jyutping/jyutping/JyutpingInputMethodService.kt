@@ -137,7 +137,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         val keyboardForm: MutableState<KeyboardForm> by lazy { mutableStateOf(KeyboardForm.Alphabetic) }
         fun transformTo(destination: KeyboardForm) {
                 if (isBuffering.value) {
-                        bufferText = String.empty
+                        val shouldKeepBuffer: Boolean = (keyboardForm.value == KeyboardForm.Alphabetic) || (keyboardForm.value == KeyboardForm.CandidateBoard)
+                        if (!shouldKeepBuffer) {
+                                bufferText = String.empty
+                        }
                 }
                 keyboardForm.value = destination
                 adjustKeyboardCase()
@@ -221,6 +224,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                         userDB.process(selectedCandidates)
                                                 }
                                                 selectedCandidates.clear()
+                                        }
+                                        if (keyboardForm.value == KeyboardForm.CandidateBoard) {
+                                                transformTo(KeyboardForm.Alphabetic)
                                         }
                                 }
                                 'r' -> {
