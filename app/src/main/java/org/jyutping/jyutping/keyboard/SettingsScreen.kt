@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.Check
@@ -226,18 +227,19 @@ fun SettingsScreen(height: Dp) {
                                 }
                         }
                         item {
-                                Button(
-                                        onClick = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                        },
-                                        shape = RoundedCornerShape(8.dp),
-                                        colors = buttonColors,
-                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                Row(
+                                        modifier = Modifier
+                                                .fillMaxWidth()
+                                                .clip(shape = RoundedCornerShape(size = 8.dp))
+                                                .background(color = Color.White)
+                                                .padding(horizontal = 8.dp, vertical = 12.dp),
+                                        verticalAlignment = Alignment.CenterVertically
                                 ) {
                                         Text(text = stringResource(id = R.string.about_label_version))
                                         Spacer(modifier = Modifier.weight(1f))
-                                        Text(text = version)
+                                        SelectionContainer {
+                                                Text(text = version)
+                                        }
                                 }
                         }
                 }
