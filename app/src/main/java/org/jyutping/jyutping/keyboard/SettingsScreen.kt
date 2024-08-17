@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
@@ -100,7 +101,6 @@ fun SettingsScreen(height: Dp) {
                                                 modifier = Modifier
                                                         .clip(RoundedCornerShape(8.dp))
                                                         .background(Color.White)
-                                                        .padding(horizontal = 8.dp)
                                                         .fillMaxWidth()
                                         ) {
                                                 Button(
@@ -109,9 +109,9 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCharacterStandard(CharacterStandard.Traditional)
                                                         },
-                                                        shape = RoundedCornerShape(4.dp),
+                                                        shape = RectangleShape,
                                                         colors = buttonColors,
-                                                        contentPadding = PaddingValues(0.dp)
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
                                                         Text(text = stringResource(id = R.string.keyboard_settings_character_standard_traditional))
                                                         Spacer(modifier = Modifier.weight(1f))
@@ -128,9 +128,9 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCharacterStandard(CharacterStandard.HongKong)
                                                         },
-                                                        shape = RoundedCornerShape(4.dp),
+                                                        shape = RectangleShape,
                                                         colors = buttonColors,
-                                                        contentPadding = PaddingValues(0.dp)
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
                                                         Text(text = stringResource(id = R.string.keyboard_settings_character_standard_hongkong))
                                                         Spacer(modifier = Modifier.weight(1f))
@@ -147,9 +147,9 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCharacterStandard(CharacterStandard.Taiwan)
                                                         },
-                                                        shape = RoundedCornerShape(4.dp),
+                                                        shape = RectangleShape,
                                                         colors = buttonColors,
-                                                        contentPadding = PaddingValues(0.dp)
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
                                                         Text(text = stringResource(id = R.string.keyboard_settings_character_standard_taiwan))
                                                         Spacer(modifier = Modifier.weight(1f))
@@ -166,9 +166,9 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCharacterStandard(CharacterStandard.Simplified)
                                                         },
-                                                        shape = RoundedCornerShape(4.dp),
+                                                        shape = RectangleShape,
                                                         colors = buttonColors,
-                                                        contentPadding = PaddingValues(0.dp)
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
                                                         Text(text = stringResource(id = R.string.keyboard_settings_character_standard_simplified))
                                                         Spacer(modifier = Modifier.weight(1f))
@@ -193,10 +193,10 @@ fun SettingsScreen(height: Dp) {
                                                 modifier = Modifier
                                                         .clip(RoundedCornerShape(8.dp))
                                                         .background(Color.White)
-                                                        .padding(horizontal = 8.dp)
                                                         .fillMaxWidth()
                                         ) {
                                                 Row(
+                                                        modifier = Modifier.padding(horizontal = 8.dp),
                                                         verticalAlignment = Alignment.CenterVertically
                                                 ) {
                                                         Text(text = stringResource(id = R.string.keyboard_settings_input_memory_switch_title))
@@ -216,9 +216,9 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.clearUserLexicon()
                                                         },
-                                                        shape = RoundedCornerShape(4.dp),
+                                                        shape = RectangleShape,
                                                         colors = ButtonColors(Color.White, Color.Red, Color.White, Color.Red),
-                                                        contentPadding = PaddingValues(0.dp)
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
                                                         Text(text = stringResource(id = R.string.keyboard_settings_clear_user_lexicon))
                                                         Spacer(modifier = Modifier.weight(1f))
