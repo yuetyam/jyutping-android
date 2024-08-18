@@ -86,7 +86,7 @@ fun SettingsScreen(height: Dp) {
                 }
                 LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                         item {
@@ -121,7 +121,7 @@ fun SettingsScreen(height: Dp) {
                                                                 modifier = Modifier.alpha(if (characterStandard.value == CharacterStandard.Traditional) 1f else 0f)
                                                         )
                                                 }
-                                                HorizontalDivider(thickness = 1.dp)
+                                                HorizontalDivider()
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -140,7 +140,7 @@ fun SettingsScreen(height: Dp) {
                                                                 modifier = Modifier.alpha(if (characterStandard.value == CharacterStandard.HongKong) 1f else 0f)
                                                         )
                                                 }
-                                                HorizontalDivider(thickness = 1.dp)
+                                                HorizontalDivider()
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -159,7 +159,7 @@ fun SettingsScreen(height: Dp) {
                                                                 modifier = Modifier.alpha(if (characterStandard.value == CharacterStandard.Taiwan) 1f else 0f)
                                                         )
                                                 }
-                                                HorizontalDivider(thickness = 1.dp)
+                                                HorizontalDivider()
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -209,7 +209,7 @@ fun SettingsScreen(height: Dp) {
                                                                 }
                                                         )
                                                 }
-                                                HorizontalDivider(thickness = 1.dp)
+                                                HorizontalDivider()
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
