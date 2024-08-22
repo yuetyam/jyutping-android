@@ -17,6 +17,7 @@ import org.jyutping.jyutping.keyboard.EditingPanel
 import org.jyutping.jyutping.keyboard.EmojiBoard
 import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.SettingsScreen
+import org.jyutping.jyutping.keyboard.StrokeKeyboard
 import org.jyutping.jyutping.presets.PresetConstant
 
 class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
@@ -28,6 +29,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                 when (keyboardForm.value) {
                         KeyboardForm.Alphabetic -> when (qwertyForm.value) {
                                 QwertyForm.Cangjie -> CangjieKeyboard(keyHeight = responsiveKeyHeight())
+                                QwertyForm.Stroke -> StrokeKeyboard(keyHeight = responsiveKeyHeight())
                                 else -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight())
                         }
                         KeyboardForm.CandidateBoard -> CandidateBoard(height = keyboardHeight())

@@ -549,4 +549,32 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 cursor.close()
                 return items
         }
+        fun strokeMatch(text: String): List<ShapeLexicon> {
+                val items: MutableList<ShapeLexicon> = mutableListOf()
+                val code = text.hashCode()
+                val command = "SELECT rowid, word FROM stroketable WHERE code = ${code};"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val rowID = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val instance = ShapeLexicon(text = word, input = text, complex = text.length, order = rowID)
+                        items.add(instance)
+                }
+                cursor.close()
+                return items
+        }
+        fun strokeGlob(text: String): List<ShapeLexicon> {
+                val items: MutableList<ShapeLexicon> = mutableListOf()
+                val command = "SELECT rowid, word, complex FROM stroketable WHERE stroke GLOB '${text}*' ORDER BY complex ASC LIMIT 100;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val rowID = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val complex = cursor.getInt(2)
+                        val instance = ShapeLexicon(text = word, input = text, complex = complex, order = rowID)
+                        items.add(instance)
+                }
+                cursor.close()
+                return items
+        }
 }

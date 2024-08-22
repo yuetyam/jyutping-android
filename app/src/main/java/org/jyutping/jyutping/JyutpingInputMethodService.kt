@@ -38,6 +38,7 @@ import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.ReturnKeyForm
 import org.jyutping.jyutping.keyboard.Segmentor
 import org.jyutping.jyutping.keyboard.SpaceKeyForm
+import org.jyutping.jyutping.keyboard.Stroke
 import org.jyutping.jyutping.keyboard.Structure
 import org.jyutping.jyutping.keyboard.isABC
 import org.jyutping.jyutping.keyboard.length
@@ -307,6 +308,26 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                                 'x' -> {
                                         updateQwertyForm(QwertyForm.Stroke)
+                                        if (value.length < 2) {
+                                                currentInputConnection.setComposingText(value, value.length)
+                                        } else {
+                                                val text = value.drop(1)
+                                                val transformed = ShapeKeyMap.strokeTransform(text)
+                                                val converted = transformed.mapNotNull { ShapeKeyMap.strokeCode(it) }
+                                                val isValidSequence: Boolean = converted.isNotEmpty() && (converted.size == text.length)
+                                                if (isValidSequence) {
+                                                        val mark = converted.joinToString(separator = PresetString.EMPTY)
+                                                        currentInputConnection.setComposingText(mark, mark.length)
+                                                        val suggestions = Stroke.reverseLookup(transformed, db)
+                                                        candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
+                                                } else {
+                                                        currentInputConnection.setComposingText(bufferText, bufferText.length)
+                                                        candidates.value = emptyList()
+                                                }
+                                        }
+                                        if (isBuffering.value.not()) {
+                                                isBuffering.value = true
+                                        }
                                 }
                                 'q' -> {
                                         if (value.length < 2) {
