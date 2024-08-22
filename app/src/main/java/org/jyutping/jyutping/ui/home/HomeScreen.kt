@@ -128,13 +128,14 @@ fun HomeScreen(navController: NavHostController) {
                                         content = stringResource(id = R.string.home_content_pinyin_reverse_lookup)
                                 )
                         }
-                        /*
                         item {
                                 TextCard(
                                         heading = stringResource(id = R.string.home_heading_cangjie_reverse_lookup),
-                                        content = stringResource(id = R.string.home_content_cangjie_reverse_lookup)
+                                        content = stringResource(id = R.string.home_content_cangjie_reverse_lookup),
+                                        subContent = stringResource(id = R.string.home_subcontent_cangjie_reverse_lookup_note)
                                 )
                         }
+                        /*
                         item {
                                 TextCard(
                                         heading = stringResource(id = R.string.home_heading_stroke_reverse_lookup),

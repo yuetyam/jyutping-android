@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.extensions.keyboardLightBackground
+import org.jyutping.jyutping.presets.PresetConstant
 
 @Composable
 fun CantoneseSymbolicKeyboard(keyHeight: Dp) {
@@ -24,7 +25,7 @@ fun CantoneseSymbolicKeyboard(keyHeight: Dp) {
         ) {
                 Box(
                         modifier = Modifier
-                                .height(60.dp)
+                                .height(PresetConstant.ToolBarHeight.dp)
                                 .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                 ) {

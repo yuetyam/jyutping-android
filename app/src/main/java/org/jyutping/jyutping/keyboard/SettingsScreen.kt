@@ -49,6 +49,7 @@ fun SettingsScreen(height: Dp) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val characterStandard = remember { context.characterStandard }
+        val cangjieVariant = remember { context.cangjieVariant }
         val isInputMemoryOn = remember { context.isInputMemoryOn }
         val buttonColors = ButtonColors(Color.White, Color.Black, Color.White, Color.White)
         val version: String by lazy { BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")" }
@@ -176,6 +177,98 @@ fun SettingsScreen(height: Dp) {
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (characterStandard.value.isSimplified()) 1f else 0f)
+                                                        )
+                                                }
+                                        }
+                                }
+                        }
+                        item {
+                                Column(
+                                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                                ) {
+                                        Text(
+                                                text = stringResource(id = R.string.keyboard_settings_cangjie_variant_header),
+                                                modifier = Modifier.padding(horizontal = 8.dp)
+                                        )
+                                        Column(
+                                                modifier = Modifier
+                                                        .clip(RoundedCornerShape(8.dp))
+                                                        .background(Color.White)
+                                                        .fillMaxWidth()
+                                        ) {
+                                                Button(
+                                                        onClick = {
+                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateCangjieVariant(CangjieVariant.Cangjie5)
+                                                        },
+                                                        shape = RectangleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(text = stringResource(id = R.string.keyboard_settings_cangjie_variant_cangjie5))
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Cangjie5) 1f else 0f)
+                                                        )
+                                                }
+                                                HorizontalDivider()
+                                                Button(
+                                                        onClick = {
+                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateCangjieVariant(CangjieVariant.Cangjie3)
+                                                        },
+                                                        shape = RectangleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(text = stringResource(id = R.string.keyboard_settings_cangjie_variant_cangjie3))
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Cangjie3) 1f else 0f)
+                                                        )
+                                                }
+                                                HorizontalDivider()
+                                                Button(
+                                                        onClick = {
+                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateCangjieVariant(CangjieVariant.Quick5)
+                                                        },
+                                                        shape = RectangleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(text = stringResource(id = R.string.keyboard_settings_cangjie_variant_quick5))
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Quick5) 1f else 0f)
+                                                        )
+                                                }
+                                                HorizontalDivider()
+                                                Button(
+                                                        onClick = {
+                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateCangjieVariant(CangjieVariant.Quick3)
+                                                        },
+                                                        shape = RectangleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(text = stringResource(id = R.string.keyboard_settings_cangjie_variant_quick3))
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Quick3) 1f else 0f)
                                                         )
                                                 }
                                         }

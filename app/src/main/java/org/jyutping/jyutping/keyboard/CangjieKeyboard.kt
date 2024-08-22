@@ -20,7 +20,7 @@ import org.jyutping.jyutping.extensions.keyboardLightBackground
 import org.jyutping.jyutping.presets.PresetConstant
 
 @Composable
-fun AlphabeticKeyboard(keyHeight: Dp) {
+fun CangjieKeyboard(keyHeight: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isBuffering = remember { context.isBuffering }
         Column(

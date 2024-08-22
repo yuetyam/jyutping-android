@@ -26,12 +26,15 @@ import org.jyutping.jyutping.extensions.separatorChar
 import org.jyutping.jyutping.extensions.space
 import org.jyutping.jyutping.extensions.toneConverted
 import org.jyutping.jyutping.keyboard.Candidate
+import org.jyutping.jyutping.keyboard.Cangjie
+import org.jyutping.jyutping.keyboard.CangjieVariant
 import org.jyutping.jyutping.keyboard.Engine
 import org.jyutping.jyutping.keyboard.InputMethodMode
 import org.jyutping.jyutping.keyboard.KeyboardCase
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.Pinyin
 import org.jyutping.jyutping.keyboard.PinyinSegmentor
+import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.ReturnKeyForm
 import org.jyutping.jyutping.keyboard.Segmentor
 import org.jyutping.jyutping.keyboard.SpaceKeyForm
@@ -39,8 +42,10 @@ import org.jyutping.jyutping.keyboard.Structure
 import org.jyutping.jyutping.keyboard.isABC
 import org.jyutping.jyutping.keyboard.length
 import org.jyutping.jyutping.keyboard.transformed
+import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
+import org.jyutping.jyutping.utilities.ShapeKeyMap
 import org.jyutping.jyutping.utilities.UserLexiconHelper
 
 class JyutpingInputMethodService: LifecycleInputMethodService(),
@@ -134,6 +139,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 updateReturnKeyForm()
         }
 
+        val qwertyForm: MutableState<QwertyForm> by lazy { mutableStateOf(QwertyForm.Jyutping) }
+        private fun updateQwertyForm(form: QwertyForm) {
+                if (qwertyForm.value != form) {
+                        qwertyForm.value = form
+                }
+        }
+
         val keyboardForm: MutableState<KeyboardForm> by lazy { mutableStateOf(KeyboardForm.Alphabetic) }
         fun transformTo(destination: KeyboardForm) {
                 if (isBuffering.value) {
@@ -187,6 +199,17 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.CharacterStandard, standard.identifier())
                 editor.apply()
         }
+        val cangjieVariant: MutableState<CangjieVariant> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CangjieVariant, CangjieVariant.Cangjie5.identifier())
+                val variant: CangjieVariant = CangjieVariant.variantOf(savedValue)
+                mutableStateOf(variant)
+        }
+        fun updateCangjieVariant(variant: CangjieVariant) {
+                cangjieVariant.value = variant
+                val editor = sharedPreferences.edit()
+                editor.putInt(UserSettingsKey.CangjieVariant, variant.identifier())
+                editor.apply()
+        }
 
         val isInputMemoryOn: MutableState<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.InputMemory, 1)
@@ -228,6 +251,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         if (keyboardForm.value == KeyboardForm.CandidateBoard) {
                                                 transformTo(KeyboardForm.Alphabetic)
                                         }
+                                        updateQwertyForm(QwertyForm.Jyutping)
                                 }
                                 'r' -> {
                                         if (value.length < 2) {
@@ -259,8 +283,31 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 isBuffering.value = true
                                         }
                                 }
-                                'v' -> {}
-                                'x' -> {}
+                                'v' -> {
+                                        updateQwertyForm(QwertyForm.Cangjie)
+                                        if (value.length < 2) {
+                                                currentInputConnection.setComposingText(value, value.length)
+                                        } else {
+                                                val text = value.drop(1)
+                                                val converted = text.mapNotNull { ShapeKeyMap.cangjieCode(it) }
+                                                val isValidSequence: Boolean = converted.isNotEmpty() && (converted.size == text.length)
+                                                if (isValidSequence) {
+                                                        val mark = converted.joinToString(separator = PresetString.EMPTY)
+                                                        currentInputConnection.setComposingText(mark, mark.length)
+                                                        val suggestions = Cangjie.reverseLookup(text, cangjieVariant.value, db)
+                                                        candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
+                                                } else {
+                                                        currentInputConnection.setComposingText(bufferText, bufferText.length)
+                                                        candidates.value = emptyList()
+                                                }
+                                        }
+                                        if (isBuffering.value.not()) {
+                                                isBuffering.value = true
+                                        }
+                                }
+                                'x' -> {
+                                        updateQwertyForm(QwertyForm.Stroke)
+                                }
                                 'q' -> {
                                         if (value.length < 2) {
                                                 currentInputConnection.setComposingText(value, value.length)

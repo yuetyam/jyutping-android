@@ -1,6 +1,7 @@
 package org.jyutping.jyutping.keyboard
 
 enum class QwertyForm {
+
         /// Alphabetic, English
         Abc,
 
@@ -11,7 +12,10 @@ enum class QwertyForm {
         TripleStroke,
 
         Pinyin,
+
+        /// Cangjie or Quick(Sucheng)
         Cangjie,
+
         Stroke,
 
         /// LoengFan Reverse Lookup. 拆字、兩分反查. 例如 木 + 旦 = 查: mukdaan

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,13 +32,15 @@ fun TextCard(
                         .padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-                Text(text = heading, fontWeight = FontWeight.Medium)
+                Text(text = heading, fontWeight = FontWeight.SemiBold)
+                HorizontalDivider()
                 if (shouldMonospaceContent) {
                         Text(text = content, fontFamily = FontFamily.Monospace)
                 } else {
                         Text(text = content)
                 }
                 if (subContent != null) {
+                        HorizontalDivider()
                         if (shouldMonospaceSubContent) {
                                 Text(text = subContent, fontFamily = FontFamily.Monospace)
                         } else {

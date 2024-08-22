@@ -10,19 +10,26 @@ import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.AlphabeticKeyboard
 import org.jyutping.jyutping.keyboard.CandidateBoard
+import org.jyutping.jyutping.keyboard.CangjieKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseNumericKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseSymbolicKeyboard
 import org.jyutping.jyutping.keyboard.EditingPanel
 import org.jyutping.jyutping.keyboard.EmojiBoard
+import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.SettingsScreen
+import org.jyutping.jyutping.presets.PresetConstant
 
 class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
 
         @Composable
         override fun Content() {
                 val keyboardForm = remember { (context as JyutpingInputMethodService).keyboardForm }
+                val qwertyForm = remember { (context as JyutpingInputMethodService).qwertyForm }
                 when (keyboardForm.value) {
-                        KeyboardForm.Alphabetic -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight())
+                        KeyboardForm.Alphabetic -> when (qwertyForm.value) {
+                                QwertyForm.Cangjie -> CangjieKeyboard(keyHeight = responsiveKeyHeight())
+                                else -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight())
+                        }
                         KeyboardForm.CandidateBoard -> CandidateBoard(height = keyboardHeight())
                         KeyboardForm.Numeric -> CantoneseNumericKeyboard(keyHeight = responsiveKeyHeight())
                         KeyboardForm.Symbolic -> CantoneseSymbolicKeyboard(keyHeight = responsiveKeyHeight())
@@ -35,9 +42,8 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
 
         @Composable
         private fun keyboardHeight(): Dp {
-                val toolBarHeight = 60.dp
                 val keyRowsHeight = responsiveKeyHeight() * 4
-                return keyRowsHeight + toolBarHeight
+                return keyRowsHeight + PresetConstant.ToolBarHeight.dp
         }
 
         @Composable

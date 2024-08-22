@@ -10,6 +10,7 @@ import org.jyutping.jyutping.extensions.isIdeographic
 import org.jyutping.jyutping.extensions.shortcutCharcode
 import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.SegmentToken
+import org.jyutping.jyutping.keyboard.ShapeLexicon
 import org.jyutping.jyutping.search.CantoneseLexicon
 import org.jyutping.jyutping.search.ChoHokYuetYamCitYiu
 import org.jyutping.jyutping.search.FanWanCuetYiu
@@ -487,6 +488,62 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                         val word = cursor.getString(1)
                         val pinyin = cursor.getString(2)
                         val instance = PinyinLexicon(text = word, pinyin = pinyin, input = text, mark = pinyin, order = rowID)
+                        items.add(instance)
+                }
+                cursor.close()
+                return items
+        }
+        fun cangjieMatch(version: Int, text: String): List<ShapeLexicon> {
+                val items: MutableList<ShapeLexicon> = mutableListOf()
+                val code = text.charcode() ?: return emptyList()
+                val command = "SELECT rowid, word FROM cangjietable WHERE cj${version}code = ${code};"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val rowID = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val instance = ShapeLexicon(text = word, input = text, complex = text.length, order = rowID)
+                        items.add(instance)
+                }
+                cursor.close()
+                return items
+        }
+        fun cangjieGlob(version: Int, text: String): List<ShapeLexicon> {
+                val items: MutableList<ShapeLexicon> = mutableListOf()
+                val command = "SELECT rowid, word, cj${version}complex FROM cangjietable WHERE cangjie${version} GLOB '${text}*' ORDER BY cj${version}complex ASC LIMIT 100;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val rowID = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val complex = cursor.getInt(2)
+                        val instance = ShapeLexicon(text = word, input = text, complex = complex, order = rowID)
+                        items.add(instance)
+                }
+                cursor.close()
+                return items
+        }
+        fun quickMatch(version: Int, text: String): List<ShapeLexicon> {
+                val items: MutableList<ShapeLexicon> = mutableListOf()
+                val code = text.charcode() ?: return emptyList()
+                val command = "SELECT rowid, word FROM quicktable WHERE q${version}code = ${code};"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val rowID = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val instance = ShapeLexicon(text = word, input = text, complex = text.length, order = rowID)
+                        items.add(instance)
+                }
+                cursor.close()
+                return items
+        }
+        fun quickGlob(version: Int, text: String): List<ShapeLexicon> {
+                val items: MutableList<ShapeLexicon> = mutableListOf()
+                val command = "SELECT rowid, word, q${version}complex FROM quicktable WHERE quick${version} GLOB '${text}*' ORDER BY q${version}complex ASC LIMIT 100;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val rowID = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val complex = cursor.getInt(2)
+                        val instance = ShapeLexicon(text = word, input = text, complex = complex, order = rowID)
                         items.add(instance)
                 }
                 cursor.close()

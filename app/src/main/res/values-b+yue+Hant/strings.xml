@@ -16,8 +16,9 @@
     <string name="home_heading_compose_reverse_lookup">用兩分拆字反查粵拼</string>
     <string name="home_content_pinyin_reverse_lookup">以 r 開始，再輸入普通話拼音即可。例如輸入 rcha 就會出「查」等。候選詞會帶顯示對應嘅粵拼。</string>
     <string name="home_content_cangjie_reverse_lookup">以 v 開始，再輸入倉頡或速成碼即可。例如輸入 vdam 就會出「查」等。候選詞會帶顯示對應嘅粵拼。</string>
+    <string name="home_subcontent_cangjie_reverse_lookup_note">鍵盤設定介面可以揀倉頡、速成版本。</string>
     <string name="home_content_stroke_reverse_lookup">以 x 開始，再輸入筆畫碼即可。例如輸入 xwsad 就會出「木」等。候選詞會帶顯示對應嘅粵拼。</string>
-    <string name="home_content_compose_reverse_lookup">兩分即係將一個字分成兩部份。例如「查」字可以分成「木、旦」。以 q 開始，再輸入兩個字嘅粵拼即可反查。例如輸入 qmukdaan 就會出「查」等。候選詞會帶顯示對應嘅粵拼。</string>
+    <string name="home_content_compose_reverse_lookup">兩分即係將一個字分成兩部分。例如「查」字可以分成「木、旦」。以 q 開始，再輸入兩個字嘅粵拼即可。例如輸入 qmukdaan 就會出「查」等。候選詞會帶顯示對應嘅粵拼。</string>
     <string name="home_label_more_introductions">更多介紹</string>
     <string name="screen_title_introductions">更多介紹</string>
     <string name="jyutping_label_initials">粵拼聲母表</string>
@@ -51,4 +52,9 @@
     <string name="keyboard_settings_user_lexicon_header">個人詞庫</string>
     <string name="keyboard_settings_input_memory_switch_title">記憶輸入</string>
     <string name="keyboard_settings_clear_user_lexicon">清空個人詞庫</string>
+    <string name="keyboard_settings_cangjie_variant_header">倉頡／速成反查粵拼</string>
+    <string name="keyboard_settings_cangjie_variant_cangjie5">倉頡五代</string>
+    <string name="keyboard_settings_cangjie_variant_cangjie3">倉頡三代</string>
+    <string name="keyboard_settings_cangjie_variant_quick5">速成五代</string>
+    <string name="keyboard_settings_cangjie_variant_quick3">速成三代</string>
 </resources>
