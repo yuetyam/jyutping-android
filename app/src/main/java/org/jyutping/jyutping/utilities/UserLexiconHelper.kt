@@ -4,11 +4,10 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import org.jyutping.jyutping.UserSettingsKey
-import org.jyutping.jyutping.extensions.empty
-import org.jyutping.jyutping.extensions.space
 import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.Segmentation
 import org.jyutping.jyutping.keyboard.length
+import org.jyutping.jyutping.presets.PresetString
 
 class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettingsKey.UserLexiconDatabaseFileName, null, 3) {
 
@@ -27,8 +26,7 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                 val id: Int = (candidate.lexiconText + candidate.romanization).hashCode()
                 val frequency = find(id)
                 if (frequency != null) {
-                        val newFrequency: Int = frequency + 1
-                        update(id = id, frequency = newFrequency)
+                        update(id = id, frequency = frequency)
                 } else {
                         val lexicon = UserLexicon.convert(candidate)
                         insert(lexicon)
@@ -39,8 +37,7 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                 val id = lexicon.id
                 val frequency = find(id)
                 if (frequency != null) {
-                        val newFrequency: Int = frequency + 1
-                        update(id = id, frequency = newFrequency)
+                        update(id = id, frequency = frequency)
                 } else {
                         insert(lexicon)
                 }
@@ -53,7 +50,9 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                 this.writableDatabase.execSQL(command)
         }
         private fun update(id: Int, frequency: Int) {
-                val command: String = "UPDATE memory SET frequency = $frequency WHERE id = ${id};"
+                val newFrequency: Int = frequency + 1
+                val newTime: Long = System.currentTimeMillis()
+                val command: String = "UPDATE memory SET frequency = ${newFrequency}, latest = $newTime WHERE id = ${id};"
                 this.writableDatabase.execSQL(command)
         }
         private fun find(id: Int): Int? {
@@ -80,11 +79,11 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                 if (schemes.isEmpty()) return matches + shortcuts
                 val searches: MutableList<List<Candidate>> = mutableListOf()
                 for (scheme in schemes) {
-                        val pingText = scheme.joinToString(separator = String.empty) { it.origin }
+                        val pingText = scheme.joinToString(separator = PresetString.EMPTY) { it.origin }
                         val matched = query(text = pingText, input = text, isShortcut = false)
                         if (matched.isEmpty()) continue
-                        val text2mark = scheme.joinToString(separator = String.space) { it.text }
-                        val syllables = scheme.joinToString(separator = String.space) { it.origin }
+                        val text2mark = scheme.joinToString(separator = PresetString.SPACE) { it.text }
+                        val syllables = scheme.joinToString(separator = PresetString.SPACE) { it.origin }
                         val transformed = matched.filter { it.mark == syllables }.map { Candidate(text = it.text, romanization = it.romanization, input = it.input, mark = text2mark) }
                         searches.add(transformed)
                 }
