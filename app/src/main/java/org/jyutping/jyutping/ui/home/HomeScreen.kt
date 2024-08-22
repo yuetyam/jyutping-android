@@ -135,7 +135,6 @@ fun HomeScreen(navController: NavHostController) {
                                         subContent = stringResource(id = R.string.home_subcontent_cangjie_reverse_lookup_note)
                                 )
                         }
-                        /*
                         item {
                                 TextCard(
                                         heading = stringResource(id = R.string.home_heading_stroke_reverse_lookup),
@@ -149,7 +148,6 @@ fun HomeScreen(navController: NavHostController) {
                                         shouldMonospaceContent = true
                                 )
                         }
-                        */
                         item {
                                 TextCard(
                                         heading = stringResource(id = R.string.home_heading_compose_reverse_lookup),
