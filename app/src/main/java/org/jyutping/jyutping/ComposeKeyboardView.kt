@@ -15,15 +15,18 @@ import org.jyutping.jyutping.keyboard.CantoneseNumericKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseSymbolicKeyboard
 import org.jyutping.jyutping.keyboard.EditingPanel
 import org.jyutping.jyutping.keyboard.EmojiBoard
+import org.jyutping.jyutping.keyboard.NumericKeyboard
 import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.SettingsScreen
 import org.jyutping.jyutping.keyboard.StrokeKeyboard
+import org.jyutping.jyutping.keyboard.SymbolicKeyboard
 import org.jyutping.jyutping.presets.PresetConstant
 
 class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
 
         @Composable
         override fun Content() {
+                val inputMethodMode = remember { (context as JyutpingInputMethodService).inputMethodMode }
                 val keyboardForm = remember { (context as JyutpingInputMethodService).keyboardForm }
                 val qwertyForm = remember { (context as JyutpingInputMethodService).qwertyForm }
                 when (keyboardForm.value) {
@@ -33,8 +36,8 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                                 else -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight())
                         }
                         KeyboardForm.CandidateBoard -> CandidateBoard(height = keyboardHeight())
-                        KeyboardForm.Numeric -> CantoneseNumericKeyboard(keyHeight = responsiveKeyHeight())
-                        KeyboardForm.Symbolic -> CantoneseSymbolicKeyboard(keyHeight = responsiveKeyHeight())
+                        KeyboardForm.Numeric -> if (inputMethodMode.value.isABC()) NumericKeyboard(keyHeight = responsiveKeyHeight()) else CantoneseNumericKeyboard(keyHeight = responsiveKeyHeight())
+                        KeyboardForm.Symbolic -> if (inputMethodMode.value.isABC()) SymbolicKeyboard(keyHeight = responsiveKeyHeight()) else CantoneseSymbolicKeyboard(keyHeight = responsiveKeyHeight())
                         KeyboardForm.Settings -> SettingsScreen(height = keyboardHeight())
                         KeyboardForm.EmojiBoard -> EmojiBoard(height = keyboardHeight())
                         KeyboardForm.EditingPanel -> EditingPanel(height = keyboardHeight())

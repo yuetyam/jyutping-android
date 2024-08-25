@@ -39,7 +39,6 @@ import org.jyutping.jyutping.keyboard.Segmentor
 import org.jyutping.jyutping.keyboard.SpaceKeyForm
 import org.jyutping.jyutping.keyboard.Stroke
 import org.jyutping.jyutping.keyboard.Structure
-import org.jyutping.jyutping.keyboard.isABC
 import org.jyutping.jyutping.keyboard.length
 import org.jyutping.jyutping.keyboard.transformed
 import org.jyutping.jyutping.presets.PresetColor
