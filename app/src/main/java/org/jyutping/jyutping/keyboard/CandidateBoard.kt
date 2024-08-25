@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
@@ -39,8 +38,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
-import org.jyutping.jyutping.extensions.keyLightEmphatic
-import org.jyutping.jyutping.extensions.keyboardLightBackground
+import org.jyutping.jyutping.presets.PresetColor
 
 private fun Candidate.width(): Dp = when (this.type) {
         CandidateType.Cantonese -> (this.text.length * 20 + 32).dp
@@ -57,6 +55,7 @@ fun CandidateBoard(height: Dp) {
         val interactionSource = remember { MutableInteractionSource() }
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val isDarkMode = remember { context.isDarkMode }
         val state = rememberLazyListState()
         LaunchedEffect(context.candidateState.intValue) {
                 state.scrollToItem(index = 0, scrollOffset = 0)
@@ -89,7 +88,7 @@ fun CandidateBoard(height: Dp) {
         }
         Box(
                 modifier = Modifier
-                        .background(Color.keyboardLightBackground)
+                        .background(if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
                         .height(height)
                         .fillMaxWidth(),
                 contentAlignment = Alignment.TopEnd
@@ -111,6 +110,7 @@ fun CandidateBoard(height: Dp) {
                                         row.candidates.map {
                                                 CandidateView(
                                                         candidate = it,
+                                                        isDarkMode = isDarkMode.value,
                                                         modifier = Modifier
                                                                 .clickable(interactionSource = interactionSource, indication = null) {
                                                                         view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -125,7 +125,10 @@ fun CandidateBoard(height: Dp) {
                                                 Spacer(modifier = Modifier.width(collapseWidth).weight(collapseWidth / screenWidth))
                                         }
                                 }
-                                HorizontalDivider()
+                                HorizontalDivider(
+                                      thickness = 1.dp,
+                                      color = if (isDarkMode.value) PresetColor.keyDarkEmphatic else PresetColor.keyLightEmphatic
+                                )
                         }
                 }
                 IconButton(
@@ -137,12 +140,16 @@ fun CandidateBoard(height: Dp) {
                         modifier = Modifier
                                 .width(collapseWidth)
                                 .height(collapseHeight)
-                                .background(color = Color.keyLightEmphatic, shape = RoundedCornerShape(4.dp))
+                                .background(
+                                        color = if (isDarkMode.value) PresetColor.keyDarkEmphaticOpacity else PresetColor.keyLightEmphatic,
+                                        shape = RoundedCornerShape(4.dp)
+                                )
                 ) {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.chevron_up),
                                 contentDescription = null,
-                                modifier = Modifier.size(20.dp)
+                                modifier = Modifier.size(20.dp),
+                                tint = if (isDarkMode.value) Color.White else Color.Black
                         )
                 }
         }

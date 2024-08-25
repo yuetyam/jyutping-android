@@ -22,8 +22,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
-import org.jyutping.jyutping.extensions.keyLight
-import org.jyutping.jyutping.extensions.keyLightEmphatic
+import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.utilities.ShapeKeyMap
 
 @Composable
@@ -32,6 +31,7 @@ fun CangjieKey(letter: Char, modifier: Modifier) {
         val isPressed = interactionSource.collectIsPressedAsState()
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val isDarkMode = remember { context.isDarkMode }
         val keyboardCase = remember { context.keyboardCase }
         val keyLetter: String = if (keyboardCase.value.isLowercased()) letter.lowercase() else letter.uppercase()
         val keyRadical: Char = ShapeKeyMap.cangjieCode(letter) ?: letter
@@ -49,7 +49,13 @@ fun CangjieKey(letter: Char, modifier: Modifier) {
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(if (isPressed.value) Color.keyLightEmphatic else Color.keyLight)
+                                .background(
+                                        if (isDarkMode.value) {
+                                                if (isPressed.value) PresetColor.keyDarkEmphatic else PresetColor.keyDark
+                                        } else {
+                                                if (isPressed.value) PresetColor.keyLightEmphatic else PresetColor.keyLight
+                                        }
+                                )
                                 .fillMaxSize(),
                         contentAlignment = Alignment.Center
                 ) {
@@ -61,11 +67,13 @@ fun CangjieKey(letter: Char, modifier: Modifier) {
                         ) {
                                 Text(
                                         text = keyLetter,
+                                        color = if (isDarkMode.value) Color.White else Color.Black,
                                         fontSize = 12.sp
                                 )
                         }
                         Text(
                                 text = keyRadical.toString(),
+                                color = if (isDarkMode.value) Color.White else Color.Black,
                                 fontSize = 16.sp
                         )
                 }

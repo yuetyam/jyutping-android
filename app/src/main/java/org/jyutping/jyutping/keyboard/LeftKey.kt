@@ -10,8 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -27,9 +26,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
-import org.jyutping.jyutping.extensions.keyLight
-import org.jyutping.jyutping.extensions.keyLightEmphatic
-import org.jyutping.jyutping.extensions.separator
+import org.jyutping.jyutping.presets.PresetColor
+import org.jyutping.jyutping.presets.PresetString
 
 @Composable
 fun LeftKey(modifier: Modifier) {
@@ -39,6 +37,7 @@ fun LeftKey(modifier: Modifier) {
         val context = LocalContext.current as JyutpingInputMethodService
         val inputMethodMode = remember { context.inputMethodMode }
         val isBuffering = remember { context.isBuffering }
+        val isDarkMode = remember { context.isDarkMode }
         val keyForm: LeftKeyForm = when (inputMethodMode.value) {
                 InputMethodMode.Cantonese -> if (isBuffering.value) LeftKeyForm.Buffering else LeftKeyForm.Cantonese
                 InputMethodMode.ABC -> LeftKeyForm.ABC
@@ -50,17 +49,21 @@ fun LeftKey(modifier: Modifier) {
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                 context.leftKey()
                         }
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
+                        .fillMaxSize(),
                 contentAlignment = Alignment.Center
         ) {
                 Box (
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(if (isPressed.value) Color.keyLightEmphatic else Color.keyLight)
-                                .fillMaxWidth()
-                                .fillMaxHeight(),
+                                .background(
+                                        if (isDarkMode.value) {
+                                                if (isPressed.value) PresetColor.keyDarkEmphatic else PresetColor.keyDark
+                                        } else {
+                                                if (isPressed.value) PresetColor.keyLightEmphatic else PresetColor.keyLight
+                                        }
+                                )
+                                .fillMaxSize(),
                         contentAlignment = Alignment.Center
                 ) {
                         if (keyForm.isBuffering()) {
@@ -74,12 +77,14 @@ fun LeftKey(modifier: Modifier) {
                                                 modifier = Modifier
                                                         .alpha(0.85f)
                                                         .padding(bottom = 2.dp),
+                                                color = if (isDarkMode.value) Color.White else Color.Black,
                                                 fontSize = 10.sp
                                         )
                                 }
                         }
                         Text(
                                 text = keyForm.keyText(),
+                                color = if (isDarkMode.value) Color.White else Color.Black,
                                 fontSize = 20.sp
                         )
                 }
@@ -94,6 +99,6 @@ private enum class LeftKeyForm {
 private fun LeftKeyForm.isBuffering(): Boolean = (this == LeftKeyForm.Buffering)
 private fun LeftKeyForm.keyText(): String = when (this) {
         LeftKeyForm.Cantonese -> "，"
-        LeftKeyForm.Buffering -> String.separator
+        LeftKeyForm.Buffering -> PresetString.SEPARATOR
         LeftKeyForm.ABC -> ","
 }

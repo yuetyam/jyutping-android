@@ -1,15 +1,13 @@
 package org.jyutping.jyutping.keyboard
 
+import android.annotation.SuppressLint
 import android.view.HapticFeedbackConstants
 import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -37,23 +36,42 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
-import org.jyutping.jyutping.extensions.keyLight
-import org.jyutping.jyutping.extensions.keyLightEmphatic
+import org.jyutping.jyutping.presets.PresetColor
 
+@SuppressLint("ReturnFromAwaitPointerEventScope")
 @Composable
 fun BackspaceKey(modifier: Modifier) {
-        val interactionSource = remember { MutableInteractionSource() }
-        val isPressed = interactionSource.collectIsPressedAsState()
+        var isPressed by remember { mutableStateOf(false) }
         var isLongPressed by remember { mutableStateOf(false) }
         var taskJob: Job? by remember { mutableStateOf(null) }
         val scope = rememberCoroutineScope()
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val isDarkMode = remember { context.isDarkMode }
         var offsetX by remember { mutableFloatStateOf(0f) }
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
                                 coroutineScope {
+                                        launch {
+                                                awaitPointerEventScope {
+                                                        while (true) {
+                                                                val event = awaitPointerEvent()
+                                                                when (event.type) {
+                                                                        PointerEventType.Press -> {
+                                                                                if (isPressed.not()) {
+                                                                                        isPressed = true
+                                                                                }
+                                                                        }
+                                                                        PointerEventType.Release -> {
+                                                                                if (isPressed) {
+                                                                                        isPressed = false
+                                                                                }
+                                                                        }
+                                                                }
+                                                        }
+                                                }
+                                        }
                                         launch {
                                                 detectTapGestures(
                                                         onLongPress = {
@@ -92,23 +110,28 @@ fun BackspaceKey(modifier: Modifier) {
                                         }
                                 }
                         }
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
+                        .fillMaxSize(),
                 contentAlignment = Alignment.Center
         ) {
                 Box (
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(if (isPressed.value) Color.keyLight else Color.keyLightEmphatic)
-                                .fillMaxWidth()
-                                .fillMaxHeight(),
+                                .background(
+                                        if (isDarkMode.value) {
+                                                if (isPressed) PresetColor.keyDark else PresetColor.keyDarkEmphatic
+                                        } else {
+                                                if (isPressed) PresetColor.keyLight else PresetColor.keyLightEmphatic
+                                        }
+                                )
+                                .fillMaxSize(),
                         contentAlignment = Alignment.Center
                 ) {
                         Icon(
-                                imageVector = ImageVector.vectorResource(id = if (isPressed.value) R.drawable.key_backspacing else R.drawable.key_backspace),
+                                imageVector = ImageVector.vectorResource(id = if (isPressed) R.drawable.key_backspacing else R.drawable.key_backspace),
                                 contentDescription = null,
-                                modifier = Modifier.size(22.dp)
+                                modifier = Modifier.size(22.dp),
+                                tint = if (isDarkMode.value) Color.White else Color.Black
                         )
                 }
         }

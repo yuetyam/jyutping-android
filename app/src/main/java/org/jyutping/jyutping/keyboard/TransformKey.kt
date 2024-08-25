@@ -7,8 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -23,8 +22,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
-import org.jyutping.jyutping.extensions.keyLight
-import org.jyutping.jyutping.extensions.keyLightEmphatic
+import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
 fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
@@ -32,6 +30,7 @@ fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
         val isPressed = interactionSource.collectIsPressedAsState()
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val isDarkMode = remember { context.isDarkMode }
         val keyText: String = when (destination) {
                 KeyboardForm.Alphabetic -> "ABC"
                 KeyboardForm.Numeric -> "123"
@@ -45,22 +44,27 @@ fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                 context.transformTo(destination)
                         }
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
+                        .fillMaxSize(),
                 contentAlignment = Alignment.Center
         ) {
                 Box (
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(if (isPressed.value) Color.keyLight else Color.keyLightEmphatic)
-                                .fillMaxWidth()
-                                .fillMaxHeight(),
+                                .background(
+                                        if (isDarkMode.value) {
+                                                if (isPressed.value) PresetColor.keyDark else PresetColor.keyDarkEmphatic
+                                        } else {
+                                                if (isPressed.value) PresetColor.keyLight else PresetColor.keyLightEmphatic
+                                        }
+                                )
+                                .fillMaxSize(),
                         contentAlignment = Alignment.Center
                 ) {
                         Text(
                                 text = keyText,
-                                fontSize = 18.sp
+                                color = if (isDarkMode.value) Color.White else Color.Black,
+                                fontSize = 18.sp,
                         )
                 }
         }

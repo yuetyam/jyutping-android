@@ -17,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,15 +26,17 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
-import org.jyutping.jyutping.extensions.keyboardLightBackground
+import org.jyutping.jyutping.presets.PresetColor
+import org.jyutping.jyutping.presets.PresetConstant
 
 @Composable
 fun EditingPanel(height: Dp) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val isDarkMode = remember { context.isDarkMode }
         Column(
                 modifier = Modifier
-                        .background(Color.keyboardLightBackground)
+                        .background(if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
                         .height(height)
                         .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(0.dp),
@@ -41,7 +44,7 @@ fun EditingPanel(height: Dp) {
         ) {
                 Row(
                         modifier = Modifier
-                                .height(44.dp)
+                                .height(PresetConstant.ToolBarHeight.dp)
                                 .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -52,7 +55,11 @@ fun EditingPanel(height: Dp) {
                                         context.transformTo(KeyboardForm.Alphabetic)
                                 }
                         ) {
-                                Icon(imageVector = Icons.Outlined.ArrowUpward, contentDescription = null)
+                                Icon(
+                                        imageVector = Icons.Outlined.ArrowUpward,
+                                        contentDescription = null,
+                                        tint = if (isDarkMode.value) Color.White else Color.Black
+                                )
                         }
                 }
                 LazyColumn(
@@ -61,10 +68,16 @@ fun EditingPanel(height: Dp) {
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                         item {
-                                Text(text = "未實現")
+                                Text(
+                                        text = "未實現",
+                                        color = if (isDarkMode.value) Color.White else Color.Black
+                                )
                         }
                         item {
-                                Text(text = "Not Implemented Yet")
+                                Text(
+                                        text = "Not Implemented Yet",
+                                        color = if (isDarkMode.value) Color.White else Color.Black
+                                )
                         }
                 }
         }

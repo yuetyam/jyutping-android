@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -22,8 +23,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
-import org.jyutping.jyutping.extensions.keyLight
-import org.jyutping.jyutping.extensions.keyLightEmphatic
+import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.utilities.ShapeKeyMap
 
 @Composable
@@ -32,6 +32,7 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
         val isPressed = interactionSource.collectIsPressedAsState()
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val isDarkMode = remember { context.isDarkMode }
         val keyboardCase = remember { context.keyboardCase }
         val keyLetter: String = if (keyboardCase.value.isLowercased()) letter.lowercase() else letter.uppercase()
         val keyStroke: Char? = ShapeKeyMap.strokeCode(letter)
@@ -49,7 +50,13 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(if (isPressed.value) Color.keyLightEmphatic else Color.keyLight)
+                                .background(
+                                        if (isDarkMode.value) {
+                                                if (isPressed.value) PresetColor.keyDarkEmphatic else PresetColor.keyDark
+                                        } else {
+                                                if (isPressed.value) PresetColor.keyLightEmphatic else PresetColor.keyLight
+                                        }
+                                )
                                 .fillMaxSize(),
                         contentAlignment = Alignment.Center
                 ) {
@@ -62,17 +69,20 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
                                 ) {
                                         Text(
                                                 text = keyLetter,
+                                                color = if (isDarkMode.value) Color.White else Color.Black,
                                                 fontSize = 12.sp
                                         )
                                 }
                                 Text(
                                         text = keyStroke.toString(),
+                                        color = if (isDarkMode.value) Color.White else Color.Black,
                                         fontSize = 16.sp
                                 )
                         } else {
                                 Text(
                                         text = keyLetter,
-                                        color = Color.Gray,
+                                        modifier = Modifier.alpha(0.66f),
+                                        color = if (isDarkMode.value) Color.White else Color.Black,
                                         fontSize = 18.sp
                                 )
                         }

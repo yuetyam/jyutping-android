@@ -6,11 +6,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CandidateView(candidate: Candidate, modifier: Modifier) {
+fun CandidateView(candidate: Candidate, isDarkMode: Boolean, modifier: Modifier) {
         Column(
                 modifier = modifier,
                 verticalArrangement = Arrangement.spacedBy((-2).dp),
@@ -18,10 +19,12 @@ fun CandidateView(candidate: Candidate, modifier: Modifier) {
         ) {
                 Text(
                         text = candidate.romanization,
+                        color = if (isDarkMode) Color.White else Color.Black,
                         fontSize = 12.sp
                 )
                 Text(
                         text = candidate.text,
+                        color = if (isDarkMode) Color.White else Color.Black,
                         fontSize = 20.sp
                 )
         }

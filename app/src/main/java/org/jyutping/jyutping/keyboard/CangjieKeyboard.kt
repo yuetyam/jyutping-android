@@ -11,22 +11,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
-import org.jyutping.jyutping.extensions.keyboardLightBackground
+import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 
 @Composable
 fun CangjieKeyboard(keyHeight: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isBuffering = remember { context.isBuffering }
+        val isDarkMode = remember { context.isDarkMode }
         Column(
                 modifier = Modifier
+                        .background(if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
                         .fillMaxWidth()
-                        .background(Color.keyboardLightBackground)
         ) {
                 Box(
                         modifier = Modifier
@@ -34,7 +34,7 @@ fun CangjieKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                 ) {
-                        Color.keyboardLightBackground
+                        if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground
                         if (isBuffering.value) {
                                 CandidateScrollBar()
                         } else {

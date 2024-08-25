@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
-import org.jyutping.jyutping.extensions.keyboardLightBackground
+import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
 fun CandidateScrollBar() {
@@ -44,6 +44,7 @@ fun CandidateScrollBar() {
         val interactionSource = remember { MutableInteractionSource() }
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val isDarkMode = remember { context.isDarkMode }
         val state = rememberLazyListState()
         LaunchedEffect(context.candidateState.intValue) {
                 state.scrollToItem(index = 0, scrollOffset = 0)
@@ -60,6 +61,7 @@ fun CandidateScrollBar() {
                         items(context.candidates.value) {
                                 CandidateView(
                                         candidate = it,
+                                        isDarkMode = isDarkMode.value,
                                         modifier = Modifier
                                                 .clickable(interactionSource = interactionSource, indication = null) {
                                                         view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -73,7 +75,7 @@ fun CandidateScrollBar() {
                 }
                 Box(
                         modifier = Modifier
-                                .background(Color.keyboardLightBackground)
+                                .background(if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
                                 .width(expanderWidth)
                                 .fillMaxHeight(),
                         contentAlignment = Alignment.Center
@@ -101,7 +103,8 @@ fun CandidateScrollBar() {
                                 Icon(
                                         imageVector = ImageVector.vectorResource(id = R.drawable.chevron_down),
                                         contentDescription = null,
-                                        modifier = Modifier.size(20.dp)
+                                        modifier = Modifier.size(20.dp),
+                                        tint = if (isDarkMode.value) Color.White else Color.Black
                                 )
                         }
                 }

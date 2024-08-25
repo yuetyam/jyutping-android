@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -34,6 +35,7 @@ fun ToolBar() {
         val interactionSource = remember { MutableInteractionSource() }
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val isDarkMode = remember { context.isDarkMode }
         Row(
                 modifier = Modifier
                         .fillMaxWidth()
@@ -53,7 +55,8 @@ fun ToolBar() {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.button_settings),
                                 contentDescription = null,
-                                modifier = Modifier.size(iconSize)
+                                modifier = Modifier.size(iconSize),
+                                tint = if (isDarkMode.value) Color.White else Color.Black
                         )
                 }
                 IconButton(
@@ -69,7 +72,8 @@ fun ToolBar() {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.button_emoji),
                                 contentDescription = null,
-                                modifier = Modifier.size(iconSize)
+                                modifier = Modifier.size(iconSize),
+                                tint = if (isDarkMode.value) Color.White else Color.Black
                         )
                 }
                 Box (
@@ -98,7 +102,8 @@ fun ToolBar() {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.button_editing),
                                 contentDescription = null,
-                                modifier = Modifier.size(editingIconSize)
+                                modifier = Modifier.size(editingIconSize),
+                                tint = if (isDarkMode.value) Color.White else Color.Black
                         )
                 }
                 IconButton(
@@ -114,7 +119,8 @@ fun ToolBar() {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.button_dismiss_keyboard),
                                 contentDescription = null,
-                                modifier = Modifier.size(iconSize)
+                                modifier = Modifier.size(iconSize),
+                                tint = if (isDarkMode.value) Color.White else Color.Black
                         )
                 }
         }

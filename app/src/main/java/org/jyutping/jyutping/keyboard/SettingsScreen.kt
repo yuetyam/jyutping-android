@@ -42,20 +42,23 @@ import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.CharacterStandard
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
-import org.jyutping.jyutping.extensions.keyboardLightBackground
+import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
 fun SettingsScreen(height: Dp) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val isDarkMode = remember { context.isDarkMode }
         val characterStandard = remember { context.characterStandard }
         val cangjieVariant = remember { context.cangjieVariant }
         val isInputMemoryOn = remember { context.isInputMemoryOn }
-        val buttonColors = ButtonColors(Color.White, Color.Black, Color.White, Color.White)
+        val tintColor: Color = if (isDarkMode.value) Color.White else Color.Black
+        val backColor: Color = if (isDarkMode.value) Color.Black else Color.White
+        val buttonColors: ButtonColors = if (isDarkMode.value) ButtonColors(Color.Black, Color.White, Color.Black, Color.White) else ButtonColors(Color.White, Color.Black, Color.White, Color.Black)
         val version: String by lazy { BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")" }
         Column(
                 modifier = Modifier
-                        .background(Color.keyboardLightBackground)
+                        .background(if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
                         .height(height)
                         .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(0.dp),
@@ -75,14 +78,25 @@ fun SettingsScreen(height: Dp) {
                                         context.transformTo(KeyboardForm.Alphabetic)
                                 }
                         ) {
-                               Icon(imageVector = Icons.Outlined.ArrowUpward, contentDescription = null)
+                               Icon(
+                                       imageVector = Icons.Outlined.ArrowUpward,
+                                       contentDescription = null,
+                                       tint = tintColor
+                               )
                         }
-                        Text(text = stringResource(id = R.string.keyboard_settings_navigation_hint))
+                        Text(
+                                text = stringResource(id = R.string.keyboard_settings_navigation_hint),
+                                color = tintColor
+                        )
                         IconButton(
                                 onClick = { /* TODO: Expansion */ },
                                 modifier = Modifier.alpha(0f)
                         ) {
-                                Icon(imageVector = Icons.Outlined.ArrowUpward, contentDescription = null)
+                                Icon(
+                                        imageVector = Icons.Outlined.ArrowUpward,
+                                        contentDescription = null,
+                                        tint = tintColor
+                                )
                         }
                 }
                 LazyColumn(
@@ -96,12 +110,13 @@ fun SettingsScreen(height: Dp) {
                                 ) {
                                         Text(
                                                 text = stringResource(id = R.string.keyboard_settings_character_standard_header),
-                                                modifier = Modifier.padding(horizontal = 8.dp)
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                color = tintColor
                                         )
                                         Column(
                                                 modifier = Modifier
                                                         .clip(RoundedCornerShape(8.dp))
-                                                        .background(Color.White)
+                                                        .background(backColor)
                                                         .fillMaxWidth()
                                         ) {
                                                 Button(
@@ -122,7 +137,7 @@ fun SettingsScreen(height: Dp) {
                                                                 modifier = Modifier.alpha(if (characterStandard.value == CharacterStandard.Traditional) 1f else 0f)
                                                         )
                                                 }
-                                                HorizontalDivider()
+                                                ResponsiveDivider(isDarkMode.value)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -141,7 +156,7 @@ fun SettingsScreen(height: Dp) {
                                                                 modifier = Modifier.alpha(if (characterStandard.value == CharacterStandard.HongKong) 1f else 0f)
                                                         )
                                                 }
-                                                HorizontalDivider()
+                                                ResponsiveDivider(isDarkMode.value)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -160,7 +175,7 @@ fun SettingsScreen(height: Dp) {
                                                                 modifier = Modifier.alpha(if (characterStandard.value == CharacterStandard.Taiwan) 1f else 0f)
                                                         )
                                                 }
-                                                HorizontalDivider()
+                                                ResponsiveDivider(isDarkMode.value)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -188,12 +203,13 @@ fun SettingsScreen(height: Dp) {
                                 ) {
                                         Text(
                                                 text = stringResource(id = R.string.keyboard_settings_cangjie_variant_header),
-                                                modifier = Modifier.padding(horizontal = 8.dp)
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                color = tintColor
                                         )
                                         Column(
                                                 modifier = Modifier
                                                         .clip(RoundedCornerShape(8.dp))
-                                                        .background(Color.White)
+                                                        .background(backColor)
                                                         .fillMaxWidth()
                                         ) {
                                                 Button(
@@ -214,7 +230,7 @@ fun SettingsScreen(height: Dp) {
                                                                 modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Cangjie5) 1f else 0f)
                                                         )
                                                 }
-                                                HorizontalDivider()
+                                                ResponsiveDivider(isDarkMode.value)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -233,7 +249,7 @@ fun SettingsScreen(height: Dp) {
                                                                 modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Cangjie3) 1f else 0f)
                                                         )
                                                 }
-                                                HorizontalDivider()
+                                                ResponsiveDivider(isDarkMode.value)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -252,7 +268,7 @@ fun SettingsScreen(height: Dp) {
                                                                 modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Quick5) 1f else 0f)
                                                         )
                                                 }
-                                                HorizontalDivider()
+                                                ResponsiveDivider(isDarkMode.value)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -280,19 +296,23 @@ fun SettingsScreen(height: Dp) {
                                 ) {
                                         Text(
                                                 text = stringResource(id = R.string.keyboard_settings_user_lexicon_header),
-                                                modifier = Modifier.padding(horizontal = 8.dp)
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                color = tintColor
                                         )
                                         Column(
                                                 modifier = Modifier
                                                         .clip(RoundedCornerShape(8.dp))
-                                                        .background(Color.White)
+                                                        .background(backColor)
                                                         .fillMaxWidth()
                                         ) {
                                                 Row(
                                                         modifier = Modifier.padding(horizontal = 8.dp),
                                                         verticalAlignment = Alignment.CenterVertically
                                                 ) {
-                                                        Text(text = stringResource(id = R.string.keyboard_settings_input_memory_switch_title))
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_input_memory_switch_title),
+                                                                color = tintColor
+                                                        )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Switch(
                                                                 checked = isInputMemoryOn.value,
@@ -302,7 +322,7 @@ fun SettingsScreen(height: Dp) {
                                                                 }
                                                         )
                                                 }
-                                                HorizontalDivider()
+                                                ResponsiveDivider(isDarkMode.value)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -310,7 +330,7 @@ fun SettingsScreen(height: Dp) {
                                                                 context.clearUserLexicon()
                                                         },
                                                         shape = RectangleShape,
-                                                        colors = ButtonColors(Color.White, Color.Red, Color.White, Color.Red),
+                                                        colors = if (isDarkMode.value) ButtonColors(Color.Black, Color.Red, Color.Black, Color.Red) else ButtonColors(Color.White, Color.Red, Color.White, Color.Red),
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
                                                         Text(text = stringResource(id = R.string.keyboard_settings_clear_user_lexicon))
@@ -324,17 +344,32 @@ fun SettingsScreen(height: Dp) {
                                         modifier = Modifier
                                                 .fillMaxWidth()
                                                 .clip(shape = RoundedCornerShape(size = 8.dp))
-                                                .background(color = Color.White)
+                                                .background(color = backColor)
                                                 .padding(horizontal = 8.dp, vertical = 12.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                        Text(text = stringResource(id = R.string.about_label_version))
+                                        Text(
+                                                text = stringResource(id = R.string.about_label_version),
+                                                color = tintColor
+                                        )
                                         Spacer(modifier = Modifier.weight(1f))
                                         SelectionContainer {
-                                                Text(text = version)
+                                                Text(
+                                                        text = version,
+                                                        color = tintColor
+                                                )
                                         }
                                 }
                         }
                 }
         }
+}
+
+@Composable
+private fun ResponsiveDivider(isDarkMode: Boolean) {
+        HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                thickness = 1.dp,
+                color = if (isDarkMode) PresetColor.keyDarkEmphatic else PresetColor.keyLightEmphatic
+        )
 }

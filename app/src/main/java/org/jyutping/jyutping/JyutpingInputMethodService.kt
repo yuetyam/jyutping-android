@@ -1,13 +1,13 @@
 package org.jyutping.jyutping
 
 import android.content.Context
+import android.content.res.Configuration
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStore
@@ -20,7 +20,6 @@ import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import org.jyutping.jyutping.extensions.empty
 import org.jyutping.jyutping.extensions.isReverseLookupTrigger
-import org.jyutping.jyutping.extensions.keyboardLightBackground
 import org.jyutping.jyutping.extensions.separator
 import org.jyutping.jyutping.extensions.separatorChar
 import org.jyutping.jyutping.extensions.space
@@ -43,6 +42,7 @@ import org.jyutping.jyutping.keyboard.Structure
 import org.jyutping.jyutping.keyboard.isABC
 import org.jyutping.jyutping.keyboard.length
 import org.jyutping.jyutping.keyboard.transformed
+import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
@@ -53,9 +53,19 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         ViewModelStoreOwner,
         SavedStateRegistryOwner {
 
+        override fun onCreate() {
+                super.onCreate()
+                savedStateRegistryController.performRestore(null)
+                DatabasePreparer.prepare(this)
+        }
+
         override fun onCreateInputView(): View {
+                val isNightMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+                if (isDarkMode.value != isNightMode) {
+                        isDarkMode.value = isNightMode
+                }
                 val view = ComposeKeyboardView(this)
-                window?.window?.navigationBarColor = Color.keyboardLightBackground.toArgb()
+                window?.window?.navigationBarColor = if (isDarkMode.value) PresetColor.keyboardDarkBackground.toArgb() else PresetColor.keyboardLightBackground.toArgb()
                 window?.window?.decorView?.let { decorView ->
                         decorView.setViewTreeLifecycleOwner(this)
                         decorView.setViewTreeViewModelStoreOwner(this)
@@ -64,12 +74,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 updateSpaceKeyForm()
                 updateReturnKeyForm()
                 return view
-        }
-
-        override fun onCreate() {
-                super.onCreate()
-                savedStateRegistryController.performRestore(null)
-                DatabasePreparer.prepare(this)
         }
 
         override val viewModelStore: ViewModelStore
@@ -84,6 +88,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         override val savedStateRegistry: SavedStateRegistry get() = savedStateRegistryController.savedStateRegistry
 
         private val sharedPreferences by lazy { getSharedPreferences(UserSettingsKey.PreferencesFileName, Context.MODE_PRIVATE) }
+
+        val isDarkMode: MutableState<Boolean> by lazy {
+                val isNightMode: Boolean = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+                mutableStateOf(isNightMode)
+        }
 
         val spaceKeyForm: MutableState<SpaceKeyForm> by lazy { mutableStateOf(SpaceKeyForm.Fallback) }
         private fun updateSpaceKeyForm() {
