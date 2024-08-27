@@ -1,9 +1,8 @@
 package org.jyutping.jyutping.keyboard
 
-import org.jyutping.jyutping.extensions.empty
 import org.jyutping.jyutping.extensions.isSeparatorChar
-import org.jyutping.jyutping.extensions.separatorChar
-import org.jyutping.jyutping.extensions.space
+import org.jyutping.jyutping.presets.PresetCharacter
+import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 
 object Engine {
@@ -19,7 +18,7 @@ object Engine {
                 }
         }
         private fun dispatch(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
-                val hasSeparators: Boolean = text.contains(Char.separatorChar)
+                val hasSeparators: Boolean = text.contains(PresetCharacter.SEPARATOR)
                 val hasTones: Boolean = text.contains(Regex("[1-6]"))
                 return when {
                         hasSeparators && hasTones -> {
@@ -112,7 +111,7 @@ object Engine {
         }
         private fun processWithSeparators(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
                 val separatorCount = text.count { it.isSeparatorChar() }
-                val textParts = text.split(Char.separatorChar).filter { it.isNotEmpty() }
+                val textParts = text.split(PresetCharacter.SEPARATOR).filter { it.isNotEmpty() }
                 val isHeadingSeparator: Boolean = text.firstOrNull()?.isSeparatorChar() ?: false
                 val isTrailingSeparator: Boolean = text.lastOrNull()?.isSeparatorChar() ?: false
                 val rawText = text.filter { !(it.isSeparatorChar()) }
@@ -138,13 +137,13 @@ object Engine {
                                         when (syllables.size) {
                                                 1 -> {
                                                         if (item.input != textParts.firstOrNull()) continue
-                                                        val combinedInput: String = item.input + Char.separatorChar
+                                                        val combinedInput: String = item.input + PresetCharacter.SEPARATOR
                                                         val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
                                                         qualified.add(newItem)
                                                 }
                                                 2 -> {
                                                         if (syllables.firstOrNull() != textParts.firstOrNull()) continue
-                                                        val combinedInput: String = item.input + Char.separatorChar
+                                                        val combinedInput: String = item.input + PresetCharacter.SEPARATOR
                                                         val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
                                                         qualified.add(newItem)
                                                 }
@@ -155,7 +154,7 @@ object Engine {
                                         when (syllables.size) {
                                                 1 -> {
                                                         if (item.input != textParts.firstOrNull()) continue
-                                                        val combinedInput: String = item.input + Char.separatorChar
+                                                        val combinedInput: String = item.input + PresetCharacter.SEPARATOR
                                                         val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
                                                         qualified.add(newItem)
                                                 }
@@ -223,8 +222,8 @@ object Engine {
                                 val tail = text.drop(scheme.length())
                                 val lastAnchor = tail.firstOrNull() ?: continue
                                 val schemeAnchors = scheme.mapNotNull { it.text.firstOrNull() }
-                                val anchors: String = (schemeAnchors + lastAnchor).joinToString(separator = String.empty)
-                                val text2mark = scheme.joinToString(separator = String.space) { it.text } + String.space + tail
+                                val anchors: String = (schemeAnchors + lastAnchor).joinToString(separator = PresetString.EMPTY)
+                                val text2mark = scheme.joinToString(separator = PresetString.SPACE) { it.text } + PresetString.SPACE + tail
                                 val shortcut = db.shortcut(anchors, limit)
                                         .filter { candidate -> candidate.romanization.filter { it.isDigit().not() }.startsWith(text2mark) }
                                         .map { Candidate(text = it.text, romanization = it.romanization, input = text, mark = text2mark) }
@@ -265,9 +264,9 @@ object Engine {
                         for (scheme in perfectSchemes) {
                                 for (number in scheme.indices) {
                                         val slice = scheme.dropLast(number)
-                                        val pingText = slice.joinToString(separator = String.empty) { it.origin }
-                                        val inputText = slice.joinToString(separator = String.empty) { it.text }
-                                        val text2mark = slice.joinToString(separator = String.space) { it.text }
+                                        val pingText = slice.joinToString(separator = PresetString.EMPTY) { it.origin }
+                                        val inputText = slice.joinToString(separator = PresetString.EMPTY) { it.text }
+                                        val text2mark = slice.joinToString(separator = PresetString.SPACE) { it.text }
                                         val matched = db.match(text = pingText, input = inputText, mark = text2mark, limit = limit)
                                         matches.add(matched)
                                 }
@@ -276,9 +275,9 @@ object Engine {
                 } else {
                         val matches: MutableList<List<Candidate>> = mutableListOf()
                         for (scheme in segmentation) {
-                                val pingText = scheme.joinToString(separator = String.empty) { it.origin }
-                                val inputText = scheme.joinToString(separator = String.empty) { it.text }
-                                val text2mark = scheme.joinToString(separator = String.space) { it.text }
+                                val pingText = scheme.joinToString(separator = PresetString.EMPTY) { it.origin }
+                                val inputText = scheme.joinToString(separator = PresetString.EMPTY) { it.text }
+                                val text2mark = scheme.joinToString(separator = PresetString.SPACE) { it.text }
                                 val matched = db.match(text = pingText, input = inputText, mark = text2mark, limit = limit)
                                 matches.add(matched)
                         }

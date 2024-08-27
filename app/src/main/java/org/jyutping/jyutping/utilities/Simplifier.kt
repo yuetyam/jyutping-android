@@ -1,28 +1,28 @@
 package org.jyutping.jyutping.utilities
 
-import org.jyutping.jyutping.extensions.empty
+import org.jyutping.jyutping.presets.PresetString
 
 object Simplifier {
         fun convert(text: String, db: DatabaseHelper): String {
                 return when (text.length) {
                         0 -> text
                         1 -> db.t2s(text.first())
-                        2 -> phrases[text] ?: text.map { db.t2s(it) }.joinToString(separator = String.empty)
+                        2 -> phrases[text] ?: text.map { db.t2s(it) }.joinToString(separator = PresetString.EMPTY)
                         else -> phrases[text] ?: transform(text, db)
                 }
         }
         private fun transform(text: String, db: DatabaseHelper): String {
                 val roundOne = replace(text, "W")
-                if (roundOne.matched.isEmpty()) return text.map { db.t2s(it) }.joinToString(separator = String.empty)
+                if (roundOne.matched.isEmpty()) return text.map { db.t2s(it) }.joinToString(separator = PresetString.EMPTY)
                 val roundTwo = replace(roundOne.modified, "X")
                 if (roundTwo.matched.isEmpty()) {
-                        val transformed: String = roundTwo.modified.map { db.t2s(it) }.joinToString(separator = String.empty)
+                        val transformed: String = roundTwo.modified.map { db.t2s(it) }.joinToString(separator = PresetString.EMPTY)
                         val reverted: String = transformed.replace(roundOne.replacement, roundOne.matched)
                         return reverted
                 }
                 val roundThree = replace(roundTwo.modified, "Y")
                 if (roundThree.matched.isEmpty()) {
-                        val transformed: String = roundThree.modified.map { db.t2s(it) }.joinToString(separator = String.empty)
+                        val transformed: String = roundThree.modified.map { db.t2s(it) }.joinToString(separator = PresetString.EMPTY)
                         val reverted: String = transformed
                                 .replace(roundOne.replacement, roundOne.matched)
                                 .replace(roundTwo.replacement, roundTwo.matched)
@@ -30,14 +30,14 @@ object Simplifier {
                 }
                 val roundFour = replace(roundThree.modified, "Z")
                 if (roundFour.matched.isEmpty()) {
-                        val transformed: String = roundFour.modified.map { db.t2s(it) }.joinToString(separator = String.empty)
+                        val transformed: String = roundFour.modified.map { db.t2s(it) }.joinToString(separator = PresetString.EMPTY)
                         val reverted: String = transformed
                                 .replace(roundOne.replacement, roundOne.matched)
                                 .replace(roundTwo.replacement, roundTwo.matched)
                                 .replace(roundThree.replacement, roundThree.matched)
                         return reverted
                 }
-                val transformed: String = roundFour.modified.map { db.t2s(it) }.joinToString(separator = String.empty)
+                val transformed: String = roundFour.modified.map { db.t2s(it) }.joinToString(separator = PresetString.EMPTY)
                 val reverted: String = transformed
                         .replace(roundOne.replacement, roundOne.matched)
                         .replace(roundTwo.replacement, roundTwo.matched)
@@ -50,7 +50,7 @@ object Simplifier {
                 val textLength: Int = text.length
                 val keys = phrases.keys.filter { it.length <= textLength }.sortedByDescending { it.length }
                 var modified: String = text
-                var matched: String = String.empty
+                var matched: String = PresetString.EMPTY
                 for (key in keys) {
                         if (text.startsWith(key)) {
                                 modified = text.replace(key, replacement)

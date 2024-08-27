@@ -1,12 +1,12 @@
 package org.jyutping.jyutping.utilities
 
 import android.content.Context
+import org.jyutping.jyutping.BuildConfig
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import org.jyutping.jyutping.BuildConfig
 
 object DatabasePreparer {
         private const val SOURCE_DATABASE_NAME = "appdb.sqlite3"

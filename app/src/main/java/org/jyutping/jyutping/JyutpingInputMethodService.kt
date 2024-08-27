@@ -18,11 +18,7 @@ import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
-import org.jyutping.jyutping.extensions.empty
 import org.jyutping.jyutping.extensions.isReverseLookupTrigger
-import org.jyutping.jyutping.extensions.separator
-import org.jyutping.jyutping.extensions.separatorChar
-import org.jyutping.jyutping.extensions.space
 import org.jyutping.jyutping.extensions.toneConverted
 import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.Cangjie
@@ -41,6 +37,7 @@ import org.jyutping.jyutping.keyboard.Stroke
 import org.jyutping.jyutping.keyboard.Structure
 import org.jyutping.jyutping.keyboard.length
 import org.jyutping.jyutping.keyboard.transformed
+import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
@@ -160,7 +157,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 if (isBuffering.value) {
                         val shouldKeepBuffer: Boolean = (keyboardForm.value == KeyboardForm.Alphabetic) || (keyboardForm.value == KeyboardForm.CandidateBoard)
                         if (!shouldKeepBuffer) {
-                                bufferText = String.empty
+                                bufferText = PresetString.EMPTY
                         }
                 }
                 keyboardForm.value = destination
@@ -242,7 +239,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         val candidateState: MutableIntState by lazy { mutableIntStateOf(1) }
         val candidates: MutableState<List<Candidate>> by lazy { mutableStateOf(listOf()) }
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.databaseName) }
-        private var bufferText: String = String.empty
+        private var bufferText: String = PresetString.EMPTY
                 set(value) {
                         candidates.value = emptyList()
                         field = value
@@ -276,11 +273,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                         } else {
                                                                 val bestScheme = segmentation.firstOrNull()
                                                                 val leadingLength: Int = bestScheme?.map { it.length }?.fold(0) { acc, i -> acc + i } ?: 0
-                                                                val leadingText: String = bestScheme?.joinToString(separator = String.space) ?: String.empty
+                                                                val leadingText: String = bestScheme?.joinToString(separator = PresetString.SPACE) ?: PresetString.EMPTY
                                                                 when (leadingLength) {
                                                                         0 -> text
                                                                         text.length -> leadingText
-                                                                        else -> (leadingText + String.space + text.drop(leadingLength))
+                                                                        else -> (leadingText + PresetString.SPACE + text.drop(leadingLength))
                                                                 }
                                                         }
                                                 }
@@ -346,11 +343,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 val tailMark: String = run {
                                                         val bestScheme = segmentation.firstOrNull()
                                                         val leadingLength: Int = bestScheme?.length() ?: 0
-                                                        val leadingText: String = bestScheme?.joinToString(separator = String.space) { it.text } ?: String.empty
+                                                        val leadingText: String = bestScheme?.joinToString(separator = PresetString.SPACE) { it.text } ?: PresetString.EMPTY
                                                         when (leadingLength) {
                                                                 0 -> text
                                                                 text.length -> leadingText
-                                                                else -> (leadingText + String.space + text.drop(leadingLength))
+                                                                else -> (leadingText + PresetString.SPACE + text.drop(leadingLength))
                                                         }
                                                 }
                                                 val mark = "q $tailMark"
@@ -389,7 +386,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         val isBuffering: MutableState<Boolean> by lazy { mutableStateOf(false) }
         fun clearBuffer() {
-                bufferText = String.empty
+                bufferText = PresetString.EMPTY
         }
         fun process(text: String) {
                 when (inputMethodMode.value) {
@@ -419,13 +416,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val tail = bufferText.drop(leadingLength)
                                         bufferText = "${firstChar}${tail}"
                                 } else {
-                                        bufferText = String.empty
+                                        bufferText = PresetString.EMPTY
                                 }
                         }
                         else -> {
                                 val inputLength: Int = candidate.input.replace(Regex("([456])"), "RR").length
                                 var tail = bufferText.drop(inputLength)
-                                while (tail.startsWith(Char.separatorChar)) {
+                                while (tail.startsWith(PresetCharacter.SEPARATOR)) {
                                         tail = tail.drop(1)
                                 }
                                 bufferText = tail
@@ -442,7 +439,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun performReturn() {
                 if (isBuffering.value) {
                         currentInputConnection.commitText(bufferText, bufferText.length)
-                        bufferText = String.empty
+                        bufferText = PresetString.EMPTY
                 } else {
                         sendDefaultEditorAction(true)
                 }
@@ -452,12 +449,12 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         val firstCandidate = candidates.value.firstOrNull()
                         if (firstCandidate == null) {
                                 currentInputConnection.commitText(bufferText, bufferText.length)
-                                bufferText = String.empty
+                                bufferText = PresetString.EMPTY
                         } else {
                                 select(firstCandidate)
                         }
                 } else {
-                        currentInputConnection.commitText(String.space, String.space.length)
+                        currentInputConnection.commitText(PresetString.SPACE, PresetString.SPACE.length)
                 }
         }
         fun dismissKeyboard() {
@@ -465,7 +462,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun leftKey() {
                 if (isBuffering.value) {
-                        bufferText += String.separator
+                        bufferText += PresetString.SEPARATOR
                 } else {
                         val text: String = when (inputMethodMode.value) {
                                 InputMethodMode.Cantonese -> "，"
@@ -476,7 +473,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun rightKey() {
                 if (isBuffering.value) {
-                        bufferText += String.separator
+                        bufferText += PresetString.SEPARATOR
                 } else {
                         val text: String = when (inputMethodMode.value) {
                                 InputMethodMode.Cantonese -> "。"

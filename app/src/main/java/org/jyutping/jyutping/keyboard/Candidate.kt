@@ -1,7 +1,7 @@
 package org.jyutping.jyutping.keyboard
 
 import org.jyutping.jyutping.CharacterStandard
-import org.jyutping.jyutping.extensions.space
+import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.HongKongVariantConverter
 import org.jyutping.jyutping.utilities.Simplifier
@@ -32,9 +32,9 @@ data class Candidate(
         }
         operator fun plus(another: Candidate): Candidate {
                 val newText = this.text + another.text
-                val newRomanization = this.romanization + String.space + another.romanization
+                val newRomanization = this.romanization + PresetString.SPACE + another.romanization
                 val newInput = this.input + another.input
-                val newMark = this.mark + String.space + another.mark
+                val newMark = this.mark + PresetString.SPACE + another.mark
                 return Candidate(text = newText, romanization = newRomanization, input = newInput, mark = newMark)
         }
 }

@@ -4,10 +4,16 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import org.jyutping.jyutping.ui.about.*
-import org.jyutping.jyutping.ui.cantonese.*
-import org.jyutping.jyutping.ui.home.*
-import org.jyutping.jyutping.ui.romanization.*
+import org.jyutping.jyutping.ui.about.AboutScreen
+import org.jyutping.jyutping.ui.cantonese.CantoneseScreen
+import org.jyutping.jyutping.ui.cantonese.ConfusionScreen
+import org.jyutping.jyutping.ui.cantonese.ExpressionsScreen
+import org.jyutping.jyutping.ui.home.HomeScreen
+import org.jyutping.jyutping.ui.home.IntroductionsScreen
+import org.jyutping.jyutping.ui.romanization.JyutpingFinalsScreen
+import org.jyutping.jyutping.ui.romanization.JyutpingInitialsScreen
+import org.jyutping.jyutping.ui.romanization.JyutpingScreen
+import org.jyutping.jyutping.ui.romanization.JyutpingTonesScreen
 
 @Composable
 fun AppContent(navController: NavHostController) {

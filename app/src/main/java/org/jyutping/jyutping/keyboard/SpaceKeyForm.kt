@@ -21,7 +21,7 @@ enum class SpaceKeyForm {
                 English -> "space"
                 Fallback -> "空格"
                 Lowercased -> "粵拼"
-                LowercasedSimplified -> "粤拼·简化字"
+                LowercasedSimplified -> "粤拼·简"
                 Uppercased -> "全寬空格"
                 UppercasedSimplified -> "全宽空格"
                 CapsLocked -> "大寫鎖定"

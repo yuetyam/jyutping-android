@@ -1,6 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
-import org.jyutping.jyutping.extensions.empty
+import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 
 object Structure {
@@ -19,7 +19,7 @@ object Structure {
                 if (schemes.maxSchemeLength() < 1) return fullMatched
                 val matches: MutableList<List<Candidate>> = mutableListOf()
                 for (scheme in schemes) {
-                        val pingText = scheme.joinToString(separator = String.empty) { it.origin }
+                        val pingText = scheme.joinToString(separator = PresetString.EMPTY) { it.origin }
                         val matched = db.structureMatch(pingText)
                         matches.add(matched)
                 }

@@ -24,11 +24,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
 @Throws(IOException::class)
 private fun fetchConfusionJsonContent(navController: NavHostController): String? {

@@ -1,8 +1,7 @@
 package org.jyutping.jyutping.utilities
 
-import org.jyutping.jyutping.extensions.empty
-import org.jyutping.jyutping.extensions.space
 import org.jyutping.jyutping.keyboard.Candidate
+import org.jyutping.jyutping.presets.PresetString
 
 data class UserLexicon(
         val id: Int,
@@ -25,9 +24,9 @@ data class UserLexicon(
                 fun convert(candidate: Candidate): UserLexicon {
                         val idValue: Int = (candidate.lexiconText + candidate.romanization).hashCode()
                         val shortcutValue: Int = candidate.romanization
-                                .split(String.space)
+                                .split(PresetString.SPACE)
                                 .mapNotNull { it.firstOrNull() }
-                                .joinToString(separator = String.empty)
+                                .joinToString(separator = PresetString.EMPTY)
                                 .hashCode()
                         val pingValue: Int = candidate.romanization.filter { it.isLetter() }.hashCode()
                         val time: Long = System.currentTimeMillis()
@@ -42,13 +41,13 @@ data class UserLexicon(
                         )
                 }
                 fun join(candidates: List<Candidate>): UserLexicon {
-                        val newText: String = candidates.joinToString(separator = String.empty) { it.lexiconText }
-                        val newRomanization: String = candidates.joinToString(separator = String.space) { it.romanization }
+                        val newText: String = candidates.joinToString(separator = PresetString.EMPTY) { it.lexiconText }
+                        val newRomanization: String = candidates.joinToString(separator = PresetString.SPACE) { it.romanization }
                         val idValue: Int = (newText + newRomanization).hashCode()
                         val shortcutValue: Int = newRomanization
-                                .split(String.space)
+                                .split(PresetString.SPACE)
                                 .mapNotNull { it.firstOrNull() }
-                                .joinToString(separator = String.empty)
+                                .joinToString(separator = PresetString.EMPTY)
                                 .hashCode()
                         val pingValue: Int = newRomanization.filter { it.isLetter() }.hashCode()
                         val time: Long = System.currentTimeMillis()

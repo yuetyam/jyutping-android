@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import org.jyutping.jyutping.extensions.charcode
 import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.extensions.intercode
-import org.jyutping.jyutping.extensions.isIdeographic
+import org.jyutping.jyutping.extensions.isIdeographicChar
 import org.jyutping.jyutping.extensions.shortcutCharcode
 import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.SegmentToken
@@ -68,7 +68,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                         val pronunciations: List<Pronunciation> = altRomanizations.map { Pronunciation(it) }
                                         return CantoneseLexicon(text = convertedText, pronunciations = pronunciations)
                                 }
-                                val firstIdeographic = text.firstOrNull { it.isIdeographic() }
+                                val firstIdeographic = text.firstOrNull { it.isIdeographicChar() }
                                 if (firstIdeographic == null) return CantoneseLexicon(text)
                                 var chars = text
                                 val fetches: MutableList<String> = mutableListOf()
@@ -94,7 +94,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                                         chars = traditionalChars.drop(leadLength)
                                                 } else {
                                                         val leadingChar = chars.first()
-                                                        val symbol: String = if (leadingChar.isIdeographic()) "?" else leadingChar.toString()
+                                                        val symbol: String = if (leadingChar.isIdeographicChar()) "?" else leadingChar.toString()
                                                         fetches.add(symbol)
                                                         newText += leadingChar
                                                         chars = chars.drop(1)

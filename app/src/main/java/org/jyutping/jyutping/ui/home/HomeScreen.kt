@@ -1,24 +1,18 @@
 package org.jyutping.jyutping.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.text.selection.DisableSelection
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import org.jyutping.jyutping.search.CantoneseLexicon
-import org.jyutping.jyutping.utilities.DatabaseHelper
-import org.jyutping.jyutping.utilities.DatabasePreparer
 import org.jyutping.jyutping.R
-import org.jyutping.jyutping.Screen
 import org.jyutping.jyutping.extensions.convertedS2T
+import org.jyutping.jyutping.search.CantoneseLexicon
 import org.jyutping.jyutping.search.CantoneseLexiconView
 import org.jyutping.jyutping.search.ChoHokView
 import org.jyutping.jyutping.search.ChoHokYuetYamCitYiu
@@ -29,9 +23,10 @@ import org.jyutping.jyutping.search.GwongWanView
 import org.jyutping.jyutping.search.UnihanDefinition
 import org.jyutping.jyutping.search.YingWaaFanWan
 import org.jyutping.jyutping.search.YingWaaView
-import org.jyutping.jyutping.ui.common.NavigationLabel
 import org.jyutping.jyutping.ui.common.SearchField
 import org.jyutping.jyutping.ui.common.TextCard
+import org.jyutping.jyutping.utilities.DatabaseHelper
+import org.jyutping.jyutping.utilities.DatabasePreparer
 
 @Composable
 fun HomeScreen(navController: NavHostController) {

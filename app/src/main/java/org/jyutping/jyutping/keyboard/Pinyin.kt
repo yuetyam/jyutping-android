@@ -1,7 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
-import org.jyutping.jyutping.extensions.empty
-import org.jyutping.jyutping.extensions.space
+import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.PinyinLexicon
 
@@ -63,8 +62,8 @@ object Pinyin {
                                 val tail = text.drop(scheme.length())
                                 val lastAnchor = tail.firstOrNull() ?: continue
                                 val schemeAnchors = scheme.mapNotNull { it.firstOrNull() }
-                                val anchors: String = (schemeAnchors + lastAnchor).joinToString(separator = String.empty)
-                                val text2mark = scheme.joinToString(separator = String.space) { it } + String.space + tail
+                                val anchors: String = (schemeAnchors + lastAnchor).joinToString(separator = PresetString.EMPTY)
+                                val text2mark = scheme.joinToString(separator = PresetString.SPACE) { it } + PresetString.SPACE + tail
                                 val shortcut = db.pinyinShortcut(anchors)
                                         .filter { it.pinyin.startsWith(text2mark) }
                                         .map { PinyinLexicon(text = it.text, pinyin = it.pinyin, input = text, mark = text2mark, order = it.order) }
@@ -93,7 +92,7 @@ object Pinyin {
                         val matches: MutableList<List<PinyinLexicon>> = mutableListOf()
                         for (scheme in schemes) {
                                 for (number in scheme.indices) {
-                                        val pingText = scheme.dropLast(number).joinToString(separator = String.empty)
+                                        val pingText = scheme.dropLast(number).joinToString(separator = PresetString.EMPTY)
                                         val matched = db.pinyinMatch(pingText)
                                         matches.add(matched)
                                 }
@@ -102,7 +101,7 @@ object Pinyin {
                 } else {
                         val matches: MutableList<List<PinyinLexicon>> = mutableListOf()
                         for (scheme in schemes) {
-                                val pingText = scheme.joinToString(separator = String.empty)
+                                val pingText = scheme.joinToString(separator = PresetString.EMPTY)
                                 val matched = db.pinyinMatch(pingText)
                                 matches.add(matched)
                         }

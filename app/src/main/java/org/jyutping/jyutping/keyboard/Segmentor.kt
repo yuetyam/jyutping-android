@@ -1,6 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
-import org.jyutping.jyutping.extensions.empty
+import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import kotlin.math.min
 
@@ -26,10 +26,10 @@ private fun Segmentation.tokenCount(): Int = this.map { it.size }.fold(0) { acc,
 private fun SegmentScheme.isValid(): Boolean {
         // REASON: *am => [*aa, m] => *aam
         val regex = Regex("aa(m|ng)")
-        val origin = this.joinToString(separator = String.empty) { it.origin }
+        val origin = this.joinToString(separator = PresetString.EMPTY) { it.origin }
         val originNumber = regex.findAll(origin).count()
         if (originNumber < 1) return true
-        val text = this.joinToString(separator = String.empty) { it.text }
+        val text = this.joinToString(separator = PresetString.EMPTY) { it.text }
         val tokenNumber = regex.findAll(text).count()
         if (tokenNumber < 1) return false
         return originNumber == tokenNumber

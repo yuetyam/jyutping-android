@@ -1,10 +1,10 @@
 package org.jyutping.jyutping.utilities
 
-import org.jyutping.jyutping.extensions.empty
+import org.jyutping.jyutping.presets.PresetString
 
 object HongKongVariantConverter {
 
-        fun convert(text: String): String = text.map { variants[it] ?: it }.joinToString(separator = String.empty)
+        fun convert(text: String): String = text.map { variants[it] ?: it }.joinToString(separator = PresetString.EMPTY)
 
         private val variants: HashMap<Char, Char> = hashMapOf(
                 '僞' to '偽',

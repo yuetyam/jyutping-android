@@ -1,18 +1,13 @@
 package org.jyutping.jyutping.extensions
 
-val Char.Companion.separatorChar: Char
-        get() = '\''
+import org.jyutping.jyutping.presets.PresetCharacter
 
-val Char.Companion.spaceChar: Char
-        get() = ' '
+fun Char.isSeparatorChar(): Boolean = (this == PresetCharacter.SEPARATOR)
 
-fun Char.isSeparatorChar(): Boolean = this == Char.separatorChar
-
-fun Char.isReverseLookupTrigger(): Boolean = reverseLookupTriggers.contains(this)
-private val reverseLookupTriggers: Set<Char> = setOf('r', 'v', 'x', 'q')
+fun Char.isReverseLookupTrigger(): Boolean = PresetCharacter.reverseLookupTriggers.contains(this)
 
 /// is CJKV character
-fun Char.isIdeographic(): Boolean = when (this.code) {
+fun Char.isIdeographicChar(): Boolean = when (this.code) {
         0x3007 -> true
         in 0x4E00..0x9FFF -> true
         in 0x3400..0x4DBF -> true
