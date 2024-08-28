@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -28,23 +28,41 @@ fun TextCard(
                 modifier = Modifier
                         .fillMaxWidth()
                         .clip(shape = RoundedCornerShape(size = 8.dp))
-                        .background(color = MaterialTheme.colorScheme.background)
+                        .background(color = colorScheme.background)
                         .padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-                Text(text = heading, fontWeight = FontWeight.SemiBold)
+                Text(
+                        text = heading,
+                        color = colorScheme.onBackground,
+                        fontWeight = FontWeight.SemiBold
+                )
                 HorizontalDivider()
                 if (shouldMonospaceContent) {
-                        Text(text = content, fontFamily = FontFamily.Monospace)
+                        Text(
+                                text = content,
+                                color = colorScheme.onBackground,
+                                fontFamily = FontFamily.Monospace
+                        )
                 } else {
-                        Text(text = content)
+                        Text(
+                                text = content,
+                                color = colorScheme.onBackground,
+                        )
                 }
                 if (subContent != null) {
                         HorizontalDivider()
                         if (shouldMonospaceSubContent) {
-                                Text(text = subContent, fontFamily = FontFamily.Monospace)
+                                Text(
+                                        text = subContent,
+                                        color = colorScheme.onBackground,
+                                        fontFamily = FontFamily.Monospace
+                                )
                         } else {
-                                Text(text = subContent)
+                                Text(
+                                        text = subContent,
+                                        color = colorScheme.onBackground,
+                                )
                         }
                 }
         }

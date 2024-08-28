@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
@@ -32,14 +33,21 @@ fun AppLinkLabel(icon: ImageVector, text: String, uri: String) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
-                Icon(imageVector = icon, contentDescription = null)
-                Text(text = text)
+                Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = colorScheme.onBackground
+                )
+                Text(
+                        text = text,
+                        color = colorScheme.onBackground
+                )
                 Spacer(modifier = Modifier.weight(1.0f))
                 Icon(
                         imageVector = Icons.Outlined.ArrowOutward,
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp),
-                        tint = colorScheme.tertiary
+                        modifier = Modifier.size(18.dp).alpha(0.75f),
+                        tint = colorScheme.onBackground
                 )
         }
 }
