@@ -6,6 +6,7 @@
     <string name="screen_title_cantonese">粵語</string>
     <string name="screen_title_about">關於</string>
     <string name="search_field_placeholder">查字音</string>
+    <string name="home_button_enable_keyboard">啓用鍵盤</string>
     <string name="home_heading_tone_input">聲調輸入</string>
     <string name="home_content_tones_input">v = 1 陰平， vv = 4 陽平\nx = 2 陰上， xx = 5 陽上\nq = 3 陰去， qq = 6 陽去</string>
     <string name="home_subcontent_tones_input_examples">例: sinq = sin3(線), sinqq = sin6(羨)</string>

@@ -1,17 +1,29 @@
 package org.jyutping.jyutping.ui.home
 
+import android.content.Context
+import android.content.Intent
+import android.provider.Settings
+import android.view.inputmethod.InputMethodManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.extensions.convertedS2T
+import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.search.CantoneseLexicon
 import org.jyutping.jyutping.search.CantoneseLexiconView
 import org.jyutping.jyutping.search.ChoHokView
@@ -30,7 +42,7 @@ import org.jyutping.jyutping.utilities.DatabasePreparer
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
-        val textState = remember { mutableStateOf<String>("") }
+        val textState: MutableState<String> = remember { mutableStateOf("") }
         val lexiconState = remember { mutableStateOf<CantoneseLexicon?>(null) }
         val unihanDefinition = remember { mutableStateOf<UnihanDefinition?>(null) }
         val yingWaaEntries = remember { mutableStateOf<List<YingWaaFanWan>>(listOf()) }
@@ -66,6 +78,11 @@ fun HomeScreen(navController: NavHostController) {
                 if (matched.isNotEmpty()) return matched
                 val traditionalChar = text.convertedS2T().firstOrNull() ?: char
                 return helper.gwongWanMatch(traditionalChar)
+        }
+        val isKeyboardEnabled: MutableState<Boolean> = remember { mutableStateOf(false) }
+        LaunchedEffect(Unit) {
+                val manager = navController.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                isKeyboardEnabled.value = manager.enabledInputMethodList.any { it.packageName == PresetConstant.KEYBOARD_ID }
         }
         SelectionContainer {
                 LazyColumn(
@@ -107,6 +124,22 @@ fun HomeScreen(navController: NavHostController) {
                         if (gwongWanEntries.value.isNotEmpty()) {
                                 item {
                                         GwongWanView(gwongWanEntries.value)
+                                }
+                        }
+                        if (isKeyboardEnabled.value.not()) {
+                                item {
+                                        Button(
+                                                onClick = {
+                                                        val intent = Intent(Settings.ACTION_INPUT_METHOD_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
+                                                        navController.context.startActivity(intent)
+                                                },
+                                                shape = RoundedCornerShape(8.dp),
+                                                contentPadding = PaddingValues(horizontal = 4.dp)
+                                        ) {
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Text(text = stringResource(id = R.string.home_button_enable_keyboard))
+                                                Spacer(modifier = Modifier.weight(1f))
+                                        }
                                 }
                         }
                         item {

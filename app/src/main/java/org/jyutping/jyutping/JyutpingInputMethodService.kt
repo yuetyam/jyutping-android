@@ -370,14 +370,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 val userLexiconMark = userLexiconSuggestions.firstOrNull()?.mark
                                                 if (userLexiconMark != null) {
                                                         userLexiconMark
+                                                } else if (processingText.any { it.isSeparatorOrTone() }){
+                                                        processingText.formattedForMark()
                                                 } else {
-                                                        val separatorOrTone = processingText.firstOrNull { it.isSeparatorOrTone() }
-                                                        if (separatorOrTone != null) {
-                                                                processingText.formattedForMark()
-                                                        } else {
-                                                                val firstCandidate = suggestions.firstOrNull()
-                                                                if (firstCandidate != null && firstCandidate.input.length == processingText.length) firstCandidate.mark else processingText
-                                                        }
+                                                        val firstCandidate = suggestions.firstOrNull()
+                                                        if (firstCandidate != null && firstCandidate.input.length == processingText.length) firstCandidate.mark else processingText
                                                 }
                                         }
                                         currentInputConnection.setComposingText(mark, mark.length)
