@@ -124,7 +124,11 @@ obj/
 
 ### SQLite ###
 *.sqlite
+*.sqlite-journal
 *.sqlite3
+*.sqlite3-journal
+*.db
+*.db-journal
 
 
 ### Editors ###
