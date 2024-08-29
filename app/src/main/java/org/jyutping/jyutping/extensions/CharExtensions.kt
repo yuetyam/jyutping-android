@@ -3,6 +3,8 @@ package org.jyutping.jyutping.extensions
 import org.jyutping.jyutping.presets.PresetCharacter
 
 fun Char.isSeparatorChar(): Boolean = (this == PresetCharacter.SEPARATOR)
+fun Char.isCantoneseTone(): Boolean = PresetCharacter.cantoneseTones.contains(this)
+fun Char.isSeparatorOrTone(): Boolean = (this.isSeparatorChar() || this.isCantoneseTone())
 
 fun Char.isReverseLookupTrigger(): Boolean = PresetCharacter.reverseLookupTriggers.contains(this)
 

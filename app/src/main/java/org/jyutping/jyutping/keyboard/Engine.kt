@@ -40,7 +40,7 @@ object Engine {
                 val textTones = text.filter { it.isDigit() }
                 val textToneCount = textTones.length
                 val rawText: String = text.filterNot { it.isDigit() }
-                val candidates= search(rawText, segmentation, db)
+                val candidates= query(rawText, segmentation, db)
                 val qualified: MutableList<Candidate> = mutableListOf()
                 for (item in candidates) {
                         val continuous = item.romanization.filterNot { it.isWhitespace() }
@@ -64,7 +64,7 @@ object Engine {
                                                 val newItem = Candidate(text = item.text, romanization = item.romanization, input = text)
                                                 qualified.add(newItem)
                                         } else {
-                                                if (!(continuousTones.startsWith(textTones))) continue
+                                                if (!continuous.startsWith(text)) continue
                                                 val combinedInput = item.input + textTones
                                                 val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
                                                 qualified.add(newItem)
@@ -115,7 +115,7 @@ object Engine {
                 val isHeadingSeparator: Boolean = text.firstOrNull()?.isSeparatorChar() ?: false
                 val isTrailingSeparator: Boolean = text.lastOrNull()?.isSeparatorChar() ?: false
                 val rawText = text.filter { !(it.isSeparatorChar()) }
-                val candidates = search(rawText, segmentation, db)
+                val candidates = query(rawText, segmentation, db)
                 val qualified: MutableList<Candidate> = mutableListOf()
                 for (item in candidates) {
                         val syllables = item.romanization.filterNot { it.isDigit() }.split(' ')
@@ -182,7 +182,8 @@ object Engine {
                 }
                 if (qualified.isNotEmpty()) return qualified
                 val anchors = textParts.mapNotNull { it.firstOrNull() }
-                return db.shortcut(anchors.toString())
+                val anchorText = anchors.joinToString(separator = PresetString.EMPTY)
+                return db.shortcut(anchorText)
                         .filter { item ->
                                 val syllables = item.romanization.filterNot { it.isDigit() }.split(' ')
                                 if (syllables.size != anchors.size) {

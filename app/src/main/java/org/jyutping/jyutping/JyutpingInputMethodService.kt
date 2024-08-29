@@ -18,7 +18,9 @@ import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import org.jyutping.jyutping.extensions.formattedForMark
 import org.jyutping.jyutping.extensions.isReverseLookupTrigger
+import org.jyutping.jyutping.extensions.isSeparatorOrTone
 import org.jyutping.jyutping.extensions.toneConverted
 import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.Cangjie
@@ -369,8 +371,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 if (userLexiconMark != null) {
                                                         userLexiconMark
                                                 } else {
-                                                        val firstCandidate = suggestions.firstOrNull()
-                                                        if (firstCandidate != null && firstCandidate.input.length == processingText.length) firstCandidate.mark else processingText
+                                                        val separatorOrTone = processingText.firstOrNull { it.isSeparatorOrTone() }
+                                                        if (separatorOrTone != null) {
+                                                                processingText.formattedForMark()
+                                                        } else {
+                                                                val firstCandidate = suggestions.firstOrNull()
+                                                                if (firstCandidate != null && firstCandidate.input.length == processingText.length) firstCandidate.mark else processingText
+                                                        }
                                                 }
                                         }
                                         currentInputConnection.setComposingText(mark, mark.length)
