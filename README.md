@@ -7,9 +7,6 @@
 <a href="https://x.com/JyutpingApp">
         <img src="images/badge-twitter.png" alt="X (formerly Twitter)" width="150"/>
 </a>
-<a href="https://www.threads.net/@jyutping_app">
-        <img src="images/badge-threads.png" alt="Threads" width="150"/>
-</a>
 <a href="https://www.instagram.com/jyutping_app">
         <img src="images/badge-instagram.png" alt="Instagram" width="150"/>
 </a>
@@ -31,7 +28,7 @@ Android 粵語拼音輸入法。
 請前往官網下載安裝: https://jyutping.app/android
 
 ## 擷屏（Screenshots）
-<img src="images/screenshot.png" alt="App Screenshot" width="250"/>
+<img src="images/screenshot.png" alt="App Screenshot" width="300"/>
 
 ## 鳴謝（Credits）
 - [Rime-Cantonese](https://github.com/rime/rime-cantonese) (Cantonese Lexicon)
