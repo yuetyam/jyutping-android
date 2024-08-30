@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.ui.romanization
+package org.jyutping.jyutping.mainapp.romanization
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.text.selection.SelectionContainer

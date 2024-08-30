@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.ui.romanization
+package org.jyutping.jyutping.mainapp.romanization
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

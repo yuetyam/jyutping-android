@@ -4,16 +4,16 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import org.jyutping.jyutping.ui.about.AboutScreen
-import org.jyutping.jyutping.ui.cantonese.CantoneseScreen
-import org.jyutping.jyutping.ui.cantonese.ConfusionScreen
-import org.jyutping.jyutping.ui.cantonese.ExpressionsScreen
-import org.jyutping.jyutping.ui.home.HomeScreen
-import org.jyutping.jyutping.ui.home.IntroductionsScreen
-import org.jyutping.jyutping.ui.romanization.JyutpingFinalsScreen
-import org.jyutping.jyutping.ui.romanization.JyutpingInitialsScreen
-import org.jyutping.jyutping.ui.romanization.JyutpingScreen
-import org.jyutping.jyutping.ui.romanization.JyutpingTonesScreen
+import org.jyutping.jyutping.mainapp.about.AboutScreen
+import org.jyutping.jyutping.mainapp.cantonese.CantoneseScreen
+import org.jyutping.jyutping.mainapp.cantonese.ConfusionScreen
+import org.jyutping.jyutping.mainapp.cantonese.ExpressionsScreen
+import org.jyutping.jyutping.mainapp.home.HomeScreen
+import org.jyutping.jyutping.mainapp.home.IntroductionsScreen
+import org.jyutping.jyutping.mainapp.romanization.JyutpingFinalsScreen
+import org.jyutping.jyutping.mainapp.romanization.JyutpingInitialsScreen
+import org.jyutping.jyutping.mainapp.romanization.JyutpingScreen
+import org.jyutping.jyutping.mainapp.romanization.JyutpingTonesScreen
 
 @Composable
 fun AppContent(navController: NavHostController) {

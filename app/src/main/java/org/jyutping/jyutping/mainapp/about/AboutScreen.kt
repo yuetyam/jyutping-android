@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.ui.about
+package org.jyutping.jyutping.mainapp.about
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
