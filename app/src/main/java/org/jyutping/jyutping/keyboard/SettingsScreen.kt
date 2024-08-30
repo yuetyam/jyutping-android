@@ -30,7 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
@@ -50,6 +49,7 @@ fun SettingsScreen(height: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode = remember { context.isDarkMode }
         val characterStandard = remember { context.characterStandard }
+        val needsInputModeSwitchKey = remember { context.needsInputModeSwitchKey }
         val cangjieVariant = remember { context.cangjieVariant }
         val isInputMemoryOn = remember { context.isInputMemoryOn }
         val tintColor: Color = if (isDarkMode.value) Color.White else Color.Black
@@ -115,8 +115,7 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Column(
                                                 modifier = Modifier
-                                                        .clip(RoundedCornerShape(8.dp))
-                                                        .background(backColor)
+                                                        .background(color = backColor, shape = RoundedCornerShape(8.dp))
                                                         .fillMaxWidth()
                                         ) {
                                                 Button(
@@ -198,6 +197,28 @@ fun SettingsScreen(height: Dp) {
                                 }
                         }
                         item {
+                                Row(
+                                        modifier = Modifier
+                                                .fillMaxWidth()
+                                                .background(color = backColor, shape = RoundedCornerShape(8.dp))
+                                                .padding(horizontal = 8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                        Text(
+                                                text = stringResource(id = R.string.keyboard_settings_globe_key_switch_title),
+                                                color = tintColor
+                                        )
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        Switch(
+                                                checked = needsInputModeSwitchKey.value,
+                                                onCheckedChange = {
+                                                        needsInputModeSwitchKey.value = it
+                                                        context.updateNeedsInputModeSwitchKey(it)
+                                                }
+                                        )
+                                }
+                        }
+                        item {
                                 Column(
                                         verticalArrangement = Arrangement.spacedBy(2.dp),
                                 ) {
@@ -208,8 +229,7 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Column(
                                                 modifier = Modifier
-                                                        .clip(RoundedCornerShape(8.dp))
-                                                        .background(backColor)
+                                                        .background(color = backColor, shape = RoundedCornerShape(8.dp))
                                                         .fillMaxWidth()
                                         ) {
                                                 Button(
@@ -301,8 +321,7 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Column(
                                                 modifier = Modifier
-                                                        .clip(RoundedCornerShape(8.dp))
-                                                        .background(backColor)
+                                                        .background(color = backColor, shape = RoundedCornerShape(8.dp))
                                                         .fillMaxWidth()
                                         ) {
                                                 Row(
@@ -343,8 +362,7 @@ fun SettingsScreen(height: Dp) {
                                 Row(
                                         modifier = Modifier
                                                 .fillMaxWidth()
-                                                .clip(shape = RoundedCornerShape(size = 8.dp))
-                                                .background(color = backColor)
+                                                .background(color = backColor, shape = RoundedCornerShape(8.dp))
                                                 .padding(horizontal = 8.dp, vertical = 12.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {

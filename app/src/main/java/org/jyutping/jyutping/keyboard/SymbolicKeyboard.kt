@@ -22,6 +22,7 @@ import org.jyutping.jyutping.presets.PresetConstant
 fun SymbolicKeyboard(keyHeight: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode = remember { context.isDarkMode }
+        val needsInputModeSwitchKey = remember { context.needsInputModeSwitchKey }
         Column(
                 modifier = Modifier
                         .background(if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
@@ -90,7 +91,11 @@ fun SymbolicKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth()
                 ) {
                         TransformKey(destination = KeyboardForm.Alphabetic, modifier = Modifier.weight(2f))
-                        LeftKey(modifier = Modifier.weight(1f))
+                        if (needsInputModeSwitchKey.value) {
+                                GlobeKey(modifier = Modifier.weight(1f))
+                        } else {
+                                LeftKey(modifier = Modifier.weight(1f))
+                        }
                         SpaceKey(modifier = Modifier.weight(4f))
                         RightKey(modifier = Modifier.weight(1f))
                         ReturnKey(modifier = Modifier.weight(2f))

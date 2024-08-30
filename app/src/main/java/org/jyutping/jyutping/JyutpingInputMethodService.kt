@@ -207,6 +207,17 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.CharacterStandard, standard.identifier())
                 editor.apply()
         }
+        val needsInputModeSwitchKey: MutableState<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.GlobeKey, 0)
+                val needs: Boolean = (savedValue == 1)
+                mutableStateOf(needs)
+        }
+        fun updateNeedsInputModeSwitchKey(needs: Boolean) {
+                val value2save: Int = if (needs) 1 else 0
+                val editor = sharedPreferences.edit()
+                editor.putInt(UserSettingsKey.GlobeKey, value2save)
+                editor.apply()
+        }
         val cangjieVariant: MutableState<CangjieVariant> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CangjieVariant, CangjieVariant.Cangjie5.identifier())
                 val variant: CangjieVariant = CangjieVariant.variantOf(savedValue)
@@ -218,7 +229,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.CangjieVariant, variant.identifier())
                 editor.apply()
         }
-
         val isInputMemoryOn: MutableState<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.InputMemory, 1)
                 val isOn: Boolean = (savedValue == 1)
