@@ -9,11 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -35,9 +34,7 @@ fun JyutpingTonesScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier
-                                        .clip(shape = RoundedCornerShape(size = 8.dp))
-                                        .background(color = MaterialTheme.colorScheme.background)
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(8.dp))
                         ) {
                                 ToneLabel(word = "芬", syllable = "fan1", value = "55/53", name = "陰入", jyutping = "1")
                                 ToneLabel(word = "粉", syllable = "fan2", value = "35", name = "陰上", jyutping = "2")
@@ -61,10 +58,26 @@ private fun ToneLabel(word: String, syllable: String, value: String, name: Strin
                                 .fillMaxWidth()
                                 .padding(horizontal = 8.dp, vertical = 4.dp),
                 ) {
-                        Text(text = "$word $syllable", modifier = Modifier.weight(0.3f))
-                        Text(text = value, modifier = Modifier.weight(0.25f))
-                        Text(text = name, modifier = Modifier.weight(0.25f))
-                        Text(text = jyutping, modifier = Modifier.weight(0.2f))
+                        Text(
+                                text = "$word $syllable",
+                                modifier = Modifier.weight(0.3f),
+                                color = colorScheme.onBackground
+                        )
+                        Text(
+                                text = value,
+                                modifier = Modifier.weight(0.25f),
+                                color = colorScheme.onBackground
+                        )
+                        Text(
+                                text = name,
+                                modifier = Modifier.weight(0.25f),
+                                color = colorScheme.onBackground
+                        )
+                        Text(
+                                text = jyutping,
+                                modifier = Modifier.weight(0.2f),
+                                color = colorScheme.onBackground
+                        )
                 }
         }
 }

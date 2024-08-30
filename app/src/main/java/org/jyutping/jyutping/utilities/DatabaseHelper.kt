@@ -11,6 +11,7 @@ import org.jyutping.jyutping.extensions.shortcutCharcode
 import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.SegmentToken
 import org.jyutping.jyutping.keyboard.ShapeLexicon
+import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.search.CantoneseLexicon
 import org.jyutping.jyutping.search.ChoHokYuetYamCitYiu
 import org.jyutping.jyutping.search.FanWanCuetYiu
@@ -102,7 +103,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                         }
                                 }
                                 if (fetches.isEmpty()) return CantoneseLexicon(text)
-                                val romanization = fetches.joinToString(separator = " ")
+                                val romanization = fetches.joinToString(separator = PresetString.SPACE)
                                 val pronunciation = Pronunciation(romanization)
                                 return CantoneseLexicon(text = newText, pronunciations = listOf(pronunciation))
                         }

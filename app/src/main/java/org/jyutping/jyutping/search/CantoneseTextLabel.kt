@@ -2,9 +2,11 @@ package org.jyutping.jyutping.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.ui.common.SeparatorMark
@@ -20,14 +22,21 @@ fun CantoneseTextLabel(text: String) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
                 Row {
-                        Text(text = "文字")
+                        Text(
+                                text = "文字",
+                                color = colorScheme.onBackground
+                        )
                         SeparatorMark()
-                        Text(text = text)
+                        Text(
+                                text = text,
+                                color = colorScheme.onBackground
+                        )
                 }
                 unicode?.let {
                         Text(
                                 text = it,
-                                color = MaterialTheme.colorScheme.secondary,
+                                modifier = Modifier.alpha(0.75f),
+                                color = colorScheme.onBackground,
                                 fontFamily = FontFamily.Monospace
                         )
                 }

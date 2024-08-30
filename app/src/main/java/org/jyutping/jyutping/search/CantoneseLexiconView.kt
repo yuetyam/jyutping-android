@@ -8,11 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.ui.common.SeparatorMark
 
@@ -21,8 +20,7 @@ fun CantoneseLexiconView(lexicon: CantoneseLexicon, unihanDefinition: UnihanDefi
         Column(
                 modifier = Modifier
                         .fillMaxWidth()
-                        .clip(shape = RoundedCornerShape(size = 8.dp))
-                        .background(color = MaterialTheme.colorScheme.background)
+                        .background(color = colorScheme.background, shape = RoundedCornerShape(8.dp))
                         .padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -41,9 +39,15 @@ fun CantoneseLexiconView(lexicon: CantoneseLexicon, unihanDefinition: UnihanDefi
                         ) {
                                 HorizontalDivider()
                                 Row {
-                                        Text(text = "英文")
+                                        Text(
+                                                text = "英文",
+                                                color = colorScheme.onBackground
+                                        )
                                         SeparatorMark()
-                                        Text(text = it.definition)
+                                        Text(
+                                                text = it.definition,
+                                                color = colorScheme.onBackground
+                                        )
                                 }
                         }
                 }

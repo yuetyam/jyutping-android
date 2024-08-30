@@ -17,12 +17,11 @@ import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -158,13 +157,16 @@ private fun DifferentView(heading: String, lines: List<String>) {
                         modifier = Modifier
                                 .padding(vertical = 8.dp)
                                 .fillMaxWidth()
-                                .clip(shape = RoundedCornerShape(size = 8.dp))
-                                .background(color = MaterialTheme.colorScheme.background)
+                                .background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
                                 .padding(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                        Text(text = heading, fontWeight = FontWeight.SemiBold)
-                        lines.onEach { Text(text = it) }
+                        Text(
+                                text = heading,
+                                color = colorScheme.onBackground,
+                                fontWeight = FontWeight.SemiBold
+                        )
+                        lines.map { Text(text = it, color = colorScheme.onBackground) }
                 }
         }
 }
@@ -183,15 +185,18 @@ private fun Expression(heading: String, labels: List<LabelEntry>) {
                 modifier = Modifier
                         .padding(vertical = 8.dp)
                         .fillMaxWidth()
-                        .clip(shape = RoundedCornerShape(size = 8.dp))
-                        .background(color = MaterialTheme.colorScheme.background)
+                        .background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
                         .padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
                 SelectionContainer {
-                        Text(text = heading, fontWeight = FontWeight.SemiBold)
+                        Text(
+                                text = heading,
+                                color = colorScheme.onBackground,
+                                fontWeight = FontWeight.SemiBold
+                        )
                 }
-                labels.onEach {
+                labels.map {
                         IconLabel(entry = it)
                 }
         }
@@ -209,9 +214,14 @@ private fun IconLabel(entry: LabelEntry) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
-                Icon(imageVector = image, contentDescription = null, modifier = Modifier.size(16.dp))
+                Icon(
+                        imageVector = image,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = colorScheme.onBackground
+                )
                 SelectionContainer {
-                        Text(text = entry.text)
+                        Text(text = entry.text, color = colorScheme.onBackground)
                 }
         }
 }

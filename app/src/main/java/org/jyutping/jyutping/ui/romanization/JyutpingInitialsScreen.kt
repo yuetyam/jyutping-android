@@ -10,11 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 
@@ -37,9 +36,7 @@ fun JyutpingInitialsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier
-                                        .clip(shape = RoundedCornerShape(size = 8.dp))
-                                        .background(color = MaterialTheme.colorScheme.background)
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
                         ) {
                                 InitialLabel(word = "巴", syllable = "baa1", jyutping = "b", ipa = "[ p ]")
                                 InitialLabel(word = "趴", syllable = "paa1", jyutping = "p", ipa = "[ pʰ ]")
@@ -49,9 +46,7 @@ fun JyutpingInitialsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier
-                                        .clip(shape = RoundedCornerShape(size = 8.dp))
-                                        .background(color = MaterialTheme.colorScheme.background)
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
                         ) {
                                 InitialLabel(word = "打", syllable = "daa2", jyutping = "d", ipa = "[ t ]")
                                 InitialLabel(word = "他", syllable = "taa1", jyutping = "t", ipa = "[ tʰ ]")
@@ -61,9 +56,7 @@ fun JyutpingInitialsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier
-                                        .clip(shape = RoundedCornerShape(size = 8.dp))
-                                        .background(color = MaterialTheme.colorScheme.background)
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
                         ) {
                                 InitialLabel(word = "家", syllable = "gaa1", jyutping = "g", ipa = "[ k ]")
                                 InitialLabel(word = "卡", syllable = "kaa1", jyutping = "k", ipa = "[ kʰ ]")
@@ -73,9 +66,7 @@ fun JyutpingInitialsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier
-                                        .clip(shape = RoundedCornerShape(size = 8.dp))
-                                        .background(color = MaterialTheme.colorScheme.background)
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
                         ) {
                                 InitialLabel(word = "瓜", syllable = "gwaa1", jyutping = "gw", ipa = "[ kʷ ]")
                                 InitialLabel(word = "夸", syllable = "kwaa1", jyutping = "kw", ipa = "[ kʷʰ ]")
@@ -83,9 +74,7 @@ fun JyutpingInitialsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier
-                                        .clip(shape = RoundedCornerShape(size = 8.dp))
-                                        .background(color = MaterialTheme.colorScheme.background)
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
                         ) {
                                 InitialLabel(word = "渣", syllable = "zaa1", jyutping = "z", ipa = "t͡s ~ t͡ʃ")
                                 InitialLabel(word = "叉", syllable = "caa1", jyutping = "c", ipa = "t͡sʰ ~ t͡ʃʰ")
@@ -94,9 +83,7 @@ fun JyutpingInitialsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier
-                                        .clip(shape = RoundedCornerShape(size = 8.dp))
-                                        .background(color = MaterialTheme.colorScheme.background)
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
                         ) {
                                 InitialLabel(word = "蛙", syllable = "waa1", jyutping = "w", ipa = "[ w ]")
                                 InitialLabel(word = "也", syllable = "jaa5", jyutping = "j", ipa = "[ j ]")
@@ -113,9 +100,22 @@ private fun InitialLabel(word: String, syllable: String, jyutping: String, ipa: 
                                 .fillMaxWidth()
                                 .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
-                        Text(text = "$word $syllable", modifier = Modifier.weight(0.4f))
-                        Text(text = jyutping, modifier = Modifier.weight(0.3f), fontFamily = FontFamily.Monospace)
-                        Text(text = ipa, modifier = Modifier.weight(0.3f))
+                        Text(
+                                text = "$word $syllable",
+                                modifier = Modifier.weight(0.4f),
+                                color = colorScheme.onBackground
+                        )
+                        Text(
+                                text = jyutping,
+                                modifier = Modifier.weight(0.3f),
+                                color = colorScheme.onBackground,
+                                fontFamily = FontFamily.Monospace
+                        )
+                        Text(
+                                text = ipa,
+                                modifier = Modifier.weight(0.3f),
+                                color = colorScheme.onBackground
+                        )
                 }
         }
 }

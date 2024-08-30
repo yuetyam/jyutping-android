@@ -105,7 +105,7 @@ fun AboutScreen() {
 
 @Composable
 private fun VersionLabel() {
-        val version: String = BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")"
+        val version: String by lazy { BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")" }
         Row(
                 modifier = Modifier
                         .fillMaxWidth()
@@ -115,11 +115,21 @@ private fun VersionLabel() {
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
-                Icon(imageVector = Icons.Outlined.Info, contentDescription = null)
-                Text(text = stringResource(id = R.string.about_label_version))
+                Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = null,
+                        tint = colorScheme.onBackground
+                )
+                Text(
+                        text = stringResource(id = R.string.about_label_version),
+                        color = colorScheme.onBackground
+                )
                 Spacer(modifier = Modifier.weight(1.0f))
                 SelectionContainer {
-                        Text(text = version)
+                        Text(
+                                text = version,
+                                color = colorScheme.onBackground
+                        )
                 }
         }
 }
