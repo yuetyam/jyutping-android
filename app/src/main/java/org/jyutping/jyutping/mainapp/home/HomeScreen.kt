@@ -13,13 +13,16 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavHostController
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.extensions.convertedS2T
@@ -80,9 +83,18 @@ fun HomeScreen(navController: NavHostController) {
                 return helper.gwongWanMatch(traditionalChar)
         }
         val isKeyboardEnabled: MutableState<Boolean> = remember { mutableStateOf(false) }
-        LaunchedEffect(Unit) {
-                val manager = navController.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                isKeyboardEnabled.value = manager.enabledInputMethodList.any { it.packageName == PresetConstant.KEYBOARD_ID }
+        val lifecycleOwner = LocalLifecycleOwner.current
+        DisposableEffect(lifecycleOwner) {
+                val observer = LifecycleEventObserver { _, event ->
+                        if (event == Lifecycle.Event.ON_START) {
+                                val manager = navController.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                                isKeyboardEnabled.value = manager.enabledInputMethodList.any { it.packageName == PresetConstant.KEYBOARD_ID }
+                        }
+                }
+                lifecycleOwner.lifecycle.addObserver(observer)
+                onDispose {
+                        lifecycleOwner.lifecycle.removeObserver(observer)
+                }
         }
         SelectionContainer {
                 LazyColumn(
