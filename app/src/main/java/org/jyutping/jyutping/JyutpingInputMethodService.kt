@@ -3,6 +3,7 @@ package org.jyutping.jyutping
 import android.content.Context
 import android.content.res.Configuration
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
@@ -454,6 +455,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 if (isBuffering.value) {
                         currentInputConnection.commitText(bufferText, bufferText.length)
                         bufferText = PresetString.EMPTY
+                } else if (currentInputEditorInfo.imeOptions == EditorInfo.IME_FLAG_NO_ENTER_ACTION) {
+                        currentInputConnection.commitText(PresetString.NEW_LINE, PresetString.NEW_LINE.length)
                 } else {
                         sendDefaultEditorAction(true)
                 }

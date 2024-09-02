@@ -65,8 +65,7 @@ object Engine {
                                                 qualified.add(newItem)
                                         } else {
                                                 if (!continuous.startsWith(text)) continue
-                                                val combinedInput = item.input + textTones
-                                                val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
+                                                val newItem = Candidate(text = item.text, romanization = item.romanization, input = text)
                                                 qualified.add(newItem)
                                         }
                                 }
