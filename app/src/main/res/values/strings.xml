@@ -51,6 +51,7 @@
     <string name="keyboard_settings_character_standard_taiwan">Traditional, Taiwan</string>
     <string name="keyboard_settings_character_standard_simplified">Simplified</string>
     <string name="keyboard_settings_globe_key_switch_title">Show Input Method Switch Key</string>
+    <string name="keyboard_settings_emoji_switch_title">Emoji Suggestions</string>
     <string name="keyboard_settings_cangjie_variant_header">Cangjie / Quick(Sucheng) Reverse Lookup</string>
     <string name="keyboard_settings_cangjie_variant_cangjie5">Cangjie5 (倉頡五代)</string>
     <string name="keyboard_settings_cangjie_variant_cangjie3">Cangjie3 (倉頡三代)</string>

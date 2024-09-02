@@ -50,6 +50,7 @@ fun SettingsScreen(height: Dp) {
         val isDarkMode = remember { context.isDarkMode }
         val characterStandard = remember { context.characterStandard }
         val needsInputModeSwitchKey = remember { context.needsInputModeSwitchKey }
+        val isEmojiSuggestionsOn = remember { context.isEmojiSuggestionsOn }
         val cangjieVariant = remember { context.cangjieVariant }
         val isInputMemoryOn = remember { context.isInputMemoryOn }
         val tintColor: Color = if (isDarkMode.value) Color.White else Color.Black
@@ -214,6 +215,28 @@ fun SettingsScreen(height: Dp) {
                                                 onCheckedChange = {
                                                         needsInputModeSwitchKey.value = it
                                                         context.updateNeedsInputModeSwitchKey(it)
+                                                }
+                                        )
+                                }
+                        }
+                        item {
+                                Row(
+                                        modifier = Modifier
+                                                .fillMaxWidth()
+                                                .background(color = backColor, shape = RoundedCornerShape(8.dp))
+                                                .padding(horizontal = 8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                        Text(
+                                                text = stringResource(id = R.string.keyboard_settings_emoji_switch_title),
+                                                color = tintColor
+                                        )
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        Switch(
+                                                checked = isEmojiSuggestionsOn.value,
+                                                onCheckedChange = {
+                                                        isEmojiSuggestionsOn.value = it
+                                                        context.updateEmojiSuggestionsState(it)
                                                 }
                                         )
                                 }

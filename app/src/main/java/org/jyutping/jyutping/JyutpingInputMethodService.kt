@@ -219,6 +219,17 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.GlobeKey, value2save)
                 editor.apply()
         }
+        val isEmojiSuggestionsOn: MutableState<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.Emoji, 1)
+                val isOn: Boolean = (savedValue == 1)
+                mutableStateOf(isOn)
+        }
+        fun updateEmojiSuggestionsState(isOn: Boolean) {
+                val value2save: Int = if (isOn) 1 else 2
+                val editor = sharedPreferences.edit()
+                editor.putInt(UserSettingsKey.Emoji, value2save)
+                editor.apply()
+        }
         val cangjieVariant: MutableState<CangjieVariant> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CangjieVariant, CangjieVariant.Cangjie5.identifier())
                 val variant: CangjieVariant = CangjieVariant.variantOf(savedValue)
