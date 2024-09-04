@@ -5,10 +5,12 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import org.jyutping.jyutping.extensions.charcode
 import org.jyutping.jyutping.extensions.convertedS2T
+import org.jyutping.jyutping.extensions.generateSymbol
 import org.jyutping.jyutping.extensions.intercode
 import org.jyutping.jyutping.extensions.isIdeographicChar
 import org.jyutping.jyutping.extensions.shortcutCharcode
 import org.jyutping.jyutping.keyboard.Candidate
+import org.jyutping.jyutping.keyboard.CandidateType
 import org.jyutping.jyutping.keyboard.SegmentToken
 import org.jyutping.jyutping.keyboard.ShapeLexicon
 import org.jyutping.jyutping.presets.PresetString
@@ -577,5 +579,24 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
                 cursor.close()
                 return items
+        }
+        fun symbolMatch(text: String, input: String): List<Candidate> {
+                val candidates: MutableList<Candidate> = mutableListOf()
+                val code = text.hashCode()
+                val command = "SELECT category, codepoint, cantonese, romanization FROM symboltable WHERE ping = ${code};"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val categoryCode = cursor.getInt(0)
+                        val codepoint = cursor.getString(1)
+                        val cantonese = cursor.getString(2)
+                        val romanization = cursor.getString(3)
+                        val symbolText = generateSymbol(codepoint)
+                        val isEmoji: Boolean = (categoryCode > 0) && (categoryCode < 9)
+                        val type: CandidateType = if (isEmoji) CandidateType.Emoji else CandidateType.Symbol
+                        val instance = Candidate(type = type, text = symbolText, lexiconText = cantonese, romanization = romanization, input = input)
+                        candidates.add(instance)
+                }
+                cursor.close()
+                return candidates
         }
 }

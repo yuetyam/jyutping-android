@@ -42,7 +42,7 @@ import org.jyutping.jyutping.presets.PresetColor
 
 private fun Candidate.width(): Dp = when (this.type) {
         CandidateType.Cantonese -> (this.text.length * 20 + 32).dp
-        else -> if (this.text.length < 2) 52.dp else (this.text.length * 14).dp
+        else -> if (this.text.length < 2) 60.dp else (this.text.length * 16).dp
 }
 
 private class CandidateRow(val identifier: Int, val candidates: List<Candidate>, val width: Dp = candidates.map { it.width() }.fold(0.dp) { acc, w -> acc + w })
@@ -105,7 +105,7 @@ fun CandidateBoard(height: Dp) {
                                                 .defaultMinSize(minHeight = collapseHeight)
                                                 .fillMaxWidth(),
                                         horizontalArrangement = Arrangement.spacedBy(0.dp),
-                                        verticalAlignment = Alignment.CenterVertically
+                                        verticalAlignment = Alignment.Bottom
                                 ) {
                                         row.candidates.map {
                                                 CandidateView(

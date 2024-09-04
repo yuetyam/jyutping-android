@@ -26,3 +26,14 @@ fun String.formattedForMark(): String {
         val blocks = this.map { if (it.isSeparatorOrTone()) "$it " else it.toString() }
         return blocks.joinToString(separator = PresetString.EMPTY).trimEnd()
 }
+
+/**
+ * Create Emoji text from the given code point String.
+ * @param codepoint Unicode code point. Example: 1F469.200D.1F373
+ * @return Emoji / Symbol character(s)
+ */
+fun generateSymbol(codepoint: String) = codepoint
+        .split(".")
+        .map { it.toInt(radix = 16) }
+        .flatMap { Character.toChars(it).toList() }
+        .joinToString(PresetString.EMPTY)

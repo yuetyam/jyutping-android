@@ -68,7 +68,7 @@ fun CandidateScrollBar() {
                                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                         context.select(it)
                                                 }
-                                                .padding(horizontal = 6.dp)
+                                                .padding(horizontal = if (it.type.isCantonese()) 6.dp else 10.dp)
                                                 .padding(bottom = 12.dp)
                                 )
                         }

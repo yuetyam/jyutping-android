@@ -225,6 +225,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 mutableStateOf(isOn)
         }
         fun updateEmojiSuggestionsState(isOn: Boolean) {
+                isEmojiSuggestionsOn.value = isOn
                 val value2save: Int = if (isOn) 1 else 2
                 val editor = sharedPreferences.edit()
                 editor.putInt(UserSettingsKey.Emoji, value2save)
@@ -387,7 +388,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val processingText: String = value.toneConverted()
                                         val segmentation = Segmentor.segment(processingText, db)
                                         val userLexiconSuggestions: List<Candidate> = if (isInputMemoryOn.value) userDB.suggest(text = processingText, segmentation = segmentation) else emptyList()
-                                        val suggestions = Engine.suggest(text = processingText, segmentation = segmentation, db = db)
+                                        val needsSymbols: Boolean = isEmojiSuggestionsOn.value && selectedCandidates.isEmpty()
+                                        val asap: Boolean = userLexiconSuggestions.isNotEmpty()
+                                        val suggestions = Engine.suggest(text = processingText, segmentation = segmentation, db = db, needsSymbols = needsSymbols, asap = asap)
                                         val mark: String = run {
                                                 val userLexiconMark = userLexiconSuggestions.firstOrNull()?.mark
                                                 if (userLexiconMark != null) {

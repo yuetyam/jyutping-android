@@ -17,11 +17,13 @@ fun CandidateView(candidate: Candidate, isDarkMode: Boolean, modifier: Modifier)
                 verticalArrangement = Arrangement.spacedBy((-2).dp),
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
-                Text(
-                        text = candidate.romanization,
-                        color = if (isDarkMode) Color.White else Color.Black,
-                        fontSize = 12.sp
-                )
+                if (candidate.type.isCantonese()) {
+                        Text(
+                                text = candidate.romanization,
+                                color = if (isDarkMode) Color.White else Color.Black,
+                                fontSize = 12.sp
+                        )
+                }
                 Text(
                         text = candidate.text,
                         color = if (isDarkMode) Color.White else Color.Black,

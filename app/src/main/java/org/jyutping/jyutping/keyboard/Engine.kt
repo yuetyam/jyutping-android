@@ -6,7 +6,7 @@ import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 
 object Engine {
-        fun suggest(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
+        fun suggest(text: String, segmentation: Segmentation, db: DatabaseHelper, needsSymbols: Boolean, asap: Boolean): List<Candidate> {
                 return when (text.length) {
                         0 -> emptyList()
                         1 -> when (text) {
@@ -14,10 +14,21 @@ object Engine {
                                 "o", "m", "e" -> db.match(text = text, input = text) + db.shortcut(text)
                                 else -> db.shortcut(text)
                         }
-                        else -> dispatch(text, segmentation, db)
+                        else -> {
+                                if (asap) {
+                                        if (segmentation.maxSchemeLength() > 0) {
+                                                val candidates = query(text = text, segmentation = segmentation, db = db, needsSymbols = needsSymbols)
+                                                if (candidates.isEmpty()) processVerbatim(text = text, db = db) else candidates
+                                        } else {
+                                                processVerbatim(text = text, db = db)
+                                        }
+                                } else {
+                                        dispatch(text = text, segmentation = segmentation, db = db, needsSymbols = needsSymbols)
+                                }
+                        }
                 }
         }
-        private fun dispatch(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
+        private fun dispatch(text: String, segmentation: Segmentation, db: DatabaseHelper, needsSymbols: Boolean): List<Candidate> {
                 val hasSeparators: Boolean = text.contains(PresetCharacter.SEPARATOR)
                 val hasTones: Boolean = text.contains(Regex("[1-6]"))
                 return when {
@@ -31,7 +42,7 @@ object Engine {
                                 if (segmentation.maxSchemeLength() < 1) {
                                         processVerbatim(text, db)
                                 } else {
-                                        process(text, segmentation, db)
+                                        process(text = text, segmentation = segmentation, db = db, needsSymbols = needsSymbols)
                                 }
                         }
                 }
@@ -40,7 +51,7 @@ object Engine {
                 val textTones = text.filter { it.isDigit() }
                 val textToneCount = textTones.length
                 val rawText: String = text.filterNot { it.isDigit() }
-                val candidates= query(rawText, segmentation, db)
+                val candidates= query(text = rawText, segmentation = segmentation, db = db, needsSymbols = false)
                 val qualified: MutableList<Candidate> = mutableListOf()
                 for (item in candidates) {
                         val continuous = item.romanization.filterNot { it.isWhitespace() }
@@ -114,7 +125,7 @@ object Engine {
                 val isHeadingSeparator: Boolean = text.firstOrNull()?.isSeparatorChar() ?: false
                 val isTrailingSeparator: Boolean = text.lastOrNull()?.isSeparatorChar() ?: false
                 val rawText = text.filter { !(it.isSeparatorChar()) }
-                val candidates = query(rawText, segmentation, db)
+                val candidates = query(text = rawText, segmentation = segmentation, db = db, needsSymbols = false)
                 val qualified: MutableList<Candidate> = mutableListOf()
                 for (item in candidates) {
                         val syllables = item.romanization.filterNot { it.isDigit() }.split(' ')
@@ -209,9 +220,9 @@ object Engine {
                 }
                 return rounds.flatten().distinct()
         }
-        private fun process(text: String, segmentation: Segmentation, db: DatabaseHelper, limit: Int? = null): List<Candidate> {
+        private fun process(text: String, segmentation: Segmentation, db: DatabaseHelper, needsSymbols: Boolean, limit: Int? = null): List<Candidate> {
                 val textLength = text.length
-                val primary = query(text, segmentation, db, limit)
+                val primary = query(text = text, segmentation = segmentation, db = db, needsSymbols = needsSymbols)
                 val firstInputLength = primary.firstOrNull()?.input?.length ?: 0
                 if (firstInputLength == 0) return processVerbatim(text, db, limit)
                 if (firstInputLength == textLength) return primary
@@ -239,7 +250,7 @@ object Engine {
                         val tailText = text.drop(headInputLength)
                         if (db.canProcess(tailText).not()) continue
                         val tailSegmentation = Segmentor.segment(tailText, db)
-                        val tailCandidates = process(text = tailText, segmentation = tailSegmentation, db = db, limit = 8).take(100)
+                        val tailCandidates = process(text = tailText, segmentation = tailSegmentation, db = db, needsSymbols = false, limit = 8).take(100)
                         if (tailCandidates.isEmpty()) continue
                         val headCandidates = primary.takeWhile { it.input == headText }.take(8)
                         val combines = headCandidates.map { head -> tailCandidates.map { head + it } }
@@ -248,13 +259,25 @@ object Engine {
                 val preferredConcatenated = preferred(text, concatenated.flatten().distinct()).take(1)
                 return preferredConcatenated + primary
         }
-        private fun query(text: String, segmentation: Segmentation, db: DatabaseHelper, limit: Int? = null): List<Candidate> {
+        private fun query(text: String, segmentation: Segmentation, db: DatabaseHelper, needsSymbols: Boolean, limit: Int? = null): List<Candidate> {
                 val textLength = text.length
                 val searches = search(text, segmentation, db, limit)
-                val preferredSearched = searches.filter { it.input.length == textLength }
+                val preferredSearches = searches.filter { it.input.length == textLength }
                 val matched = db.match(text = text, input = text, limit = limit)
                 val shortcut = db.shortcut(text, limit)
-                return (matched + preferredSearched + shortcut + searches).distinct()
+                val fallback by lazy { (matched + preferredSearches + shortcut + searches).distinct() }
+                val shouldNotContinue: Boolean = (!needsSymbols) || (limit != null) || (matched.isEmpty() && preferredSearches.isEmpty())
+                if (shouldNotContinue) return fallback
+                val symbols: List<Candidate> = searchSymbols(text = text, segmentation = segmentation, db = db)
+                if (symbols.isEmpty()) return fallback
+                val regular: MutableList<Candidate> = (matched + preferredSearches).toMutableList()
+                for (symbol in symbols.reversed()) {
+                        val index = regular.indexOfFirst { it.lexiconText == symbol.lexiconText }
+                        if (index != -1) {
+                                regular.add(index = index + 1, element = symbol)
+                        }
+                }
+                return (regular + shortcut + searches).distinct()
         }
         private fun search(text: String, segmentation: Segmentation, db: DatabaseHelper, limit: Int? = null): List<Candidate> {
                 val textLength = text.length
@@ -311,5 +334,18 @@ object Engine {
                 }
                 return candidates.sortedWith(comparator)
                 */
+        }
+        private fun searchSymbols(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
+                val regular = db.symbolMatch(text = text, input = text)
+                val textLength = text.length
+                val schemes = segmentation.filter { it.length() == textLength }
+                if (schemes.isEmpty()) return regular
+                val matches: MutableList<List<Candidate>> = mutableListOf()
+                for (scheme in schemes) {
+                        val pingText = scheme.joinToString(separator = PresetString.EMPTY) { it.origin }
+                        val matched = db.symbolMatch(text = pingText, input = text)
+                        matches.add(matched)
+                }
+                return (regular + matches.flatten()).distinct()
         }
 }
