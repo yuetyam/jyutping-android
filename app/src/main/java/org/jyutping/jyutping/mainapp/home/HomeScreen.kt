@@ -2,6 +2,7 @@ package org.jyutping.jyutping.mainapp.home
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
 import androidx.compose.foundation.layout.Arrangement
@@ -83,12 +84,19 @@ fun HomeScreen(navController: NavHostController) {
                 return helper.gwongWanMatch(traditionalChar)
         }
         val isKeyboardEnabled: MutableState<Boolean> = remember { mutableStateOf(false) }
+        val isKeyboardSelected: MutableState<Boolean> = remember { mutableStateOf(false) }
         val lifecycleOwner = LocalLifecycleOwner.current
         DisposableEffect(lifecycleOwner) {
                 val observer = LifecycleEventObserver { _, event ->
                         if (event == Lifecycle.Event.ON_START) {
                                 val manager = navController.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                                isKeyboardEnabled.value = manager.enabledInputMethodList.any { it.packageName == PresetConstant.KEYBOARD_ID }
+                                isKeyboardEnabled.value = manager.enabledInputMethodList.any { it.packageName == PresetConstant.KEYBOARD_PACKAGE_NAME }
+                                isKeyboardSelected.value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                                        manager.currentInputMethodInfo?.packageName == PresetConstant.KEYBOARD_PACKAGE_NAME
+                                } else {
+                                        val defaultKeyboardId = Settings.Secure.getString(navController.context.contentResolver, Settings.Secure.DEFAULT_INPUT_METHOD)
+                                        defaultKeyboardId == PresetConstant.KEYBOARD_ID
+                                }
                         }
                 }
                 lifecycleOwner.lifecycle.addObserver(observer)
@@ -150,6 +158,20 @@ fun HomeScreen(navController: NavHostController) {
                                         ) {
                                                 Spacer(modifier = Modifier.weight(1f))
                                                 Text(text = stringResource(id = R.string.home_button_enable_keyboard))
+                                                Spacer(modifier = Modifier.weight(1f))
+                                        }
+                                }
+                        } else if (isKeyboardSelected.value.not()) {
+                                item {
+                                        Button(
+                                                onClick = {
+                                                        (navController.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showInputMethodPicker()
+                                                },
+                                                shape = RoundedCornerShape(8.dp),
+                                                contentPadding = PaddingValues(horizontal = 4.dp)
+                                        ) {
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Text(text = stringResource(id = R.string.home_button_select_keyboard))
                                                 Spacer(modifier = Modifier.weight(1f))
                                         }
                                 }
