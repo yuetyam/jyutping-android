@@ -461,8 +461,12 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun backspace() {
                 if (isBuffering.value) {
                         bufferText = bufferText.dropLast(1)
+                } else if (currentInputConnection.getSelectedText(0).isNullOrEmpty()) {
+                        if (currentInputConnection.getTextBeforeCursor(1, 0).isNullOrEmpty().not()) {
+                                currentInputConnection.deleteSurroundingTextInCodePoints(1, 0)
+                        }
                 } else {
-                        currentInputConnection.deleteSurroundingText(1, 0)
+                        currentInputConnection.commitText(PresetString.EMPTY, PresetString.EMPTY.length)
                 }
         }
         fun performReturn() {
