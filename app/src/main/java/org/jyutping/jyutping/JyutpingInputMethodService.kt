@@ -461,22 +461,45 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun backspace() {
                 if (isBuffering.value) {
                         bufferText = bufferText.dropLast(1)
-                } else if (currentInputConnection.getSelectedText(0).isNullOrEmpty()) {
-                        if (currentInputConnection.getTextBeforeCursor(1, 0).isNullOrEmpty().not()) {
+                        return
+                }
+                val doesNotHaveSelectedText: Boolean = currentInputConnection.getSelectedText(0).isNullOrEmpty()
+                if (doesNotHaveSelectedText) {
+                        val hasTextBeforeCursor: Boolean = currentInputConnection.getTextBeforeCursor(1, 0).isNullOrEmpty().not()
+                        if (hasTextBeforeCursor) {
                                 currentInputConnection.deleteSurroundingTextInCodePoints(1, 0)
                         }
-                } else {
-                        currentInputConnection.commitText(PresetString.EMPTY, PresetString.EMPTY.length)
+                        return
                 }
+
+                // Delete the selected text
+                currentInputConnection.commitText(PresetString.EMPTY, PresetString.EMPTY.length)
         }
         fun performReturn() {
                 if (isBuffering.value) {
                         currentInputConnection.commitText(bufferText, bufferText.length)
                         bufferText = PresetString.EMPTY
-                } else if (currentInputEditorInfo.imeOptions == EditorInfo.IME_FLAG_NO_ENTER_ACTION) {
+                        return
+                }
+                val imeOptions = currentInputEditorInfo.imeOptions
+                val shouldInputNewLine: Boolean = imeOptions == EditorInfo.IME_FLAG_NO_ENTER_ACTION
+                if (shouldInputNewLine){
                         currentInputConnection.commitText(PresetString.NEW_LINE, PresetString.NEW_LINE.length)
-                } else {
-                        sendDefaultEditorAction(true)
+                        return
+                }
+                val hasActionLabel: Boolean = currentInputEditorInfo.actionLabel.isNullOrEmpty().not()
+                val actionId = currentInputEditorInfo.actionId
+                val hasSpecifiedAction: Boolean = actionId != EditorInfo.IME_ACTION_UNSPECIFIED
+                val shouldPerformSpecifiedAction = hasActionLabel && hasSpecifiedAction
+                if (shouldPerformSpecifiedAction) {
+                        currentInputConnection.performEditorAction(actionId)
+                        return
+                }
+                val action = imeOptions and EditorInfo.IME_MASK_ACTION
+                when (action) {
+                        EditorInfo.IME_ACTION_UNSPECIFIED,
+                        EditorInfo.IME_ACTION_NONE -> currentInputConnection.commitText(PresetString.NEW_LINE, PresetString.NEW_LINE.length)
+                        else -> currentInputConnection.performEditorAction(action)
                 }
         }
         fun space() {
