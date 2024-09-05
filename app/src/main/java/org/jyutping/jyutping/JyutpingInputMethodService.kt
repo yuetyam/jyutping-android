@@ -463,8 +463,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         bufferText = bufferText.dropLast(1)
                         return
                 }
-                val doesNotHaveSelectedText: Boolean = currentInputConnection.getSelectedText(0).isNullOrEmpty()
-                if (doesNotHaveSelectedText) {
+                val noSelectedText: Boolean = currentInputConnection.getSelectedText(0).isNullOrEmpty()
+                if (noSelectedText) {
                         val hasTextBeforeCursor: Boolean = currentInputConnection.getTextBeforeCursor(1, 0).isNullOrEmpty().not()
                         if (hasTextBeforeCursor) {
                                 currentInputConnection.deleteSurroundingTextInCodePoints(1, 0)
@@ -482,25 +482,34 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         return
                 }
                 val imeOptions = currentInputEditorInfo.imeOptions
-                val shouldInputNewLine: Boolean = imeOptions == EditorInfo.IME_FLAG_NO_ENTER_ACTION
+                val shouldInputNewLine: Boolean = (imeOptions and EditorInfo.IME_FLAG_NO_ENTER_ACTION) == EditorInfo.IME_FLAG_NO_ENTER_ACTION
                 if (shouldInputNewLine){
                         currentInputConnection.commitText(PresetString.NEW_LINE, PresetString.NEW_LINE.length)
                         return
                 }
                 val hasActionLabel: Boolean = currentInputEditorInfo.actionLabel.isNullOrEmpty().not()
                 val actionId = currentInputEditorInfo.actionId
-                val hasSpecifiedAction: Boolean = actionId != EditorInfo.IME_ACTION_UNSPECIFIED
-                val shouldPerformSpecifiedAction = hasActionLabel && hasSpecifiedAction
+                val hasSpecifiedActionId: Boolean = when (actionId) {
+                        EditorInfo.IME_ACTION_UNSPECIFIED,
+                        EditorInfo.IME_ACTION_NONE -> false
+                        else -> true
+                }
+                val shouldPerformSpecifiedAction = hasActionLabel && hasSpecifiedActionId
                 if (shouldPerformSpecifiedAction) {
                         currentInputConnection.performEditorAction(actionId)
                         return
                 }
                 val action = imeOptions and EditorInfo.IME_MASK_ACTION
-                when (action) {
+                val isReasonableAction: Boolean = when (action) {
                         EditorInfo.IME_ACTION_UNSPECIFIED,
-                        EditorInfo.IME_ACTION_NONE -> currentInputConnection.commitText(PresetString.NEW_LINE, PresetString.NEW_LINE.length)
-                        else -> currentInputConnection.performEditorAction(action)
+                        EditorInfo.IME_ACTION_NONE -> false
+                        else -> true
                 }
+                if (isReasonableAction) {
+                        currentInputConnection.performEditorAction(action)
+                        return
+                }
+                currentInputConnection.commitText(PresetString.NEW_LINE, PresetString.NEW_LINE.length)
         }
         fun space() {
                 if (isBuffering.value) {
