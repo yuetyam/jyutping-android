@@ -50,6 +50,7 @@ fun SettingsScreen(height: Dp) {
         val isDarkMode = remember { context.isDarkMode }
         val characterStandard = remember { context.characterStandard }
         val needsInputModeSwitchKey = remember { context.needsInputModeSwitchKey }
+        val showLowercaseKeys = remember { context.showLowercaseKeys }
         val isEmojiSuggestionsOn = remember { context.isEmojiSuggestionsOn }
         val cangjieVariant = remember { context.cangjieVariant }
         val isInputMemoryOn = remember { context.isInputMemoryOn }
@@ -198,25 +199,46 @@ fun SettingsScreen(height: Dp) {
                                 }
                         }
                         item {
-                                Row(
+                                Column(
                                         modifier = Modifier
-                                                .fillMaxWidth()
                                                 .background(color = backColor, shape = RoundedCornerShape(8.dp))
-                                                .padding(horizontal = 8.dp),
-                                        verticalAlignment = Alignment.CenterVertically
+                                                .fillMaxWidth()
                                 ) {
-                                        Text(
-                                                text = stringResource(id = R.string.keyboard_settings_globe_key_switch_title),
-                                                color = tintColor
-                                        )
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        Switch(
-                                                checked = needsInputModeSwitchKey.value,
-                                                onCheckedChange = {
-                                                        needsInputModeSwitchKey.value = it
-                                                        context.updateNeedsInputModeSwitchKey(it)
-                                                }
-                                        )
+                                        Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_globe_key_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = needsInputModeSwitchKey.value,
+                                                        onCheckedChange = {
+                                                                needsInputModeSwitchKey.value = it
+                                                                context.updateNeedsInputModeSwitchKey(it)
+                                                        }
+                                                )
+                                        }
+                                        ResponsiveDivider(isDarkMode.value)
+                                        Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_show_lowercase_keys_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = showLowercaseKeys.value,
+                                                        onCheckedChange = {
+                                                                showLowercaseKeys.value = it
+                                                                context.updateShowLowercaseKeys(it)
+                                                        }
+                                                )
+                                        }
                                 }
                         }
                         item {

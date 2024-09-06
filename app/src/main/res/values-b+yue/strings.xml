@@ -52,6 +52,7 @@
     <string name="keyboard_settings_character_standard_taiwan">傳統漢字・臺灣</string>
     <string name="keyboard_settings_character_standard_simplified">简化字</string>
     <string name="keyboard_settings_globe_key_switch_title">顯示輸入法切換掣（地球掣）</string>
+    <string name="keyboard_settings_show_lowercase_keys_switch_title">鍵文字母小寫顯示</string>
     <string name="keyboard_settings_emoji_switch_title">表情符號（Emoji）候選詞</string>
     <string name="keyboard_settings_cangjie_variant_header">倉頡／速成反查粵拼</string>
     <string name="keyboard_settings_cangjie_variant_cangjie5">倉頡五代</string>

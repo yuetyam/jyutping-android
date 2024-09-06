@@ -31,14 +31,16 @@ fun LetterKey(letter: String, modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode = remember { context.isDarkMode }
+        val showLowercaseKeys = remember { context.showLowercaseKeys }
         val keyboardCase = remember { context.keyboardCase }
-        val keyText: String = if (keyboardCase.value.isLowercased()) letter else letter.uppercase()
+        val displayText: String = if (showLowercaseKeys.value && keyboardCase.value.isLowercased()) letter else letter.uppercase()
         Box(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                context.process(keyText)
+                                val text: String = if (keyboardCase.value.isLowercased()) letter else letter.uppercase()
+                                context.process(text)
                         }
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -58,7 +60,7 @@ fun LetterKey(letter: String, modifier: Modifier) {
                         contentAlignment = Alignment.Center
                 ) {
                         Text(
-                                text = keyText,
+                                text = displayText,
                                 color = if (isDarkMode.value) Color.White else Color.Black,
                                 fontSize = 22.sp
                         )
