@@ -41,7 +41,7 @@ import org.jyutping.jyutping.utilities.AppMaster
 fun AboutScreen() {
         LazyColumn(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
                 item {
                         Column(

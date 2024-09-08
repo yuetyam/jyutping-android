@@ -22,7 +22,9 @@
     <string name="home_content_stroke_reverse_lookup">Start with “x”, then enter Stroke code. For example, enter “xwsad”, candidate “木” will appear. Candidates will be displayed with the corresponding Jyutping.</string>
     <string name="home_content_compose_reverse_lookup">Start with “q”, then enter two components’ Jyutping. For example, enter “qmukmuk”, candidate “林” will appear. Candidates will be displayed with the corresponding Jyutping.</string>
     <string name="home_label_more_introductions">More Introductions</string>
-    <string name="screen_title_introductions">More Introductions</string>
+    <string name="screen_title_introductions">Introductions</string>
+    <string name="introductions_heading_clear_buffer">Clear current pre-edit text</string>
+    <string name="introductions_content_clear_buffer">Swipe from right to left on the Delete key will clear current pre-edit syllables.</string>
     <string name="jyutping_label_initials">Jyutping Initials</string>
     <string name="jyutping_label_finals">Jyutping Finals</string>
     <string name="jyutping_label_tones">Jyutping Tones</string>

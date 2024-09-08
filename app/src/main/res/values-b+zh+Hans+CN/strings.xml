@@ -23,6 +23,8 @@
     <string name="home_content_compose_reverse_lookup">兩分即係將一個字分成兩部分。例如「林」字可以分成「木、木」。以 q 開始，再輸入兩個字嘅粵拼即可。例如輸入 qmukmuk 就會出「林」等。候選詞會帶顯示對應嘅粵拼。</string>
     <string name="home_label_more_introductions">更多介紹</string>
     <string name="screen_title_introductions">更多介紹</string>
+    <string name="introductions_heading_clear_buffer">一次過清除已輸入音節</string>
+    <string name="introductions_content_clear_buffer">刪除鍵(Delete)從右向左滑，即可一次過清空預輸入拼寫。</string>
     <string name="jyutping_label_initials">粵拼聲母表</string>
     <string name="jyutping_label_finals">粵拼韻母表</string>
     <string name="jyutping_label_tones">粵拼聲調表</string>
