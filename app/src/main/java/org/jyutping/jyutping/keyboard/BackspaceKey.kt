@@ -92,7 +92,7 @@ fun BackspaceKey(modifier: Modifier) {
                                                         },
                                                         onTap = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                                 context.backspace()
                                                         }
                                                 )
@@ -103,7 +103,7 @@ fun BackspaceKey(modifier: Modifier) {
                                                         offsetX += dragAmount
                                                         if (offsetX < -44f) {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_RELEASE)
                                                                 context.clearBuffer()
                                                         }
                                                 }

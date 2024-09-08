@@ -1,5 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
+import android.os.Build
 import android.view.HapticFeedbackConstants
 import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
@@ -40,7 +41,11 @@ fun ReturnKey(modifier: Modifier) {
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
                                 view.playSoundEffect(SoundEffectConstants.CLICK)
-                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                        view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+                                } else {
+                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                }
                                 context.performReturn()
                         }
                         .fillMaxSize(),

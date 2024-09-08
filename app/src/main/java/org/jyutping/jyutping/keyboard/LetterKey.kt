@@ -38,7 +38,7 @@ fun LetterKey(letter: String, modifier: Modifier) {
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
                                 view.playSoundEffect(SoundEffectConstants.CLICK)
-                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                 val text: String = if (keyboardCase.value.isLowercased()) letter else letter.uppercase()
                                 context.process(text)
                         }

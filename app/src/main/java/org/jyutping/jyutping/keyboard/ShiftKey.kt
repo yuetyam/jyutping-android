@@ -74,12 +74,12 @@ fun ShiftKey(modifier: Modifier) {
                                                 detectTapGestures(
                                                         onDoubleTap = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                                 context.doubleShift()
                                                         },
                                                         onTap = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                                 context.shift()
                                                         }
                                                 )

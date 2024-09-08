@@ -41,7 +41,7 @@ fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
                                 view.playSoundEffect(SoundEffectConstants.CLICK)
-                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                 context.transformTo(destination)
                         }
                         .fillMaxSize(),
