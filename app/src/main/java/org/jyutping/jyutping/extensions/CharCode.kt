@@ -15,7 +15,15 @@ fun String.shortcutCharcode(): Long? {
                 .combined()
         return code
 }
-
+fun Iterable<Char>.shortcutCode(): Long? {
+        if (this.count() >= 10) return null
+        val codes = this.mapNotNull { it.intercode() }
+        if (codes.size != this.count()) return null
+        val code = codes
+                .map { if (it == 44) 29 else it } // Replace 'y' with 'j'
+                .combined()
+        return code
+}
 fun Iterable<Int>.combined(): Long {
         if (this.count() >= 10) return 0
         return this.fold(0) { acc, i -> acc * 100 + i }

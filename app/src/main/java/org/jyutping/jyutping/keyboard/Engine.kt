@@ -1,6 +1,7 @@
 package org.jyutping.jyutping.keyboard
 
 import org.jyutping.jyutping.extensions.isSeparatorChar
+import org.jyutping.jyutping.extensions.shortcutCode
 import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
@@ -10,9 +11,9 @@ object Engine {
                 return when (text.length) {
                         0 -> emptyList()
                         1 -> when (text) {
-                                "a" -> db.match(text, input = text) + db.match(text = "aa", input = text) + db.shortcut(text)
-                                "o", "m", "e" -> db.match(text = text, input = text) + db.shortcut(text)
-                                else -> db.shortcut(text)
+                                "a" -> db.pingMatch(text = text, input = text) + db.pingMatch(text = "aa", input = text, mark = text) + db.shortcutMatch(text)
+                                "o", "m", "e" -> db.pingMatch(text = text, input = text) + db.shortcutMatch(text)
+                                else -> db.shortcutMatch(text)
                         }
                         else -> {
                                 if (asap) {
@@ -34,7 +35,7 @@ object Engine {
                 return when {
                         hasSeparators && hasTones -> {
                                 val syllable = text.filter { it.isLetter() }
-                                db.match(text = syllable, input = text, mark = text).filter { text.startsWith(it.romanization) }
+                                db.pingMatch(text = syllable, input = text, mark = text).filter { text.startsWith(it.romanization) }
                         }
                         !hasSeparators && hasTones -> processWithTones(text, segmentation, db)
                         hasSeparators && !hasTones -> processWithSeparators(text, segmentation, db)
@@ -193,7 +194,7 @@ object Engine {
                 if (qualified.isNotEmpty()) return qualified
                 val anchors = textParts.mapNotNull { it.firstOrNull() }
                 val anchorText = anchors.joinToString(separator = PresetString.EMPTY)
-                return db.shortcut(anchorText)
+                return db.shortcutMatch(anchorText)
                         .filter { item ->
                                 val syllables = item.romanization.filterNot { it.isDigit() }.split(' ')
                                 if (syllables.size != anchors.size) {
@@ -215,7 +216,7 @@ object Engine {
                 val rounds: MutableList<List<Candidate>> = mutableListOf()
                 for (number in text.indices) {
                         val leading = text.dropLast(number)
-                        val round = db.match(text = leading, input = leading, limit = limit) + db.shortcut(leading, limit)
+                        val round = db.pingMatch(text = leading, input = leading, limit = limit) + db.shortcutMatch(leading, limit)
                         rounds.add(round)
                 }
                 return rounds.flatten().distinct()
@@ -235,7 +236,7 @@ object Engine {
                                 val schemeAnchors = scheme.mapNotNull { it.text.firstOrNull() }
                                 val anchors: String = (schemeAnchors + lastAnchor).joinToString(separator = PresetString.EMPTY)
                                 val text2mark = scheme.joinToString(separator = PresetString.SPACE) { it.text } + PresetString.SPACE + tail
-                                val shortcut = db.shortcut(anchors, limit)
+                                val shortcut = db.shortcutMatch(anchors, limit)
                                         .filter { candidate -> candidate.romanization.filter { it.isDigit().not() }.startsWith(text2mark) }
                                         .map { Candidate(text = it.text, romanization = it.romanization, input = text, mark = text2mark) }
                                 shortcuts.add(shortcut)
@@ -261,23 +262,23 @@ object Engine {
         }
         private fun query(text: String, segmentation: Segmentation, db: DatabaseHelper, needsSymbols: Boolean, limit: Int? = null): List<Candidate> {
                 val textLength = text.length
+                val fullMatch = db.pingMatch(text = text, input = text, limit = limit)
+                val fullShortcut = db.shortcutMatch(text, limit)
                 val searches = search(text, segmentation, db, limit)
                 val preferredSearches = searches.filter { it.input.length == textLength }
-                val matched = db.match(text = text, input = text, limit = limit)
-                val shortcut = db.shortcut(text, limit)
-                val fallback by lazy { (matched + preferredSearches + shortcut + searches).distinct() }
-                val shouldNotContinue: Boolean = (!needsSymbols) || (limit != null) || (matched.isEmpty() && preferredSearches.isEmpty())
+                val fallback by lazy { (fullMatch + preferredSearches + fullShortcut + searches).distinct() }
+                val shouldNotContinue: Boolean = (!needsSymbols) || (limit != null) || (fullMatch.isEmpty() && preferredSearches.isEmpty())
                 if (shouldNotContinue) return fallback
                 val symbols: List<Candidate> = searchSymbols(text = text, segmentation = segmentation, db = db)
                 if (symbols.isEmpty()) return fallback
-                val regular: MutableList<Candidate> = (matched + preferredSearches).toMutableList()
+                val regular: MutableList<Candidate> = (fullMatch + preferredSearches).toMutableList()
                 for (symbol in symbols.reversed()) {
                         val index = regular.indexOfFirst { it.lexiconText == symbol.lexiconText }
                         if (index != -1) {
                                 regular.add(index = index + 1, element = symbol)
                         }
                 }
-                return (regular + shortcut + searches).distinct()
+                return (regular + fullShortcut + searches).distinct()
         }
         private fun search(text: String, segmentation: Segmentation, db: DatabaseHelper, limit: Int? = null): List<Candidate> {
                 val textLength = text.length
@@ -287,10 +288,12 @@ object Engine {
                         for (scheme in perfectSchemes) {
                                 for (number in scheme.indices) {
                                         val slice = scheme.dropLast(number)
-                                        val pingText = slice.joinToString(separator = PresetString.EMPTY) { it.origin }
-                                        val inputText = slice.joinToString(separator = PresetString.EMPTY) { it.text }
-                                        val text2mark = slice.joinToString(separator = PresetString.SPACE) { it.text }
-                                        val matched = db.match(text = pingText, input = inputText, mark = text2mark, limit = limit)
+                                        val shortcutCode = slice.mapNotNull { it.text.firstOrNull() }.shortcutCode()
+                                        if (shortcutCode == null) continue
+                                        val pingCode = slice.map { it.origin }.joinToString(separator = PresetString.EMPTY).hashCode()
+                                        val input = slice.joinToString(separator = PresetString.EMPTY) { it.text }
+                                        val mark = slice.joinToString(separator = PresetString.SPACE) { it.text }
+                                        val matched = db.strictMatch(shortcut = shortcutCode, ping = pingCode, input = input, mark = mark, limit = limit)
                                         matches.add(matched)
                                 }
                         }
@@ -298,10 +301,12 @@ object Engine {
                 } else {
                         val matches: MutableList<List<Candidate>> = mutableListOf()
                         for (scheme in segmentation) {
-                                val pingText = scheme.joinToString(separator = PresetString.EMPTY) { it.origin }
-                                val inputText = scheme.joinToString(separator = PresetString.EMPTY) { it.text }
-                                val text2mark = scheme.joinToString(separator = PresetString.SPACE) { it.text }
-                                val matched = db.match(text = pingText, input = inputText, mark = text2mark, limit = limit)
+                                val shortcutCode = scheme.mapNotNull { it.text.firstOrNull() }.shortcutCode()
+                                if (shortcutCode == null) continue
+                                val pingCode = scheme.map { it.origin }.joinToString(separator = PresetString.EMPTY).hashCode()
+                                val input = scheme.joinToString(separator = PresetString.EMPTY) { it.text }
+                                val mark = scheme.joinToString(separator = PresetString.SPACE) { it.text }
+                                val matched = db.strictMatch(shortcut = shortcutCode, ping = pingCode, input = input, mark = mark, limit = limit)
                                 matches.add(matched)
                         }
                         return ordered(textLength, matches.flatten())

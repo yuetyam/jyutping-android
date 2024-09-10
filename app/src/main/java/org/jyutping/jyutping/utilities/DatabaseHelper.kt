@@ -366,7 +366,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                         return false
                 }
         }
-        fun shortcut(text: String, limit: Int? = null): List<Candidate> {
+        fun shortcutMatch(text: String, limit: Int? = null): List<Candidate> {
                 val code = text.shortcutCharcode() ?: return emptyList()
                 val limitValue: Int = limit ?: 50
                 val candidates: MutableList<Candidate> = mutableListOf()
@@ -382,7 +382,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 cursor.close()
                 return candidates
         }
-        fun match(text: String, input: String, mark: String? = null, limit: Int? = null): List<Candidate> {
+        fun pingMatch(text: String, input: String, mark: String? = null, limit: Int? = null): List<Candidate> {
                 if (text.isBlank()) return emptyList()
                 val code: Int = text.hashCode()
                 val limitValue: Int = limit ?: -1
@@ -393,7 +393,23 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                         val order = cursor.getInt(0)
                         val word = cursor.getString(1)
                         val romanization = cursor.getString(2)
-                        val markText = mark ?: romanization.filter { it.isDigit().not() }
+                        val markText = mark ?: romanization.filterNot { it.isDigit() }
+                        val candidate = Candidate(text = word, romanization = romanization, input = input, mark = markText, order = order)
+                        candidates.add(candidate)
+                }
+                cursor.close()
+                return candidates
+        }
+        fun strictMatch(shortcut: Long, ping: Int, input: String, mark: String? = null, limit: Int? = null): List<Candidate> {
+                val candidates: MutableList<Candidate> = mutableListOf()
+                val limitValue: Int = limit ?: -1
+                val command = "SELECT rowid, word, romanization FROM lexicontable WHERE ping = $ping AND shortcut = $shortcut LIMIT ${limitValue};"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val order = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val romanization = cursor.getString(2)
+                        val markText = mark ?: romanization.filterNot { it.isDigit() }
                         val candidate = Candidate(text = word, romanization = romanization, input = input, mark = markText, order = order)
                         candidates.add(candidate)
                 }
