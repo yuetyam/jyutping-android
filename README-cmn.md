@@ -1,4 +1,4 @@
-README in [English](README-en.md) | [普通話(Mandarin)](README-cmn.md)
+README in [粵語(Cantonese)](README.md) | [English](README-en.md)
 
 粵拼輸入法
 ======
@@ -24,7 +24,7 @@ README in [English](README-en.md) | [普通話(Mandarin)](README-cmn.md)
 Android 粵語拼音輸入法。
 
 採用 [香港語言學學會粵語拼音方案](https://jyutping.org/jyutping) (粵拼 / Jyutping)，兼容各種習慣拼寫串法。  
-候選詞會標注對應嘅粵拼。  
+候選詞會標注對應的粵拼。  
 支持簡、繁體漢字及各種字形標準。  
 可以用倉頡、速成、筆畫、普通話拼音、拆字等反查粵語拼音。
 

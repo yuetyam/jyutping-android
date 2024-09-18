@@ -1,6 +1,6 @@
-README in [English](README-en.md) | [普通話(Mandarin)](README-cmn.md)
+README in [粵語(Cantonese)](README.md) | [普通話(Mandarin)](README-cmn.md)
 
-粵拼輸入法
+Jyutping
 ======
 
 <a href="https://t.me/jyutping">
@@ -21,27 +21,33 @@ README in [English](README-en.md) | [普通話(Mandarin)](README-cmn.md)
 <br>
 <br>
 
-Android 粵語拼音輸入法。
+Cantonese Keyboard for Android adopts the [LSHK Jyutping scheme](https://jyutping.org/jyutping) and supports common habitual spellings.
 
-採用 [香港語言學學會粵語拼音方案](https://jyutping.org/jyutping) (粵拼 / Jyutping)，兼容各種習慣拼寫串法。  
-候選詞會標注對應嘅粵拼。  
-支持簡、繁體漢字及各種字形標準。  
-可以用倉頡、速成、筆畫、普通話拼音、拆字等反查粵語拼音。
+Feature highlights:
+- Full support for Jyutping input.
+- Abbreviated input with Jyutping initials.
+- Accurate input with Jyutping tones.
+- Traditional / Simplified characters.
+- Reverse Lookup with Cangjie, Quick(Sucheng), Stroke or Mandarin Pinyin.
+- Jyutping hints for candidates.
+- Emoji suggestions.
+- Easy ways to Copy, Cut, Paste and moving cursor backward/forward.
+- Audio and Haptic feedbacks.
 
-另有 iOS、iPadOS 及 macOS 版: [yuetyam/jyutping](https://github.com/yuetyam/jyutping)
+Jyutping for iOS & macOS: [yuetyam/jyutping](https://github.com/yuetyam/jyutping)
 
-## 下載安裝（Download）
-請前往官網下載安裝: https://jyutping.app/android
+## Download
+https://jyutping.app/android
 
-## 擷屏（Screenshots）
+## Screenshots
 <img src="images/screenshot.png" alt="App Screenshot" width="300"/>
 
-## 鳴謝（Credits）
+## Credits
 - [Rime-Cantonese](https://github.com/rime/rime-cantonese) (Cantonese Lexicon)
 - [OpenCC](https://github.com/BYVoid/OpenCC) (Traditional-Simplified Character Conversion)
 - [JetBrains](https://www.jetbrains.com/) (Licenses for Open Source Development)
 
-## 多謝支持（Support this project）
+## Support this project
 <a href="https://ko-fi.com/zheung">
         <img src="images/buy-me-a-coffee.png" alt="Ko-fi, buy me a coffee" width="180"/>
 </a>
