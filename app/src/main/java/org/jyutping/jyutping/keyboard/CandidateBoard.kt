@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -89,6 +90,7 @@ fun CandidateBoard(height: Dp) {
         Box(
                 modifier = Modifier
                         .background(if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
+                        .systemBarsPadding()
                         .height(height)
                         .fillMaxWidth(),
                 contentAlignment = Alignment.TopEnd
@@ -141,7 +143,7 @@ fun CandidateBoard(height: Dp) {
                                 .width(collapseWidth)
                                 .height(collapseHeight)
                                 .background(
-                                        color = if (isDarkMode.value) PresetColor.keyDarkEmphaticOpacity else PresetColor.keyLightEmphatic,
+                                        color = if (isDarkMode.value) PresetColor.keyDarkEmphatic else PresetColor.keyLightEmphatic,
                                         shape = RoundedCornerShape(4.dp)
                                 )
                 ) {
