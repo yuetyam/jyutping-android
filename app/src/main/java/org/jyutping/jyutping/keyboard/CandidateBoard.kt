@@ -1,5 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
+import android.os.Build
 import android.view.HapticFeedbackConstants
 import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
@@ -40,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.presets.PresetColor
+import splitties.systemservices.windowManager
 
 private fun Candidate.width(): Dp = when (this.type) {
         CandidateType.Cantonese -> (this.text.length * 20 + 32).dp
@@ -52,10 +54,15 @@ private class CandidateRow(val identifier: Int, val candidates: List<Candidate>,
 fun CandidateBoard(height: Dp) {
         val collapseWidth: Dp = 44.dp
         val collapseHeight: Dp = 44.dp
-        val screenWidth = LocalConfiguration.current.screenWidthDp.dp
         val interactionSource = remember { MutableInteractionSource() }
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val screenWidth: Dp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                val windowMetrics = context.windowManager.currentWindowMetrics
+                (windowMetrics.bounds.width() / windowMetrics.density).dp
+        } else {
+                LocalConfiguration.current.screenWidthDp.dp
+        }
         val isDarkMode = remember { context.isDarkMode }
         val state = rememberLazyListState()
         LaunchedEffect(context.candidateState.intValue) {
