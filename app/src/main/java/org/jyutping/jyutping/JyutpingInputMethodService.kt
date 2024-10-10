@@ -75,6 +75,20 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 return view
         }
 
+        override fun onFinishInputView(finishingInput: Boolean) {
+                if (selectedCandidates.isNotEmpty()) {
+                        selectedCandidates.clear()
+                }
+                if (isBuffering.value) {
+                        currentInputConnection.commitText(bufferText, bufferText.length)
+                        bufferText = PresetString.EMPTY
+                }
+                if (candidates.value.isNotEmpty()) {
+                        candidates.value = emptyList()
+                }
+                super.onFinishInputView(finishingInput)
+        }
+
         override val viewModelStore: ViewModelStore
                 get() = store
         override val lifecycle: Lifecycle

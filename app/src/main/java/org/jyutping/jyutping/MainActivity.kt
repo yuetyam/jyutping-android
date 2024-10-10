@@ -24,8 +24,9 @@ import androidx.navigation.compose.rememberNavController
 import org.jyutping.jyutping.ui.theme.JyutpingTheme
 import org.jyutping.jyutping.utilities.DatabasePreparer
 
-@OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
+
+        @OptIn(ExperimentalMaterial3Api::class)
         override fun onCreate(savedInstanceState: Bundle?) {
                 super.onCreate(savedInstanceState)
                 enableEdgeToEdge()
