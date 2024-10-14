@@ -55,6 +55,10 @@
     <string name="keyboard_settings_character_standard_simplified">Simplified</string>
     <string name="keyboard_settings_globe_key_switch_title">Show Input Method Switch Key</string>
     <string name="keyboard_settings_show_lowercase_keys_switch_title">Show Lowercase Keys</string>
+    <string name="keyboard_settings_comment_style_header">Jyutping Display</string>
+    <string name="keyboard_settings_comment_style_above">Above Candidates</string>
+    <string name="keyboard_settings_comment_style_below">Below Candidates</string>
+    <string name="keyboard_settings_comment_style_none">None</string>
     <string name="keyboard_settings_emoji_switch_title">Emoji Suggestions</string>
     <string name="keyboard_settings_cangjie_variant_header">Cangjie / Quick(Sucheng) Reverse Lookup</string>
     <string name="keyboard_settings_cangjie_variant_cangjie5">Cangjie5 (倉頡五代)</string>

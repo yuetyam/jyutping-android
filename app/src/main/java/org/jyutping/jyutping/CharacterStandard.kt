@@ -1,35 +1,27 @@
 package org.jyutping.jyutping
 
-enum class CharacterStandard {
+enum class CharacterStandard(val identifier: Int) {
 
-        Traditional,
+        Traditional(1),
 
         /// Traditional, Hong Kong
-        HongKong,
+        HongKong(2),
 
         /// Traditional, Taiwan
-        Taiwan,
+        Taiwan(3),
 
-        Simplified;
+        Simplified(4);
 
         fun isSimplified(): Boolean = (this == Simplified)
         fun isNotSimplified(): Boolean = (this != Simplified)
 
-        fun identifier(): Int = when (this) {
-                Traditional -> 1
-                HongKong -> 2
-                Taiwan -> 3
-                Simplified -> 4
-        }
         companion object {
-                fun standardOf(value: Int): CharacterStandard {
-                        return when (value) {
-                                Traditional.identifier() -> Traditional
-                                HongKong.identifier() -> HongKong
-                                Taiwan.identifier() -> Taiwan
-                                Simplified.identifier() -> Simplified
-                                else -> Traditional
-                        }
+                fun standardOf(value: Int): CharacterStandard = when (value) {
+                        Traditional.identifier -> Traditional
+                        HongKong.identifier -> HongKong
+                        Taiwan.identifier -> Taiwan
+                        Simplified.identifier -> Simplified
+                        else -> Traditional
                 }
         }
 }

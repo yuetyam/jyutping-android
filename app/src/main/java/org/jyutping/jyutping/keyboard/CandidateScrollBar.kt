@@ -44,6 +44,22 @@ fun CandidateScrollBar() {
         val interactionSource = remember { MutableInteractionSource() }
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val commentStyle = remember { context.commentStyle }
+        val candidateViewTopInset: Dp = when (commentStyle.value) {
+                CommentStyle.AboveCandidates -> 0.dp
+                CommentStyle.BelowCandidates -> 4.dp
+                CommentStyle.NoComments -> 0.dp
+        }
+        val candidateViewBottomInset: Dp = when (commentStyle.value) {
+                CommentStyle.AboveCandidates -> 12.dp
+                CommentStyle.BelowCandidates -> 0.dp
+                CommentStyle.NoComments -> 16.dp
+        }
+        val candidateRowVerticalAlignment: Alignment.Vertical = when (commentStyle.value) {
+                CommentStyle.AboveCandidates -> Alignment.Bottom
+                CommentStyle.BelowCandidates -> Alignment.Top
+                CommentStyle.NoComments -> Alignment.Bottom
+        }
         val isDarkMode = remember { context.isDarkMode }
         val state = rememberLazyListState()
         LaunchedEffect(context.candidateState.intValue) {
@@ -56,11 +72,12 @@ fun CandidateScrollBar() {
                         modifier = Modifier.fillMaxSize(),
                         state = state,
                         horizontalArrangement = Arrangement.spacedBy(0.dp),
-                        verticalAlignment = Alignment.Bottom
+                        verticalAlignment = candidateRowVerticalAlignment
                 ) {
                         items(context.candidates.value) {
                                 CandidateView(
                                         candidate = it,
+                                        commentStyle = commentStyle.value,
                                         isDarkMode = isDarkMode.value,
                                         modifier = Modifier
                                                 .clickable(interactionSource = interactionSource, indication = null) {
@@ -69,7 +86,8 @@ fun CandidateScrollBar() {
                                                         context.select(it)
                                                 }
                                                 .padding(horizontal = if (it.type.isCantonese()) 6.dp else 10.dp)
-                                                .padding(bottom = 12.dp)
+                                                .padding(vertical = if (it.type.isCantonese()) 0.dp else 4.dp)
+                                                .padding(top = candidateViewTopInset, bottom = candidateViewBottomInset)
                                 )
                         }
                 }

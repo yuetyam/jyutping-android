@@ -26,6 +26,7 @@ import org.jyutping.jyutping.extensions.toneConverted
 import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.Cangjie
 import org.jyutping.jyutping.keyboard.CangjieVariant
+import org.jyutping.jyutping.keyboard.CommentStyle
 import org.jyutping.jyutping.keyboard.Engine
 import org.jyutping.jyutping.keyboard.InputMethodMode
 import org.jyutping.jyutping.keyboard.KeyboardCase
@@ -210,7 +211,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
 
         val characterStandard: MutableState<CharacterStandard> by lazy {
-                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CharacterStandard, CharacterStandard.Traditional.identifier())
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CharacterStandard, CharacterStandard.Traditional.identifier)
                 val standard: CharacterStandard = CharacterStandard.standardOf(savedValue)
                 mutableStateOf(standard)
         }
@@ -219,7 +220,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 updateSpaceKeyForm()
                 updateReturnKeyForm()
                 val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.CharacterStandard, standard.identifier())
+                editor.putInt(UserSettingsKey.CharacterStandard, standard.identifier)
                 editor.apply()
         }
         val needsInputModeSwitchKey: MutableState<Boolean> by lazy {
@@ -258,15 +259,26 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.Emoji, value2save)
                 editor.apply()
         }
+        val commentStyle: MutableState<CommentStyle> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CommentStyle, CommentStyle.AboveCandidates.identifier)
+                val style: CommentStyle = CommentStyle.styleOf(savedValue)
+                mutableStateOf(style)
+        }
+        fun updateCommentStyle(style: CommentStyle) {
+                commentStyle.value = style
+                val editor = sharedPreferences.edit()
+                editor.putInt(UserSettingsKey.CommentStyle, style.identifier)
+                editor.apply()
+        }
         val cangjieVariant: MutableState<CangjieVariant> by lazy {
-                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CangjieVariant, CangjieVariant.Cangjie5.identifier())
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CangjieVariant, CangjieVariant.Cangjie5.identifier)
                 val variant: CangjieVariant = CangjieVariant.variantOf(savedValue)
                 mutableStateOf(variant)
         }
         fun updateCangjieVariant(variant: CangjieVariant) {
                 cangjieVariant.value = variant
                 val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.CangjieVariant, variant.identifier())
+                editor.putInt(UserSettingsKey.CangjieVariant, variant.identifier)
                 editor.apply()
         }
         val isInputMemoryOn: MutableState<Boolean> by lazy {

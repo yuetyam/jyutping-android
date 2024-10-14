@@ -52,6 +52,7 @@ fun SettingsScreen(height: Dp) {
         val characterStandard = remember { context.characterStandard }
         val needsInputModeSwitchKey = remember { context.needsInputModeSwitchKey }
         val showLowercaseKeys = remember { context.showLowercaseKeys }
+        val commentStyle = remember { context.commentStyle }
         val isEmojiSuggestionsOn = remember { context.isEmojiSuggestionsOn }
         val cangjieVariant = remember { context.cangjieVariant }
         val isInputMemoryOn = remember { context.isInputMemoryOn }
@@ -240,6 +241,79 @@ fun SettingsScreen(height: Dp) {
                                                                 context.updateShowLowercaseKeys(it)
                                                         }
                                                 )
+                                        }
+                                }
+                        }
+                        item {
+                                Column(
+                                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                                ) {
+                                        Text(
+                                                text = stringResource(id = R.string.keyboard_settings_comment_style_header),
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                color = tintColor
+                                        )
+                                        Column(
+                                                modifier = Modifier
+                                                        .background(color = backColor, shape = RoundedCornerShape(8.dp))
+                                                        .fillMaxWidth()
+                                        ) {
+                                                Button(
+                                                        onClick = {
+                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateCommentStyle(CommentStyle.AboveCandidates)
+                                                        },
+                                                        shape = RectangleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(text = stringResource(id = R.string.keyboard_settings_comment_style_above))
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (commentStyle.value.isAbove()) 1f else 0f)
+                                                        )
+                                                }
+                                                ResponsiveDivider(isDarkMode.value)
+                                                Button(
+                                                        onClick = {
+                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateCommentStyle(CommentStyle.BelowCandidates)
+                                                        },
+                                                        shape = RectangleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(text = stringResource(id = R.string.keyboard_settings_comment_style_below))
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (commentStyle.value.isBelow()) 1f else 0f)
+                                                        )
+                                                }
+                                                ResponsiveDivider(isDarkMode.value)
+                                                Button(
+                                                        onClick = {
+                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateCommentStyle(CommentStyle.NoComments)
+                                                        },
+                                                        shape = RectangleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(text = stringResource(id = R.string.keyboard_settings_comment_style_none))
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (commentStyle.value.isNone()) 1f else 0f)
+                                                        )
+                                                }
                                         }
                                 }
                         }

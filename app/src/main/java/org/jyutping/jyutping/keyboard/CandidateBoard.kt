@@ -43,9 +43,10 @@ import org.jyutping.jyutping.R
 import org.jyutping.jyutping.presets.PresetColor
 import splitties.systemservices.windowManager
 
-private fun Candidate.width(): Dp = when (this.type) {
-        CandidateType.Cantonese -> (this.text.length * 20 + 32).dp
-        else -> if (this.text.length < 2) 60.dp else (this.text.length * 16).dp
+private fun Candidate.width(): Dp = when {
+        this.type.isCantonese() -> (this.text.length * 20 + 32).dp
+        (this.text.length == 1) -> 64.dp
+        else -> (this.text.length * 18).dp
 }
 
 private class CandidateRow(val identifier: Int, val candidates: List<Candidate>, val width: Dp = candidates.map { it.width() }.fold(0.dp) { acc, w -> acc + w })
@@ -57,13 +58,15 @@ fun CandidateBoard(height: Dp) {
         val interactionSource = remember { MutableInteractionSource() }
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val commentStyle = remember { context.commentStyle }
+        val rowVerticalAlignment: Alignment.Vertical = if (commentStyle.value.isBelow()) Alignment.Top else Alignment.Bottom
+        val isDarkMode = remember { context.isDarkMode }
         val screenWidth: Dp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 val windowMetrics = context.windowManager.currentWindowMetrics
                 (windowMetrics.bounds.width() / windowMetrics.density).dp
         } else {
                 LocalConfiguration.current.screenWidthDp.dp
         }
-        val isDarkMode = remember { context.isDarkMode }
         val state = rememberLazyListState()
         LaunchedEffect(context.candidateState.intValue) {
                 state.scrollToItem(index = 0, scrollOffset = 0)
@@ -114,11 +117,12 @@ fun CandidateBoard(height: Dp) {
                                                 .defaultMinSize(minHeight = collapseHeight)
                                                 .fillMaxWidth(),
                                         horizontalArrangement = Arrangement.spacedBy(0.dp),
-                                        verticalAlignment = Alignment.Bottom
+                                        verticalAlignment = rowVerticalAlignment
                                 ) {
                                         row.candidates.map {
                                                 CandidateView(
                                                         candidate = it,
+                                                        commentStyle = commentStyle.value,
                                                         isDarkMode = isDarkMode.value,
                                                         modifier = Modifier
                                                                 .clickable(interactionSource = interactionSource, indication = null) {

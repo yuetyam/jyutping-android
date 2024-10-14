@@ -90,7 +90,7 @@ fun ExpressionsScreen() {
                                 heading = "區分「咁」以及「噉」",
                                 lines = listOf(
                                         "咁 gam3，音同「禁」。",
-                                        "噉 gam2，音同「錦」。",
+                                        "噉 gam2，音同「感」。",
                                         "例：我生得咁靚仔。",
                                         "例：噉又未必。"
                                 )
