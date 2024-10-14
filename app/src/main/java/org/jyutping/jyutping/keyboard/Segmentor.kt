@@ -103,10 +103,10 @@ object Segmentor {
         private val mama: Segmentation = listOf(listOf(SegmentToken(text = "ma", origin = "maa"), SegmentToken(text = "ma", origin = "maa")))
         private val mami: Segmentation = listOf(listOf(SegmentToken(text = "ma", origin = "maa"), SegmentToken(text = "mi", origin = "mi")))
 
-        private const val maxCachedCount: Int = 5000
+        private const val MAX_CACHE_COUNT: Int = 1000
         private val cachedSegmentations: HashMap<Int, Segmentation> = hashMapOf()
         private fun cache(key: Int, segmentation: Segmentation) {
-                if (cachedSegmentations.size > maxCachedCount) {
+                if (cachedSegmentations.size > MAX_CACHE_COUNT) {
                         cachedSegmentations.clear()
                 }
                 cachedSegmentations[key] = segmentation

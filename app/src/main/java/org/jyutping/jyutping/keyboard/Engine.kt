@@ -288,12 +288,15 @@ object Engine {
                         for (scheme in perfectSchemes) {
                                 for (number in scheme.indices) {
                                         val slice = scheme.dropLast(number)
+                                        val cached = cachedMatches[slice]
+                                        if (cached != null) { matches.add(cached); continue }
                                         val shortcutCode = slice.mapNotNull { it.text.firstOrNull() }.shortcutCode()
                                         if (shortcutCode == null) continue
                                         val pingCode = slice.map { it.origin }.joinToString(separator = PresetString.EMPTY).hashCode()
                                         val input = slice.joinToString(separator = PresetString.EMPTY) { it.text }
                                         val mark = slice.joinToString(separator = PresetString.SPACE) { it.text }
                                         val matched = db.strictMatch(shortcut = shortcutCode, ping = pingCode, input = input, mark = mark, limit = limit)
+                                        if (limit == null) { cache(slice, matched) }
                                         matches.add(matched)
                                 }
                         }
@@ -301,16 +304,27 @@ object Engine {
                 } else {
                         val matches: MutableList<List<Candidate>> = mutableListOf()
                         for (scheme in segmentation) {
+                                val cached = cachedMatches[scheme]
+                                if (cached != null) { matches.add(cached); continue }
                                 val shortcutCode = scheme.mapNotNull { it.text.firstOrNull() }.shortcutCode()
                                 if (shortcutCode == null) continue
                                 val pingCode = scheme.map { it.origin }.joinToString(separator = PresetString.EMPTY).hashCode()
                                 val input = scheme.joinToString(separator = PresetString.EMPTY) { it.text }
                                 val mark = scheme.joinToString(separator = PresetString.SPACE) { it.text }
                                 val matched = db.strictMatch(shortcut = shortcutCode, ping = pingCode, input = input, mark = mark, limit = limit)
+                                if (limit == null) { cache(scheme, matched) }
                                 matches.add(matched)
                         }
                         return ordered(textLength, matches.flatten())
                 }
+        }
+        private const val MAX_CACHE_COUNT: Int = 1000
+        private val cachedMatches: HashMap<SegmentScheme, List<Candidate>> = hashMapOf()
+        private fun cache(scheme: SegmentScheme, candidates: List<Candidate>) {
+                if (cachedMatches.size > MAX_CACHE_COUNT) {
+                        cachedMatches.clear()
+                }
+                cachedMatches[scheme] = candidates
         }
         private fun preferred(text: String, candidates: List<Candidate>): List<Candidate> {
                 val sorted = candidates.sortedWith(compareBy({-it.input.length}, {-it.text.length}))
