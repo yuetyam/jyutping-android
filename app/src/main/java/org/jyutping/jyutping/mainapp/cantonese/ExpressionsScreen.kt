@@ -17,13 +17,13 @@ import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -164,7 +164,7 @@ private fun DifferentView(heading: String, lines: List<String>) {
                         Text(
                                 text = heading,
                                 color = colorScheme.onBackground,
-                                fontWeight = FontWeight.SemiBold
+                                style = MaterialTheme.typography.titleMedium
                         )
                         lines.map { Text(text = it, color = colorScheme.onBackground) }
                 }
@@ -193,7 +193,7 @@ private fun Expression(heading: String, labels: List<LabelEntry>) {
                         Text(
                                 text = heading,
                                 color = colorScheme.onBackground,
-                                fontWeight = FontWeight.SemiBold
+                                style = MaterialTheme.typography.titleMedium
                         )
                 }
                 labels.map {
