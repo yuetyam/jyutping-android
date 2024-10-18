@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -69,7 +70,7 @@ fun EditingPanelReturnKey(modifier: Modifier) {
                                 tint = if (isDarkMode.value) Color.White else Color.Black
                         )
                         Text(
-                                text = "Return",
+                                text = stringResource(id = R.string.editing_panel_key_return),
                                 color = if (isDarkMode.value) Color.White else Color.Black,
                                 fontSize = 11.sp,
                         )

@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ClearAll
+import androidx.compose.material.icons.outlined.ContentPasteOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,9 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.R
 import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
@@ -62,13 +64,13 @@ fun EditingPanelClearClipboardKey(modifier: Modifier) {
                         horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                         Icon(
-                                imageVector = Icons.Outlined.ClearAll,
+                                imageVector = Icons.Outlined.ContentPasteOff,
                                 contentDescription = null,
                                 modifier = Modifier.size(22.dp),
                                 tint = if (isDarkMode.value) Color.White else Color.Black
                         )
                         Text(
-                                text = "Clear System Clipboard",
+                                text = stringResource(id = R.string.editing_panel_key_clear_clipboard),
                                 color = if (isDarkMode.value) Color.White else Color.Black,
                                 fontSize = 10.sp,
                         )

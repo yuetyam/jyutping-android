@@ -25,9 +25,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.R
 import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
@@ -70,7 +72,7 @@ fun EditingPanelPasteKey(modifier: Modifier) {
                                 tint = if (isDarkMode.value) Color.White else Color.Black
                         )
                         Text(
-                                text = "Paste",
+                                text = stringResource(id = R.string.editing_panel_key_paste),
                                 modifier = Modifier.alpha(if (isClipboardEmpty.value) 0.5f else 1f),
                                 color = if (isDarkMode.value) Color.White else Color.Black,
                                 fontSize = 11.sp,

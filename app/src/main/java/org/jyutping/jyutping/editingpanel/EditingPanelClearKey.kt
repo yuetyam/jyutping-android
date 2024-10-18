@@ -24,9 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.R
 import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
@@ -68,7 +70,7 @@ fun EditingPanelClearKey(modifier: Modifier) {
                                 tint = if (isDarkMode.value) Color.White else Color.Black
                         )
                         Text(
-                                text = "Clear",
+                                text = stringResource(id = R.string.editing_panel_key_clear),
                                 color = if (isDarkMode.value) Color.White else Color.Black,
                                 fontSize = 11.sp,
                         )

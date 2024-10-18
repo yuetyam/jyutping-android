@@ -18,9 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.R
 import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
@@ -55,7 +57,7 @@ fun EditingPanelSpaceKey(modifier: Modifier) {
                         contentAlignment = Alignment.Center
                 ) {
                         Text(
-                                text = "space",
+                                text = stringResource(id = R.string.editing_panel_key_space),
                                 color = if (isDarkMode.value) Color.White else Color.Black,
                                 fontSize = 13.sp,
                         )
