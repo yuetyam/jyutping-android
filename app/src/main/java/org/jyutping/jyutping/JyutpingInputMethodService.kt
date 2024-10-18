@@ -1,9 +1,14 @@
 package org.jyutping.jyutping
 
+import android.content.ClipData
+import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.res.Configuration
+import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.ExtractedTextRequest
 import android.view.inputmethod.InputMethodManager
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
@@ -19,6 +24,8 @@ import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import org.jyutping.jyutping.extensions.convertedS2T
+import org.jyutping.jyutping.extensions.convertedT2S
 import org.jyutping.jyutping.extensions.formattedForMark
 import org.jyutping.jyutping.extensions.isReverseLookupTrigger
 import org.jyutping.jyutping.extensions.isSeparatorOrTone
@@ -174,7 +181,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun transformTo(destination: KeyboardForm) {
                 if (isBuffering.value) {
                         val shouldKeepBuffer: Boolean = (keyboardForm.value == KeyboardForm.Alphabetic) || (keyboardForm.value == KeyboardForm.CandidateBoard)
-                        if (!shouldKeepBuffer) {
+                        if (shouldKeepBuffer.not()) {
                                 bufferText = PresetString.EMPTY
                         }
                 }
@@ -508,11 +515,22 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         if (hasTextBeforeCursor) {
                                 currentInputConnection.deleteSurroundingTextInCodePoints(1, 0)
                         }
-                        return
+                } else {
+                        // Delete the selected text
+                        currentInputConnection.commitText(PresetString.EMPTY, PresetString.EMPTY.length)
                 }
-
-                // Delete the selected text
-                currentInputConnection.commitText(PresetString.EMPTY, PresetString.EMPTY.length)
+        }
+        fun forwardDelete() {
+                val noSelectedText: Boolean = currentInputConnection.getSelectedText(0).isNullOrEmpty()
+                if (noSelectedText) {
+                        val hasTextAfterCursor: Boolean = currentInputConnection.getTextAfterCursor(1, 0).isNullOrEmpty().not()
+                        if (hasTextAfterCursor) {
+                                currentInputConnection.deleteSurroundingTextInCodePoints(0, 1)
+                        }
+                } else {
+                        // Delete the selected text
+                        currentInputConnection.commitText(PresetString.EMPTY, PresetString.EMPTY.length)
+                }
         }
         fun performReturn() {
                 if (isBuffering.value) {
@@ -586,6 +604,92 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 InputMethodMode.ABC -> "."
                         }
                         currentInputConnection.commitText(text, text.length)
+                }
+        }
+
+        // region EditingPanel
+        val isClipboardEmpty: MutableState<Boolean> by lazy {
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                if (clipboard.hasPrimaryClip().not()) mutableStateOf(true)
+                val hasText: Boolean = clipboard.primaryClipDescription?.hasMimeType(MIMETYPE_TEXT_PLAIN) == true
+                mutableStateOf(hasText.not())
+        }
+        fun paste() {
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                if (clipboard.hasPrimaryClip()) {
+                        clipboard.primaryClip?.getItemAt(0)?.text?.let {
+                                if (it.isNotEmpty()) {
+                                        currentInputConnection.commitText(it, it.length)
+                                }
+                        }
+                }
+        }
+        fun clearClipboard() {
+                (getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).clearPrimaryClip()
+                isClipboardEmpty.value = true
+        }
+        fun copyAllText() {
+                val request = ExtractedTextRequest()
+                val extractedText = currentInputConnection.getExtractedText(request, 0)
+                extractedText?.text?.let {
+                        if (it.isEmpty()) return
+                        val clip = ClipData.newPlainText(it, it)
+                        (getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(clip)
+                        isClipboardEmpty.value = false
+                }
+        }
+        fun cutAllText() {
+                copyAllText()
+                currentInputConnection.deleteSurroundingTextInCodePoints(1000, 1000)
+        }
+        fun clearAllText() {
+                currentInputConnection.deleteSurroundingTextInCodePoints(1000, 0)
+        }
+        fun convertAllText() {
+                val request = ExtractedTextRequest()
+                val extractedText = currentInputConnection.getExtractedText(request, 0)
+                val text = extractedText?.text?.toString()
+                text?.let {
+                        if (it.isEmpty()) return
+                        val textLength = it.length
+                        currentInputConnection.deleteSurroundingTextInCodePoints(textLength, textLength)
+                        val simplified: String = it.convertedT2S()
+                        val converted: String = if (simplified == it) it.convertedS2T() else simplified
+                        currentInputConnection.commitText(converted, converted.length)
+                }
+        }
+        fun moveBackward() {
+                val keyDownEvent = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT)
+                currentInputConnection.sendKeyEvent(keyDownEvent)
+                val keyUpEvent = KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT)
+                currentInputConnection.sendKeyEvent(keyUpEvent)
+        }
+        fun moveForward() {
+                val keyDownEvent = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT)
+                currentInputConnection.sendKeyEvent(keyDownEvent)
+                val keyUpEvent = KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT)
+                currentInputConnection.sendKeyEvent(keyUpEvent)
+        }
+        fun moveUpward() {
+                val keyDownEvent = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP)
+                currentInputConnection.sendKeyEvent(keyDownEvent)
+                val keyUpEvent = KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP)
+                currentInputConnection.sendKeyEvent(keyUpEvent)
+        }
+        fun moveDownward() {
+                val keyDownEvent = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN)
+                currentInputConnection.sendKeyEvent(keyDownEvent)
+                val keyUpEvent = KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN)
+                currentInputConnection.sendKeyEvent(keyUpEvent)
+        }
+        fun jump2head() {
+                currentInputConnection.setSelection(0, 0)
+        }
+        fun jump2tail() {
+                val request = ExtractedTextRequest()
+                val extractedText = currentInputConnection.getExtractedText(request, 0)
+                extractedText?.text?.length?.let {
+                        currentInputConnection.setSelection(it, it)
                 }
         }
 }

@@ -14,7 +14,7 @@ import org.jyutping.jyutping.keyboard.CandidateBoard
 import org.jyutping.jyutping.keyboard.CangjieKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseNumericKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseSymbolicKeyboard
-import org.jyutping.jyutping.keyboard.EditingPanel
+import org.jyutping.jyutping.editingpanel.EditingPanel
 import org.jyutping.jyutping.keyboard.EmojiBoard
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.NumericKeyboard
