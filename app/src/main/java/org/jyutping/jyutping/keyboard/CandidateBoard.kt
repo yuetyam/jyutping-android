@@ -72,7 +72,7 @@ fun CandidateBoard(height: Dp) {
                 state.scrollToItem(index = 0, scrollOffset = 0)
         }
         val minRowIdentifier: Int = 1000
-        val candidateRows: List<CandidateRow> = run {
+        val candidateRows: List<CandidateRow> by lazy {
                 val rows: MutableList<CandidateRow> = mutableListOf()
                 var cache: MutableList<Candidate> = mutableListOf()
                 var rowID: Int = minRowIdentifier
@@ -128,7 +128,7 @@ fun CandidateBoard(height: Dp) {
                                                                 .clickable(interactionSource = interactionSource, indication = null) {
                                                                         view.playSoundEffect(SoundEffectConstants.CLICK)
                                                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                        context.select(it)
+                                                                        context.selectCandidate(it)
                                                                 }
                                                                 .padding(2.dp)
                                                                 .weight(it.width() / row.width)

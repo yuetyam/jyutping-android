@@ -478,7 +478,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 currentInputConnection.commitText(text, text.length)
                 adjustKeyboardCase()
         }
-        fun select(candidate: Candidate) {
+        fun selectCandidate(candidate: Candidate? = null, index: Int = 0) {
+                val candidate: Candidate = candidate ?: candidates.value.getOrNull(index) ?: return
                 currentInputConnection.commitText(candidate.text, candidate.text.length)
                 selectedCandidates.add(candidate)
                 val firstChar = bufferText.firstOrNull()
@@ -570,12 +571,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun space() {
                 if (isBuffering.value) {
-                        val firstCandidate = candidates.value.firstOrNull()
-                        if (firstCandidate == null) {
+                        if (candidates.value.isNotEmpty()) {
+                                selectCandidate()
+                        } else {
                                 currentInputConnection.commitText(bufferText, bufferText.length)
                                 bufferText = PresetString.EMPTY
-                        } else {
-                                select(firstCandidate)
                         }
                 } else {
                         currentInputConnection.commitText(PresetString.SPACE, PresetString.SPACE.length)

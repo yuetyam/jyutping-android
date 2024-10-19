@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -74,19 +74,19 @@ fun CandidateScrollBar() {
                         horizontalArrangement = Arrangement.spacedBy(0.dp),
                         verticalAlignment = candidateRowVerticalAlignment
                 ) {
-                        items(context.candidates.value) {
+                        itemsIndexed(context.candidates.value) { index, candidate ->
                                 CandidateView(
-                                        candidate = it,
+                                        candidate = candidate,
                                         commentStyle = commentStyle.value,
                                         isDarkMode = isDarkMode.value,
                                         modifier = Modifier
                                                 .clickable(interactionSource = interactionSource, indication = null) {
                                                         view.playSoundEffect(SoundEffectConstants.CLICK)
                                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                        context.select(it)
+                                                        context.selectCandidate(index = index)
                                                 }
-                                                .padding(horizontal = if (it.type.isCantonese()) 6.dp else 10.dp)
-                                                .padding(vertical = if (it.type.isCantonese()) 0.dp else 4.dp)
+                                                .padding(horizontal = if (candidate.type.isCantonese()) 6.dp else 10.dp)
+                                                .padding(vertical = if (candidate.type.isCantonese()) 0.dp else 4.dp)
                                                 .padding(top = candidateViewTopInset, bottom = candidateViewBottomInset)
                                 )
                         }
