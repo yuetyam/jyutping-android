@@ -1,6 +1,5 @@
 package org.jyutping.jyutping.keyboard
 
-import android.annotation.SuppressLint
 import android.view.HapticFeedbackConstants
 import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
@@ -18,22 +17,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.presets.PresetColor
 
-@SuppressLint("ReturnFromAwaitPointerEventScope")
 @Composable
 fun ShiftKey(modifier: Modifier) {
         val view = LocalView.current
@@ -45,46 +39,27 @@ fun ShiftKey(modifier: Modifier) {
                 KeyboardCase.Uppercased -> R.drawable.key_shifting
                 KeyboardCase.CapsLocked -> R.drawable.key_capslock
         }
-        var isPressed by remember { mutableStateOf(false) }
+        var isPressing by remember { mutableStateOf(false) }
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
-                                coroutineScope {
-                                        launch {
-                                                awaitPointerEventScope {
-                                                        while (true) {
-                                                                val event = awaitPointerEvent()
-                                                                when (event.type) {
-                                                                        PointerEventType.Press -> {
-                                                                                if (isPressed.not()) {
-                                                                                        isPressed = true
-                                                                                }
-                                                                        }
-
-                                                                        PointerEventType.Release -> {
-                                                                                if (isPressed) {
-                                                                                        isPressed = false
-                                                                                }
-                                                                        }
-                                                                }
-                                                        }
-                                                }
+                                detectTapGestures(
+                                        onDoubleTap = {
+                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                                context.doubleShift()
+                                        },
+                                        onPress = {
+                                                isPressing = true
+                                                tryAwaitRelease()
+                                                isPressing = false
+                                        },
+                                        onTap = {
+                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                                context.shift()
                                         }
-                                        launch {
-                                                detectTapGestures(
-                                                        onDoubleTap = {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                                                context.doubleShift()
-                                                        },
-                                                        onTap = {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                                                context.shift()
-                                                        }
-                                                )
-                                        }
-                                }
+                                )
                         }
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -92,13 +67,13 @@ fun ShiftKey(modifier: Modifier) {
                 Box (
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
-                                .clip(RoundedCornerShape(6.dp))
                                 .background(
-                                        if (isDarkMode.value) {
-                                                if (isPressed) PresetColor.keyDark else PresetColor.keyDarkEmphatic
+                                        color = if (isDarkMode.value) {
+                                                if (isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
                                         } else {
-                                                if (isPressed) PresetColor.keyLight else PresetColor.keyLightEmphatic
-                                        }
+                                                if (isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
+                                        },
+                                        shape = RoundedCornerShape(6.dp)
                                 )
                                 .fillMaxSize(),
                         contentAlignment = Alignment.Center
