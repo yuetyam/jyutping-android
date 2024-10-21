@@ -23,6 +23,12 @@ fun IntroductionsScreen() {
                                         content = stringResource(id = R.string.introductions_content_clear_buffer)
                                 )
                         }
+                        item {
+                                TextCard(
+                                        heading = stringResource(id = R.string.introductions_heading_position_insertion_point),
+                                        content = stringResource(id = R.string.introductions_content_position_insertion_point)
+                                )
+                        }
                 }
         }
 }

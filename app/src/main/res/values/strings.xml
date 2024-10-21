@@ -25,6 +25,8 @@
     <string name="screen_title_introductions">Introductions</string>
     <string name="introductions_heading_clear_buffer">Clear current pre-edit text</string>
     <string name="introductions_content_clear_buffer">Swipe from right to left on the Delete key will clear current pre-edit syllables.</string>
+    <string name="introductions_heading_position_insertion_point">Moving the insertion point</string>
+    <string name="introductions_content_position_insertion_point">Touch and hold the Space bar until the keyboard triggers sound and haptic feedback; then, slide your finger left or right.</string>
     <string name="jyutping_label_initials">Jyutping Initials</string>
     <string name="jyutping_label_finals">Jyutping Finals</string>
     <string name="jyutping_label_tones">Jyutping Tones</string>
