@@ -23,7 +23,6 @@ import org.jyutping.jyutping.presets.PresetConstant
 fun NumericKeyboard(keyHeight: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode = remember { context.isDarkMode }
-        val needsInputModeSwitchKey = remember { context.needsInputModeSwitchKey }
         Column(
                 modifier = Modifier
                         .background(if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
@@ -87,20 +86,6 @@ fun NumericKeyboard(keyHeight: Dp) {
                         Spacer(modifier = Modifier.weight(0.22f))
                         BackspaceKey(modifier = Modifier.weight(1.3f))
                 }
-                Row(
-                        modifier = Modifier
-                                .height(keyHeight)
-                                .fillMaxWidth()
-                ) {
-                        TransformKey(destination = KeyboardForm.Alphabetic, modifier = Modifier.weight(2f))
-                        if (needsInputModeSwitchKey.value) {
-                                GlobeKey(modifier = Modifier.weight(1f))
-                        } else {
-                                LeftKey(modifier = Modifier.weight(1f))
-                        }
-                        SpaceKey(modifier = Modifier.weight(4f))
-                        RightKey(modifier = Modifier.weight(1f))
-                        ReturnKey(modifier = Modifier.weight(2f))
-                }
+                BottomKeyRow(transform = KeyboardForm.Alphabetic, height = keyHeight)
         }
 }

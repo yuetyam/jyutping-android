@@ -50,8 +50,10 @@ fun SettingsScreen(height: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode = remember { context.isDarkMode }
         val characterStandard = remember { context.characterStandard }
-        val needsInputModeSwitchKey = remember { context.needsInputModeSwitchKey }
         val showLowercaseKeys = remember { context.showLowercaseKeys }
+        val needsInputModeSwitchKey = remember { context.needsInputModeSwitchKey }
+        val needsLeftKey = remember { context.needsLeftKey }
+        val needsRightKey = remember { context.needsRightKey }
         val commentStyle = remember { context.commentStyle }
         val isEmojiSuggestionsOn = remember { context.isEmojiSuggestionsOn }
         val cangjieVariant = remember { context.cangjieVariant }
@@ -212,6 +214,24 @@ fun SettingsScreen(height: Dp) {
                                                 verticalAlignment = Alignment.CenterVertically
                                         ) {
                                                 Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_show_lowercase_keys_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = showLowercaseKeys.value,
+                                                        onCheckedChange = {
+                                                                showLowercaseKeys.value = it
+                                                                context.updateShowLowercaseKeys(it)
+                                                        }
+                                                )
+                                        }
+                                        ResponsiveDivider(isDarkMode.value)
+                                        Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Text(
                                                         text = stringResource(id = R.string.keyboard_settings_globe_key_switch_title),
                                                         color = tintColor
                                                 )
@@ -230,15 +250,33 @@ fun SettingsScreen(height: Dp) {
                                                 verticalAlignment = Alignment.CenterVertically
                                         ) {
                                                 Text(
-                                                        text = stringResource(id = R.string.keyboard_settings_show_lowercase_keys_switch_title),
+                                                        text = stringResource(id = R.string.keyboard_settings_left_key_switch_title),
                                                         color = tintColor
                                                 )
                                                 Spacer(modifier = Modifier.weight(1f))
                                                 Switch(
-                                                        checked = showLowercaseKeys.value,
+                                                        checked = needsLeftKey.value,
                                                         onCheckedChange = {
-                                                                showLowercaseKeys.value = it
-                                                                context.updateShowLowercaseKeys(it)
+                                                                needsLeftKey.value = it
+                                                                context.updateNeedsLeftKey(it)
+                                                        }
+                                                )
+                                        }
+                                        ResponsiveDivider(isDarkMode.value)
+                                        Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_right_key_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = needsRightKey.value,
+                                                        onCheckedChange = {
+                                                                needsRightKey.value = it
+                                                                context.updateNeedsRightKey(it)
                                                         }
                                                 )
                                         }

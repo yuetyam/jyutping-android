@@ -230,6 +230,18 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.CharacterStandard, standard.identifier)
                 editor.apply()
         }
+        val showLowercaseKeys: MutableState<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.KeyCase, 1)
+                val isLowercase: Boolean = (savedValue == 1)
+                mutableStateOf(isLowercase)
+        }
+        fun updateShowLowercaseKeys(isOn: Boolean) {
+                showLowercaseKeys.value = isOn
+                val value2save: Int = if (isOn) 1 else 2
+                val editor = sharedPreferences.edit()
+                editor.putInt(UserSettingsKey.KeyCase, value2save)
+                editor.apply()
+        }
         val needsInputModeSwitchKey: MutableState<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.GlobeKey, 0)
                 val needs: Boolean = (savedValue == 1)
@@ -242,16 +254,28 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.GlobeKey, value2save)
                 editor.apply()
         }
-        val showLowercaseKeys: MutableState<Boolean> by lazy {
-                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.KeyCase, 1)
-                val isLowercase: Boolean = (savedValue == 1)
-                mutableStateOf(isLowercase)
+        val needsLeftKey: MutableState<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.LeftKey, 1)
+                val needs: Boolean = (savedValue == 1)
+                mutableStateOf(needs)
         }
-        fun updateShowLowercaseKeys(isOn: Boolean) {
-                showLowercaseKeys.value = isOn
-                val value2save: Int = if (isOn) 1 else 2
+        fun updateNeedsLeftKey(needs: Boolean) {
+                needsLeftKey.value = needs
+                val value2save: Int = if (needs) 1 else 2
                 val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.KeyCase, value2save)
+                editor.putInt(UserSettingsKey.LeftKey, value2save)
+                editor.apply()
+        }
+        val needsRightKey: MutableState<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.RightKey, 1)
+                val needs: Boolean = (savedValue == 1)
+                mutableStateOf(needs)
+        }
+        fun updateNeedsRightKey(needs: Boolean) {
+                needsRightKey.value = needs
+                val value2save: Int = if (needs) 1 else 2
+                val editor = sharedPreferences.edit()
+                editor.putInt(UserSettingsKey.RightKey, value2save)
                 editor.apply()
         }
         val isEmojiSuggestionsOn: MutableState<Boolean> by lazy {

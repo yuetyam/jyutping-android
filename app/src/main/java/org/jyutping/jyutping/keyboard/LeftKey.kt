@@ -58,9 +58,9 @@ fun LeftKey(modifier: Modifier) {
                                 .clip(RoundedCornerShape(6.dp))
                                 .background(
                                         if (isDarkMode.value) {
-                                                if (isPressed.value) PresetColor.keyDarkEmphatic else PresetColor.keyDark
+                                                if (isPressed.value) PresetColor.keyDark else PresetColor.keyDarkEmphatic
                                         } else {
-                                                if (isPressed.value) PresetColor.keyLightEmphatic else PresetColor.keyLight
+                                                if (isPressed.value) PresetColor.keyLight else PresetColor.keyLightEmphatic
                                         }
                                 )
                                 .fillMaxSize(),
