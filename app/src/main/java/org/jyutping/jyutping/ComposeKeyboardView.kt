@@ -9,13 +9,13 @@ import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.jyutping.jyutping.editingpanel.EditingPanel
+import org.jyutping.jyutping.emoji.EmojiBoard
 import org.jyutping.jyutping.keyboard.AlphabeticKeyboard
 import org.jyutping.jyutping.keyboard.CandidateBoard
 import org.jyutping.jyutping.keyboard.CangjieKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseNumericKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseSymbolicKeyboard
-import org.jyutping.jyutping.editingpanel.EditingPanel
-import org.jyutping.jyutping.keyboard.EmojiBoard
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.NumericKeyboard
 import org.jyutping.jyutping.keyboard.QwertyForm

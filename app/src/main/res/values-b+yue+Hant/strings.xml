@@ -55,7 +55,7 @@
     <string name="keyboard_settings_character_standard_hongkong">傳統漢字・香港</string>
     <string name="keyboard_settings_character_standard_taiwan">傳統漢字・臺灣</string>
     <string name="keyboard_settings_character_standard_simplified">简化字</string>
-    <string name="keyboard_settings_globe_key_switch_title">顯示輸入法切換掣（地球掣）</string>
+    <string name="keyboard_settings_globe_key_switch_title">顯示輸入法切換鍵（地球鍵）</string>
     <string name="keyboard_settings_show_lowercase_keys_switch_title">鍵文字母小寫顯示</string>
     <string name="keyboard_settings_comment_style_header">粵拼顯示</string>
     <string name="keyboard_settings_comment_style_above">候選詞上邊</string>
