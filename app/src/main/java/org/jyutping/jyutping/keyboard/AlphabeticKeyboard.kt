@@ -64,7 +64,7 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth()
                                 .height(keyHeight)
                 ) {
-                        Spacer(modifier = Modifier.weight(0.5f))
+                        HiddenKey(event = HiddenKeyEvent.LetterA, modifier = Modifier.weight(0.5f))
                         LetterKey(letter = "a", modifier = Modifier.weight(1f))
                         LetterKey(letter = "s", modifier = Modifier.weight(1f))
                         LetterKey(letter = "d", modifier = Modifier.weight(1f))
@@ -74,7 +74,7 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
                         LetterKey(letter = "j", modifier = Modifier.weight(1f))
                         LetterKey(letter = "k", modifier = Modifier.weight(1f))
                         LetterKey(letter = "l", modifier = Modifier.weight(1f))
-                        Spacer(modifier = Modifier.weight(0.5f))
+                        HiddenKey(event = HiddenKeyEvent.LetterL, modifier = Modifier.weight(0.5f))
                 }
                 Row(
                         modifier = Modifier
@@ -82,7 +82,7 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
                                 .height(keyHeight)
                 ) {
                         ShiftKey(modifier = Modifier.weight(1.3f))
-                        Spacer(modifier = Modifier.weight(0.2f))
+                        HiddenKey(event = HiddenKeyEvent.LetterZ, modifier = Modifier.weight(0.2f))
                         LetterKey(letter = "z", modifier = Modifier.weight(1f))
                         LetterKey(letter = "x", modifier = Modifier.weight(1f))
                         LetterKey(letter = "c", modifier = Modifier.weight(1f))
@@ -90,7 +90,7 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
                         LetterKey(letter = "b", modifier = Modifier.weight(1f))
                         LetterKey(letter = "n", modifier = Modifier.weight(1f))
                         LetterKey(letter = "m", modifier = Modifier.weight(1f))
-                        Spacer(modifier = Modifier.weight(0.2f))
+                        HiddenKey(event = HiddenKeyEvent.Backspace, modifier = Modifier.weight(0.2f))
                         BackspaceKey(modifier = Modifier.weight(1.3f))
                 }
                 BottomKeyRow(transform = KeyboardForm.Numeric, height = keyHeight)
