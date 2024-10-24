@@ -122,7 +122,7 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Column(
                                                 modifier = Modifier
-                                                        .background(color = backColor, shape = RoundedCornerShape(8.dp))
+                                                        .background(color = backColor, shape = RoundedCornerShape(6.dp))
                                                         .fillMaxWidth()
                                         ) {
                                                 Button(
@@ -206,7 +206,7 @@ fun SettingsScreen(height: Dp) {
                         item {
                                 Column(
                                         modifier = Modifier
-                                                .background(color = backColor, shape = RoundedCornerShape(8.dp))
+                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
                                                 .fillMaxWidth()
                                 ) {
                                         Row(
@@ -293,7 +293,7 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Column(
                                                 modifier = Modifier
-                                                        .background(color = backColor, shape = RoundedCornerShape(8.dp))
+                                                        .background(color = backColor, shape = RoundedCornerShape(6.dp))
                                                         .fillMaxWidth()
                                         ) {
                                                 Button(
@@ -359,7 +359,7 @@ fun SettingsScreen(height: Dp) {
                                 Row(
                                         modifier = Modifier
                                                 .fillMaxWidth()
-                                                .background(color = backColor, shape = RoundedCornerShape(8.dp))
+                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
                                                 .padding(horizontal = 8.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -388,7 +388,7 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Column(
                                                 modifier = Modifier
-                                                        .background(color = backColor, shape = RoundedCornerShape(8.dp))
+                                                        .background(color = backColor, shape = RoundedCornerShape(6.dp))
                                                         .fillMaxWidth()
                                         ) {
                                                 Button(
@@ -480,7 +480,7 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Column(
                                                 modifier = Modifier
-                                                        .background(color = backColor, shape = RoundedCornerShape(8.dp))
+                                                        .background(color = backColor, shape = RoundedCornerShape(6.dp))
                                                         .fillMaxWidth()
                                         ) {
                                                 Row(
@@ -521,7 +521,7 @@ fun SettingsScreen(height: Dp) {
                                 Row(
                                         modifier = Modifier
                                                 .fillMaxWidth()
-                                                .background(color = backColor, shape = RoundedCornerShape(8.dp))
+                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
                                                 .padding(horizontal = 8.dp, vertical = 12.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
