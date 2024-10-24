@@ -5,9 +5,7 @@ import android.view.HapticFeedbackConstants
 import android.view.SoundEffectConstants
 import android.view.inputmethod.InputMethodManager
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,11 +13,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.vectorResource
@@ -30,18 +32,39 @@ import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
 fun GlobeKey(modifier: Modifier) {
-        val interactionSource = remember { MutableInteractionSource() }
-        val isPressed = interactionSource.collectIsPressedAsState()
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode = remember { context.isDarkMode }
+        var isPressing by remember { mutableStateOf(false) }
         Box(
                 modifier = modifier
-                        .clickable(interactionSource = interactionSource, indication = null) {
-                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                val manager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                                manager.showInputMethodPicker()
+                        .pointerInput(Unit) {
+                                detectTapGestures(
+                                        onLongPress = {
+                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                                (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)?.showInputMethodPicker()
+                                        },
+                                        onPress = {
+                                                isPressing = true
+                                                tryAwaitRelease()
+                                                isPressing = false
+                                        },
+                                        onTap = {
+                                                if (context.shouldOfferSwitchingToNextInputMethod()) {
+                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                                        val didSwitch = context.switchToNextInputMethod(false)
+                                                        if (didSwitch.not()) {
+                                                                (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)?.showInputMethodPicker()
+                                                        }
+                                                } else {
+                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                                        (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)?.showInputMethodPicker()
+                                                }
+                                        },
+                                )
                         }
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -51,9 +74,9 @@ fun GlobeKey(modifier: Modifier) {
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
                                 .background(
                                         color = if (isDarkMode.value) {
-                                                if (isPressed.value) PresetColor.keyDark else PresetColor.keyDarkEmphatic
+                                                if (isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
                                         } else {
-                                                if (isPressed.value) PresetColor.keyLight else PresetColor.keyLightEmphatic
+                                                if (isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
                                         },
                                         shape = RoundedCornerShape(6.dp)
                                 )

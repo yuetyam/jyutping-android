@@ -4,7 +4,7 @@
     android:settingsActivity="org.jyutping.jyutping.MainActivity"
     android:supportsInlineSuggestions="true"
     android:supportsSwitchingToNextInputMethod="true"
-    tools:targetApi="34">
+    tools:targetApi="35">
     <subtype
         android:icon="@mipmap/ic_launcher"
         android:imeSubtypeMode="keyboard"

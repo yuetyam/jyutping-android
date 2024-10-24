@@ -65,7 +65,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 savedStateRegistryController.performRestore(null)
                 DatabasePreparer.prepare(this)
         }
-
         override fun onCreateInputView(): View {
                 window?.window?.decorView?.let { decorView ->
                         decorView.setViewTreeLifecycleOwner(this)
@@ -74,7 +73,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
                 return ComposeKeyboardView(this)
         }
-
         override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
                 super.onStartInput(attribute, restarting)
                 val isNightMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
@@ -86,7 +84,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 updateSpaceKeyForm()
                 updateReturnKeyForm()
         }
-
         override fun onFinishInputView(finishingInput: Boolean) {
                 if (selectedCandidates.isNotEmpty()) {
                         selectedCandidates.clear()
@@ -247,13 +244,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.apply()
         }
         val needsInputModeSwitchKey: MutableState<Boolean> by lazy {
-                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.GlobeKey, 0)
+                val fallbackValue: Int = if (shouldOfferSwitchingToNextInputMethod()) 1 else 2
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.GlobeKey, fallbackValue)
                 val needs: Boolean = (savedValue == 1)
                 mutableStateOf(needs)
         }
         fun updateNeedsInputModeSwitchKey(needs: Boolean) {
                 needsInputModeSwitchKey.value = needs
-                val value2save: Int = if (needs) 1 else 0
+                val value2save: Int = if (needs) 1 else 2
                 val editor = sharedPreferences.edit()
                 editor.putInt(UserSettingsKey.GlobeKey, value2save)
                 editor.apply()
