@@ -67,20 +67,24 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
 
         override fun onCreateInputView(): View {
-                val isNightMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-                if (isDarkMode.value != isNightMode) {
-                        isDarkMode.value = isNightMode
-                }
-                val view = ComposeKeyboardView(this)
-                window?.window?.navigationBarColor = if (isDarkMode.value) PresetColor.keyboardDarkBackground.toArgb() else PresetColor.keyboardLightBackground.toArgb()
                 window?.window?.decorView?.let { decorView ->
                         decorView.setViewTreeLifecycleOwner(this)
                         decorView.setViewTreeViewModelStoreOwner(this)
                         decorView.setViewTreeSavedStateRegistryOwner(this)
                 }
+                return ComposeKeyboardView(this)
+        }
+
+        override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
+                super.onStartInput(attribute, restarting)
+                val isNightMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+                window?.window?.navigationBarColor = if (isNightMode) PresetColor.keyboardDarkBackground.toArgb() else PresetColor.keyboardLightBackground.toArgb()
+                isDarkMode.value = isNightMode
+                inputMethodMode.value = InputMethodMode.Cantonese
+                keyboardForm.value = KeyboardForm.Alphabetic
+                qwertyForm.value = QwertyForm.Jyutping
                 updateSpaceKeyForm()
                 updateReturnKeyForm()
-                return view
         }
 
         override fun onFinishInputView(finishingInput: Boolean) {
