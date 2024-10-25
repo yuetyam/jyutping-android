@@ -10,6 +10,8 @@ object PresetColor {
         val keyDark                : Color = Color(0xFF666666)
         val keyDarkEmphatic        : Color = Color(0xFF444444)
         val keyboardDarkBackground : Color = Color(0xFF222222)
+
+        val accentGreen: Color = Color(0xFF36C85A)
 }
 
 /*

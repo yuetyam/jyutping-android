@@ -244,8 +244,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.apply()
         }
         val needsInputModeSwitchKey: MutableState<Boolean> by lazy {
-                val fallbackValue: Int = if (shouldOfferSwitchingToNextInputMethod()) 1 else 2
-                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.GlobeKey, fallbackValue)
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.GlobeKey, 0)
                 val needs: Boolean = (savedValue == 1)
                 mutableStateOf(needs)
         }

@@ -21,10 +21,13 @@ import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchColors
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -60,7 +63,21 @@ fun SettingsScreen(height: Dp) {
         val isInputMemoryOn = remember { context.isInputMemoryOn }
         val tintColor: Color = if (isDarkMode.value) Color.White else Color.Black
         val backColor: Color = if (isDarkMode.value) Color.Black else Color.White
-        val buttonColors: ButtonColors = if (isDarkMode.value) ButtonColors(Color.Black, Color.White, Color.Black, Color.White) else ButtonColors(Color.White, Color.Black, Color.White, Color.Black)
+        val buttonColors: ButtonColors = if (isDarkMode.value) {
+                ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White)
+        } else {
+                ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black)
+        }
+        val destructiveButtonColors: ButtonColors = if (isDarkMode.value) {
+                ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.Red)
+        } else {
+                ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Red)
+        }
+        val switchColors: SwitchColors = if (isDarkMode.value) {
+                SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = PresetColor.accentGreen, uncheckedThumbColor = Color.LightGray, uncheckedTrackColor = Color.DarkGray, uncheckedBorderColor = Color.Gray)
+        } else {
+                SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = PresetColor.accentGreen, uncheckedThumbColor = Color.DarkGray, uncheckedTrackColor = Color.LightGray, uncheckedBorderColor = Color.Gray)
+        }
         val version: String by lazy { BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")" }
         Column(
                 modifier = Modifier
@@ -223,7 +240,8 @@ fun SettingsScreen(height: Dp) {
                                                         onCheckedChange = {
                                                                 showLowercaseKeys.value = it
                                                                 context.updateShowLowercaseKeys(it)
-                                                        }
+                                                        },
+                                                        colors = switchColors
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode.value)
@@ -241,7 +259,8 @@ fun SettingsScreen(height: Dp) {
                                                         onCheckedChange = {
                                                                 needsInputModeSwitchKey.value = it
                                                                 context.updateNeedsInputModeSwitchKey(it)
-                                                        }
+                                                        },
+                                                        colors = switchColors
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode.value)
@@ -259,7 +278,8 @@ fun SettingsScreen(height: Dp) {
                                                         onCheckedChange = {
                                                                 needsLeftKey.value = it
                                                                 context.updateNeedsLeftKey(it)
-                                                        }
+                                                        },
+                                                        colors = switchColors
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode.value)
@@ -277,7 +297,8 @@ fun SettingsScreen(height: Dp) {
                                                         onCheckedChange = {
                                                                 needsRightKey.value = it
                                                                 context.updateNeedsRightKey(it)
-                                                        }
+                                                        },
+                                                        colors = switchColors
                                                 )
                                         }
                                 }
@@ -373,7 +394,8 @@ fun SettingsScreen(height: Dp) {
                                                 onCheckedChange = {
                                                         isEmojiSuggestionsOn.value = it
                                                         context.updateEmojiSuggestionsState(it)
-                                                }
+                                                },
+                                                colors = switchColors
                                         )
                                 }
                         }
@@ -497,7 +519,8 @@ fun SettingsScreen(height: Dp) {
                                                                 onCheckedChange = {
                                                                         isInputMemoryOn.value = it
                                                                         context.updateInputMemoryState(it)
-                                                                }
+                                                                },
+                                                                colors = switchColors
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode.value)
@@ -506,9 +529,10 @@ fun SettingsScreen(height: Dp) {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.clearUserLexicon()
+                                                                // TODO: Confirm deletion
                                                         },
                                                         shape = RectangleShape,
-                                                        colors = if (isDarkMode.value) ButtonColors(Color.Black, Color.Red, Color.Black, Color.Red) else ButtonColors(Color.White, Color.Red, Color.White, Color.Red),
+                                                        colors = destructiveButtonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
                                                         Text(text = stringResource(id = R.string.keyboard_settings_clear_user_lexicon))
