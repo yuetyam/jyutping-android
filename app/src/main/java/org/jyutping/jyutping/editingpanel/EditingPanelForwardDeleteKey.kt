@@ -63,14 +63,14 @@ fun EditingPanelForwardDeleteKey(modifier: Modifier) {
                                         },
                                         onPress = {
                                                 isPressing = true
+                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
                                                 tryAwaitRelease()
                                                 isPressing = false
                                                 isLongPressing = false
                                                 longPressJob?.cancel()
                                         },
                                         onTap = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                 context.forwardDelete()
                                         }
                                 )

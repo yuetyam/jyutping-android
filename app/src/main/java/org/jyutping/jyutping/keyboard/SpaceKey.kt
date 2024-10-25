@@ -41,12 +41,12 @@ fun SpaceKey(modifier: Modifier) {
                                 detectTapGestures(
                                         onPress = {
                                                 isPressing = true
+                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
                                                 tryAwaitRelease()
                                                 isPressing = false
                                         },
                                         onTap = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                 context.space()
                                         }
                                 )

@@ -61,14 +61,14 @@ fun BackspaceKey(modifier: Modifier) {
                                         },
                                         onPress = {
                                                 isPressing = true
+                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
                                                 tryAwaitRelease()
                                                 isPressing = false
                                                 isLongPressing = false
                                                 longPressJob?.cancel()
                                         },
                                         onTap = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                 context.backspace()
                                         }
                                 )
@@ -119,7 +119,7 @@ fun BackspaceKey(modifier: Modifier) {
                         contentAlignment = Alignment.Center
                 ) {
                         Icon(
-                                imageVector = ImageVector.vectorResource(id = if (isPressing) R.drawable.key_backspacing else R.drawable.key_backspace),
+                                imageVector = ImageVector.vectorResource(id = if (isPressing || isDragging) R.drawable.key_backspacing else R.drawable.key_backspace),
                                 contentDescription = null,
                                 modifier = Modifier.size(22.dp),
                                 tint = if (isDarkMode.value) Color.White else Color.Black

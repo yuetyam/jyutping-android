@@ -51,12 +51,12 @@ fun ShiftKey(modifier: Modifier) {
                                         },
                                         onPress = {
                                                 isPressing = true
+                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                 tryAwaitRelease()
                                                 isPressing = false
                                         },
                                         onTap = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                 context.shift()
                                         }
                                 )

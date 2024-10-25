@@ -47,20 +47,18 @@ fun GlobeKey(modifier: Modifier) {
                                         },
                                         onPress = {
                                                 isPressing = true
+                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
                                                 tryAwaitRelease()
                                                 isPressing = false
                                         },
                                         onTap = {
                                                 if (context.shouldOfferSwitchingToNextInputMethod()) {
-                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                         val didSwitch = context.switchToNextInputMethod(false)
                                                         if (didSwitch.not()) {
                                                                 (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)?.showInputMethodPicker()
                                                         }
                                                 } else {
-                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                         (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)?.showInputMethodPicker()
                                                 }
                                         },
