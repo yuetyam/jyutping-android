@@ -4,6 +4,8 @@ object UserSettingsKey {
         const val UserLexiconDatabaseFileName: String = "memory.sqlite3"
         const val PreferencesFileName: String = "org.jyutping.jyutping.settings"
         const val CharacterStandard: String = "character_standard"
+        const val AudioFeedback: String = "audio_feedback"
+        const val HapticFeedback: String = "haptic_feedback"
         const val KeyCase: String = "key_case"
         const val GlobeKey: String = "globe_key"
         const val LeftKey: String = "left_key"

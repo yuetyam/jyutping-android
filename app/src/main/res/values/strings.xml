@@ -55,6 +55,9 @@
     <string name="keyboard_settings_character_standard_hongkong">Traditional, Hong Kong</string>
     <string name="keyboard_settings_character_standard_taiwan">Traditional, Taiwan</string>
     <string name="keyboard_settings_character_standard_simplified">Simplified</string>
+    <string name="keyboard_settings_keyboard_feedback_header">Keyboard Feedback</string>
+    <string name="keyboard_settings_keyboard_feedback_audio_switch_title">Sound</string>
+    <string name="keyboard_settings_keyboard_feedback_haptic_switch_title">Haptic</string>
     <string name="keyboard_settings_show_lowercase_keys_switch_title">Show Lowercase Keys</string>
     <string name="keyboard_settings_globe_key_switch_title">Show Input Method Switch Key</string>
     <string name="keyboard_settings_left_key_switch_title">Show Comma Key</string>

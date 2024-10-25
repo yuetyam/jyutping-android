@@ -25,6 +25,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
@@ -53,6 +54,8 @@ fun SettingsScreen(height: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode = remember { context.isDarkMode }
         val characterStandard = remember { context.characterStandard }
+        val isAudioFeedbackOn = remember { context.isAudioFeedbackOn }
+        val isHapticFeedbackOn = remember { context.isHapticFeedbackOn }
         val showLowercaseKeys = remember { context.showLowercaseKeys }
         val needsInputModeSwitchKey = remember { context.needsInputModeSwitchKey }
         val needsLeftKey = remember { context.needsLeftKey }
@@ -97,8 +100,6 @@ fun SettingsScreen(height: Dp) {
                 ) {
                         IconButton(
                                 onClick = {
-                                        view.playSoundEffect(SoundEffectConstants.NAVIGATION_UP)
-                                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         context.transformTo(KeyboardForm.Alphabetic)
                                 }
                         ) {
@@ -135,7 +136,8 @@ fun SettingsScreen(height: Dp) {
                                         Text(
                                                 text = stringResource(id = R.string.keyboard_settings_character_standard_header),
                                                 modifier = Modifier.padding(horizontal = 8.dp),
-                                                color = tintColor
+                                                color = tintColor,
+                                                style = MaterialTheme.typography.bodySmall
                                         )
                                         Column(
                                                 modifier = Modifier
@@ -215,6 +217,61 @@ fun SettingsScreen(height: Dp) {
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (characterStandard.value.isSimplified()) 1f else 0f)
+                                                        )
+                                                }
+                                        }
+                                }
+                        }
+                        item {
+                                Column(
+                                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                                ) {
+                                        Text(
+                                                text = stringResource(id = R.string.keyboard_settings_keyboard_feedback_header),
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                color = tintColor,
+                                                style = MaterialTheme.typography.bodySmall
+                                        )
+                                        Column(
+                                                modifier = Modifier
+                                                        .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                        .fillMaxWidth()
+                                        ) {
+                                                Row(
+                                                        modifier = Modifier.padding(horizontal = 8.dp),
+                                                        verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_keyboard_feedback_audio_switch_title),
+                                                                color = tintColor
+                                                        )
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Switch(
+                                                                checked = isAudioFeedbackOn.value,
+                                                                onCheckedChange = {
+                                                                        isAudioFeedbackOn.value = it
+                                                                        context.updateAudioFeedback(it)
+                                                                },
+                                                                colors = switchColors
+                                                        )
+                                                }
+                                                ResponsiveDivider(isDarkMode.value)
+                                                Row(
+                                                        modifier = Modifier.padding(horizontal = 8.dp),
+                                                        verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_keyboard_feedback_haptic_switch_title),
+                                                                color = tintColor
+                                                        )
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Switch(
+                                                                checked = isHapticFeedbackOn.value,
+                                                                onCheckedChange = {
+                                                                        isHapticFeedbackOn.value = it
+                                                                        context.updateHapticFeedback(it)
+                                                                },
+                                                                colors = switchColors
                                                         )
                                                 }
                                         }
@@ -310,7 +367,8 @@ fun SettingsScreen(height: Dp) {
                                         Text(
                                                 text = stringResource(id = R.string.keyboard_settings_comment_style_header),
                                                 modifier = Modifier.padding(horizontal = 8.dp),
-                                                color = tintColor
+                                                color = tintColor,
+                                                style = MaterialTheme.typography.bodySmall
                                         )
                                         Column(
                                                 modifier = Modifier
@@ -406,7 +464,8 @@ fun SettingsScreen(height: Dp) {
                                         Text(
                                                 text = stringResource(id = R.string.keyboard_settings_cangjie_variant_header),
                                                 modifier = Modifier.padding(horizontal = 8.dp),
-                                                color = tintColor
+                                                color = tintColor,
+                                                style = MaterialTheme.typography.bodySmall
                                         )
                                         Column(
                                                 modifier = Modifier
@@ -498,7 +557,8 @@ fun SettingsScreen(height: Dp) {
                                         Text(
                                                 text = stringResource(id = R.string.keyboard_settings_user_lexicon_header),
                                                 modifier = Modifier.padding(horizontal = 8.dp),
-                                                color = tintColor
+                                                color = tintColor,
+                                                style = MaterialTheme.typography.bodySmall
                                         )
                                         Column(
                                                 modifier = Modifier

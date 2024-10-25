@@ -231,6 +231,30 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.CharacterStandard, standard.identifier)
                 editor.apply()
         }
+        val isAudioFeedbackOn: MutableState<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.AudioFeedback, 101)
+                val isOn: Boolean = (savedValue == 101)
+                mutableStateOf(isOn)
+        }
+        fun updateAudioFeedback(isOn: Boolean) {
+                isAudioFeedbackOn.value = isOn
+                val value: Int = if (isOn) 101 else 102
+                val editor = sharedPreferences.edit()
+                editor.putInt(UserSettingsKey.AudioFeedback, value)
+                editor.apply()
+        }
+        val isHapticFeedbackOn: MutableState<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.HapticFeedback, 101)
+                val isOn: Boolean = (savedValue == 101)
+                mutableStateOf(isOn)
+        }
+        fun updateHapticFeedback(isOn: Boolean) {
+                isHapticFeedbackOn.value = isOn
+                val value: Int = if (isOn) 101 else 102
+                val editor = sharedPreferences.edit()
+                editor.putInt(UserSettingsKey.HapticFeedback, value)
+                editor.apply()
+        }
         val showLowercaseKeys: MutableState<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.KeyCase, 1)
                 val isLowercase: Boolean = (savedValue == 1)
