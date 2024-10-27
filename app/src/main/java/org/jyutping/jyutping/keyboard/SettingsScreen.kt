@@ -77,9 +77,9 @@ fun SettingsScreen(height: Dp) {
                 ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Red)
         }
         val switchColors: SwitchColors = if (isDarkMode.value) {
-                SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = PresetColor.accentGreen, uncheckedThumbColor = Color.LightGray, uncheckedTrackColor = Color.DarkGray, uncheckedBorderColor = Color.Gray)
+                SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = PresetColor.green, uncheckedThumbColor = Color.LightGray, uncheckedTrackColor = Color.DarkGray, uncheckedBorderColor = Color.Gray)
         } else {
-                SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = PresetColor.accentGreen, uncheckedThumbColor = Color.DarkGray, uncheckedTrackColor = Color.LightGray, uncheckedBorderColor = Color.Gray)
+                SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = PresetColor.green, uncheckedThumbColor = Color.DarkGray, uncheckedTrackColor = Color.LightGray, uncheckedBorderColor = Color.Gray)
         }
         val version: String by lazy { BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")" }
         Column(
@@ -159,7 +159,8 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (characterStandard.value == CharacterStandard.Traditional) 1f else 0f)
+                                                                modifier = Modifier.alpha(if (characterStandard.value == CharacterStandard.Traditional) 1f else 0f),
+                                                                tint = PresetColor.blue
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode.value)
@@ -178,7 +179,8 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (characterStandard.value == CharacterStandard.HongKong) 1f else 0f)
+                                                                modifier = Modifier.alpha(if (characterStandard.value == CharacterStandard.HongKong) 1f else 0f),
+                                                                tint = PresetColor.blue
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode.value)
@@ -197,7 +199,8 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (characterStandard.value == CharacterStandard.Taiwan) 1f else 0f)
+                                                                modifier = Modifier.alpha(if (characterStandard.value == CharacterStandard.Taiwan) 1f else 0f),
+                                                                tint = PresetColor.blue
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode.value)
@@ -216,7 +219,8 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (characterStandard.value.isSimplified()) 1f else 0f)
+                                                                modifier = Modifier.alpha(if (characterStandard.value.isSimplified()) 1f else 0f),
+                                                                tint = PresetColor.blue
                                                         )
                                                 }
                                         }
@@ -390,7 +394,8 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (commentStyle.value.isAbove()) 1f else 0f)
+                                                                modifier = Modifier.alpha(if (commentStyle.value.isAbove()) 1f else 0f),
+                                                                tint = PresetColor.blue
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode.value)
@@ -409,7 +414,8 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (commentStyle.value.isBelow()) 1f else 0f)
+                                                                modifier = Modifier.alpha(if (commentStyle.value.isBelow()) 1f else 0f),
+                                                                tint = PresetColor.blue
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode.value)
@@ -428,7 +434,8 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (commentStyle.value.isNone()) 1f else 0f)
+                                                                modifier = Modifier.alpha(if (commentStyle.value.isNone()) 1f else 0f),
+                                                                tint = PresetColor.blue
                                                         )
                                                 }
                                         }
@@ -487,7 +494,8 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Cangjie5) 1f else 0f)
+                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Cangjie5) 1f else 0f),
+                                                                tint = PresetColor.blue
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode.value)
@@ -506,7 +514,8 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Cangjie3) 1f else 0f)
+                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Cangjie3) 1f else 0f),
+                                                                tint = PresetColor.blue
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode.value)
@@ -525,7 +534,8 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Quick5) 1f else 0f)
+                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Quick5) 1f else 0f),
+                                                                tint = PresetColor.blue
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode.value)
@@ -544,7 +554,8 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Quick3) 1f else 0f)
+                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Quick3) 1f else 0f),
+                                                                tint = PresetColor.blue
                                                         )
                                                 }
                                         }
