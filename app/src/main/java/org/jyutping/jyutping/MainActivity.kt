@@ -28,8 +28,8 @@ class MainActivity : ComponentActivity() {
 
         @OptIn(ExperimentalMaterial3Api::class)
         override fun onCreate(savedInstanceState: Bundle?) {
-                super.onCreate(savedInstanceState)
                 enableEdgeToEdge()
+                super.onCreate(savedInstanceState)
                 DatabasePreparer.prepare(this)
                 setContent {
                         val navController = rememberNavController()
