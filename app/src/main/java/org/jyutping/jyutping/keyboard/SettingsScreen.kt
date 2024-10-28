@@ -644,7 +644,7 @@ fun SettingsScreen(height: Dp) {
                                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                                 coroutineScope.launch {
-                                                                                        delay(500L) // 0.5s
+                                                                                        delay(300L) // 0.3s
                                                                                         isTryingToClearUserLexicon = false
                                                                                 }
                                                                         },
