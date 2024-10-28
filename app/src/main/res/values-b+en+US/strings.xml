@@ -75,6 +75,9 @@
     <string name="keyboard_settings_user_lexicon_header">User Lexicon</string>
     <string name="keyboard_settings_input_memory_switch_title">Input Memory</string>
     <string name="keyboard_settings_clear_user_lexicon">Clear User Lexicon</string>
+    <string name="keyboard_settings_clear_user_lexicon_message">Clear User Lexicon?</string>
+    <string name="keyboard_settings_clear_user_lexicon_confirm">Clear</string>
+    <string name="keyboard_settings_clear_user_lexicon_cancel">Cancel</string>
     <string name="editing_panel_key_back">Back</string>
     <string name="editing_panel_key_backspace">Delete</string>
     <string name="editing_panel_key_forward_delete">Forward Delete</string>

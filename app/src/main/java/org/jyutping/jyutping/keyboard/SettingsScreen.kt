@@ -30,8 +30,13 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -42,6 +47,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.CharacterStandard
 import org.jyutping.jyutping.JyutpingInputMethodService
@@ -64,6 +71,8 @@ fun SettingsScreen(height: Dp) {
         val isEmojiSuggestionsOn = remember { context.isEmojiSuggestionsOn }
         val cangjieVariant = remember { context.cangjieVariant }
         val isInputMemoryOn = remember { context.isInputMemoryOn }
+        var isTryingToClearUserLexicon by remember { mutableStateOf(false) }
+        val coroutineScope = rememberCoroutineScope()
         val tintColor: Color = if (isDarkMode.value) Color.White else Color.Black
         val backColor: Color = if (isDarkMode.value) Color.Black else Color.White
         val buttonColors: ButtonColors = if (isDarkMode.value) {
@@ -595,18 +604,55 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode.value)
-                                                Button(
-                                                        onClick = {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                context.clearUserLexicon()
-                                                                // TODO: Confirm deletion
-                                                        },
-                                                        shape = RectangleShape,
-                                                        colors = destructiveButtonColors,
-                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                Row(
+                                                        modifier = Modifier.padding(horizontal = 8.dp),
+                                                        verticalAlignment = Alignment.CenterVertically
                                                 ) {
-                                                        Text(text = stringResource(id = R.string.keyboard_settings_clear_user_lexicon))
+                                                        TextButton(
+                                                                onClick = {
+                                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                        isTryingToClearUserLexicon = true
+                                                                },
+                                                                colors = destructiveButtonColors,
+                                                                contentPadding = PaddingValues(end = 12.dp)
+                                                        ) {
+                                                                if (isTryingToClearUserLexicon) {
+                                                                        Text(text = stringResource(id = R.string.keyboard_settings_clear_user_lexicon_message))
+                                                                } else {
+                                                                        Text(text = stringResource(id = R.string.keyboard_settings_clear_user_lexicon))
+                                                                }
+                                                        }
+                                                        if (isTryingToClearUserLexicon) {
+                                                                TextButton(
+                                                                        onClick = {
+                                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                                context.clearUserLexicon()
+                                                                                coroutineScope.launch {
+                                                                                        delay(1000L) // 1s
+                                                                                        isTryingToClearUserLexicon = false
+                                                                                }
+                                                                        },
+                                                                        colors = destructiveButtonColors,
+                                                                        contentPadding = PaddingValues(horizontal = 12.dp)
+                                                                ) {
+                                                                        Text(text = stringResource(id = R.string.keyboard_settings_clear_user_lexicon_confirm))
+                                                                }
+                                                                TextButton(
+                                                                        onClick = {
+                                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                                coroutineScope.launch {
+                                                                                        delay(500L) // 0.5s
+                                                                                        isTryingToClearUserLexicon = false
+                                                                                }
+                                                                        },
+                                                                        contentPadding = PaddingValues(horizontal = 12.dp)
+                                                                ) {
+                                                                        Text(text = stringResource(id = R.string.keyboard_settings_clear_user_lexicon_cancel))
+                                                                }
+                                                        }
                                                         Spacer(modifier = Modifier.weight(1f))
                                                 }
                                         }

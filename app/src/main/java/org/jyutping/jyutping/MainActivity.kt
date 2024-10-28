@@ -60,8 +60,8 @@ class MainActivity : ComponentActivity() {
                                         },
                                         bottomBar = { AppBottomBar(navController = navController) },
                                         containerColor = colorScheme.tertiaryContainer
-                                ) { padding ->
-                                        Box(modifier = Modifier.padding(padding)) {
+                                ) { paddingValues ->
+                                        Box(modifier = Modifier.padding(paddingValues)) {
                                                 AppContent(navController = navController)
                                         }
                                 }

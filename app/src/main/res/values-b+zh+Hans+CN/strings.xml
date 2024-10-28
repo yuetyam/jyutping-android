@@ -75,6 +75,9 @@
     <string name="keyboard_settings_user_lexicon_header">個人詞庫</string>
     <string name="keyboard_settings_input_memory_switch_title">記憶輸入</string>
     <string name="keyboard_settings_clear_user_lexicon">清空個人詞庫</string>
+    <string name="keyboard_settings_clear_user_lexicon_message">清空個人詞庫？</string>
+    <string name="keyboard_settings_clear_user_lexicon_confirm">清空</string>
+    <string name="keyboard_settings_clear_user_lexicon_cancel">取消</string>
     <string name="editing_panel_key_back">返回</string>
     <string name="editing_panel_key_backspace">刪除</string>
     <string name="editing_panel_key_forward_delete">向右刪除</string>
