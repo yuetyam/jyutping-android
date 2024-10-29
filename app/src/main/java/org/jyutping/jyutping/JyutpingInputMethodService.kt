@@ -24,6 +24,12 @@ import androidx.savedstate.SavedStateRegistry
 import androidx.savedstate.SavedStateRegistryController
 import androidx.savedstate.SavedStateRegistryOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.extensions.convertedT2S
 import org.jyutping.jyutping.extensions.formattedForMark
@@ -83,8 +89,15 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 qwertyForm.value = QwertyForm.Jyutping
                 updateSpaceKeyForm()
                 updateReturnKeyForm()
+                inputClientMonitorJob = CoroutineScope(Dispatchers.Main).launch {
+                        while (isActive) {
+                                delay(1500L) // 1.5s
+                                monitorInputClient()
+                        }
+                }
         }
         override fun onFinishInputView(finishingInput: Boolean) {
+                inputClientMonitorJob?.cancel()
                 if (selectedCandidates.isNotEmpty()) {
                         selectedCandidates.clear()
                 }
@@ -96,6 +109,17 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         candidates.value = emptyList()
                 }
                 super.onFinishInputView(finishingInput)
+        }
+
+        private var inputClientMonitorJob: Job? = null
+        private fun monitorInputClient() {
+                // TODO: Better way to monitor?
+                if (isBuffering.value) {
+                        val isTextEmpty = currentInputConnection?.getExtractedText(ExtractedTextRequest(), 0)?.text.isNullOrEmpty()
+                        if (isTextEmpty) {
+                                clearBuffer()
+                        }
+                }
         }
 
         override val viewModelStore: ViewModelStore
@@ -361,7 +385,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.databaseName) }
         private var bufferText: String = PresetString.EMPTY
                 set(value) {
-                        candidates.value = emptyList()
                         field = value
                         when (value.firstOrNull()) {
                                 null -> {
