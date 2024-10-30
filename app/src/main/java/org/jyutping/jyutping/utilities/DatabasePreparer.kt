@@ -35,6 +35,8 @@ object DatabasePreparer {
                 "appdb-v0.20.0-tmp.sqlite3-journal",
                 "appdb-v0.21.0-tmp.sqlite3",
                 "appdb-v0.21.0-tmp.sqlite3-journal",
+                "appdb-v0.23.0-tmp.sqlite3",
+                "appdb-v0.23.0-tmp.sqlite3-journal",
         )
         val databaseName: String = run {
                 val version = BuildConfig.VERSION_NAME
