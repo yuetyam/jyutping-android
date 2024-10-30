@@ -89,6 +89,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 qwertyForm.value = QwertyForm.Jyutping
                 updateSpaceKeyForm()
                 updateReturnKeyForm()
+                inputClientMonitorJob?.cancel()
                 inputClientMonitorJob = CoroutineScope(Dispatchers.Main).launch {
                         while (isActive) {
                                 delay(1500L) // 1.5s
