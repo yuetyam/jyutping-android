@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -24,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.presets.PresetColor
@@ -33,22 +36,31 @@ fun ShiftKey(modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode = remember { context.isDarkMode }
+        var isPressing by remember { mutableStateOf(false) }
         val keyboardCase = remember { context.keyboardCase }
         val drawableId: Int = when (keyboardCase.value) {
                 KeyboardCase.Lowercased -> R.drawable.key_shift
                 KeyboardCase.Uppercased -> R.drawable.key_shifting
                 KeyboardCase.CapsLocked -> R.drawable.key_capslock
         }
-        var isPressing by remember { mutableStateOf(false) }
+        var previousKeyboardCase by remember { mutableStateOf(KeyboardCase.Lowercased) }
+        var isInTheMediumOfDoubleTapping by remember { mutableStateOf(false) }
+        var doubleTappingBuffer by remember { mutableIntStateOf(0) }
+        LaunchedEffect(isInTheMediumOfDoubleTapping) {
+                while (isInTheMediumOfDoubleTapping) {
+                        delay(100L) // 0.1s
+                        if (doubleTappingBuffer >= 3) {
+                                doubleTappingBuffer = 0
+                                isInTheMediumOfDoubleTapping = false
+                        } else {
+                                doubleTappingBuffer += 1
+                        }
+                }
+        }
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
                                 detectTapGestures(
-                                        onDoubleTap = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                                context.doubleShift()
-                                        },
                                         onPress = {
                                                 isPressing = true
                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -57,14 +69,25 @@ fun ShiftKey(modifier: Modifier) {
                                                 isPressing = false
                                         },
                                         onTap = {
-                                                context.shift()
+                                                val currentKeyboardCase = keyboardCase.value
+                                                val didKeyboardCaseSwitchBack = (currentKeyboardCase == previousKeyboardCase)
+                                                val shouldPerformDoubleTapping = isInTheMediumOfDoubleTapping && didKeyboardCaseSwitchBack.not()
+                                                doubleTappingBuffer = 0
+                                                previousKeyboardCase = currentKeyboardCase
+                                                if (shouldPerformDoubleTapping) {
+                                                        isInTheMediumOfDoubleTapping = false
+                                                        context.doubleShift()
+                                                } else {
+                                                        isInTheMediumOfDoubleTapping = true
+                                                        context.shift()
+                                                }
                                         }
                                 )
                         }
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
         ) {
-                Box (
+                Box(
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
                                 .background(
