@@ -386,6 +386,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.databaseName) }
         private var bufferText: String = PresetString.EMPTY
                 set(value) {
+                        candidates.value = emptyList()
                         field = value
                         when (value.firstOrNull()) {
                                 null -> {
@@ -398,7 +399,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 selectedCandidates.clear()
                                                 isBuffering.value = false
                                         }
-                                        candidates.value = emptyList()
                                         if (keyboardForm.value == KeyboardForm.CandidateBoard) {
                                                 transformTo(KeyboardForm.Alphabetic)
                                         }
@@ -407,7 +407,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 'r' -> {
                                         if (value.length < 2) {
                                                 currentInputConnection.setComposingText(value, value.length)
-                                                candidates.value = emptyList()
                                         } else {
                                                 val text = value.drop(1)
                                                 val segmentation = PinyinSegmentor.segment(text, db)
@@ -439,7 +438,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         updateQwertyForm(QwertyForm.Cangjie)
                                         if (value.length < 2) {
                                                 currentInputConnection.setComposingText(value, value.length)
-                                                candidates.value = emptyList()
                                         } else {
                                                 val text = value.drop(1)
                                                 val converted = text.mapNotNull { ShapeKeyMap.cangjieCode(it) }
@@ -451,7 +449,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                         candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
                                                 } else {
                                                         currentInputConnection.setComposingText(bufferText, bufferText.length)
-                                                        candidates.value = emptyList()
                                                 }
                                         }
                                         if (isBuffering.value.not()) {
@@ -462,7 +459,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         updateQwertyForm(QwertyForm.Stroke)
                                         if (value.length < 2) {
                                                 currentInputConnection.setComposingText(value, value.length)
-                                                candidates.value = emptyList()
                                         } else {
                                                 val text = value.drop(1)
                                                 val transformed = ShapeKeyMap.strokeTransform(text)
@@ -475,7 +471,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                         candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
                                                 } else {
                                                         currentInputConnection.setComposingText(bufferText, bufferText.length)
-                                                        candidates.value = emptyList()
                                                 }
                                         }
                                         if (isBuffering.value.not()) {
@@ -485,7 +480,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 'q' -> {
                                         if (value.length < 2) {
                                                 currentInputConnection.setComposingText(value, value.length)
-                                                candidates.value = emptyList()
                                         } else {
                                                 val text = value.drop(1)
                                                 val segmentation = Segmentor.segment(text, db)
