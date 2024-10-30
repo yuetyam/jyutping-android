@@ -81,6 +81,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
                 super.onStartInput(attribute, restarting)
+                inputClientMonitorJob?.cancel()
                 val isNightMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
                 window?.window?.navigationBarColor = if (isNightMode) PresetColor.keyboardDarkBackground.toArgb() else PresetColor.keyboardLightBackground.toArgb()
                 isDarkMode.value = isNightMode
@@ -89,10 +90,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 qwertyForm.value = QwertyForm.Jyutping
                 updateSpaceKeyForm()
                 updateReturnKeyForm()
-                inputClientMonitorJob?.cancel()
                 inputClientMonitorJob = CoroutineScope(Dispatchers.Main).launch {
                         while (isActive) {
-                                delay(1500L) // 1.5s
+                                delay(500L) // 0.5s
                                 monitorInputClient()
                         }
                 }
@@ -392,12 +392,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         currentInputConnection.setComposingText(value, value.length)
                                         currentInputConnection.finishComposingText()
                                         if (isBuffering.value) {
-                                                isBuffering.value = false
                                                 if (isInputMemoryOn.value && selectedCandidates.isNotEmpty()) {
                                                         userDB.process(selectedCandidates)
                                                 }
                                                 selectedCandidates.clear()
+                                                isBuffering.value = false
                                         }
+                                        candidates.value = emptyList()
                                         if (keyboardForm.value == KeyboardForm.CandidateBoard) {
                                                 transformTo(KeyboardForm.Alphabetic)
                                         }
@@ -406,6 +407,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 'r' -> {
                                         if (value.length < 2) {
                                                 currentInputConnection.setComposingText(value, value.length)
+                                                candidates.value = emptyList()
                                         } else {
                                                 val text = value.drop(1)
                                                 val segmentation = PinyinSegmentor.segment(text, db)
@@ -437,6 +439,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         updateQwertyForm(QwertyForm.Cangjie)
                                         if (value.length < 2) {
                                                 currentInputConnection.setComposingText(value, value.length)
+                                                candidates.value = emptyList()
                                         } else {
                                                 val text = value.drop(1)
                                                 val converted = text.mapNotNull { ShapeKeyMap.cangjieCode(it) }
@@ -459,6 +462,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         updateQwertyForm(QwertyForm.Stroke)
                                         if (value.length < 2) {
                                                 currentInputConnection.setComposingText(value, value.length)
+                                                candidates.value = emptyList()
                                         } else {
                                                 val text = value.drop(1)
                                                 val transformed = ShapeKeyMap.strokeTransform(text)
@@ -481,6 +485,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 'q' -> {
                                         if (value.length < 2) {
                                                 currentInputConnection.setComposingText(value, value.length)
+                                                candidates.value = emptyList()
                                         } else {
                                                 val text = value.drop(1)
                                                 val segmentation = Segmentor.segment(text, db)
