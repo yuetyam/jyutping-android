@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -54,16 +55,19 @@ fun LetterKey(letter: String, modifier: Modifier) {
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
         ) {
-                Box (
+                Box(
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
+                                .shadow(
+                                        elevation = 0.5.dp,
+                                        shape = RoundedCornerShape(6.dp)
+                                )
                                 .background(
-                                        color = if (isDarkMode.value) {
+                                        if (isDarkMode.value) {
                                                 if (isPressing) PresetColor.keyDarkEmphatic else PresetColor.keyDark
                                         } else {
                                                 if (isPressing) PresetColor.keyLightEmphatic else PresetColor.keyLight
-                                        },
-                                        shape = RoundedCornerShape(6.dp)
+                                        }
                                 )
                                 .fillMaxSize(),
                         contentAlignment = Alignment.Center

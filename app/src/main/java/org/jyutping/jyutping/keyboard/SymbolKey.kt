@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -41,10 +41,13 @@ fun SymbolKey(symbol: String, modifier: Modifier) {
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
         ) {
-                Box (
+                Box(
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
-                                .clip(RoundedCornerShape(6.dp))
+                                .shadow(
+                                        elevation = 0.5.dp,
+                                        shape = RoundedCornerShape(6.dp)
+                                )
                                 .background(
                                         if (isDarkMode.value) {
                                                 if (isPressed.value) PresetColor.keyDarkEmphatic else PresetColor.keyDark

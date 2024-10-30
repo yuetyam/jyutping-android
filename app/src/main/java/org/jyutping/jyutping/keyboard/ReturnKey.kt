@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -53,13 +54,16 @@ fun ReturnKey(modifier: Modifier) {
                 Box(
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
+                                .shadow(
+                                        elevation = 0.5.dp,
+                                        shape = RoundedCornerShape(6.dp)
+                                )
                                 .background(
-                                        color = if (isDarkMode.value) {
+                                        if (isDarkMode.value) {
                                                 if (isPressed.value) PresetColor.keyDark else PresetColor.keyDarkEmphatic
                                         } else {
                                                 if (isPressed.value) PresetColor.keyLight else PresetColor.keyLightEmphatic
-                                        },
-                                        shape = RoundedCornerShape(6.dp)
+                                        }
                                 )
                                 .fillMaxSize(),
                         contentAlignment = Alignment.Center

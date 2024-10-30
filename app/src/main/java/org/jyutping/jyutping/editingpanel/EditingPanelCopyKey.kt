@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -51,13 +52,16 @@ fun EditingPanelCopyKey(modifier: Modifier) {
                 Column(
                         modifier = Modifier
                                 .padding(4.dp)
+                                .shadow(
+                                        elevation = 0.5.dp,
+                                        shape = RoundedCornerShape(6.dp)
+                                )
                                 .background(
-                                        color = if (isDarkMode.value) {
+                                        if (isDarkMode.value) {
                                                 if (isPressed.value) PresetColor.keyDark else PresetColor.keyDarkEmphatic
                                         } else {
                                                 if (isPressed.value) PresetColor.keyLight else PresetColor.keyLightEmphatic
-                                        },
-                                        shape = RoundedCornerShape(6.dp)
+                                        }
                                 )
                                 .fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
