@@ -53,6 +53,11 @@ fun GlobeKey(modifier: Modifier) {
                                                 isPressing = false
                                         },
                                         onTap = {
+                                                val didSwitch = context.switchToNextInputMethod(false)
+                                                if (didSwitch.not()) {
+                                                        (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)?.showInputMethodPicker()
+                                                }
+                                                /*
                                                 if (context.shouldOfferSwitchingToNextInputMethod()) {
                                                         val didSwitch = context.switchToNextInputMethod(false)
                                                         if (didSwitch.not()) {
@@ -61,6 +66,7 @@ fun GlobeKey(modifier: Modifier) {
                                                 } else {
                                                         (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)?.showInputMethodPicker()
                                                 }
+                                                */
                                         },
                                 )
                         }
