@@ -5,7 +5,6 @@ import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -47,7 +46,7 @@ fun EditingPanelForwardDeleteKey(modifier: Modifier) {
         var isLongPressing by remember { mutableStateOf(false) }
         var longPressJob: Job? by remember { mutableStateOf(null) }
         val longPressCoroutineScope = rememberCoroutineScope()
-        Box(
+        Column(
                 modifier = modifier
                         .pointerInput(Unit) {
                                 detectTapGestures(
@@ -63,6 +62,7 @@ fun EditingPanelForwardDeleteKey(modifier: Modifier) {
                                                 }
                                         },
                                         onPress = {
+                                                longPressJob?.cancel()
                                                 isPressing = true
                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
@@ -76,38 +76,32 @@ fun EditingPanelForwardDeleteKey(modifier: Modifier) {
                                         }
                                 )
                         }
+                        .padding(4.dp)
+                        .shadow(
+                                elevation = 0.5.dp,
+                                shape = RoundedCornerShape(6.dp)
+                        )
+                        .background(
+                                if (isDarkMode.value) {
+                                        if (isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
+                                } else {
+                                        if (isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
+                                }
+                        )
                         .fillMaxSize(),
-                contentAlignment = Alignment.Center
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
         ) {
-                Column(
-                        modifier = Modifier
-                                .padding(4.dp)
-                                .shadow(
-                                        elevation = 0.5.dp,
-                                        shape = RoundedCornerShape(6.dp)
-                                )
-                                .background(
-                                        if (isDarkMode.value) {
-                                                if (isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
-                                        } else {
-                                                if (isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
-                                        }
-                                )
-                                .fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                        Icon(
-                                imageVector = ImageVector.vectorResource(id = if (isPressing) R.drawable.key_forward_deleting else R.drawable.key_forward_delete),
-                                contentDescription = null,
-                                modifier = Modifier.size(22.dp),
-                                tint = if (isDarkMode.value) Color.White else Color.Black
-                        )
-                        Text(
-                                text = stringResource(id = R.string.editing_panel_key_forward_delete),
-                                color = if (isDarkMode.value) Color.White else Color.Black,
-                                fontSize = 11.sp,
-                        )
-                }
+                Icon(
+                        imageVector = ImageVector.vectorResource(id = if (isPressing) R.drawable.key_forward_deleting else R.drawable.key_forward_delete),
+                        contentDescription = null,
+                        modifier = Modifier.size(22.dp),
+                        tint = if (isDarkMode.value) Color.White else Color.Black
+                )
+                Text(
+                        text = stringResource(id = R.string.editing_panel_key_forward_delete),
+                        color = if (isDarkMode.value) Color.White else Color.Black,
+                        fontSize = 11.sp,
+                )
         }
 }

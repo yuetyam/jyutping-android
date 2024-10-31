@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -41,46 +40,40 @@ fun EditingPanelPasteKey(modifier: Modifier) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode = remember { context.isDarkMode }
         val isClipboardEmpty = remember { context.isClipboardEmpty }
-        Box(
+        Column(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                 context.paste()
                         }
+                        .padding(4.dp)
+                        .shadow(
+                                elevation = 0.5.dp,
+                                shape = RoundedCornerShape(6.dp)
+                        )
+                        .background(
+                                if (isDarkMode.value) {
+                                        if (isPressed.value) PresetColor.keyDark else PresetColor.keyDarkEmphatic
+                                } else {
+                                        if (isPressed.value) PresetColor.keyLight else PresetColor.keyLightEmphatic
+                                }
+                        )
                         .fillMaxSize(),
-                contentAlignment = Alignment.Center
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
         ) {
-                Column(
-                        modifier = Modifier
-                                .padding(4.dp)
-                                .shadow(
-                                        elevation = 0.5.dp,
-                                        shape = RoundedCornerShape(6.dp)
-                                )
-                                .background(
-                                        if (isDarkMode.value) {
-                                                if (isPressed.value) PresetColor.keyDark else PresetColor.keyDarkEmphatic
-                                        } else {
-                                                if (isPressed.value) PresetColor.keyLight else PresetColor.keyLightEmphatic
-                                        }
-                                )
-                                .fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                        Icon(
-                                imageVector = Icons.Outlined.ContentPaste,
-                                contentDescription = null,
-                                modifier = Modifier.size(22.dp).alpha(if (isClipboardEmpty.value) 0.5f else 1f),
-                                tint = if (isDarkMode.value) Color.White else Color.Black
-                        )
-                        Text(
-                                text = stringResource(id = R.string.editing_panel_key_paste),
-                                modifier = Modifier.alpha(if (isClipboardEmpty.value) 0.5f else 1f),
-                                color = if (isDarkMode.value) Color.White else Color.Black,
-                                fontSize = 11.sp,
-                        )
-                }
+                Icon(
+                        imageVector = Icons.Outlined.ContentPaste,
+                        contentDescription = null,
+                        modifier = Modifier.size(22.dp).alpha(if (isClipboardEmpty.value) 0.5f else 1f),
+                        tint = if (isDarkMode.value) Color.White else Color.Black
+                )
+                Text(
+                        text = stringResource(id = R.string.editing_panel_key_paste),
+                        modifier = Modifier.alpha(if (isClipboardEmpty.value) 0.5f else 1f),
+                        color = if (isDarkMode.value) Color.White else Color.Black,
+                        fontSize = 11.sp,
+                )
         }
 }

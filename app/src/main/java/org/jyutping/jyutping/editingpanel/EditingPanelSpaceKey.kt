@@ -40,31 +40,25 @@ fun EditingPanelSpaceKey(modifier: Modifier) {
                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                 context.space()
                         }
+                        .padding(4.dp)
+                        .shadow(
+                                elevation = 0.5.dp,
+                                shape = RoundedCornerShape(6.dp)
+                        )
+                        .background(
+                                if (isDarkMode.value) {
+                                        if (isPressed.value) PresetColor.keyDark else PresetColor.keyDarkEmphatic
+                                } else {
+                                        if (isPressed.value) PresetColor.keyLight else PresetColor.keyLightEmphatic
+                                }
+                        )
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
         ) {
-                Box(
-                        modifier = Modifier
-                                .padding(4.dp)
-                                .shadow(
-                                        elevation = 0.5.dp,
-                                        shape = RoundedCornerShape(6.dp)
-                                )
-                                .background(
-                                        if (isDarkMode.value) {
-                                                if (isPressed.value) PresetColor.keyDark else PresetColor.keyDarkEmphatic
-                                        } else {
-                                                if (isPressed.value) PresetColor.keyLight else PresetColor.keyLightEmphatic
-                                        }
-                                )
-                                .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                ) {
-                        Text(
-                                text = stringResource(id = R.string.editing_panel_key_space),
-                                color = if (isDarkMode.value) Color.White else Color.Black,
-                                fontSize = 13.sp,
-                        )
-                }
+                Text(
+                        text = stringResource(id = R.string.editing_panel_key_space),
+                        color = if (isDarkMode.value) Color.White else Color.Black,
+                        fontSize = 13.sp,
+                )
         }
 }

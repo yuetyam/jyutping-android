@@ -206,10 +206,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         val keyboardForm: MutableState<KeyboardForm> by lazy { mutableStateOf(KeyboardForm.Alphabetic) }
         fun transformTo(destination: KeyboardForm) {
                 if (isBuffering.value) {
-                        val shouldKeepBuffer: Boolean = (keyboardForm.value == KeyboardForm.Alphabetic) || (keyboardForm.value == KeyboardForm.CandidateBoard)
+                        val shouldKeepBuffer: Boolean = (destination == KeyboardForm.Alphabetic) || (destination == KeyboardForm.CandidateBoard)
                         if (shouldKeepBuffer.not()) {
+                                currentInputConnection.commitText(bufferText, bufferText.length)
                                 bufferText = PresetString.EMPTY
                         }
+                }
+                if (destination == KeyboardForm.EditingPanel) {
+                        isClipboardEmpty.value = isCurrentClipboardEmpty()
                 }
                 keyboardForm.value = destination
                 adjustKeyboardCase()
@@ -680,11 +684,12 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
 
         // region EditingPanel
-        val isClipboardEmpty: MutableState<Boolean> by lazy {
+        val isClipboardEmpty: MutableState<Boolean> by lazy { mutableStateOf(true) }
+        private fun isCurrentClipboardEmpty(): Boolean {
                 val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                if (clipboard.hasPrimaryClip().not()) mutableStateOf(true)
+                if (clipboard.hasPrimaryClip().not()) return true
                 val hasText: Boolean = clipboard.primaryClipDescription?.hasMimeType(MIMETYPE_TEXT_PLAIN) == true
-                mutableStateOf(hasText.not())
+                return hasText.not()
         }
         fun paste() {
                 val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager

@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -36,40 +35,34 @@ fun EditingPanelJump2HeadKey(modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode = remember { context.isDarkMode }
-        Box(
+        Column(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                 context.jump2head()
                         }
-                        .fillMaxSize(),
-                contentAlignment = Alignment.Center
-        ) {
-                Column(
-                        modifier = Modifier
-                                .padding(4.dp)
-                                .shadow(
-                                        elevation = 0.5.dp,
-                                        shape = RoundedCornerShape(6.dp)
-                                )
-                                .background(
-                                        if (isDarkMode.value) {
-                                                if (isPressed.value) PresetColor.keyDark else PresetColor.keyDarkEmphatic
-                                        } else {
-                                                if (isPressed.value) PresetColor.keyLight else PresetColor.keyLightEmphatic
-                                        }
-                                )
-                                .fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                        Icon(
-                                imageVector = Icons.AutoMirrored.Outlined.KeyboardTab,
-                                contentDescription = null,
-                                modifier = Modifier.size(22.dp).rotate(180f),
-                                tint = if (isDarkMode.value) Color.White else Color.Black
+                        .padding(4.dp)
+                        .shadow(
+                                elevation = 0.5.dp,
+                                shape = RoundedCornerShape(6.dp)
                         )
-                }
+                        .background(
+                                if (isDarkMode.value) {
+                                        if (isPressed.value) PresetColor.keyDark else PresetColor.keyDarkEmphatic
+                                } else {
+                                        if (isPressed.value) PresetColor.keyLight else PresetColor.keyLightEmphatic
+                                }
+                        )
+                        .fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+                Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.KeyboardTab,
+                        contentDescription = null,
+                        modifier = Modifier.size(22.dp).rotate(180f),
+                        tint = if (isDarkMode.value) Color.White else Color.Black
+                )
         }
 }

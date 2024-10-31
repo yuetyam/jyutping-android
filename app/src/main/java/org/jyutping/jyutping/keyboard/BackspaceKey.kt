@@ -61,6 +61,7 @@ fun BackspaceKey(modifier: Modifier) {
                                                 }
                                         },
                                         onPress = {
+                                                longPressJob?.cancel()
                                                 isPressing = true
                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
