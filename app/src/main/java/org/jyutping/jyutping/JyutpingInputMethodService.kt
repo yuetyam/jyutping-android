@@ -296,6 +296,18 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.KeyCase, value2save)
                 editor.apply()
         }
+        val previewKeyText: MutableState<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.KeyTextPreview, 1)
+                val shouldPreview: Boolean = (savedValue == 1)
+                mutableStateOf(shouldPreview)
+        }
+        fun updatePreviewKeyText(isOn: Boolean) {
+                previewKeyText.value = isOn
+                val value2save: Int = if (isOn) 1 else 2
+                val editor = sharedPreferences.edit()
+                editor.putInt(UserSettingsKey.KeyTextPreview, value2save)
+                editor.apply()
+        }
         val needsInputModeSwitchKey: MutableState<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.GlobeKey, 0)
                 val needs: Boolean = (savedValue == 1)

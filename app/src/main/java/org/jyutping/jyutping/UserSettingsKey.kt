@@ -7,6 +7,7 @@ object UserSettingsKey {
         const val AudioFeedback: String = "audio_feedback"
         const val HapticFeedback: String = "haptic_feedback"
         const val KeyCase: String = "key_case"
+        const val KeyTextPreview: String = "key_preview"
         const val GlobeKey: String = "globe_key"
         const val LeftKey: String = "left_key"
         const val RightKey: String = "right_key"

@@ -64,6 +64,7 @@ fun SettingsScreen(height: Dp) {
         val isAudioFeedbackOn = remember { context.isAudioFeedbackOn }
         val isHapticFeedbackOn = remember { context.isHapticFeedbackOn }
         val showLowercaseKeys = remember { context.showLowercaseKeys }
+        val previewKeyText = remember { context.previewKeyText }
         val needsInputModeSwitchKey = remember { context.needsInputModeSwitchKey }
         val needsLeftKey = remember { context.needsLeftKey }
         val needsRightKey = remember { context.needsRightKey }
@@ -310,6 +311,25 @@ fun SettingsScreen(height: Dp) {
                                                         onCheckedChange = {
                                                                 showLowercaseKeys.value = it
                                                                 context.updateShowLowercaseKeys(it)
+                                                        },
+                                                        colors = switchColors
+                                                )
+                                        }
+                                        ResponsiveDivider(isDarkMode.value)
+                                        Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_key_text_preview_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = previewKeyText.value,
+                                                        onCheckedChange = {
+                                                                previewKeyText.value = it
+                                                                context.updatePreviewKeyText(it)
                                                         },
                                                         colors = switchColors
                                                 )

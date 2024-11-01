@@ -47,7 +47,7 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth()
                                 .height(keyHeight)
                 ) {
-                        LetterKey(letter = "q", modifier = Modifier.weight(1f))
+                        LetterLeadingEdgeKey(letter = "q", modifier = Modifier.weight(1f))
                         LetterKey(letter = "w", modifier = Modifier.weight(1f))
                         LetterKey(letter = "e", modifier = Modifier.weight(1f))
                         LetterKey(letter = "r", modifier = Modifier.weight(1f))
@@ -56,7 +56,7 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
                         LetterKey(letter = "u", modifier = Modifier.weight(1f))
                         LetterKey(letter = "i", modifier = Modifier.weight(1f))
                         LetterKey(letter = "o", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "p", modifier = Modifier.weight(1f))
+                        LetterTrailingEdgeKey(letter = "p", modifier = Modifier.weight(1f))
                 }
                 Row(
                         modifier = Modifier
