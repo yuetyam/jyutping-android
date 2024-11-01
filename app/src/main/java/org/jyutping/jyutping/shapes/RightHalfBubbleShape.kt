@@ -28,10 +28,11 @@ class RightHalfBubbleShape : Shape {
         override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
                 val width = size.width
                 val height = size.height
+                val isPhoneLandscape: Boolean = (width > height)
                 val keyCornerRadius: Float = 12F * density.density
                 val previewCornerRadius: Float = 20F * density.density
                 val curveWidth: Float = width / 3F
-                val curveHeight: Float = height / 5F
+                val curveHeight: Float = if (isPhoneLandscape) (height / 3F) else (height / 5F)
                 val keyWidth: Float = width - curveWidth
                 val keyHeight: Float = (height - curveHeight) / 2F
                 val pointO = Offset(x = keyWidth / 2F, y = height)
