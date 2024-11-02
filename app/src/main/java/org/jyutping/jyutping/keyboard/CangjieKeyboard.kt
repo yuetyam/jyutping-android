@@ -32,11 +32,11 @@ fun CangjieKeyboard(keyHeight: Dp) {
         ) {
                 Box(
                         modifier = Modifier
+                                .background(if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
                                 .height(PresetConstant.ToolBarHeight.dp)
                                 .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                 ) {
-                        if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground
                         if (isBuffering.value) {
                                 CandidateScrollBar()
                         } else {
