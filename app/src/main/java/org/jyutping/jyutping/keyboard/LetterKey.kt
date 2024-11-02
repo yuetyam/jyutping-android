@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -113,13 +114,13 @@ fun LetterKey(letter: String, modifier: Modifier) {
                                                 )
                                                 .width((baseSize.width / 3F * 5F).dp)
                                                 .height((baseSize.height * 2.5F).dp),
-                                        contentAlignment = Alignment.TopCenter
+                                        contentAlignment = Alignment.Center
                                 ) {
                                         Text(
                                                 text = displayText,
-                                                modifier = Modifier.padding(top = 6.dp), // TODO: Any better position?
+                                                modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
                                                 color = if (isDarkMode.value) Color.White else Color.Black,
-                                                fontSize = 32.sp
+                                                style = MaterialTheme.typography.headlineLarge
                                         )
                                 }
                         }
@@ -211,13 +212,13 @@ fun LetterLeadingEdgeKey(letter: String, modifier: Modifier) {
                                                 )
                                                 .width((baseSize.width / 2F * 3F).dp)
                                                 .height((baseSize.height * 2.5F).dp),
-                                        contentAlignment = Alignment.TopCenter
+                                        contentAlignment = Alignment.Center
                                 ) {
                                         Text(
                                                 text = displayText,
-                                                modifier = Modifier.padding(top = 6.dp), // TODO: Any better position?
+                                                modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
                                                 color = if (isDarkMode.value) Color.White else Color.Black,
-                                                fontSize = 32.sp
+                                                style = MaterialTheme.typography.headlineLarge
                                         )
                                 }
                         }
@@ -301,13 +302,13 @@ fun LetterTrailingEdgeKey(letter: String, modifier: Modifier) {
                                                 )
                                                 .width((baseSize.width / 2F * 3F).dp)
                                                 .height((baseSize.height * 2.5F).dp),
-                                        contentAlignment = Alignment.TopCenter
+                                        contentAlignment = Alignment.Center
                                 ) {
                                         Text(
                                                 text = displayText,
-                                                modifier = Modifier.padding(top = 6.dp), // TODO: Any better position?
+                                                modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
                                                 color = if (isDarkMode.value) Color.White else Color.Black,
-                                                fontSize = 32.sp
+                                                style = MaterialTheme.typography.headlineLarge
                                         )
                                 }
                         }

@@ -3,14 +3,18 @@ package org.jyutping.jyutping.keyboard
 import android.view.HapticFeedbackConstants
 import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,15 +25,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetString
+import org.jyutping.jyutping.shapes.BubbleShape
 
 @Composable
 fun LeftKey(modifier: Modifier) {
@@ -43,6 +53,9 @@ fun LeftKey(modifier: Modifier) {
                 InputMethodMode.ABC -> LeftKeyForm.ABC
         }
         var isPressing by remember { mutableStateOf(false) }
+        val shouldPreviewKey = remember { context.previewKeyText }
+        val density = LocalDensity.current
+        var baseSize by remember { mutableStateOf(Size.Zero) }
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -65,16 +78,18 @@ fun LeftKey(modifier: Modifier) {
                 Box(
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
+                                .onGloballyPositioned { layoutCoordinates ->
+                                        val originalSize = layoutCoordinates.size
+                                        val width = originalSize.width.div(density.density)
+                                        val height = originalSize.height.div(density.density)
+                                        baseSize = Size(width = width, height = height)
+                                }
                                 .shadow(
                                         elevation = 0.5.dp,
                                         shape = RoundedCornerShape(6.dp)
                                 )
                                 .background(
-                                        if (isDarkMode.value) {
-                                                if (isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
-                                        } else {
-                                                if (isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
-                                        }
+                                        color = responsiveKeyColor(isDarkMode.value, shouldPreviewKey.value, isPressing)
                                 )
                                 .fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -101,6 +116,36 @@ fun LeftKey(modifier: Modifier) {
                                 fontSize = 20.sp
                         )
                 }
+                if (shouldPreviewKey.value && isPressing) {
+                        Popup(
+                                alignment = Alignment.Center,
+                                offset = IntOffset(x = 0, y = (baseSize.height * 1.5F / 2F * density.density).toInt().unaryMinus())
+                        ) {
+                                val shape = BubbleShape()
+                                Box(
+                                        modifier = modifier
+                                                .border(
+                                                        width = 1.dp,
+                                                        color = if (isDarkMode.value) Color.DarkGray else Color.LightGray,
+                                                        shape = shape
+                                                )
+                                                .background(
+                                                        color = if (isDarkMode.value) PresetColor.keyDarkEmphatic else PresetColor.keyLightEmphatic,
+                                                        shape = shape
+                                                )
+                                                .width((baseSize.width / 3F * 5F).dp)
+                                                .height((baseSize.height * 2.5F).dp),
+                                        contentAlignment = Alignment.Center
+                                ) {
+                                        Text(
+                                                text = keyForm.keyText(),
+                                                modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
+                                                color = if (isDarkMode.value) Color.White else Color.Black,
+                                                style = MaterialTheme.typography.headlineLarge
+                                        )
+                                }
+                        }
+                }
         }
 }
 
@@ -114,4 +159,12 @@ private fun LeftKeyForm.keyText(): String = when (this) {
         LeftKeyForm.Cantonese -> "，"
         LeftKeyForm.Buffering -> PresetString.SEPARATOR
         LeftKeyForm.ABC -> ","
+}
+
+private fun responsiveKeyColor(isDarkMode: Boolean, shouldPreviewKey: Boolean, isPressing: Boolean): Color {
+        return if (isDarkMode) {
+                if (shouldPreviewKey.not() && isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
+        } else {
+                if (shouldPreviewKey.not() && isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
+        }
 }
