@@ -117,11 +117,15 @@ fun LeftKey(modifier: Modifier) {
                         )
                 }
                 if (shouldPreviewKey.value && isPressing) {
+                        val shape = BubbleShape()
+                        val offsetX: Int = 0
+                        val offsetY: Int = (baseSize.height * 1.5F / 2F * density.density).toInt().unaryMinus()
+                        val width: Float = baseSize.width / 3F * 5F
+                        val height: Float = baseSize.height * 2.5F
                         Popup(
                                 alignment = Alignment.Center,
-                                offset = IntOffset(x = 0, y = (baseSize.height * 1.5F / 2F * density.density).toInt().unaryMinus())
+                                offset = IntOffset(x = offsetX, y = offsetY)
                         ) {
-                                val shape = BubbleShape()
                                 Box(
                                         modifier = modifier
                                                 .border(
@@ -133,8 +137,8 @@ fun LeftKey(modifier: Modifier) {
                                                         color = if (isDarkMode.value) PresetColor.keyDarkEmphatic else PresetColor.keyLightEmphatic,
                                                         shape = shape
                                                 )
-                                                .width((baseSize.width / 3F * 5F).dp)
-                                                .height((baseSize.height * 2.5F).dp),
+                                                .width(width.dp)
+                                                .height(height.dp),
                                         contentAlignment = Alignment.Center
                                 ) {
                                         Text(

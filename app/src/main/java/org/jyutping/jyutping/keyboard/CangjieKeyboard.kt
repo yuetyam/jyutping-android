@@ -48,7 +48,7 @@ fun CangjieKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth()
                                 .height(keyHeight)
                 ) {
-                        CangjieKey(letter = 'q', modifier = Modifier.weight(1f))
+                        CangjieKey(letter = 'q', modifier = Modifier.weight(1f), position = Alignment.Start)
                         CangjieKey(letter = 'w', modifier = Modifier.weight(1f))
                         CangjieKey(letter = 'e', modifier = Modifier.weight(1f))
                         CangjieKey(letter = 'r', modifier = Modifier.weight(1f))
@@ -57,7 +57,7 @@ fun CangjieKeyboard(keyHeight: Dp) {
                         CangjieKey(letter = 'u', modifier = Modifier.weight(1f))
                         CangjieKey(letter = 'i', modifier = Modifier.weight(1f))
                         CangjieKey(letter = 'o', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'p', modifier = Modifier.weight(1f))
+                        CangjieKey(letter = 'p', modifier = Modifier.weight(1f), position = Alignment.End)
                 }
                 Row(
                         modifier = Modifier

@@ -43,7 +43,7 @@ fun CantoneseSymbolicKeyboard(keyHeight: Dp) {
                                 .height(keyHeight)
                                 .fillMaxWidth()
                 ) {
-                        SymbolKey(symbol = "［", modifier = Modifier.weight(1f))
+                        SymbolKey(symbol = "［", modifier = Modifier.weight(1f), position = Alignment.Start)
                         SymbolKey(symbol = "］", modifier = Modifier.weight(1f))
                         SymbolKey(symbol = "｛", modifier = Modifier.weight(1f))
                         SymbolKey(symbol = "｝", modifier = Modifier.weight(1f))
@@ -52,14 +52,14 @@ fun CantoneseSymbolicKeyboard(keyHeight: Dp) {
                         SymbolKey(symbol = "^", modifier = Modifier.weight(1f))
                         SymbolKey(symbol = "*", modifier = Modifier.weight(1f))
                         SymbolKey(symbol = "+", modifier = Modifier.weight(1f))
-                        SymbolKey(symbol = "=", modifier = Modifier.weight(1f))
+                        SymbolKey(symbol = "=", modifier = Modifier.weight(1f), position = Alignment.End)
                 }
                 Row(
                         modifier = Modifier
                                 .height(keyHeight)
                                 .fillMaxWidth()
                 ) {
-                        SymbolKey(symbol = "_", modifier = Modifier.weight(1f))
+                        SymbolKey(symbol = "_", modifier = Modifier.weight(1f), position = Alignment.Start)
                         SymbolKey(symbol = "—", modifier = Modifier.weight(1f))
                         SymbolKey(symbol = "\\", modifier = Modifier.weight(1f))
                         SymbolKey(symbol = "｜", modifier = Modifier.weight(1f))
@@ -68,7 +68,7 @@ fun CantoneseSymbolicKeyboard(keyHeight: Dp) {
                         SymbolKey(symbol = "》", modifier = Modifier.weight(1f))
                         SymbolKey(symbol = "¥", modifier = Modifier.weight(1f))
                         SymbolKey(symbol = "&", modifier = Modifier.weight(1f))
-                        SymbolKey(symbol = "·", modifier = Modifier.weight(1f))
+                        SymbolKey(symbol = "·", modifier = Modifier.weight(1f), position = Alignment.End)
                 }
                 Row(
                         modifier = Modifier

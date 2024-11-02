@@ -85,7 +85,11 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
                                         shape = RoundedCornerShape(6.dp)
                                 )
                                 .background(
-                                        color = responsiveKeyColor(isDarkMode.value, shouldPreviewKey.value, isPressing)
+                                        if (isDarkMode.value) {
+                                                if (shouldPreviewKey.value.not() && isPressing) PresetColor.keyDarkEmphatic else PresetColor.keyDark
+                                        } else {
+                                                if (shouldPreviewKey.value.not() && isPressing) PresetColor.keyLightEmphatic else PresetColor.keyLight
+                                        }
                                 )
                                 .fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -118,11 +122,15 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
                         }
                 }
                 if ((keyStroke != null) && shouldPreviewKey.value && isPressing) {
+                        val shape = BubbleShape()
+                        val offsetX: Int = 0
+                        val offsetY: Int = (baseSize.height * 1.5F / 2F * density.density).toInt().unaryMinus()
+                        val width: Float = baseSize.width / 3F * 5F
+                        val height: Float = baseSize.height * 2.5F
                         Popup(
                                 alignment = Alignment.Center,
-                                offset = IntOffset(x = 0, y = (baseSize.height * 1.5F / 2F * density.density).toInt().unaryMinus())
+                                offset = IntOffset(x = offsetX, y = offsetY)
                         ) {
-                                val shape = BubbleShape()
                                 Box(
                                         modifier = modifier
                                                 .border(
@@ -134,8 +142,8 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
                                                         color = if (isDarkMode.value) PresetColor.keyDark else PresetColor.keyLight,
                                                         shape = shape
                                                 )
-                                                .width((baseSize.width / 3F * 5F).dp)
-                                                .height((baseSize.height * 2.5F).dp),
+                                                .width(width.dp)
+                                                .height(height.dp),
                                         contentAlignment = Alignment.Center
                                 ) {
                                         Text(
@@ -147,13 +155,5 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
                                 }
                         }
                 }
-        }
-}
-
-private fun responsiveKeyColor(isDarkMode: Boolean, shouldPreviewKey: Boolean, isPressing: Boolean): Color {
-        return if (isDarkMode) {
-                if (shouldPreviewKey.not() && isPressing) PresetColor.keyDarkEmphatic else PresetColor.keyDark
-        } else {
-                if (shouldPreviewKey.not() && isPressing) PresetColor.keyLightEmphatic else PresetColor.keyLight
         }
 }
