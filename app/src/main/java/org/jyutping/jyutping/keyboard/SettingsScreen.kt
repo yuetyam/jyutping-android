@@ -32,6 +32,7 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,6 +66,7 @@ fun SettingsScreen(height: Dp) {
         val isHapticFeedbackOn = remember { context.isHapticFeedbackOn }
         val showLowercaseKeys = remember { context.showLowercaseKeys }
         val previewKeyText = remember { context.previewKeyText }
+        val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val needsInputModeSwitchKey = remember { context.needsInputModeSwitchKey }
         val needsLeftKey = remember { context.needsLeftKey }
         val needsRightKey = remember { context.needsRightKey }
@@ -335,6 +337,31 @@ fun SettingsScreen(height: Dp) {
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode.value)
+                                        Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_high_contrast_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = isHighContrastPreferred,
+                                                        onCheckedChange = {
+                                                                context.updateHighContrast(it)
+                                                        },
+                                                        colors = switchColors
+                                                )
+                                        }
+                                }
+                        }
+                        item {
+                                Column(
+                                        modifier = Modifier
+                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                .fillMaxWidth()
+                                ) {
                                         Row(
                                                 modifier = Modifier.padding(horizontal = 8.dp),
                                                 verticalAlignment = Alignment.CenterVertically

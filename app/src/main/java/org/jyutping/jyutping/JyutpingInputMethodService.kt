@@ -28,6 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.jyutping.jyutping.extensions.convertedS2T
@@ -306,6 +307,18 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 val value2save: Int = if (isOn) 1 else 2
                 val editor = sharedPreferences.edit()
                 editor.putInt(UserSettingsKey.KeyTextPreview, value2save)
+                editor.apply()
+        }
+        val isHighContrastPreferred: MutableStateFlow<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.HighContrast, 0)
+                val isPreferred: Boolean = (savedValue == 1)
+                MutableStateFlow(isPreferred)
+        }
+        fun updateHighContrast(isOn: Boolean) {
+                isHighContrastPreferred.value = isOn
+                val value2save: Int = if (isOn) 1 else 2
+                val editor = sharedPreferences.edit()
+                editor.putInt(UserSettingsKey.HighContrast, value2save)
                 editor.apply()
         }
         val needsInputModeSwitchKey: MutableState<Boolean> by lazy {

@@ -60,6 +60,7 @@
     <string name="keyboard_settings_keyboard_feedback_haptic_switch_title">Haptic</string>
     <string name="keyboard_settings_show_lowercase_keys_switch_title">Show Lowercase Keys</string>
     <string name="keyboard_settings_key_text_preview_switch_title">Key Text Preview</string>
+    <string name="keyboard_settings_high_contrast_switch_title">High Contrast Keyboard Color Scheme</string>
     <string name="keyboard_settings_globe_key_switch_title">Show Input Method Switch Key</string>
     <string name="keyboard_settings_left_key_switch_title">Show Comma Key</string>
     <string name="keyboard_settings_right_key_switch_title">Show Period Key</string>

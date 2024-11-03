@@ -22,10 +22,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -61,6 +62,7 @@ fun CandidateScrollBar() {
                 CommentStyle.NoComments -> Alignment.Bottom
         }
         val isDarkMode = remember { context.isDarkMode }
+        val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val state = rememberLazyListState()
         LaunchedEffect(context.candidateState.intValue) {
                 state.scrollToItem(index = 0, scrollOffset = 0)
@@ -93,7 +95,13 @@ fun CandidateScrollBar() {
                 }
                 Box(
                         modifier = Modifier
-                                .background(if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
+                                .background(
+                                        if (isDarkMode.value) {
+                                                if (isHighContrastPreferred) Color.Black else PresetColor.keyboardDarkBackground
+                                        } else {
+                                                if (isHighContrastPreferred) Color.White else PresetColor.keyboardLightBackground
+                                        }
+                                )
                                 .width(expanderWidth)
                                 .fillMaxHeight(),
                         contentAlignment = Alignment.Center
@@ -104,11 +112,7 @@ fun CandidateScrollBar() {
                                         .fillMaxWidth(),
                                 contentAlignment = Alignment.CenterStart
                         ) {
-                                VerticalDivider(
-                                        modifier = Modifier.alpha(0.3f),
-                                        thickness = 1.dp,
-                                        color = Color.Black
-                                )
+                                VerticalDivider(color = Color.Gray)
                         }
                         IconButton(
                                 onClick = {

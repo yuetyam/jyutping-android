@@ -4,6 +4,7 @@ import android.os.Build
 import android.view.HapticFeedbackConstants
 import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +28,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,6 +64,7 @@ fun CandidateBoard(height: Dp) {
         val commentStyle = remember { context.commentStyle }
         val rowVerticalAlignment: Alignment.Vertical = if (commentStyle.value.isBelow()) Alignment.Top else Alignment.Bottom
         val isDarkMode = remember { context.isDarkMode }
+        val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val screenWidth: Dp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 val windowMetrics = context.windowManager.currentWindowMetrics
                 (windowMetrics.bounds.width() / windowMetrics.density).dp
@@ -99,7 +103,13 @@ fun CandidateBoard(height: Dp) {
         }
         Box(
                 modifier = Modifier
-                        .background(if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
+                        .background(
+                                if (isDarkMode.value) {
+                                        if (isHighContrastPreferred) Color.Black else PresetColor.keyboardDarkBackground
+                                } else {
+                                        if (isHighContrastPreferred) Color.White else PresetColor.keyboardLightBackground
+                                }
+                        )
                         .systemBarsPadding()
                         .height(height)
                         .fillMaxWidth(),
@@ -135,12 +145,18 @@ fun CandidateBoard(height: Dp) {
                                                 )
                                         }
                                         if (row.identifier == minRowIdentifier) {
-                                                Spacer(modifier = Modifier.width(collapseWidth).weight(collapseWidth / screenWidth))
+                                                Spacer(modifier = Modifier
+                                                        .width(collapseWidth)
+                                                        .weight(collapseWidth / screenWidth))
                                         }
                                 }
                                 HorizontalDivider(
-                                      thickness = 1.dp,
-                                      color = if (isDarkMode.value) PresetColor.keyDarkEmphatic else PresetColor.keyLightEmphatic
+                                        thickness = 1.dp,
+                                        color = if (isDarkMode.value) {
+                                                if (isHighContrastPreferred) Color.White else PresetColor.keyDarkEmphatic
+                                        } else {
+                                                if (isHighContrastPreferred) Color.Black else PresetColor.keyLightEmphatic
+                                        }
                                 )
                         }
                 }
@@ -153,8 +169,21 @@ fun CandidateBoard(height: Dp) {
                         modifier = Modifier
                                 .width(collapseWidth)
                                 .height(collapseHeight)
+                                .border(
+                                        width = 1.dp,
+                                        color = if (isDarkMode.value) {
+                                                if (isHighContrastPreferred) Color.White else Color.Transparent
+                                        } else {
+                                                if (isHighContrastPreferred) Color.Black else Color.Transparent
+                                        },
+                                        shape = RoundedCornerShape(4.dp)
+                                )
                                 .background(
-                                        color = if (isDarkMode.value) PresetColor.keyDarkEmphatic else PresetColor.keyLightEmphatic,
+                                        color = if (isDarkMode.value) {
+                                                if (isHighContrastPreferred) Color.Black else PresetColor.keyDarkEmphatic
+                                        } else {
+                                                if (isHighContrastPreferred) Color.White else PresetColor.keyLightEmphatic
+                                        },
                                         shape = RoundedCornerShape(4.dp)
                                 )
                 ) {

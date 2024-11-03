@@ -4,8 +4,8 @@ import androidx.compose.ui.graphics.Color
 
 object PresetColor {
         val keyLight               : Color = Color.White
-        val keyLightEmphatic       : Color = Color(0xFFBBBBBB)
-        val keyboardLightBackground: Color = Color(0xFFDDDDDD)
+        val keyLightEmphatic       : Color = Color(0xFFAAAFBA)
+        val keyboardLightBackground: Color = Color(0xFFD0D4D8)
 
         val keyDark                : Color = Color(0xFF666666)
         val keyDarkEmphatic        : Color = Color(0xFF444444)
@@ -16,20 +16,20 @@ object PresetColor {
 }
 
 /*
-object AltPresetColor {
+object ShallowPresetColor {
         val keyLight               : Color = Color.White
-        val keyLightEmphatic       : Color = Color(0xFFAAAFBA)
-        val keyboardLightBackground: Color = Color(0xFFD0D4D8)
+        val keyLightEmphatic       : Color = Color(0xFFB8BCC4)
+        val keyboardLightBackground: Color = Color(0xFFDDDFE4)
 
         val keyDark                : Color = Color(0xFF666666)
         val keyDarkEmphatic        : Color = Color(0xFF444444)
         val keyboardDarkBackground : Color = Color(0xFF222222)
 }
 
-object AltShallowPresetColor {
+object GrayPresetColor {
         val keyLight               : Color = Color.White
-        val keyLightEmphatic       : Color = Color(0xFFB8BCC4)
-        val keyboardLightBackground: Color = Color(0xFFDDDFE4)
+        val keyLightEmphatic       : Color = Color(0xFFBBBBBB)
+        val keyboardLightBackground: Color = Color(0xFFDDDDDD)
 
         val keyDark                : Color = Color(0xFF666666)
         val keyDarkEmphatic        : Color = Color(0xFF444444)
