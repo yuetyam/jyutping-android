@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import splitties.systemservices.windowManager
 
@@ -154,9 +155,9 @@ fun CandidateBoard(height: Dp) {
                                 HorizontalDivider(
                                         thickness = 1.dp,
                                         color = if (isDarkMode) {
-                                                if (isHighContrastPreferred) Color.White else PresetColor.keyDarkEmphatic
+                                                if (isHighContrastPreferred) AltPresetColor.keyDarkEmphatic else PresetColor.keyDarkEmphatic
                                         } else {
-                                                if (isHighContrastPreferred) Color.Black else PresetColor.keyLightEmphatic
+                                                if (isHighContrastPreferred) AltPresetColor.keyLightEmphatic else PresetColor.keyLightEmphatic
                                         }
                                 )
                         }
@@ -181,9 +182,9 @@ fun CandidateBoard(height: Dp) {
                                 )
                                 .background(
                                         color = if (isDarkMode) {
-                                                if (isHighContrastPreferred) Color.Black else PresetColor.keyDarkEmphatic
+                                                if (isHighContrastPreferred) AltPresetColor.keyDarkEmphatic else PresetColor.keyDarkEmphatic
                                         } else {
-                                                if (isHighContrastPreferred) Color.White else PresetColor.keyLightEmphatic
+                                                if (isHighContrastPreferred) AltPresetColor.keyLightEmphatic else PresetColor.keyLightEmphatic
                                         },
                                         shape = RoundedCornerShape(4.dp)
                                 )

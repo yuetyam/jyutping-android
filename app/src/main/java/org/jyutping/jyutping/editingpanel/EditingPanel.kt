@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
@@ -26,6 +27,7 @@ import kotlin.math.min
 fun EditingPanel(height: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()
+        val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val screenWidth: Float = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 val windowMetrics = context.windowManager.currentWindowMetrics
                 (windowMetrics.bounds.width() / windowMetrics.density)
@@ -40,7 +42,13 @@ fun EditingPanel(height: Dp) {
         val keyHeight: Dp = height / 4.0f
         Row(
                 modifier = Modifier
-                        .background(if (isDarkMode) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
+                        .background(
+                                if (isDarkMode) {
+                                        if (isHighContrastPreferred) Color.Black else PresetColor.keyboardDarkBackground
+                                } else {
+                                        if (isHighContrastPreferred) Color.White else PresetColor.keyboardLightBackground
+                                }
+                        )
                         .systemBarsPadding()
                         .height(height)
                         .fillMaxWidth()

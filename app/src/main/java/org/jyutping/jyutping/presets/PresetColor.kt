@@ -15,21 +15,21 @@ object PresetColor {
         val green                  : Color = Color(0xFF4CAF50)
 }
 
-/*
-object ShallowPresetColor {
+object AltPresetColor {
         val keyLight               : Color = Color.White
-        val keyLightEmphatic       : Color = Color(0xFFB8BCC4)
-        val keyboardLightBackground: Color = Color(0xFFDDDFE4)
+        val keyLightEmphatic       : Color = Color(0xFFBBBBBB)
+        val keyboardLightBackground: Color = Color(0xFFDDDDDD)
 
         val keyDark                : Color = Color(0xFF666666)
         val keyDarkEmphatic        : Color = Color(0xFF444444)
         val keyboardDarkBackground : Color = Color(0xFF222222)
 }
 
-object GrayPresetColor {
+/*
+object ShallowPresetColor {
         val keyLight               : Color = Color.White
-        val keyLightEmphatic       : Color = Color(0xFFBBBBBB)
-        val keyboardLightBackground: Color = Color(0xFFDDDDDD)
+        val keyLightEmphatic       : Color = Color(0xFFB8BCC4)
+        val keyboardLightBackground: Color = Color(0xFFDDDFE4)
 
         val keyDark                : Color = Color(0xFF666666)
         val keyDarkEmphatic        : Color = Color(0xFF444444)

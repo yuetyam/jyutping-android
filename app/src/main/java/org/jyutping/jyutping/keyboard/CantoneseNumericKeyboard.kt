@@ -28,7 +28,13 @@ fun CantoneseNumericKeyboard(keyHeight: Dp) {
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         Column(
                 modifier = Modifier
-                        .background(if (isDarkMode) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
+                        .background(
+                                if (isDarkMode) {
+                                        if (isHighContrastPreferred) Color.Black else PresetColor.keyboardDarkBackground
+                                } else {
+                                        if (isHighContrastPreferred) Color.White else PresetColor.keyboardLightBackground
+                                }
+                        )
                         .systemBarsPadding()
                         .fillMaxWidth()
         ) {

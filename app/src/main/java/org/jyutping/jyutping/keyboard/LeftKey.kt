@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.shapes.BubbleShape
@@ -53,6 +54,7 @@ fun LeftKey(modifier: Modifier) {
                 InputMethodMode.ABC -> LeftKeyForm.ABC
         }
         val isDarkMode by context.isDarkMode.collectAsState()
+        val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val shouldPreviewKey by context.previewKeyText.collectAsState()
         val density = LocalDensity.current
         var baseSize by remember { mutableStateOf(Size.Zero) }
@@ -85,12 +87,21 @@ fun LeftKey(modifier: Modifier) {
                                         val height = originalSize.height.div(density.density)
                                         baseSize = Size(width = width, height = height)
                                 }
+                                .border(
+                                        width = 1.dp,
+                                        color = if (isDarkMode) {
+                                                if (isHighContrastPreferred) Color.White else Color.Transparent
+                                        } else {
+                                                if (isHighContrastPreferred) Color.Black else Color.Transparent
+                                        },
+                                        shape = RoundedCornerShape(6.dp)
+                                )
                                 .shadow(
                                         elevation = 0.5.dp,
                                         shape = RoundedCornerShape(6.dp)
                                 )
                                 .background(
-                                        color = responsiveKeyColor(isDarkMode, shouldPreviewKey, isPressing)
+                                        color = keyBackgroundColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey, isPressing)
                                 )
                                 .fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -131,11 +142,19 @@ fun LeftKey(modifier: Modifier) {
                                         modifier = modifier
                                                 .border(
                                                         width = 1.dp,
-                                                        color = if (isDarkMode) Color.DarkGray else Color.LightGray,
+                                                        color = if (isDarkMode) {
+                                                                if (isHighContrastPreferred) Color.White else Color.DarkGray
+                                                        } else {
+                                                                if (isHighContrastPreferred) Color.Black else Color.LightGray
+                                                        },
                                                         shape = shape
                                                 )
                                                 .background(
-                                                        color = if (isDarkMode) PresetColor.keyDarkEmphatic else PresetColor.keyLightEmphatic,
+                                                        color = if (isDarkMode) {
+                                                                if (isHighContrastPreferred) AltPresetColor.keyDarkEmphatic else PresetColor.keyDarkEmphatic
+                                                        } else {
+                                                                if (isHighContrastPreferred) AltPresetColor.keyLightEmphatic else PresetColor.keyLightEmphatic
+                                                        },
                                                         shape = shape
                                                 )
                                                 .width(width.dp)
@@ -166,10 +185,17 @@ private fun LeftKeyForm.keyText(): String = when (this) {
         LeftKeyForm.ABC -> ","
 }
 
-private fun responsiveKeyColor(isDarkMode: Boolean, shouldPreviewKey: Boolean, isPressing: Boolean): Color {
-        return if (isDarkMode) {
-                if (shouldPreviewKey.not() && isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
+private fun keyBackgroundColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, shouldPreviewKey: Boolean, isPressing: Boolean): Color =
+        if (isDarkMode) {
+                if (isHighContrastPreferred) {
+                        if (shouldPreviewKey.not() && isPressing) AltPresetColor.keyDark else AltPresetColor.keyDarkEmphatic
+                } else {
+                        if (shouldPreviewKey.not() && isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
+                }
         } else {
-                if (shouldPreviewKey.not() && isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
+                if (isHighContrastPreferred) {
+                        if (shouldPreviewKey.not() && isPressing) AltPresetColor.keyLight else AltPresetColor.keyLightEmphatic
+                } else {
+                        if (shouldPreviewKey.not() && isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
+                }
         }
-}

@@ -3,6 +3,7 @@ package org.jyutping.jyutping.keyboard
 import android.view.HapticFeedbackConstants
 import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,7 @@ fun SpaceKey(modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()
+        val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val keyForm by context.spaceKeyForm.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
         var isDragging by remember { mutableStateOf(false) }
@@ -87,6 +89,15 @@ fun SpaceKey(modifier: Modifier) {
                 Box(
                         modifier = modifier
                                 .padding(horizontal = 3.dp, vertical = 6.dp)
+                                .border(
+                                        width = 1.dp,
+                                        color = if (isDarkMode) {
+                                                if (isHighContrastPreferred) Color.White else Color.Transparent
+                                        } else {
+                                                if (isHighContrastPreferred) Color.Black else Color.Transparent
+                                        },
+                                        shape = RoundedCornerShape(6.dp)
+                                )
                                 .shadow(
                                         elevation = 0.5.dp,
                                         shape = RoundedCornerShape(6.dp)

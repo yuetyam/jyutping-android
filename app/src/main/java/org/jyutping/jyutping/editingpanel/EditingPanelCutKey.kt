@@ -3,6 +3,7 @@ package org.jyutping.jyutping.editingpanel
 import android.view.HapticFeedbackConstants
 import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
@@ -40,6 +42,7 @@ fun EditingPanelCutKey(modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()
+        val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         Column(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
@@ -48,16 +51,21 @@ fun EditingPanelCutKey(modifier: Modifier) {
                                 context.cutAllText()
                         }
                         .padding(4.dp)
+                        .border(
+                                width = 1.dp,
+                                color = if (isDarkMode) {
+                                        if (isHighContrastPreferred) Color.White else Color.Transparent
+                                } else {
+                                        if (isHighContrastPreferred) Color.Black else Color.Transparent
+                                },
+                                shape = RoundedCornerShape(6.dp)
+                        )
                         .shadow(
                                 elevation = 0.5.dp,
                                 shape = RoundedCornerShape(6.dp)
                         )
                         .background(
-                                if (isDarkMode) {
-                                        if (isPressed) PresetColor.keyDark else PresetColor.keyDarkEmphatic
-                                } else {
-                                        if (isPressed) PresetColor.keyLight else PresetColor.keyLightEmphatic
-                                }
+                                color = backgroundColor(isDarkMode, isHighContrastPreferred, isPressed)
                         )
                         .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -76,3 +84,18 @@ fun EditingPanelCutKey(modifier: Modifier) {
                 )
         }
 }
+
+private fun backgroundColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean) =
+        if (isDarkMode) {
+                if (isHighContrastPreferred) {
+                        if (isPressing) AltPresetColor.keyDark else AltPresetColor.keyDarkEmphatic
+                } else {
+                        if (isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
+                }
+        } else {
+                if (isHighContrastPreferred) {
+                        if (isPressing) AltPresetColor.keyLight else AltPresetColor.keyLightEmphatic
+                } else {
+                        if (isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
+                }
+        }

@@ -54,6 +54,7 @@ import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.CharacterStandard
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
@@ -96,7 +97,13 @@ fun SettingsScreen(height: Dp) {
         val version: String by lazy { BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")" }
         Column(
                 modifier = Modifier
-                        .background(if (isDarkMode) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
+                        .background(
+                                if (isDarkMode) {
+                                        if (isHighContrastPreferred) AltPresetColor.keyboardDarkBackground else PresetColor.keyboardDarkBackground
+                                } else {
+                                        if (isHighContrastPreferred) AltPresetColor.keyboardLightBackground else PresetColor.keyboardLightBackground
+                                }
+                        )
                         .systemBarsPadding()
                         .height(height)
                         .fillMaxWidth(),
@@ -175,7 +182,7 @@ fun SettingsScreen(height: Dp) {
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode)
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -195,7 +202,7 @@ fun SettingsScreen(height: Dp) {
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode)
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -215,7 +222,7 @@ fun SettingsScreen(height: Dp) {
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode)
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -270,7 +277,7 @@ fun SettingsScreen(height: Dp) {
                                                                 colors = switchColors
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode)
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Row(
                                                         modifier = Modifier.padding(horizontal = 8.dp),
                                                         verticalAlignment = Alignment.CenterVertically
@@ -314,7 +321,7 @@ fun SettingsScreen(height: Dp) {
                                                         colors = switchColors
                                                 )
                                         }
-                                        ResponsiveDivider(isDarkMode)
+                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                         Row(
                                                 modifier = Modifier.padding(horizontal = 8.dp),
                                                 verticalAlignment = Alignment.CenterVertically
@@ -332,7 +339,7 @@ fun SettingsScreen(height: Dp) {
                                                         colors = switchColors
                                                 )
                                         }
-                                        ResponsiveDivider(isDarkMode)
+                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                         Row(
                                                 modifier = Modifier.padding(horizontal = 8.dp),
                                                 verticalAlignment = Alignment.CenterVertically
@@ -375,7 +382,7 @@ fun SettingsScreen(height: Dp) {
                                                         colors = switchColors
                                                 )
                                         }
-                                        ResponsiveDivider(isDarkMode)
+                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                         Row(
                                                 modifier = Modifier.padding(horizontal = 8.dp),
                                                 verticalAlignment = Alignment.CenterVertically
@@ -393,7 +400,7 @@ fun SettingsScreen(height: Dp) {
                                                         colors = switchColors
                                                 )
                                         }
-                                        ResponsiveDivider(isDarkMode)
+                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                         Row(
                                                 modifier = Modifier.padding(horizontal = 8.dp),
                                                 verticalAlignment = Alignment.CenterVertically
@@ -447,7 +454,7 @@ fun SettingsScreen(height: Dp) {
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode)
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -467,7 +474,7 @@ fun SettingsScreen(height: Dp) {
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode)
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -546,7 +553,7 @@ fun SettingsScreen(height: Dp) {
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode)
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -566,7 +573,7 @@ fun SettingsScreen(height: Dp) {
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode)
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -586,7 +593,7 @@ fun SettingsScreen(height: Dp) {
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode)
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -641,7 +648,7 @@ fun SettingsScreen(height: Dp) {
                                                                 colors = switchColors
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode)
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Row(
                                                         modifier = Modifier.padding(horizontal = 8.dp),
                                                         verticalAlignment = Alignment.CenterVertically
@@ -722,10 +729,14 @@ fun SettingsScreen(height: Dp) {
 }
 
 @Composable
-private fun ResponsiveDivider(isDarkMode: Boolean) {
+private fun ResponsiveDivider(isDarkMode: Boolean, isHighContrastPreferred: Boolean) {
         HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 thickness = 1.dp,
-                color = if (isDarkMode) PresetColor.keyDarkEmphatic else PresetColor.keyLightEmphatic
+                color = if (isDarkMode) {
+                        if (isHighContrastPreferred) AltPresetColor.keyDarkEmphatic else PresetColor.keyDarkEmphatic
+                } else {
+                        if (isHighContrastPreferred) AltPresetColor.keyLightEmphatic else PresetColor.keyLightEmphatic
+                }
         )
 }

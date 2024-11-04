@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
@@ -50,9 +51,9 @@ fun InputMethodModeSwitch() {
                         )
                         .background(
                                 color = if (isDarkMode) {
-                                        if (isHighContrastPreferred) Color.Black else PresetColor.keyDarkEmphatic
+                                        if (isHighContrastPreferred) AltPresetColor.keyDarkEmphatic else PresetColor.keyDarkEmphatic
                                 } else {
-                                        if (isHighContrastPreferred) Color.White else PresetColor.keyLightEmphatic
+                                        if (isHighContrastPreferred) AltPresetColor.keyLightEmphatic else PresetColor.keyLightEmphatic
                                 },
                                 shape = shape
                         )
@@ -124,9 +125,9 @@ private fun optionBorderColor(isSelected: Boolean, isDarkMode: Boolean, isHighCo
 private fun optionBackgroundColor(isSelected: Boolean, isDarkMode: Boolean, isHighContrastPreferred: Boolean): Color =
         if (isSelected) {
                 if (isDarkMode) {
-                        if (isHighContrastPreferred) Color.Black else PresetColor.keyDark
+                        if (isHighContrastPreferred) AltPresetColor.keyDark else PresetColor.keyDark
                 } else {
-                        if (isHighContrastPreferred) Color.White else PresetColor.keyLight
+                        if (isHighContrastPreferred) AltPresetColor.keyLight else PresetColor.keyLight
                 }
         } else {
                 Color.Transparent

@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.shapes.BubbleShape
 import org.jyutping.jyutping.shapes.LeftHalfBubbleShape
@@ -46,6 +47,7 @@ fun CangjieKey(letter: Char, modifier: Modifier, position: Alignment.Horizontal 
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()
+        val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
         val keyboardCase by context.keyboardCase.collectAsState()
         val displayKeyLetter: String = if (showLowercaseKeys && keyboardCase.isLowercased()) letter.lowercase() else letter.uppercase()
@@ -83,16 +85,21 @@ fun CangjieKey(letter: Char, modifier: Modifier, position: Alignment.Horizontal 
                                         val height = originalSize.height.div(density.density)
                                         baseSize = Size(width = width, height = height)
                                 }
+                                .border(
+                                        width = 1.dp,
+                                        color = if (isDarkMode) {
+                                                if (isHighContrastPreferred) Color.White else Color.Transparent
+                                        } else {
+                                                if (isHighContrastPreferred) Color.Black else Color.Transparent
+                                        },
+                                        shape = RoundedCornerShape(6.dp)
+                                )
                                 .shadow(
                                         elevation = 0.5.dp,
                                         shape = RoundedCornerShape(6.dp)
                                 )
                                 .background(
-                                        if (isDarkMode) {
-                                                if (shouldPreviewKey.not() && isPressing) PresetColor.keyDarkEmphatic else PresetColor.keyDark
-                                        } else {
-                                                if (shouldPreviewKey.not() && isPressing) PresetColor.keyLightEmphatic else PresetColor.keyLight
-                                        }
+                                        color = keyBackgroundColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey, isPressing)
                                 )
                                 .fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -141,11 +148,19 @@ fun CangjieKey(letter: Char, modifier: Modifier, position: Alignment.Horizontal 
                                         modifier = modifier
                                                 .border(
                                                         width = 1.dp,
-                                                        color = if (isDarkMode) Color.DarkGray else Color.LightGray,
+                                                        color = if (isDarkMode) {
+                                                                if (isHighContrastPreferred) Color.White else Color.DarkGray
+                                                        } else {
+                                                                if (isHighContrastPreferred) Color.Black else Color.LightGray
+                                                        },
                                                         shape = shape
                                                 )
                                                 .background(
-                                                        color = if (isDarkMode) PresetColor.keyDark else PresetColor.keyLight,
+                                                        color = if (isDarkMode) {
+                                                                if (isHighContrastPreferred) AltPresetColor.keyDark else PresetColor.keyDark
+                                                        } else {
+                                                                if (isHighContrastPreferred) AltPresetColor.keyLight else PresetColor.keyLight
+                                                        },
                                                         shape = shape
                                                 )
                                                 .width(width.dp)
@@ -163,3 +178,18 @@ fun CangjieKey(letter: Char, modifier: Modifier, position: Alignment.Horizontal 
                 }
         }
 }
+
+private fun keyBackgroundColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, shouldPreviewKey: Boolean, isPressing: Boolean): Color =
+        if (isDarkMode) {
+                if (isHighContrastPreferred) {
+                        if (shouldPreviewKey.not() && isPressing) AltPresetColor.keyDarkEmphatic else AltPresetColor.keyDark
+                } else {
+                        if (shouldPreviewKey.not() && isPressing) PresetColor.keyDarkEmphatic else PresetColor.keyDark
+                }
+        } else {
+                if (isHighContrastPreferred) {
+                        if (shouldPreviewKey.not() && isPressing) AltPresetColor.keyLightEmphatic else AltPresetColor.keyLight
+                } else {
+                        if (shouldPreviewKey.not() && isPressing) PresetColor.keyLightEmphatic else PresetColor.keyLight
+                }
+        }
