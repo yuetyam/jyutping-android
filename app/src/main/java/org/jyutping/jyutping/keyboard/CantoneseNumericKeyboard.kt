@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,7 @@ import org.jyutping.jyutping.presets.PresetConstant
 fun CantoneseNumericKeyboard(keyHeight: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()
+        val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         Column(
                 modifier = Modifier
                         .background(if (isDarkMode) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
@@ -32,7 +34,13 @@ fun CantoneseNumericKeyboard(keyHeight: Dp) {
         ) {
                 Box(
                         modifier = Modifier
-                                .background(if (isDarkMode) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
+                                .background(
+                                        if (isDarkMode) {
+                                                if (isHighContrastPreferred) Color.Black else PresetColor.keyboardDarkBackground
+                                        } else {
+                                                if (isHighContrastPreferred) Color.White else PresetColor.keyboardLightBackground
+                                        }
+                                )
                                 .height(PresetConstant.ToolBarHeight.dp)
                                 .fillMaxWidth(),
                         contentAlignment = Alignment.Center
