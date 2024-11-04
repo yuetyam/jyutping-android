@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,9 +26,9 @@ import org.jyutping.jyutping.presets.PresetColor
 @Composable
 fun InputMethodModeSwitch() {
         val context = LocalContext.current as JyutpingInputMethodService
-        val inputMethodMode = remember { context.inputMethodMode }
-        val characterStandard = remember { context.characterStandard }
-        val isDarkMode = remember { context.isDarkMode }
+        val inputMethodMode by context.inputMethodMode.collectAsState()
+        val characterStandard by context.characterStandard.collectAsState()
+        val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val shapeWidth: Dp = 72.dp
         val shapeHeight: Dp = 25.dp
@@ -42,7 +41,7 @@ fun InputMethodModeSwitch() {
                 modifier = Modifier
                         .border(
                                 width = 1.dp,
-                                color = if (isDarkMode.value) {
+                                color = if (isDarkMode) {
                                         if (isHighContrastPreferred) Color.White else Color.Transparent
                                 } else {
                                         if (isHighContrastPreferred) Color.Black else Color.Transparent
@@ -50,7 +49,7 @@ fun InputMethodModeSwitch() {
                                 shape = shape
                         )
                         .background(
-                                color = if (isDarkMode.value) {
+                                color = if (isDarkMode) {
                                         if (isHighContrastPreferred) Color.Black else PresetColor.keyDarkEmphatic
                                 } else {
                                         if (isHighContrastPreferred) Color.White else PresetColor.keyLightEmphatic
@@ -69,11 +68,11 @@ fun InputMethodModeSwitch() {
                                 modifier = Modifier
                                         .border(
                                                 width = 1.dp,
-                                                color = optionBorderColor(inputMethodMode.value.isCantonese(), isDarkMode.value, isHighContrastPreferred),
+                                                color = optionBorderColor(inputMethodMode.isCantonese(), isDarkMode, isHighContrastPreferred),
                                                 shape = shape
                                         )
                                         .background(
-                                                color = optionBackgroundColor(inputMethodMode.value.isCantonese(), isDarkMode.value, isHighContrastPreferred),
+                                                color = optionBackgroundColor(inputMethodMode.isCantonese(), isDarkMode, isHighContrastPreferred),
                                                 shape = shape
                                         )
                                         .width(partWidth)
@@ -81,20 +80,20 @@ fun InputMethodModeSwitch() {
                                 contentAlignment = Alignment.Center
                         ) {
                                 Text(
-                                        text = if (characterStandard.value.isSimplified()) "粤" else "粵",
-                                        color = if (isDarkMode.value) Color.White else Color.Black,
-                                        fontSize = if (inputMethodMode.value.isCantonese()) largerFontSize else normalFontSize
+                                        text = if (characterStandard.isSimplified()) "粤" else "粵",
+                                        color = if (isDarkMode) Color.White else Color.Black,
+                                        fontSize = if (inputMethodMode.isCantonese()) largerFontSize else normalFontSize
                                 )
                         }
                         Box(
                                 modifier = Modifier
                                         .border(
                                                 width = 1.dp,
-                                                color = optionBorderColor(inputMethodMode.value.isABC(), isDarkMode.value, isHighContrastPreferred),
+                                                color = optionBorderColor(inputMethodMode.isABC(), isDarkMode, isHighContrastPreferred),
                                                 shape = shape
                                         )
                                         .background(
-                                                color = optionBackgroundColor(inputMethodMode.value.isABC(), isDarkMode.value, isHighContrastPreferred),
+                                                color = optionBackgroundColor(inputMethodMode.isABC(), isDarkMode, isHighContrastPreferred),
                                                 shape = shape
                                         )
                                         .width(partWidth)
@@ -103,8 +102,8 @@ fun InputMethodModeSwitch() {
                         ) {
                                 Text(
                                         text = "A",
-                                        color = if (isDarkMode.value) Color.White else Color.Black,
-                                        fontSize = if (inputMethodMode.value.isABC()) largerFontSize else normalFontSize
+                                        color = if (isDarkMode) Color.White else Color.Black,
+                                        fontSize = if (inputMethodMode.isABC()) largerFontSize else normalFontSize
                                 )
                         }
                 }

@@ -10,10 +10,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.ExtractedTextRequest
 import android.view.inputmethod.InputMethodManager
-import androidx.compose.runtime.MutableIntState
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStore
@@ -83,7 +79,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
                 super.onStartInput(attribute, restarting)
                 inputClientMonitorJob?.cancel()
-                val isNightMode = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+                val isNightMode: Boolean = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
                 window?.window?.navigationBarColor = if (isNightMode) PresetColor.keyboardDarkBackground.toArgb() else PresetColor.keyboardLightBackground.toArgb()
                 isDarkMode.value = isNightMode
                 inputMethodMode.value = InputMethodMode.Cantonese
@@ -137,12 +133,12 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         private val sharedPreferences by lazy { getSharedPreferences(UserSettingsKey.PreferencesFileName, Context.MODE_PRIVATE) }
 
-        val isDarkMode: MutableState<Boolean> by lazy {
+        val isDarkMode: MutableStateFlow<Boolean> by lazy {
                 val isNightMode: Boolean = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-                mutableStateOf(isNightMode)
+                MutableStateFlow(isNightMode)
         }
 
-        val spaceKeyForm: MutableState<SpaceKeyForm> by lazy { mutableStateOf(SpaceKeyForm.Fallback) }
+        val spaceKeyForm: MutableStateFlow<SpaceKeyForm> by lazy { MutableStateFlow(SpaceKeyForm.Fallback) }
         private fun updateSpaceKeyForm() {
                 val newForm: SpaceKeyForm = when {
                         inputMethodMode.value.isABC() -> SpaceKeyForm.English
@@ -169,7 +165,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
-        val returnKeyForm: MutableState<ReturnKeyForm> by lazy { mutableStateOf(ReturnKeyForm.StandbyTraditional) }
+        val returnKeyForm: MutableStateFlow<ReturnKeyForm> by lazy { MutableStateFlow(ReturnKeyForm.StandbyTraditional) }
         private fun updateReturnKeyForm() {
                 val newForm: ReturnKeyForm = when (inputMethodMode.value) {
                         InputMethodMode.ABC -> ReturnKeyForm.StandbyABC
@@ -186,7 +182,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
-        val inputMethodMode: MutableState<InputMethodMode> by lazy { mutableStateOf(InputMethodMode.Cantonese) }
+        val inputMethodMode: MutableStateFlow<InputMethodMode> by lazy { MutableStateFlow(InputMethodMode.Cantonese) }
         fun toggleInputMethodMode() {
                 val newMode: InputMethodMode = when (inputMethodMode.value) {
                         InputMethodMode.Cantonese -> InputMethodMode.ABC
@@ -197,14 +193,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 updateReturnKeyForm()
         }
 
-        val qwertyForm: MutableState<QwertyForm> by lazy { mutableStateOf(QwertyForm.Jyutping) }
+        val qwertyForm: MutableStateFlow<QwertyForm> by lazy { MutableStateFlow(QwertyForm.Jyutping) }
         private fun updateQwertyForm(form: QwertyForm) {
                 if (qwertyForm.value != form) {
                         qwertyForm.value = form
                 }
         }
 
-        val keyboardForm: MutableState<KeyboardForm> by lazy { mutableStateOf(KeyboardForm.Alphabetic) }
+        val keyboardForm: MutableStateFlow<KeyboardForm> by lazy { MutableStateFlow(KeyboardForm.Alphabetic) }
         fun transformTo(destination: KeyboardForm) {
                 if (isBuffering.value) {
                         val shouldKeepBuffer: Boolean = (destination == KeyboardForm.Alphabetic) || (destination == KeyboardForm.CandidateBoard)
@@ -221,7 +217,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 updateSpaceKeyForm()
         }
 
-        val keyboardCase: MutableState<KeyboardCase> by lazy { mutableStateOf(KeyboardCase.Lowercased) }
+        val keyboardCase: MutableStateFlow<KeyboardCase> by lazy { MutableStateFlow(KeyboardCase.Lowercased) }
         private fun updateKeyboardCase(case: KeyboardCase) {
                 keyboardCase.value = case
                 updateSpaceKeyForm()
@@ -248,10 +244,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
-        val characterStandard: MutableState<CharacterStandard> by lazy {
+        val characterStandard: MutableStateFlow<CharacterStandard> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CharacterStandard, CharacterStandard.Traditional.identifier)
                 val standard: CharacterStandard = CharacterStandard.standardOf(savedValue)
-                mutableStateOf(standard)
+                MutableStateFlow(standard)
         }
         fun updateCharacterStandard(standard: CharacterStandard) {
                 characterStandard.value = standard
@@ -261,10 +257,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.CharacterStandard, standard.identifier)
                 editor.apply()
         }
-        val isAudioFeedbackOn: MutableState<Boolean> by lazy {
+        val isAudioFeedbackOn: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.AudioFeedback, 101)
                 val isOn: Boolean = (savedValue == 101)
-                mutableStateOf(isOn)
+                MutableStateFlow(isOn)
         }
         fun updateAudioFeedback(isOn: Boolean) {
                 isAudioFeedbackOn.value = isOn
@@ -273,10 +269,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.AudioFeedback, value)
                 editor.apply()
         }
-        val isHapticFeedbackOn: MutableState<Boolean> by lazy {
+        val isHapticFeedbackOn: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.HapticFeedback, 101)
                 val isOn: Boolean = (savedValue == 101)
-                mutableStateOf(isOn)
+                MutableStateFlow(isOn)
         }
         fun updateHapticFeedback(isOn: Boolean) {
                 isHapticFeedbackOn.value = isOn
@@ -285,10 +281,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.HapticFeedback, value)
                 editor.apply()
         }
-        val showLowercaseKeys: MutableState<Boolean> by lazy {
+        val showLowercaseKeys: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.KeyCase, 1)
                 val isLowercase: Boolean = (savedValue == 1)
-                mutableStateOf(isLowercase)
+                MutableStateFlow(isLowercase)
         }
         fun updateShowLowercaseKeys(isOn: Boolean) {
                 showLowercaseKeys.value = isOn
@@ -297,10 +293,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.KeyCase, value2save)
                 editor.apply()
         }
-        val previewKeyText: MutableState<Boolean> by lazy {
+        val previewKeyText: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.KeyTextPreview, 1)
                 val shouldPreview: Boolean = (savedValue == 1)
-                mutableStateOf(shouldPreview)
+                MutableStateFlow(shouldPreview)
         }
         fun updatePreviewKeyText(isOn: Boolean) {
                 previewKeyText.value = isOn
@@ -321,10 +317,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.HighContrast, value2save)
                 editor.apply()
         }
-        val needsInputModeSwitchKey: MutableState<Boolean> by lazy {
+        val needsInputModeSwitchKey: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.GlobeKey, 0)
                 val needs: Boolean = (savedValue == 1)
-                mutableStateOf(needs)
+                MutableStateFlow(needs)
         }
         fun updateNeedsInputModeSwitchKey(needs: Boolean) {
                 needsInputModeSwitchKey.value = needs
@@ -333,10 +329,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.GlobeKey, value2save)
                 editor.apply()
         }
-        val needsLeftKey: MutableState<Boolean> by lazy {
+        val needsLeftKey: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.LeftKey, 1)
                 val needs: Boolean = (savedValue == 1)
-                mutableStateOf(needs)
+                MutableStateFlow(needs)
         }
         fun updateNeedsLeftKey(needs: Boolean) {
                 needsLeftKey.value = needs
@@ -345,10 +341,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.LeftKey, value2save)
                 editor.apply()
         }
-        val needsRightKey: MutableState<Boolean> by lazy {
+        val needsRightKey: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.RightKey, 1)
                 val needs: Boolean = (savedValue == 1)
-                mutableStateOf(needs)
+                MutableStateFlow(needs)
         }
         fun updateNeedsRightKey(needs: Boolean) {
                 needsRightKey.value = needs
@@ -357,10 +353,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.RightKey, value2save)
                 editor.apply()
         }
-        val isEmojiSuggestionsOn: MutableState<Boolean> by lazy {
+        val isEmojiSuggestionsOn: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.Emoji, 1)
                 val isOn: Boolean = (savedValue == 1)
-                mutableStateOf(isOn)
+                MutableStateFlow(isOn)
         }
         fun updateEmojiSuggestionsState(isOn: Boolean) {
                 isEmojiSuggestionsOn.value = isOn
@@ -369,10 +365,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.Emoji, value2save)
                 editor.apply()
         }
-        val commentStyle: MutableState<CommentStyle> by lazy {
+        val commentStyle: MutableStateFlow<CommentStyle> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CommentStyle, CommentStyle.AboveCandidates.identifier)
                 val style: CommentStyle = CommentStyle.styleOf(savedValue)
-                mutableStateOf(style)
+                MutableStateFlow(style)
         }
         fun updateCommentStyle(style: CommentStyle) {
                 commentStyle.value = style
@@ -380,10 +376,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.CommentStyle, style.identifier)
                 editor.apply()
         }
-        val cangjieVariant: MutableState<CangjieVariant> by lazy {
+        val cangjieVariant: MutableStateFlow<CangjieVariant> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CangjieVariant, CangjieVariant.Cangjie5.identifier)
                 val variant: CangjieVariant = CangjieVariant.variantOf(savedValue)
-                mutableStateOf(variant)
+                MutableStateFlow(variant)
         }
         fun updateCangjieVariant(variant: CangjieVariant) {
                 cangjieVariant.value = variant
@@ -391,10 +387,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.CangjieVariant, variant.identifier)
                 editor.apply()
         }
-        val isInputMemoryOn: MutableState<Boolean> by lazy {
+        val isInputMemoryOn: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.InputMemory, 1)
                 val isOn: Boolean = (savedValue == 1)
-                mutableStateOf(isOn)
+                MutableStateFlow(isOn)
         }
         fun updateInputMemoryState(isOn: Boolean) {
                 isInputMemoryOn.value = isOn
@@ -410,8 +406,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 userDB.deleteAll()
         }
 
-        val candidateState: MutableIntState by lazy { mutableIntStateOf(1) }
-        val candidates: MutableState<List<Candidate>> by lazy { mutableStateOf(listOf()) }
+        val candidateState: MutableStateFlow<Int> by lazy { MutableStateFlow(1) }
+        val candidates: MutableStateFlow<List<Candidate>> by lazy { MutableStateFlow(listOf()) }
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.databaseName) }
         private var bufferText: String = PresetString.EMPTY
                 set(value) {
@@ -556,11 +552,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         }
                                 }
                         }
-                        candidateState.intValue += 1
+                        candidateState.value += 1
                         updateSpaceKeyForm()
                         updateReturnKeyForm()
                 }
-        val isBuffering: MutableState<Boolean> by lazy { mutableStateOf(false) }
+        val isBuffering: MutableStateFlow<Boolean> by lazy { MutableStateFlow(false) }
         fun clearBuffer() {
                 bufferText = PresetString.EMPTY
         }
@@ -709,7 +705,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
 
         // region EditingPanel
-        val isClipboardEmpty: MutableState<Boolean> by lazy { mutableStateOf(true) }
+        val isClipboardEmpty: MutableStateFlow<Boolean> by lazy { MutableStateFlow(true) }
         private fun isCurrentClipboardEmpty(): Boolean {
                 val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 if (clipboard.hasPrimaryClip().not()) return true

@@ -17,6 +17,8 @@ import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,10 +36,10 @@ import org.jyutping.jyutping.presets.PresetColor
 @Composable
 fun EditingPanelClearKey(modifier: Modifier) {
         val interactionSource = remember { MutableInteractionSource() }
-        val isPressed = interactionSource.collectIsPressedAsState()
+        val isPressed by interactionSource.collectIsPressedAsState()
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        val isDarkMode = remember { context.isDarkMode }
+        val isDarkMode by context.isDarkMode.collectAsState()
         Column(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
@@ -51,10 +53,10 @@ fun EditingPanelClearKey(modifier: Modifier) {
                                 shape = RoundedCornerShape(6.dp)
                         )
                         .background(
-                                if (isDarkMode.value) {
-                                        if (isPressed.value) PresetColor.keyDark else PresetColor.keyDarkEmphatic
+                                if (isDarkMode) {
+                                        if (isPressed) PresetColor.keyDark else PresetColor.keyDarkEmphatic
                                 } else {
-                                        if (isPressed.value) PresetColor.keyLight else PresetColor.keyLightEmphatic
+                                        if (isPressed) PresetColor.keyLight else PresetColor.keyLightEmphatic
                                 }
                         )
                         .fillMaxSize(),
@@ -65,11 +67,11 @@ fun EditingPanelClearKey(modifier: Modifier) {
                         imageVector = Icons.Outlined.Clear,
                         contentDescription = null,
                         modifier = Modifier.size(22.dp),
-                        tint = if (isDarkMode.value) Color.White else Color.Black
+                        tint = if (isDarkMode) Color.White else Color.Black
                 )
                 Text(
                         text = stringResource(id = R.string.editing_panel_key_clear),
-                        color = if (isDarkMode.value) Color.White else Color.Black,
+                        color = if (isDarkMode) Color.White else Color.Black,
                         fontSize = 11.sp,
                 )
         }

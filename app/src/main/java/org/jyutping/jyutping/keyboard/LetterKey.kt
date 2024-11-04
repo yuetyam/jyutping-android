@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,14 +44,14 @@ import org.jyutping.jyutping.shapes.RightHalfBubbleShape
 fun LetterKey(letter: String, modifier: Modifier, position: Alignment.Horizontal = Alignment.CenterHorizontally) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        val isDarkMode = remember { context.isDarkMode }
-        val showLowercaseKeys = remember { context.showLowercaseKeys }
-        val keyboardCase = remember { context.keyboardCase }
-        val displayText: String = if (showLowercaseKeys.value && keyboardCase.value.isLowercased()) letter else letter.uppercase()
-        var isPressing by remember { mutableStateOf(false) }
-        val shouldPreviewKey = remember { context.previewKeyText }
+        val isDarkMode by context.isDarkMode.collectAsState()
+        val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
+        val keyboardCase by context.keyboardCase.collectAsState()
+        val displayText: String = if (showLowercaseKeys && keyboardCase.isLowercased()) letter else letter.uppercase()
+        val shouldPreviewKey by context.previewKeyText.collectAsState()
         val density = LocalDensity.current
         var baseSize by remember { mutableStateOf(Size.Zero) }
+        var isPressing by remember { mutableStateOf(false) }
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -63,7 +64,7 @@ fun LetterKey(letter: String, modifier: Modifier, position: Alignment.Horizontal
                                                 isPressing = false
                                         },
                                         onTap = {
-                                                val text: String = if (keyboardCase.value.isLowercased()) letter else letter.uppercase()
+                                                val text: String = if (keyboardCase.isLowercased()) letter else letter.uppercase()
                                                 context.process(text)
                                         }
                                 )
@@ -85,10 +86,10 @@ fun LetterKey(letter: String, modifier: Modifier, position: Alignment.Horizontal
                                         shape = RoundedCornerShape(6.dp)
                                 )
                                 .background(
-                                        if (isDarkMode.value) {
-                                                if (shouldPreviewKey.value.not() && isPressing) PresetColor.keyDarkEmphatic else PresetColor.keyDark
+                                        if (isDarkMode) {
+                                                if (shouldPreviewKey.not() && isPressing) PresetColor.keyDarkEmphatic else PresetColor.keyDark
                                         } else {
-                                                if (shouldPreviewKey.value.not() && isPressing) PresetColor.keyLightEmphatic else PresetColor.keyLight
+                                                if (shouldPreviewKey.not() && isPressing) PresetColor.keyLightEmphatic else PresetColor.keyLight
                                         }
                                 )
                                 .fillMaxSize(),
@@ -96,11 +97,11 @@ fun LetterKey(letter: String, modifier: Modifier, position: Alignment.Horizontal
                 ) {
                         Text(
                                 text = displayText,
-                                color = if (isDarkMode.value) Color.White else Color.Black,
+                                color = if (isDarkMode) Color.White else Color.Black,
                                 fontSize = 22.sp
                         )
                 }
-                if (shouldPreviewKey.value && isPressing) {
+                if (shouldPreviewKey && isPressing) {
                         val shape: Shape = when (position) {
                                 Alignment.Start -> RightHalfBubbleShape()
                                 Alignment.End -> LeftHalfBubbleShape()
@@ -126,11 +127,11 @@ fun LetterKey(letter: String, modifier: Modifier, position: Alignment.Horizontal
                                         modifier = modifier
                                                 .border(
                                                         width = 1.dp,
-                                                        color = if (isDarkMode.value) Color.DarkGray else Color.LightGray,
+                                                        color = if (isDarkMode) Color.DarkGray else Color.LightGray,
                                                         shape = shape
                                                 )
                                                 .background(
-                                                        color = if (isDarkMode.value) PresetColor.keyDark else PresetColor.keyLight,
+                                                        color = if (isDarkMode) PresetColor.keyDark else PresetColor.keyLight,
                                                         shape = shape
                                                 )
                                                 .width(width.dp)
@@ -140,7 +141,7 @@ fun LetterKey(letter: String, modifier: Modifier, position: Alignment.Horizontal
                                         Text(
                                                 text = displayText,
                                                 modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
-                                                color = if (isDarkMode.value) Color.White else Color.Black,
+                                                color = if (isDarkMode) Color.White else Color.Black,
                                                 style = MaterialTheme.typography.headlineLarge
                                         )
                                 }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,19 +23,19 @@ import org.jyutping.jyutping.presets.PresetConstant
 @Composable
 fun AlphabeticKeyboard(keyHeight: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
-        val isBuffering = remember { context.isBuffering }
-        val isDarkMode = remember { context.isDarkMode }
+        val isBuffering by context.isBuffering.collectAsState()
+        val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         Column(
                 modifier = Modifier
-                        .background(if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
+                        .background(if (isDarkMode) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
                         .systemBarsPadding()
                         .fillMaxWidth()
         ) {
                 Box(
                         modifier = Modifier
                                 .background(
-                                        if (isDarkMode.value) {
+                                        if (isDarkMode) {
                                                 if (isHighContrastPreferred) Color.Black else PresetColor.keyboardDarkBackground
                                         } else {
                                                 if (isHighContrastPreferred) Color.White else PresetColor.keyboardLightBackground
@@ -46,7 +45,7 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                 ) {
-                        if (isBuffering.value) {
+                        if (isBuffering) {
                                 CandidateScrollBar()
                         } else {
                                 ToolBar()

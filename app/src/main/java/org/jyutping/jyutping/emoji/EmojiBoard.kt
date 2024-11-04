@@ -26,7 +26,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,12 +46,12 @@ import org.jyutping.jyutping.presets.PresetColor
 fun EmojiBoard(height: Dp) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        val isDarkMode = remember { context.isDarkMode }
+        val isDarkMode by context.isDarkMode.collectAsState()
         val edgeIndicatorWeight: Float = 1f
         val indicatorWeight: Float = 1f
         Column(
                 modifier = Modifier
-                        .background(if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
+                        .background(if (isDarkMode) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
                         .systemBarsPadding()
                         .height(height)
                         .fillMaxWidth(),
@@ -67,7 +68,7 @@ fun EmojiBoard(height: Dp) {
                 ) {
                         Text(
                                 text = "<#Emoji Category Title#>",
-                                color = if (isDarkMode.value) Color.White else Color.Black,
+                                color = if (isDarkMode) Color.White else Color.Black,
                                 style = MaterialTheme.typography.labelMedium
                         )
                 }
@@ -79,13 +80,13 @@ fun EmojiBoard(height: Dp) {
                         item {
                                 Text(
                                         text = " 未實現 ",
-                                        color = if (isDarkMode.value) Color.White else Color.Black
+                                        color = if (isDarkMode) Color.White else Color.Black
                                 )
                         }
                         item {
                                 Text(
                                         text = " Not Implemented Yet",
-                                        color = if (isDarkMode.value) Color.White else Color.Black
+                                        color = if (isDarkMode) Color.White else Color.Black
                                 )
                         }
                 }
@@ -106,7 +107,7 @@ fun EmojiBoard(height: Dp) {
                         ) {
                                 Text(
                                         text = "ABC",
-                                        color = if (isDarkMode.value) Color.White else Color.Black,
+                                        color = if (isDarkMode) Color.White else Color.Black,
                                         style = MaterialTheme.typography.bodyLarge
                                 )
                         }
@@ -120,7 +121,7 @@ fun EmojiBoard(height: Dp) {
                                 Icon(
                                         imageVector = Icons.Outlined.Schedule,
                                         contentDescription = null,
-                                        tint = if (isDarkMode.value) Color.White else Color.Black
+                                        tint = if (isDarkMode) Color.White else Color.Black
                                 )
                         }
                         IconButton(
@@ -133,7 +134,7 @@ fun EmojiBoard(height: Dp) {
                                 Icon(
                                         imageVector = Icons.Outlined.EmojiEmotions,
                                         contentDescription = null,
-                                        tint = if (isDarkMode.value) Color.White else Color.Black
+                                        tint = if (isDarkMode) Color.White else Color.Black
                                 )
                         }
                         IconButton(
@@ -146,7 +147,7 @@ fun EmojiBoard(height: Dp) {
                                 Icon(
                                         imageVector = Icons.Outlined.EmojiNature,
                                         contentDescription = null,
-                                        tint = if (isDarkMode.value) Color.White else Color.Black
+                                        tint = if (isDarkMode) Color.White else Color.Black
                                 )
                         }
                         IconButton(
@@ -159,7 +160,7 @@ fun EmojiBoard(height: Dp) {
                                 Icon(
                                         imageVector = Icons.Outlined.EmojiFoodBeverage,
                                         contentDescription = null,
-                                        tint = if (isDarkMode.value) Color.White else Color.Black
+                                        tint = if (isDarkMode) Color.White else Color.Black
                                 )
                         }
                         IconButton(
@@ -172,7 +173,7 @@ fun EmojiBoard(height: Dp) {
                                 Icon(
                                         imageVector = Icons.Outlined.EmojiPeople,
                                         contentDescription = null,
-                                        tint = if (isDarkMode.value) Color.White else Color.Black
+                                        tint = if (isDarkMode) Color.White else Color.Black
                                 )
                         }
                         IconButton(
@@ -185,7 +186,7 @@ fun EmojiBoard(height: Dp) {
                                 Icon(
                                         imageVector = Icons.Outlined.EmojiTransportation,
                                         contentDescription = null,
-                                        tint = if (isDarkMode.value) Color.White else Color.Black
+                                        tint = if (isDarkMode) Color.White else Color.Black
                                 )
                         }
                         IconButton(
@@ -198,7 +199,7 @@ fun EmojiBoard(height: Dp) {
                                 Icon(
                                         imageVector = Icons.Outlined.EmojiObjects,
                                         contentDescription = null,
-                                        tint = if (isDarkMode.value) Color.White else Color.Black
+                                        tint = if (isDarkMode) Color.White else Color.Black
                                 )
                         }
                         IconButton(
@@ -211,7 +212,7 @@ fun EmojiBoard(height: Dp) {
                                 Icon(
                                         imageVector = Icons.Outlined.EmojiSymbols,
                                         contentDescription = null,
-                                        tint = if (isDarkMode.value) Color.White else Color.Black
+                                        tint = if (isDarkMode) Color.White else Color.Black
                                 )
                         }
                         IconButton(
@@ -224,7 +225,7 @@ fun EmojiBoard(height: Dp) {
                                 Icon(
                                         imageVector = Icons.Outlined.EmojiFlags,
                                         contentDescription = null,
-                                        tint = if (isDarkMode.value) Color.White else Color.Black
+                                        tint = if (isDarkMode) Color.White else Color.Black
                                 )
                         }
                         IconButton(
@@ -239,7 +240,7 @@ fun EmojiBoard(height: Dp) {
                                         imageVector = ImageVector.vectorResource(id = R.drawable.key_backspace),
                                         contentDescription = null,
                                         modifier = Modifier.height(20.dp),
-                                        tint = if (isDarkMode.value) Color.White else Color.Black
+                                        tint = if (isDarkMode) Color.White else Color.Black
                                 )
                         }
                 }

@@ -61,9 +61,9 @@ fun CandidateBoard(height: Dp) {
         val interactionSource = remember { MutableInteractionSource() }
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        val commentStyle = remember { context.commentStyle }
-        val rowVerticalAlignment: Alignment.Vertical = if (commentStyle.value.isBelow()) Alignment.Top else Alignment.Bottom
-        val isDarkMode = remember { context.isDarkMode }
+        val commentStyle by context.commentStyle.collectAsState()
+        val rowVerticalAlignment: Alignment.Vertical = if (commentStyle.isBelow()) Alignment.Top else Alignment.Bottom
+        val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val screenWidth: Dp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 val windowMetrics = context.windowManager.currentWindowMetrics
@@ -72,7 +72,9 @@ fun CandidateBoard(height: Dp) {
                 LocalConfiguration.current.screenWidthDp.dp
         }
         val state = rememberLazyListState()
-        LaunchedEffect(context.candidateState.intValue) {
+        val candidates by context.candidates.collectAsState()
+        val candidateState by context.candidateState.collectAsState()
+        LaunchedEffect(candidateState) {
                 state.scrollToItem(index = 0, scrollOffset = 0)
         }
         val minRowIdentifier: Int = 1000
@@ -81,7 +83,6 @@ fun CandidateBoard(height: Dp) {
                 var cache: MutableList<Candidate> = mutableListOf()
                 var rowID: Int = minRowIdentifier
                 var rowWidth: Dp = 0.dp
-                val candidates = context.candidates.value
                 for (index in candidates.indices) {
                         val candidate = candidates[index]
                         val maxWidth: Dp = if (rows.isEmpty()) (screenWidth - collapseWidth) else screenWidth
@@ -104,7 +105,7 @@ fun CandidateBoard(height: Dp) {
         Box(
                 modifier = Modifier
                         .background(
-                                if (isDarkMode.value) {
+                                if (isDarkMode) {
                                         if (isHighContrastPreferred) Color.Black else PresetColor.keyboardDarkBackground
                                 } else {
                                         if (isHighContrastPreferred) Color.White else PresetColor.keyboardLightBackground
@@ -132,8 +133,8 @@ fun CandidateBoard(height: Dp) {
                                         row.candidates.map {
                                                 CandidateView(
                                                         candidate = it,
-                                                        commentStyle = commentStyle.value,
-                                                        isDarkMode = isDarkMode.value,
+                                                        commentStyle = commentStyle,
+                                                        isDarkMode = isDarkMode,
                                                         modifier = Modifier
                                                                 .clickable(interactionSource = interactionSource, indication = null) {
                                                                         view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -152,7 +153,7 @@ fun CandidateBoard(height: Dp) {
                                 }
                                 HorizontalDivider(
                                         thickness = 1.dp,
-                                        color = if (isDarkMode.value) {
+                                        color = if (isDarkMode) {
                                                 if (isHighContrastPreferred) Color.White else PresetColor.keyDarkEmphatic
                                         } else {
                                                 if (isHighContrastPreferred) Color.Black else PresetColor.keyLightEmphatic
@@ -171,7 +172,7 @@ fun CandidateBoard(height: Dp) {
                                 .height(collapseHeight)
                                 .border(
                                         width = 1.dp,
-                                        color = if (isDarkMode.value) {
+                                        color = if (isDarkMode) {
                                                 if (isHighContrastPreferred) Color.White else Color.Transparent
                                         } else {
                                                 if (isHighContrastPreferred) Color.Black else Color.Transparent
@@ -179,7 +180,7 @@ fun CandidateBoard(height: Dp) {
                                         shape = RoundedCornerShape(4.dp)
                                 )
                                 .background(
-                                        color = if (isDarkMode.value) {
+                                        color = if (isDarkMode) {
                                                 if (isHighContrastPreferred) Color.Black else PresetColor.keyDarkEmphatic
                                         } else {
                                                 if (isHighContrastPreferred) Color.White else PresetColor.keyLightEmphatic
@@ -191,7 +192,7 @@ fun CandidateBoard(height: Dp) {
                                 imageVector = ImageVector.vectorResource(id = R.drawable.chevron_up),
                                 contentDescription = null,
                                 modifier = Modifier.size(20.dp),
-                                tint = if (isDarkMode.value) Color.White else Color.Black
+                                tint = if (isDarkMode) Color.White else Color.Black
                         )
                 }
         }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -36,14 +37,14 @@ import org.jyutping.jyutping.presets.PresetColor
 fun ShiftKey(modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        val isDarkMode = remember { context.isDarkMode }
-        var isPressing by remember { mutableStateOf(false) }
-        val keyboardCase = remember { context.keyboardCase }
-        val drawableId: Int = when (keyboardCase.value) {
+        val isDarkMode by context.isDarkMode.collectAsState()
+        val keyboardCase by context.keyboardCase.collectAsState()
+        val drawableId: Int = when (keyboardCase) {
                 KeyboardCase.Lowercased -> R.drawable.key_shift
                 KeyboardCase.Uppercased -> R.drawable.key_shifting
                 KeyboardCase.CapsLocked -> R.drawable.key_capslock
         }
+        var isPressing by remember { mutableStateOf(false) }
         var previousKeyboardCase by remember { mutableStateOf(KeyboardCase.Lowercased) }
         var isInTheMediumOfDoubleTapping by remember { mutableStateOf(false) }
         var doubleTappingBuffer by remember { mutableIntStateOf(0) }
@@ -70,7 +71,7 @@ fun ShiftKey(modifier: Modifier) {
                                                 isPressing = false
                                         },
                                         onTap = {
-                                                val currentKeyboardCase = keyboardCase.value
+                                                val currentKeyboardCase = keyboardCase
                                                 val didKeyboardCaseSwitchBack = (currentKeyboardCase == previousKeyboardCase)
                                                 val shouldPerformDoubleTapping = isInTheMediumOfDoubleTapping && didKeyboardCaseSwitchBack.not()
                                                 doubleTappingBuffer = 0
@@ -96,7 +97,7 @@ fun ShiftKey(modifier: Modifier) {
                                         shape = RoundedCornerShape(6.dp)
                                 )
                                 .background(
-                                        if (isDarkMode.value) {
+                                        if (isDarkMode) {
                                                 if (isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
                                         } else {
                                                 if (isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
@@ -109,7 +110,7 @@ fun ShiftKey(modifier: Modifier) {
                                 imageVector = ImageVector.vectorResource(id = drawableId),
                                 contentDescription = null,
                                 modifier = Modifier.size(22.dp),
-                                tint = if (isDarkMode.value) Color.White else Color.Black
+                                tint = if (isDarkMode) Color.White else Color.Black
                         )
                 }
         }

@@ -7,6 +7,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,7 +21,7 @@ fun HiddenKey(event: HiddenKeyEvent, modifier: Modifier) {
         val interactionSource = remember { MutableInteractionSource() }
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        val keyboardCase = remember { context.keyboardCase }
+        val keyboardCase by context.keyboardCase.collectAsState()
         Box(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
@@ -29,7 +31,7 @@ fun HiddenKey(event: HiddenKeyEvent, modifier: Modifier) {
                                 if (letter == null) {
                                         context.backspace()
                                 } else {
-                                        val text: String = if (keyboardCase.value.isLowercased()) letter else letter.uppercase()
+                                        val text: String = if (keyboardCase.isLowercased()) letter else letter.uppercase()
                                         context.process(text)
                                 }
                         }

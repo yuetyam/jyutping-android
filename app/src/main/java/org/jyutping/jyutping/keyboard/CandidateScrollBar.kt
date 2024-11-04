@@ -45,26 +45,28 @@ fun CandidateScrollBar() {
         val interactionSource = remember { MutableInteractionSource() }
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        val commentStyle = remember { context.commentStyle }
-        val candidateViewTopInset: Dp = when (commentStyle.value) {
+        val commentStyle by context.commentStyle.collectAsState()
+        val candidateViewTopInset: Dp = when (commentStyle) {
                 CommentStyle.AboveCandidates -> 0.dp
                 CommentStyle.BelowCandidates -> 4.dp
                 CommentStyle.NoComments -> 0.dp
         }
-        val candidateViewBottomInset: Dp = when (commentStyle.value) {
+        val candidateViewBottomInset: Dp = when (commentStyle) {
                 CommentStyle.AboveCandidates -> 12.dp
                 CommentStyle.BelowCandidates -> 0.dp
                 CommentStyle.NoComments -> 16.dp
         }
-        val candidateRowVerticalAlignment: Alignment.Vertical = when (commentStyle.value) {
+        val candidateRowVerticalAlignment: Alignment.Vertical = when (commentStyle) {
                 CommentStyle.AboveCandidates -> Alignment.Bottom
                 CommentStyle.BelowCandidates -> Alignment.Top
                 CommentStyle.NoComments -> Alignment.Bottom
         }
-        val isDarkMode = remember { context.isDarkMode }
+        val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val state = rememberLazyListState()
-        LaunchedEffect(context.candidateState.intValue) {
+        val candidates by context.candidates.collectAsState()
+        val candidateState by context.candidateState.collectAsState()
+        LaunchedEffect(candidateState) {
                 state.scrollToItem(index = 0, scrollOffset = 0)
         }
         Box(
@@ -76,11 +78,11 @@ fun CandidateScrollBar() {
                         horizontalArrangement = Arrangement.spacedBy(0.dp),
                         verticalAlignment = candidateRowVerticalAlignment
                 ) {
-                        itemsIndexed(context.candidates.value) { index, candidate ->
+                        itemsIndexed(candidates) { index, candidate ->
                                 CandidateView(
                                         candidate = candidate,
-                                        commentStyle = commentStyle.value,
-                                        isDarkMode = isDarkMode.value,
+                                        commentStyle = commentStyle,
+                                        isDarkMode = isDarkMode,
                                         modifier = Modifier
                                                 .clickable(interactionSource = interactionSource, indication = null) {
                                                         view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -96,7 +98,7 @@ fun CandidateScrollBar() {
                 Box(
                         modifier = Modifier
                                 .background(
-                                        if (isDarkMode.value) {
+                                        if (isDarkMode) {
                                                 if (isHighContrastPreferred) Color.Black else PresetColor.keyboardDarkBackground
                                         } else {
                                                 if (isHighContrastPreferred) Color.White else PresetColor.keyboardLightBackground
@@ -126,7 +128,7 @@ fun CandidateScrollBar() {
                                         imageVector = ImageVector.vectorResource(id = R.drawable.chevron_down),
                                         contentDescription = null,
                                         modifier = Modifier.size(20.dp),
-                                        tint = if (isDarkMode.value) Color.White else Color.Black
+                                        tint = if (isDarkMode) Color.White else Color.Black
                                 )
                         }
                 }

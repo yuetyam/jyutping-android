@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,7 +36,7 @@ import org.jyutping.jyutping.presets.PresetColor
 fun GlobeKey(modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        val isDarkMode = remember { context.isDarkMode }
+        val isDarkMode by context.isDarkMode.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
         Box(
                 modifier = modifier
@@ -76,7 +77,7 @@ fun GlobeKey(modifier: Modifier) {
                                         shape = RoundedCornerShape(6.dp)
                                 )
                                 .background(
-                                        if (isDarkMode.value) {
+                                        if (isDarkMode) {
                                                 if (isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
                                         } else {
                                                 if (isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
@@ -89,7 +90,7 @@ fun GlobeKey(modifier: Modifier) {
                                 imageVector = ImageVector.vectorResource(id = R.drawable.key_globe),
                                 contentDescription = null,
                                 modifier = Modifier.size(18.dp),
-                                tint = if (isDarkMode.value) Color.White else Color.Black
+                                tint = if (isDarkMode) Color.White else Color.Black
                         )
                 }
         }

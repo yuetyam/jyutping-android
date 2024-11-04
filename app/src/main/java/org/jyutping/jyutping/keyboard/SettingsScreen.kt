@@ -60,35 +60,35 @@ import org.jyutping.jyutping.presets.PresetColor
 fun SettingsScreen(height: Dp) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        val isDarkMode = remember { context.isDarkMode }
-        val characterStandard = remember { context.characterStandard }
-        val isAudioFeedbackOn = remember { context.isAudioFeedbackOn }
-        val isHapticFeedbackOn = remember { context.isHapticFeedbackOn }
-        val showLowercaseKeys = remember { context.showLowercaseKeys }
-        val previewKeyText = remember { context.previewKeyText }
+        val isDarkMode by context.isDarkMode.collectAsState()
+        val characterStandard by context.characterStandard.collectAsState()
+        val isAudioFeedbackOn by context.isAudioFeedbackOn.collectAsState()
+        val isHapticFeedbackOn by context.isHapticFeedbackOn.collectAsState()
+        val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
+        val previewKeyText by context.previewKeyText.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
-        val needsInputModeSwitchKey = remember { context.needsInputModeSwitchKey }
-        val needsLeftKey = remember { context.needsLeftKey }
-        val needsRightKey = remember { context.needsRightKey }
-        val commentStyle = remember { context.commentStyle }
-        val isEmojiSuggestionsOn = remember { context.isEmojiSuggestionsOn }
-        val cangjieVariant = remember { context.cangjieVariant }
-        val isInputMemoryOn = remember { context.isInputMemoryOn }
+        val needsInputModeSwitchKey by context.needsInputModeSwitchKey.collectAsState()
+        val needsLeftKey by context.needsLeftKey.collectAsState()
+        val needsRightKey by context.needsRightKey.collectAsState()
+        val commentStyle by context.commentStyle.collectAsState()
+        val isEmojiSuggestionsOn by context.isEmojiSuggestionsOn.collectAsState()
+        val cangjieVariant by context.cangjieVariant.collectAsState()
+        val isInputMemoryOn by context.isInputMemoryOn.collectAsState()
         var isTryingToClearUserLexicon by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()
-        val tintColor: Color = if (isDarkMode.value) Color.White else Color.Black
-        val backColor: Color = if (isDarkMode.value) Color.Black else Color.White
-        val buttonColors: ButtonColors = if (isDarkMode.value) {
+        val tintColor: Color = if (isDarkMode) Color.White else Color.Black
+        val backColor: Color = if (isDarkMode) Color.Black else Color.White
+        val buttonColors: ButtonColors = if (isDarkMode) {
                 ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White)
         } else {
                 ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black)
         }
-        val destructiveButtonColors: ButtonColors = if (isDarkMode.value) {
+        val destructiveButtonColors: ButtonColors = if (isDarkMode) {
                 ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.Red)
         } else {
                 ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Red)
         }
-        val switchColors: SwitchColors = if (isDarkMode.value) {
+        val switchColors: SwitchColors = if (isDarkMode) {
                 SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = PresetColor.green, uncheckedThumbColor = Color.LightGray, uncheckedTrackColor = Color.DarkGray, uncheckedBorderColor = Color.Gray)
         } else {
                 SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = PresetColor.green, uncheckedThumbColor = Color.DarkGray, uncheckedTrackColor = Color.LightGray, uncheckedBorderColor = Color.Gray)
@@ -96,7 +96,7 @@ fun SettingsScreen(height: Dp) {
         val version: String by lazy { BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")" }
         Column(
                 modifier = Modifier
-                        .background(if (isDarkMode.value) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
+                        .background(if (isDarkMode) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
                         .systemBarsPadding()
                         .height(height)
                         .fillMaxWidth(),
@@ -171,11 +171,11 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (characterStandard.value == CharacterStandard.Traditional) 1f else 0f),
+                                                                modifier = Modifier.alpha(if (characterStandard == CharacterStandard.Traditional) 1f else 0f),
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode.value)
+                                                ResponsiveDivider(isDarkMode)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -191,11 +191,11 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (characterStandard.value == CharacterStandard.HongKong) 1f else 0f),
+                                                                modifier = Modifier.alpha(if (characterStandard == CharacterStandard.HongKong) 1f else 0f),
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode.value)
+                                                ResponsiveDivider(isDarkMode)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -211,11 +211,11 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (characterStandard.value == CharacterStandard.Taiwan) 1f else 0f),
+                                                                modifier = Modifier.alpha(if (characterStandard == CharacterStandard.Taiwan) 1f else 0f),
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode.value)
+                                                ResponsiveDivider(isDarkMode)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -231,7 +231,7 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (characterStandard.value.isSimplified()) 1f else 0f),
+                                                                modifier = Modifier.alpha(if (characterStandard.isSimplified()) 1f else 0f),
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
@@ -263,15 +263,14 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Switch(
-                                                                checked = isAudioFeedbackOn.value,
+                                                                checked = isAudioFeedbackOn,
                                                                 onCheckedChange = {
-                                                                        isAudioFeedbackOn.value = it
                                                                         context.updateAudioFeedback(it)
                                                                 },
                                                                 colors = switchColors
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode.value)
+                                                ResponsiveDivider(isDarkMode)
                                                 Row(
                                                         modifier = Modifier.padding(horizontal = 8.dp),
                                                         verticalAlignment = Alignment.CenterVertically
@@ -282,9 +281,8 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Switch(
-                                                                checked = isHapticFeedbackOn.value,
+                                                                checked = isHapticFeedbackOn,
                                                                 onCheckedChange = {
-                                                                        isHapticFeedbackOn.value = it
                                                                         context.updateHapticFeedback(it)
                                                                 },
                                                                 colors = switchColors
@@ -309,15 +307,14 @@ fun SettingsScreen(height: Dp) {
                                                 )
                                                 Spacer(modifier = Modifier.weight(1f))
                                                 Switch(
-                                                        checked = showLowercaseKeys.value,
+                                                        checked = showLowercaseKeys,
                                                         onCheckedChange = {
-                                                                showLowercaseKeys.value = it
                                                                 context.updateShowLowercaseKeys(it)
                                                         },
                                                         colors = switchColors
                                                 )
                                         }
-                                        ResponsiveDivider(isDarkMode.value)
+                                        ResponsiveDivider(isDarkMode)
                                         Row(
                                                 modifier = Modifier.padding(horizontal = 8.dp),
                                                 verticalAlignment = Alignment.CenterVertically
@@ -328,15 +325,14 @@ fun SettingsScreen(height: Dp) {
                                                 )
                                                 Spacer(modifier = Modifier.weight(1f))
                                                 Switch(
-                                                        checked = previewKeyText.value,
+                                                        checked = previewKeyText,
                                                         onCheckedChange = {
-                                                                previewKeyText.value = it
                                                                 context.updatePreviewKeyText(it)
                                                         },
                                                         colors = switchColors
                                                 )
                                         }
-                                        ResponsiveDivider(isDarkMode.value)
+                                        ResponsiveDivider(isDarkMode)
                                         Row(
                                                 modifier = Modifier.padding(horizontal = 8.dp),
                                                 verticalAlignment = Alignment.CenterVertically
@@ -372,15 +368,14 @@ fun SettingsScreen(height: Dp) {
                                                 )
                                                 Spacer(modifier = Modifier.weight(1f))
                                                 Switch(
-                                                        checked = needsInputModeSwitchKey.value,
+                                                        checked = needsInputModeSwitchKey,
                                                         onCheckedChange = {
-                                                                needsInputModeSwitchKey.value = it
                                                                 context.updateNeedsInputModeSwitchKey(it)
                                                         },
                                                         colors = switchColors
                                                 )
                                         }
-                                        ResponsiveDivider(isDarkMode.value)
+                                        ResponsiveDivider(isDarkMode)
                                         Row(
                                                 modifier = Modifier.padding(horizontal = 8.dp),
                                                 verticalAlignment = Alignment.CenterVertically
@@ -391,15 +386,14 @@ fun SettingsScreen(height: Dp) {
                                                 )
                                                 Spacer(modifier = Modifier.weight(1f))
                                                 Switch(
-                                                        checked = needsLeftKey.value,
+                                                        checked = needsLeftKey,
                                                         onCheckedChange = {
-                                                                needsLeftKey.value = it
                                                                 context.updateNeedsLeftKey(it)
                                                         },
                                                         colors = switchColors
                                                 )
                                         }
-                                        ResponsiveDivider(isDarkMode.value)
+                                        ResponsiveDivider(isDarkMode)
                                         Row(
                                                 modifier = Modifier.padding(horizontal = 8.dp),
                                                 verticalAlignment = Alignment.CenterVertically
@@ -410,9 +404,8 @@ fun SettingsScreen(height: Dp) {
                                                 )
                                                 Spacer(modifier = Modifier.weight(1f))
                                                 Switch(
-                                                        checked = needsRightKey.value,
+                                                        checked = needsRightKey,
                                                         onCheckedChange = {
-                                                                needsRightKey.value = it
                                                                 context.updateNeedsRightKey(it)
                                                         },
                                                         colors = switchColors
@@ -450,11 +443,11 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (commentStyle.value.isAbove()) 1f else 0f),
+                                                                modifier = Modifier.alpha(if (commentStyle.isAbove()) 1f else 0f),
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode.value)
+                                                ResponsiveDivider(isDarkMode)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -470,11 +463,11 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (commentStyle.value.isBelow()) 1f else 0f),
+                                                                modifier = Modifier.alpha(if (commentStyle.isBelow()) 1f else 0f),
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode.value)
+                                                ResponsiveDivider(isDarkMode)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -490,7 +483,7 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (commentStyle.value.isNone()) 1f else 0f),
+                                                                modifier = Modifier.alpha(if (commentStyle.isNone()) 1f else 0f),
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
@@ -511,9 +504,8 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Spacer(modifier = Modifier.weight(1f))
                                         Switch(
-                                                checked = isEmojiSuggestionsOn.value,
+                                                checked = isEmojiSuggestionsOn,
                                                 onCheckedChange = {
-                                                        isEmojiSuggestionsOn.value = it
                                                         context.updateEmojiSuggestionsState(it)
                                                 },
                                                 colors = switchColors
@@ -550,11 +542,11 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Cangjie5) 1f else 0f),
+                                                                modifier = Modifier.alpha(if (cangjieVariant == CangjieVariant.Cangjie5) 1f else 0f),
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode.value)
+                                                ResponsiveDivider(isDarkMode)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -570,11 +562,11 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Cangjie3) 1f else 0f),
+                                                                modifier = Modifier.alpha(if (cangjieVariant == CangjieVariant.Cangjie3) 1f else 0f),
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode.value)
+                                                ResponsiveDivider(isDarkMode)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -590,11 +582,11 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Quick5) 1f else 0f),
+                                                                modifier = Modifier.alpha(if (cangjieVariant == CangjieVariant.Quick5) 1f else 0f),
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode.value)
+                                                ResponsiveDivider(isDarkMode)
                                                 Button(
                                                         onClick = {
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -610,7 +602,7 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (cangjieVariant.value == CangjieVariant.Quick3) 1f else 0f),
+                                                                modifier = Modifier.alpha(if (cangjieVariant == CangjieVariant.Quick3) 1f else 0f),
                                                                 tint = PresetColor.blue
                                                         )
                                                 }
@@ -642,15 +634,14 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Switch(
-                                                                checked = isInputMemoryOn.value,
+                                                                checked = isInputMemoryOn,
                                                                 onCheckedChange = {
-                                                                        isInputMemoryOn.value = it
                                                                         context.updateInputMemoryState(it)
                                                                 },
                                                                 colors = switchColors
                                                         )
                                                 }
-                                                ResponsiveDivider(isDarkMode.value)
+                                                ResponsiveDivider(isDarkMode)
                                                 Row(
                                                         modifier = Modifier.padding(horizontal = 8.dp),
                                                         verticalAlignment = Alignment.CenterVertically

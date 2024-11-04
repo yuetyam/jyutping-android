@@ -4,7 +4,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
@@ -13,10 +14,10 @@ import org.jyutping.jyutping.JyutpingInputMethodService
 @Composable
 fun BottomKeyRow(transform: KeyboardForm, height: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
-        val needsInputModeSwitchKey = remember { context.needsInputModeSwitchKey }
-        val needsLeftKey = remember { context.needsLeftKey }
-        val needsRightKey = remember { context.needsRightKey }
-        val enabledBottomKeyCount: Int = listOf(needsInputModeSwitchKey.value, needsLeftKey.value, needsRightKey.value).count { it }
+        val needsInputModeSwitchKey by context.needsInputModeSwitchKey.collectAsState()
+        val needsLeftKey by context.needsLeftKey.collectAsState()
+        val needsRightKey by context.needsRightKey.collectAsState()
+        val enabledBottomKeyCount: Int = listOf(needsInputModeSwitchKey, needsLeftKey, needsRightKey).count { it }
         val edgeBottomKeyWeight: Float = when (enabledBottomKeyCount) {
                 0 -> 2f
                 1 -> 2f
@@ -37,14 +38,14 @@ fun BottomKeyRow(transform: KeyboardForm, height: Dp) {
                         .fillMaxWidth()
         ) {
                 TransformKey(destination = transform, modifier = Modifier.weight(edgeBottomKeyWeight))
-                if (needsLeftKey.value) {
+                if (needsLeftKey) {
                         LeftKey(modifier = Modifier.weight(1f))
                 }
-                if (needsInputModeSwitchKey.value) {
+                if (needsInputModeSwitchKey) {
                         GlobeKey(modifier = Modifier.weight(1f))
                 }
                 SpaceKey(modifier = Modifier.weight(spaceKeyWeight))
-                if (needsRightKey.value) {
+                if (needsRightKey) {
                         RightKey(modifier = Modifier.weight(1f))
                 }
                 ReturnKey(modifier = Modifier.weight(edgeBottomKeyWeight))

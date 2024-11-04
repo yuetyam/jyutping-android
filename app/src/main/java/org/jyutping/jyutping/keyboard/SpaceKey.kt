@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,8 +33,8 @@ import org.jyutping.jyutping.presets.PresetConstant
 fun SpaceKey(modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        val keyForm = remember { context.spaceKeyForm }
-        val isDarkMode = remember { context.isDarkMode }
+        val isDarkMode by context.isDarkMode.collectAsState()
+        val keyForm by context.spaceKeyForm.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
         var isDragging by remember { mutableStateOf(false) }
         Box(
@@ -91,7 +92,7 @@ fun SpaceKey(modifier: Modifier) {
                                         shape = RoundedCornerShape(6.dp)
                                 )
                                 .background(
-                                        if (isDarkMode.value) {
+                                        if (isDarkMode) {
                                                 if (isPressing || isDragging) PresetColor.keyDarkEmphatic else PresetColor.keyDark
                                         } else {
                                                 if (isPressing || isDragging) PresetColor.keyLightEmphatic else PresetColor.keyLight
@@ -101,8 +102,8 @@ fun SpaceKey(modifier: Modifier) {
                         contentAlignment = Alignment.Center
                 ) {
                         Text(
-                                text = if (isDragging) PresetConstant.SpaceKeyLongPressHint else keyForm.value.text(),
-                                color = if (isDarkMode.value) Color.White else Color.Black,
+                                text = if (isDragging) PresetConstant.SpaceKeyLongPressHint else keyForm.text(),
+                                color = if (isDarkMode) Color.White else Color.Black,
                                 fontSize = 15.sp
                         )
                 }

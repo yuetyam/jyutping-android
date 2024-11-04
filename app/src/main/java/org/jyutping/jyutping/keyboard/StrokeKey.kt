@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,15 +43,15 @@ import org.jyutping.jyutping.utilities.ShapeKeyMap
 fun StrokeKey(letter: Char, modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        val isDarkMode = remember { context.isDarkMode }
-        val showLowercaseKeys = remember { context.showLowercaseKeys }
-        val keyboardCase = remember { context.keyboardCase }
-        val displayKeyLetter: String = if (showLowercaseKeys.value && keyboardCase.value.isLowercased()) letter.lowercase() else letter.uppercase()
+        val isDarkMode by context.isDarkMode.collectAsState()
+        val keyboardCase by context.keyboardCase.collectAsState()
+        val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
+        val shouldPreviewKey by context.previewKeyText.collectAsState()
+        val displayKeyLetter: String = if (showLowercaseKeys && keyboardCase.isLowercased()) letter.lowercase() else letter.uppercase()
         val keyStroke: Char? = ShapeKeyMap.strokeCode(letter)
-        var isPressing by remember { mutableStateOf(false) }
-        val shouldPreviewKey = remember { context.previewKeyText }
         val density = LocalDensity.current
         var baseSize by remember { mutableStateOf(Size.Zero) }
+        var isPressing by remember { mutableStateOf(false) }
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -63,7 +64,7 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
                                                 isPressing = false
                                         },
                                         onTap = {
-                                                val text: String = if (keyboardCase.value.isLowercased()) letter.lowercase() else letter.uppercase()
+                                                val text: String = if (keyboardCase.isLowercased()) letter.lowercase() else letter.uppercase()
                                                 context.process(text)
                                         }
                                 )
@@ -85,10 +86,10 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
                                         shape = RoundedCornerShape(6.dp)
                                 )
                                 .background(
-                                        if (isDarkMode.value) {
-                                                if (shouldPreviewKey.value.not() && isPressing) PresetColor.keyDarkEmphatic else PresetColor.keyDark
+                                        if (isDarkMode) {
+                                                if (shouldPreviewKey.not() && isPressing) PresetColor.keyDarkEmphatic else PresetColor.keyDark
                                         } else {
-                                                if (shouldPreviewKey.value.not() && isPressing) PresetColor.keyLightEmphatic else PresetColor.keyLight
+                                                if (shouldPreviewKey.not() && isPressing) PresetColor.keyLightEmphatic else PresetColor.keyLight
                                         }
                                 )
                                 .fillMaxSize(),
@@ -103,25 +104,25 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
                                 ) {
                                         Text(
                                                 text = displayKeyLetter,
-                                                color = if (isDarkMode.value) Color.White else Color.Black,
+                                                color = if (isDarkMode) Color.White else Color.Black,
                                                 fontSize = 12.sp
                                         )
                                 }
                                 Text(
                                         text = keyStroke.toString(),
-                                        color = if (isDarkMode.value) Color.White else Color.Black,
+                                        color = if (isDarkMode) Color.White else Color.Black,
                                         fontSize = 16.sp
                                 )
                         } else {
                                 Text(
                                         text = displayKeyLetter,
                                         modifier = Modifier.alpha(0.66f),
-                                        color = if (isDarkMode.value) Color.White else Color.Black,
+                                        color = if (isDarkMode) Color.White else Color.Black,
                                         fontSize = 18.sp
                                 )
                         }
                 }
-                if ((keyStroke != null) && shouldPreviewKey.value && isPressing) {
+                if ((keyStroke != null) && shouldPreviewKey && isPressing) {
                         val shape = BubbleShape()
                         val offsetX: Int = 0
                         val offsetY: Int = (baseSize.height * 1.5F / 2F * density.density).toInt().unaryMinus()
@@ -135,11 +136,11 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
                                         modifier = modifier
                                                 .border(
                                                         width = 1.dp,
-                                                        color = if (isDarkMode.value) Color.DarkGray else Color.LightGray,
+                                                        color = if (isDarkMode) Color.DarkGray else Color.LightGray,
                                                         shape = shape
                                                 )
                                                 .background(
-                                                        color = if (isDarkMode.value) PresetColor.keyDark else PresetColor.keyLight,
+                                                        color = if (isDarkMode) PresetColor.keyDark else PresetColor.keyLight,
                                                         shape = shape
                                                 )
                                                 .width(width.dp)
@@ -149,7 +150,7 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
                                         Text(
                                                 text = keyStroke.toString(),
                                                 modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
-                                                color = if (isDarkMode.value) Color.White else Color.Black,
+                                                color = if (isDarkMode) Color.White else Color.Black,
                                                 style = MaterialTheme.typography.headlineLarge
                                         )
                                 }

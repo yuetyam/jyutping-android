@@ -5,6 +5,8 @@ import android.os.Build
 import androidx.annotation.DeprecatedSinceApi
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
@@ -31,17 +33,22 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
         @Composable
         override fun Content() {
                 val ctx = context as JyutpingInputMethodService
-                LocalView.current.isSoundEffectsEnabled = ctx.isAudioFeedbackOn.value
-                LocalView.current.isHapticFeedbackEnabled = ctx.isHapticFeedbackOn.value
-                when (ctx.keyboardForm.value) {
-                        KeyboardForm.Alphabetic -> when (ctx.qwertyForm.value) {
+                val isAudioFeedbackOn by ctx.isAudioFeedbackOn.collectAsState()
+                val isHapticFeedbackOn by ctx.isHapticFeedbackOn.collectAsState()
+                LocalView.current.isSoundEffectsEnabled = isAudioFeedbackOn
+                LocalView.current.isHapticFeedbackEnabled = isHapticFeedbackOn
+                val keyboardForm by ctx.keyboardForm.collectAsState()
+                val qwertyForm by ctx.qwertyForm.collectAsState()
+                val inputMethodMode by ctx.inputMethodMode.collectAsState()
+                when (keyboardForm) {
+                        KeyboardForm.Alphabetic -> when (qwertyForm) {
                                 QwertyForm.Cangjie -> CangjieKeyboard(keyHeight = responsiveKeyHeight())
                                 QwertyForm.Stroke -> StrokeKeyboard(keyHeight = responsiveKeyHeight())
                                 else -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight())
                         }
                         KeyboardForm.CandidateBoard -> CandidateBoard(height = keyboardHeight())
-                        KeyboardForm.Numeric -> if (ctx.inputMethodMode.value.isABC()) NumericKeyboard(keyHeight = responsiveKeyHeight()) else CantoneseNumericKeyboard(keyHeight = responsiveKeyHeight())
-                        KeyboardForm.Symbolic -> if (ctx.inputMethodMode.value.isABC()) SymbolicKeyboard(keyHeight = responsiveKeyHeight()) else CantoneseSymbolicKeyboard(keyHeight = responsiveKeyHeight())
+                        KeyboardForm.Numeric -> if (inputMethodMode.isABC()) NumericKeyboard(keyHeight = responsiveKeyHeight()) else CantoneseNumericKeyboard(keyHeight = responsiveKeyHeight())
+                        KeyboardForm.Symbolic -> if (inputMethodMode.isABC()) SymbolicKeyboard(keyHeight = responsiveKeyHeight()) else CantoneseSymbolicKeyboard(keyHeight = responsiveKeyHeight())
                         KeyboardForm.Settings -> SettingsScreen(height = keyboardHeight())
                         KeyboardForm.EmojiBoard -> EmojiBoard(height = keyboardHeight())
                         KeyboardForm.EditingPanel -> EditingPanel(height = keyboardHeight())
