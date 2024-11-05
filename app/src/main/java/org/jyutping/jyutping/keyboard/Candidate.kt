@@ -15,7 +15,8 @@ data class Candidate(
         val input: String,
         val mark: String = input,
         val order: Int = 0
-) {
+) : Comparable<Candidate>
+{
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true
                 if (other !is Candidate) return false
@@ -35,7 +36,14 @@ data class Candidate(
                 val newRomanization = this.romanization + PresetString.SPACE + another.romanization
                 val newInput = this.input + another.input
                 val newMark = this.mark + PresetString.SPACE + another.mark
-                return Candidate(text = newText, romanization = newRomanization, input = newInput, mark = newMark)
+                val step: Int = 1_000_000
+                val newOrder = (this.order + step) + (another.order + step)
+                return Candidate(text = newText, romanization = newRomanization, input = newInput, mark = newMark, order = newOrder)
+        }
+        override fun compareTo(other: Candidate): Int {
+                return this.input.length.compareTo(other.input.length).unaryMinus()
+                        .takeIf { it != 0 } ?: this.text.length.compareTo(other.text.length)
+                        .takeIf { it != 0 } ?: this.order.compareTo(other.order)
         }
 }
 

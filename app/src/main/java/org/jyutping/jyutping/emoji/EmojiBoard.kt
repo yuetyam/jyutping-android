@@ -47,11 +47,18 @@ fun EmojiBoard(height: Dp) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()
+        val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val edgeIndicatorWeight: Float = 1f
         val indicatorWeight: Float = 1f
         Column(
                 modifier = Modifier
-                        .background(if (isDarkMode) PresetColor.keyboardDarkBackground else PresetColor.keyboardLightBackground)
+                        .background(
+                                if (isDarkMode) {
+                                        if (isHighContrastPreferred) Color.Black else PresetColor.keyboardDarkBackground
+                                } else {
+                                        if (isHighContrastPreferred) Color.White else PresetColor.keyboardLightBackground
+                                }
+                        )
                         .systemBarsPadding()
                         .height(height)
                         .fillMaxWidth(),

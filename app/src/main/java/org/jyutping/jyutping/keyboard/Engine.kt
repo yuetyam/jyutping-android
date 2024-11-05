@@ -52,7 +52,7 @@ object Engine {
                 val textTones = text.filter { it.isDigit() }
                 val textToneCount = textTones.length
                 val rawText: String = text.filterNot { it.isDigit() }
-                val candidates= query(text = rawText, segmentation = segmentation, db = db, needsSymbols = false)
+                val candidates = query(text = rawText, segmentation = segmentation, db = db, needsSymbols = false)
                 val qualified: MutableList<Candidate> = mutableListOf()
                 for (item in candidates) {
                         val continuous = item.romanization.filterNot { it.isWhitespace() }
@@ -176,7 +176,7 @@ object Engine {
                                                         val newItem = Candidate(text = item.text, romanization = item.romanization, input = text)
                                                         qualified.add(newItem)
                                                 }
-                                                 else -> continue
+                                                else -> continue
                                         }
                                 }
                                 else -> {
@@ -227,8 +227,7 @@ object Engine {
                 val firstInputLength = primary.firstOrNull()?.input?.length ?: 0
                 if (firstInputLength == 0) return processVerbatim(text, db, limit)
                 if (firstInputLength == textLength) return primary
-                val prefixes: List<Candidate> = run {
-                        if (segmentation.maxSchemeLength() >= textLength) emptyList<Candidate>()
+                val prefixes: List<Candidate> = if (segmentation.maxSchemeLength() >= textLength) emptyList() else {
                         val shortcuts: MutableList<List<Candidate>> = mutableListOf()
                         for (scheme in segmentation) {
                                 val tail = text.drop(scheme.length())
@@ -245,19 +244,20 @@ object Engine {
                 }
                 if (prefixes.isNotEmpty()) return prefixes + primary
                 val headTexts = primary.map { it.input }.distinct()
-                val concatenated: MutableList<List<Candidate>> = mutableListOf()
+                val concatenated: MutableList<Candidate> = mutableListOf()
                 for (headText in headTexts) {
                         val headInputLength = headText.length
                         val tailText = text.drop(headInputLength)
                         if (db.canProcess(tailText).not()) continue
                         val tailSegmentation = Segmentor.segment(tailText, db)
-                        val tailCandidates = process(text = tailText, segmentation = tailSegmentation, db = db, needsSymbols = false, limit = 8).take(100)
-                        if (tailCandidates.isEmpty()) continue
-                        val headCandidates = primary.takeWhile { it.input == headText }.take(8)
-                        val combines = headCandidates.map { head -> tailCandidates.map { head + it } }
-                        concatenated.add(combines.flatten())
+                        val tailCandidate = process(text = tailText, segmentation = tailSegmentation, db = db, needsSymbols = false, limit = 50).sorted().firstOrNull()
+                        if (tailCandidate == null) continue
+                        val headCandidate = primary.takeWhile { it.input == headText }.sorted().firstOrNull()
+                        if (headCandidate == null) continue
+                        val conjoined = headCandidate + tailCandidate
+                        concatenated.add(conjoined)
                 }
-                val preferredConcatenated = preferred(text, concatenated.flatten().distinct()).take(1)
+                val preferredConcatenated = concatenated.distinct().sorted().take(1)
                 return preferredConcatenated + primary
         }
         private fun query(text: String, segmentation: Segmentation, db: DatabaseHelper, needsSymbols: Boolean, limit: Int? = null): List<Candidate> {
@@ -311,11 +311,6 @@ object Engine {
                         }
                         return ordered(textLength, matches.flatten())
                 }
-        }
-        private fun preferred(text: String, candidates: List<Candidate>): List<Candidate> {
-                val sorted = candidates.sortedWith(compareBy({-it.input.length}, {-it.text.length}))
-                val matched = sorted.filter { candidate -> candidate.romanization.filter { it.isLetter() } == text }
-                return matched.ifEmpty { sorted }
         }
         private fun ordered(textLength: Int, candidates: List<Candidate>): List<Candidate> {
                 val perfectCandidates = candidates.filter { it.input.length == textLength }.sortedBy { it.order }
