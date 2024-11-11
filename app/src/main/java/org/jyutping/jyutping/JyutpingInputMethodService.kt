@@ -10,7 +10,9 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.ExtractedTextRequest
 import android.view.inputmethod.InputMethodManager
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
@@ -80,7 +82,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 super.onStartInput(attribute, restarting)
                 inputClientMonitorJob?.cancel()
                 val isNightMode: Boolean = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-                window?.window?.navigationBarColor = if (isNightMode) PresetColor.keyboardDarkBackground.toArgb() else PresetColor.keyboardLightBackground.toArgb()
+                window?.window?.let {
+                        WindowCompat.getInsetsController(it, it.decorView).isAppearanceLightNavigationBars = isNightMode.not()
+                        it.navigationBarColor = if (isDarkMode.value) {
+                                if (isHighContrastPreferred.value) Color.Black.toArgb() else PresetColor.keyboardDarkBackground.toArgb()
+                        } else {
+                                if (isHighContrastPreferred.value) Color.White.toArgb() else PresetColor.keyboardLightBackground.toArgb()
+                        }
+                }
                 isDarkMode.value = isNightMode
                 inputMethodMode.value = InputMethodMode.Cantonese
                 keyboardForm.value = KeyboardForm.Alphabetic
