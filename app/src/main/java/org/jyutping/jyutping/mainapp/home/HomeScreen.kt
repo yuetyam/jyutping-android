@@ -100,12 +100,12 @@ fun HomeScreen(navController: NavHostController) {
                 val observer = LifecycleEventObserver { _, event ->
                         if (event == Lifecycle.Event.ON_START) {
                                 val manager = navController.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                                isKeyboardEnabled.value = manager.enabledInputMethodList.any { it.packageName == PresetConstant.KEYBOARD_PACKAGE_NAME }
+                                isKeyboardEnabled.value = manager.enabledInputMethodList.any { it.packageName == PresetConstant.keyboardPackageName }
                                 isKeyboardSelected.value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                                        manager.currentInputMethodInfo?.packageName == PresetConstant.KEYBOARD_PACKAGE_NAME
+                                        manager.currentInputMethodInfo?.packageName == PresetConstant.keyboardPackageName
                                 } else {
                                         val defaultKeyboardId = Settings.Secure.getString(navController.context.contentResolver, Settings.Secure.DEFAULT_INPUT_METHOD)
-                                        defaultKeyboardId == PresetConstant.KEYBOARD_ID
+                                        defaultKeyboardId == PresetConstant.keyboardId
                                 }
                         }
                 }

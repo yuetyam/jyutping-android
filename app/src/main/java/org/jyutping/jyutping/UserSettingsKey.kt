@@ -1,5 +1,6 @@
 package org.jyutping.jyutping
 
+@Suppress("ConstPropertyName")
 object UserSettingsKey {
         const val UserLexiconDatabaseFileName: String = "memory.sqlite3"
         const val PreferencesFileName: String = "org.jyutping.jyutping.settings"
