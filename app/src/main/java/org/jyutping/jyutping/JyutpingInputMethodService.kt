@@ -108,7 +108,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         selectedCandidates.clear()
                 }
                 if (isBuffering.value) {
-                        currentInputConnection.commitText(bufferText, bufferText.length)
+                        currentInputConnection.commitText(bufferText, 1)
                         bufferText = PresetString.EMPTY
                 }
                 if (candidates.value.isNotEmpty()) {
@@ -213,7 +213,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 if (isBuffering.value) {
                         val shouldKeepBuffer: Boolean = (destination == KeyboardForm.Alphabetic) || (destination == KeyboardForm.CandidateBoard)
                         if (shouldKeepBuffer.not()) {
-                                currentInputConnection.commitText(bufferText, bufferText.length)
+                                currentInputConnection.commitText(bufferText, 1)
                                 bufferText = PresetString.EMPTY
                         }
                 }
@@ -423,7 +423,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         field = value
                         when (value.firstOrNull()) {
                                 null -> {
-                                        currentInputConnection.setComposingText(value, value.length)
+                                        currentInputConnection.setComposingText(value, 0)
                                         currentInputConnection.finishComposingText()
                                         if (isBuffering.value) {
                                                 if (isInputMemoryOn.value && selectedCandidates.isNotEmpty()) {
@@ -439,7 +439,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                                 'r' -> {
                                         if (value.length < 2) {
-                                                currentInputConnection.setComposingText(value, value.length)
+                                                currentInputConnection.setComposingText(value, 1)
                                         } else {
                                                 val text = value.drop(1)
                                                 val segmentation = PinyinSegmentor.segment(text, db)
@@ -460,7 +460,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                         }
                                                 }
                                                 val mark = "r $tailMark"
-                                                currentInputConnection.setComposingText(mark, mark.length)
+                                                currentInputConnection.setComposingText(mark, 1)
                                                 candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
                                         }
                                         if (isBuffering.value.not()) {
@@ -470,18 +470,18 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 'v' -> {
                                         updateQwertyForm(QwertyForm.Cangjie)
                                         if (value.length < 2) {
-                                                currentInputConnection.setComposingText(value, value.length)
+                                                currentInputConnection.setComposingText(value, 1)
                                         } else {
                                                 val text = value.drop(1)
                                                 val converted = text.mapNotNull { ShapeKeyMap.cangjieCode(it) }
                                                 val isValidSequence: Boolean = converted.isNotEmpty() && (converted.size == text.length)
                                                 if (isValidSequence) {
                                                         val mark = converted.joinToString(separator = PresetString.EMPTY)
-                                                        currentInputConnection.setComposingText(mark, mark.length)
+                                                        currentInputConnection.setComposingText(mark, 1)
                                                         val suggestions = Cangjie.reverseLookup(text, cangjieVariant.value, db)
                                                         candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
                                                 } else {
-                                                        currentInputConnection.setComposingText(bufferText, bufferText.length)
+                                                        currentInputConnection.setComposingText(bufferText, 1)
                                                 }
                                         }
                                         if (isBuffering.value.not()) {
@@ -491,7 +491,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 'x' -> {
                                         updateQwertyForm(QwertyForm.Stroke)
                                         if (value.length < 2) {
-                                                currentInputConnection.setComposingText(value, value.length)
+                                                currentInputConnection.setComposingText(value, 1)
                                         } else {
                                                 val text = value.drop(1)
                                                 val transformed = ShapeKeyMap.strokeTransform(text)
@@ -499,11 +499,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 val isValidSequence: Boolean = converted.isNotEmpty() && (converted.size == text.length)
                                                 if (isValidSequence) {
                                                         val mark = converted.joinToString(separator = PresetString.EMPTY)
-                                                        currentInputConnection.setComposingText(mark, mark.length)
+                                                        currentInputConnection.setComposingText(mark, 1)
                                                         val suggestions = Stroke.reverseLookup(transformed, db)
                                                         candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
                                                 } else {
-                                                        currentInputConnection.setComposingText(bufferText, bufferText.length)
+                                                        currentInputConnection.setComposingText(bufferText, 1)
                                                 }
                                         }
                                         if (isBuffering.value.not()) {
@@ -512,7 +512,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                                 'q' -> {
                                         if (value.length < 2) {
-                                                currentInputConnection.setComposingText(value, value.length)
+                                                currentInputConnection.setComposingText(value, 1)
                                         } else {
                                                 val text = value.drop(1)
                                                 val segmentation = Segmentor.segment(text, db)
@@ -527,7 +527,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                         }
                                                 }
                                                 val mark = "q $tailMark"
-                                                currentInputConnection.setComposingText(mark, mark.length)
+                                                currentInputConnection.setComposingText(mark, 1)
                                                 val suggestions = Structure.reverseLookup(text, segmentation, db)
                                                 candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
                                         }
@@ -553,7 +553,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                         if (firstCandidate != null && firstCandidate.input.length == processingText.length) firstCandidate.mark else processingText
                                                 }
                                         }
-                                        currentInputConnection.setComposingText(mark, mark.length)
+                                        currentInputConnection.setComposingText(mark, 1)
                                         candidates.value = (userLexiconSuggestions + suggestions).map { it.transformed(characterStandard.value, db) }.distinct()
                                         if (isBuffering.value.not()) {
                                                 isBuffering.value = true
@@ -574,18 +574,18 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 bufferText += text
                         }
                         InputMethodMode.ABC -> {
-                                currentInputConnection.commitText(text, text.length)
+                                currentInputConnection.commitText(text, 1)
                         }
                 }
                 adjustKeyboardCase()
         }
         fun input(text: String) {
-                currentInputConnection.commitText(text, text.length)
+                currentInputConnection.commitText(text, 1)
                 adjustKeyboardCase()
         }
         fun selectCandidate(candidate: Candidate? = null, index: Int = 0) {
                 val candidate: Candidate = candidate ?: candidates.value.getOrNull(index) ?: return
-                currentInputConnection.commitText(candidate.text, candidate.text.length)
+                currentInputConnection.commitText(candidate.text, 1)
                 selectedCandidates.add(candidate)
                 val firstChar = bufferText.firstOrNull()
                 when {
@@ -625,7 +625,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         */
                 } else {
-                        currentInputConnection.commitText(PresetString.EMPTY, PresetString.EMPTY.length)
+                        currentInputConnection.commitText(PresetString.EMPTY, 0)
                 }
         }
         fun forwardDelete() {
@@ -639,19 +639,19 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         */
                 } else {
-                        currentInputConnection.commitText(PresetString.EMPTY, PresetString.EMPTY.length)
+                        currentInputConnection.commitText(PresetString.EMPTY, 0)
                 }
         }
         fun performReturn() {
                 if (isBuffering.value) {
-                        currentInputConnection.commitText(bufferText, bufferText.length)
+                        currentInputConnection.commitText(bufferText, 1)
                         bufferText = PresetString.EMPTY
                         return
                 }
                 val imeOptions = currentInputEditorInfo.imeOptions
                 val shouldInputNewLine: Boolean = (imeOptions and EditorInfo.IME_FLAG_NO_ENTER_ACTION) == EditorInfo.IME_FLAG_NO_ENTER_ACTION
                 if (shouldInputNewLine){
-                        currentInputConnection.commitText(PresetString.NEW_LINE, PresetString.NEW_LINE.length)
+                        currentInputConnection.commitText(PresetString.NEW_LINE, 1)
                         return
                 }
                 val hasActionLabel: Boolean = currentInputEditorInfo.actionLabel.isNullOrEmpty().not()
@@ -676,18 +676,18 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         currentInputConnection.performEditorAction(action)
                         return
                 }
-                currentInputConnection.commitText(PresetString.NEW_LINE, PresetString.NEW_LINE.length)
+                currentInputConnection.commitText(PresetString.NEW_LINE, 1)
         }
         fun space() {
                 if (isBuffering.value) {
                         if (candidates.value.isNotEmpty()) {
                                 selectCandidate()
                         } else {
-                                currentInputConnection.commitText(bufferText, bufferText.length)
+                                currentInputConnection.commitText(bufferText, 1)
                                 bufferText = PresetString.EMPTY
                         }
                 } else {
-                        currentInputConnection.commitText(PresetString.SPACE, PresetString.SPACE.length)
+                        currentInputConnection.commitText(PresetString.SPACE, 1)
                 }
         }
         fun dismissKeyboard() {
@@ -701,7 +701,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 InputMethodMode.Cantonese -> "，"
                                 InputMethodMode.ABC -> ","
                         }
-                        currentInputConnection.commitText(text, text.length)
+                        currentInputConnection.commitText(text, 1)
                 }
         }
         fun rightKey() {
@@ -712,7 +712,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 InputMethodMode.Cantonese -> "。"
                                 InputMethodMode.ABC -> "."
                         }
-                        currentInputConnection.commitText(text, text.length)
+                        currentInputConnection.commitText(text, 1)
                 }
         }
 
@@ -729,7 +729,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 if (clipboard.hasPrimaryClip()) {
                         clipboard.primaryClip?.getItemAt(0)?.text?.let {
                                 if (it.isNotEmpty()) {
-                                        currentInputConnection.commitText(it, it.length)
+                                        currentInputConnection.commitText(it, 1)
                                 }
                         }
                 }
@@ -757,11 +757,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         (getSystemService(CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(clip)
                         isClipboardEmpty.value = false
                 }
-                currentInputConnection.commitText(PresetString.EMPTY, PresetString.EMPTY.length)
+                currentInputConnection.commitText(PresetString.EMPTY, 0)
         }
         fun clearAllText() {
                 currentInputConnection.performContextMenuAction(android.R.id.selectAll)
-                currentInputConnection.commitText(PresetString.EMPTY, PresetString.EMPTY.length)
+                currentInputConnection.commitText(PresetString.EMPTY, 0)
         }
         fun convertAllText() {
                 currentInputConnection.performContextMenuAction(android.R.id.selectAll)
@@ -771,7 +771,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         val origin: String = it.toString()
                         val simplified: String = origin.convertedT2S()
                         val converted: String = if (simplified == origin) origin.convertedS2T() else simplified
-                        currentInputConnection.commitText(converted, converted.length)
+                        currentInputConnection.commitText(converted, 1)
                 }
         }
         fun moveBackward() {
