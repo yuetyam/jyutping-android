@@ -219,7 +219,25 @@ object Engine {
                         val round = db.pingMatch(text = leading, input = leading, limit = limit) + db.shortcutMatch(leading, limit)
                         rounds.add(round)
                 }
-                return rounds.flatten().distinct()
+                val candidates: MutableList<Candidate> = mutableListOf()
+                val textLength = text.length
+                for (item in rounds.flatten()) {
+                        val syllables = item.romanization.filterNot { it.isDigit() }.split(PresetCharacter.SPACE)
+                        val lastSyllable: String = syllables.lastOrNull() ?: continue
+                        if (text.endsWith(lastSyllable).not()) {
+                                candidates.add(item)
+                                continue
+                        }
+                        val isMatched: Boolean = ((syllables.count() - 1) + lastSyllable.count()) == textLength
+                        if (isMatched.not()) {
+                                candidates.add(item)
+                                continue
+                        }
+                        val mark = syllables.mapNotNull { it.firstOrNull() }.dropLast(1).joinToString(separator = PresetString.SPACE) + PresetString.SPACE + lastSyllable
+                        val instance = Candidate(text = item.text, romanization = item.romanization, input = text, mark = mark, order = item.order)
+                        candidates.add(instance)
+                }
+                return candidates.sorted()
         }
         private fun process(text: String, segmentation: Segmentation, db: DatabaseHelper, needsSymbols: Boolean, limit: Int? = null): List<Candidate> {
                 val textLength = text.length
@@ -232,13 +250,26 @@ object Engine {
                         for (scheme in segmentation) {
                                 val tail = text.drop(scheme.length())
                                 val lastAnchor = tail.firstOrNull() ?: continue
-                                val schemeAnchors = scheme.mapNotNull { it.text.firstOrNull() }
-                                val anchors: String = (schemeAnchors + lastAnchor).joinToString(separator = PresetString.EMPTY)
-                                val text2mark = scheme.joinToString(separator = PresetString.SPACE) { it.text } + PresetString.SPACE + tail
-                                val shortcut = db.shortcutMatch(anchors, limit)
-                                        .filter { candidate -> candidate.romanization.filter { it.isDigit().not() }.startsWith(text2mark) }
-                                        .map { Candidate(text = it.text, romanization = it.romanization, input = text, mark = text2mark) }
-                                shortcuts.add(shortcut)
+                                val schemeAnchors: String = scheme.mapNotNull { it.text.firstOrNull() }.joinToString(separator = PresetString.EMPTY)
+                                val conjoined: String = schemeAnchors + tail
+                                val anchors: String = schemeAnchors + lastAnchor
+                                val schemeMark: String = scheme.joinToString(separator = PresetString.SPACE) { it.text }
+                                val spacedMark: String = schemeMark + PresetString.SPACE + tail.toList().joinToString(separator = PresetString.SPACE)
+                                val anchorMark: String = schemeMark + PresetString.SPACE + tail
+                                val conjoinedShortcuts = db.shortcutMatch(conjoined, limit)
+                                        .filter { item ->
+                                                val rawRomanization = item.romanization.filterNot { it.isDigit() }
+                                                rawRomanization.startsWith(schemeMark) && run {
+                                                        val tailAnchors = rawRomanization.drop(schemeMark.length).split(PresetCharacter.SPACE).mapNotNull { it.firstOrNull() }.joinToString(separator = PresetString.EMPTY)
+                                                        tailAnchors == tail
+                                                }
+                                        }
+                                        .map { Candidate(text = it.text, romanization = it.romanization, input = text, mark = spacedMark, order = it.order) }
+                                shortcuts.add(conjoinedShortcuts)
+                                val anchorShortcuts = db.shortcutMatch(anchors, limit)
+                                        .filter { item -> item.romanization.filterNot { it.isDigit() }.startsWith(anchorMark) }
+                                        .map { Candidate(text = it.text, romanization = it.romanization, input = text, mark = anchorMark, order = it.order) }
+                                shortcuts.add(anchorShortcuts)
                         }
                         shortcuts.flatten()
                 }

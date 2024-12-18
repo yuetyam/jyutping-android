@@ -36,7 +36,7 @@ data class Candidate(
                 val newRomanization = this.romanization + PresetString.SPACE + another.romanization
                 val newInput = this.input + another.input
                 val newMark = this.mark + PresetString.SPACE + another.mark
-                val step: Int = 1_000_000
+                val step: Int = 100_0000
                 val newOrder = (this.order + step) + (another.order + step)
                 return Candidate(text = newText, romanization = newRomanization, input = newInput, mark = newMark, order = newOrder)
         }
