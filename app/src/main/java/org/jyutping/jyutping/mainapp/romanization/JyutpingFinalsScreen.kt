@@ -97,7 +97,7 @@ fun JyutpingFinalsScreen() {
                                 modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
                         ) {
                                 FinalLabel(word = "個", syllable = "go3", jyutping = "o", ipa = "[ ɔː ]")
-                                FinalLabel(word = "菜", syllable = "coi3", jyutping = "oi", ipa = "[ ɔːi ]")
+                                FinalLabel(word = "蓋", syllable = "goi3", jyutping = "oi", ipa = "[ ɔːi ]")
                                 FinalLabel(word = "告", syllable = "gou3", jyutping = "ou", ipa = "[ ɔːu ]")
                                 FinalLabel(word = "幹", syllable = "gon3", jyutping = "on", ipa = "[ ɔːn ]")
                                 FinalLabel(word = "鋼", syllable = "gong3", jyutping = "ong", ipa = "[ ɔːŋ ]")

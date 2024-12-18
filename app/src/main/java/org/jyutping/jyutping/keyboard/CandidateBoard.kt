@@ -47,10 +47,13 @@ import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import splitties.systemservices.windowManager
 
-private fun Candidate.width(): Dp = when {
-        this.type.isCantonese() -> (this.text.length * 20 + 32).dp
-        (this.text.length == 1) -> 64.dp
-        else -> (this.text.length * 18).dp
+private fun Candidate.width(): Dp = run {
+        when (this.type) {
+                CandidateType.Cantonese -> (this.text.length * 20 + 32).dp
+                CandidateType.Emoji -> 64.dp
+                CandidateType.Symbol -> if (this.text.length == 1) 64.dp else (this.text.length * 18).dp
+                else -> if (this.text.length == 1) 64.dp else (this.text.length * 18).dp
+        }
 }
 
 private class CandidateRow(val identifier: Int, val candidates: List<Candidate>, val width: Dp = candidates.map { it.width() }.fold(0.dp) { acc, w -> acc + w })

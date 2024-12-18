@@ -597,22 +597,48 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return items
         }
         fun symbolMatch(text: String, input: String): List<Candidate> {
-                val candidates: MutableList<Candidate> = mutableListOf()
                 val code = text.hashCode()
                 val command = "SELECT category, codepoint, cantonese, romanization FROM symboltable WHERE ping = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
+                val symbols: MutableList<SymbolEntry> = mutableListOf()
                 while (cursor.moveToNext()) {
                         val categoryCode = cursor.getInt(0)
                         val codepoint = cursor.getString(1)
                         val cantonese = cursor.getString(2)
                         val romanization = cursor.getString(3)
-                        val symbolText = generateSymbol(codepoint)
-                        val isEmoji: Boolean = (categoryCode > 0) && (categoryCode < 9)
-                        val type: CandidateType = if (isEmoji) CandidateType.Emoji else CandidateType.Symbol
-                        val instance = Candidate(type = type, text = symbolText, lexiconText = cantonese, romanization = romanization, input = input)
-                        candidates.add(instance)
+                        val entry = SymbolEntry(categoryCode = categoryCode, codepoint = codepoint, cantonese = cantonese, romanization = romanization)
+                        symbols.add(entry)
                 }
                 cursor.close()
+                val candidates: MutableList<Candidate> = mutableListOf()
+                for (entry in symbols) {
+                        val shouldMapSkinTone: Boolean = entry.categoryCode == 1 || entry.categoryCode == 4
+                        val codePointText: String = if (shouldMapSkinTone) (mapSkinTone(entry.codepoint) ?: entry.codepoint) else entry.codepoint
+                        val symbolText = generateSymbol(codePointText)
+                        val isEmoji: Boolean = entry.categoryCode != 9
+                        val type: CandidateType = if (isEmoji) CandidateType.Emoji else CandidateType.Symbol
+                        val instance = Candidate(type = type, text = symbolText, lexiconText = entry.cantonese, romanization = entry.romanization, input = input)
+                        candidates.add(instance)
+                }
                 return candidates
         }
+        private fun mapSkinTone(source: String): String? {
+                val command = "SELECT target FROM emojiskinmapping WHERE source = '${source}';"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                if (cursor.moveToFirst()) {
+                        val target = cursor.getString(0)
+                        cursor.close()
+                        return target
+                } else {
+                        cursor.close()
+                        return null
+                }
+        }
 }
+
+private data class SymbolEntry(
+        val categoryCode: Int,
+        val codepoint: String,
+        val cantonese: String,
+        val romanization: String
+)
