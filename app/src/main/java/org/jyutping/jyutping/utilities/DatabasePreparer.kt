@@ -11,16 +11,6 @@ import java.io.OutputStream
 object DatabasePreparer {
         private const val SOURCE_DATABASE_NAME = "appdb.sqlite3"
         private val oldDatabaseNames: List<String> = listOf(
-                "appdb-v0.10.0-tmp.sqlite3",
-                "appdb-v0.10.0-tmp.sqlite3-journal",
-                "appdb-v0.11.0-tmp.sqlite3",
-                "appdb-v0.11.0-tmp.sqlite3-journal",
-                "appdb-v0.12.0-tmp.sqlite3",
-                "appdb-v0.12.0-tmp.sqlite3-journal",
-                "appdb-v0.13.0-tmp.sqlite3",
-                "appdb-v0.13.0-tmp.sqlite3-journal",
-                "appdb-v0.14.0-tmp.sqlite3",
-                "appdb-v0.14.0-tmp.sqlite3-journal",
                 "appdb-v0.15.0-tmp.sqlite3",
                 "appdb-v0.15.0-tmp.sqlite3-journal",
                 "appdb-v0.16.0-tmp.sqlite3",
@@ -39,6 +29,8 @@ object DatabasePreparer {
                 "appdb-v0.23.0-tmp.sqlite3-journal",
                 "appdb-v0.24.0-tmp.sqlite3",
                 "appdb-v0.24.0-tmp.sqlite3-journal",
+                "appdb-v0.25.0-tmp.sqlite3",
+                "appdb-v0.25.0-tmp.sqlite3-journal",
         )
         val databaseName: String = run {
                 val version = BuildConfig.VERSION_NAME
