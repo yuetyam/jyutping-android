@@ -8,11 +8,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.mandatorySystemGestures
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.systemGestures
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -48,6 +53,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jyutping.jyutping.BuildConfig
@@ -56,6 +62,7 @@ import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
+import org.jyutping.jyutping.presets.PresetConstant
 
 @Composable
 fun SettingsScreen(height: Dp) {
@@ -71,6 +78,18 @@ fun SettingsScreen(height: Dp) {
         val needsInputModeSwitchKey by context.needsInputModeSwitchKey.collectAsState()
         val needsLeftKey by context.needsLeftKey.collectAsState()
         val needsRightKey by context.needsRightKey.collectAsState()
+        val needsExtraBottomPadding by context.needsExtraBottomPadding.collectAsState()
+        val extraBottomPadding: Dp = when {
+                needsExtraBottomPadding -> {
+                        val navigationBarBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                        val mandatorySystemGesturesBottom = WindowInsets.mandatorySystemGestures.asPaddingValues().calculateBottomPadding()
+                        val bottomPadding = max(navigationBarBottom, mandatorySystemGesturesBottom)
+                        if (bottomPadding > 0.dp) bottomPadding
+                        val systemGesturesBottom = WindowInsets.systemGestures.asPaddingValues().calculateBottomPadding()
+                        if (systemGesturesBottom > 0.dp) systemGesturesBottom else PresetConstant.FallbackExtraBottomPadding.dp
+                }
+                else -> 0.dp
+        }
         val commentStyle by context.commentStyle.collectAsState()
         val isEmojiSuggestionsOn by context.isEmojiSuggestionsOn.collectAsState()
         val cangjieVariant by context.cangjieVariant.collectAsState()
@@ -105,6 +124,7 @@ fun SettingsScreen(height: Dp) {
                                 }
                         )
                         .systemBarsPadding()
+                        .padding(bottom = extraBottomPadding)
                         .height(height)
                         .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(0.dp),
@@ -414,6 +434,24 @@ fun SettingsScreen(height: Dp) {
                                                         checked = needsRightKey,
                                                         onCheckedChange = {
                                                                 context.updateNeedsRightKey(it)
+                                                        },
+                                                        colors = switchColors
+                                                )
+                                        }
+                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                        Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_bottom_padding_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = needsExtraBottomPadding,
+                                                        onCheckedChange = {
+                                                                context.updateNeedsExtraBottomPadding(it)
                                                         },
                                                         colors = switchColors
                                                 )

@@ -6,10 +6,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.mandatorySystemGestures
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.systemGestures
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.EmojiEmotions
@@ -37,10 +42,12 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.presets.PresetColor
+import org.jyutping.jyutping.presets.PresetConstant
 
 @Composable
 fun EmojiBoard(height: Dp) {
@@ -48,6 +55,18 @@ fun EmojiBoard(height: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
+        val shouldApplyExtraBottomPadding by context.needsExtraBottomPadding.collectAsState()
+        val extraBottomPadding: Dp = when {
+                shouldApplyExtraBottomPadding -> {
+                        val navigationBarBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                        val mandatorySystemGesturesBottom = WindowInsets.mandatorySystemGestures.asPaddingValues().calculateBottomPadding()
+                        val bottomPadding = max(navigationBarBottom, mandatorySystemGesturesBottom)
+                        if (bottomPadding > 0.dp) bottomPadding
+                        val systemGesturesBottom = WindowInsets.systemGestures.asPaddingValues().calculateBottomPadding()
+                        if (systemGesturesBottom > 0.dp) systemGesturesBottom else PresetConstant.FallbackExtraBottomPadding.dp
+                }
+                else -> 0.dp
+        }
         val edgeIndicatorWeight: Float = 1f
         val indicatorWeight: Float = 1f
         Column(
@@ -60,6 +79,7 @@ fun EmojiBoard(height: Dp) {
                                 }
                         )
                         .systemBarsPadding()
+                        .padding(bottom = extraBottomPadding)
                         .height(height)
                         .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(2.dp),

@@ -64,6 +64,7 @@
     <string name="keyboard_settings_globe_key_switch_title">顯示輸入法切換鍵（地球鍵）</string>
     <string name="keyboard_settings_left_key_switch_title">顯示逗號鍵</string>
     <string name="keyboard_settings_right_key_switch_title">顯示句號鍵</string>
+    <string name="keyboard_settings_bottom_padding_switch_title">墊高鍵盤</string>
     <string name="keyboard_settings_comment_style_header">粵拼顯示</string>
     <string name="keyboard_settings_comment_style_above">候選詞上邊</string>
     <string name="keyboard_settings_comment_style_below">候選詞下邊</string>

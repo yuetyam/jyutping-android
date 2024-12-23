@@ -361,6 +361,18 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.RightKey, value2save)
                 editor.apply()
         }
+        val needsExtraBottomPadding: MutableStateFlow<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.NeedsExtraBottomPadding, 0)
+                val needs: Boolean = (savedValue == 1)
+                MutableStateFlow(needs)
+        }
+        fun updateNeedsExtraBottomPadding(needs: Boolean) {
+                needsExtraBottomPadding.value = needs
+                val value2save: Int = if (needs) 1 else 0
+                val editor = sharedPreferences.edit()
+                editor.putInt(UserSettingsKey.NeedsExtraBottomPadding, value2save)
+                editor.apply()
+        }
         val isEmojiSuggestionsOn: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.Emoji, 1)
                 val isOn: Boolean = (savedValue == 1)

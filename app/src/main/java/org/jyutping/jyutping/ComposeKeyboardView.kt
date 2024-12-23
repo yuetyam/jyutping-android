@@ -76,7 +76,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                 val screenHeight: Int = (bounds.height() / density).toInt()
                 val isPhoneLandscape: Boolean = (screenHeight < 500) && (screenWidth > screenHeight)
                 if (isPhoneLandscape) return 40.dp
-                val value: Int = 50 + ((screenWidth - 300) / 20)
+                val value: Int = 52 + ((screenWidth - 300) / 20)
                 return value.dp
         }
 
@@ -87,7 +87,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                 val screenHeight = LocalConfiguration.current.screenHeightDp
                 val isPhoneLandscape: Boolean = (screenHeight < 500) && (screenWidth > screenHeight)
                 if (isPhoneLandscape) return 40.dp
-                val value: Int = 50 + ((screenWidth - 300) / 20)
+                val value: Int = 52 + ((screenWidth - 300) / 20)
                 return value.dp
         }
 }

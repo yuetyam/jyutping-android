@@ -13,6 +13,7 @@ object UserSettingsKey {
         const val GlobeKey: String = "globe_key"
         const val LeftKey: String = "left_key"
         const val RightKey: String = "right_key"
+        const val NeedsExtraBottomPadding: String = "bottom_padding"
         const val CommentStyle: String = "comment_style"
         const val Emoji: String = "emoji"
         const val CangjieVariant: String = "cangjie_variant"
