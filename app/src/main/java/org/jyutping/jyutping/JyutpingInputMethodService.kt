@@ -42,6 +42,7 @@ import org.jyutping.jyutping.keyboard.Engine
 import org.jyutping.jyutping.keyboard.InputMethodMode
 import org.jyutping.jyutping.keyboard.KeyboardCase
 import org.jyutping.jyutping.keyboard.KeyboardForm
+import org.jyutping.jyutping.keyboard.KeyboardInterface
 import org.jyutping.jyutping.keyboard.Pinyin
 import org.jyutping.jyutping.keyboard.PinyinSegmentor
 import org.jyutping.jyutping.keyboard.QwertyForm
@@ -199,6 +200,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 inputMethodMode.value = newMode
                 updateSpaceKeyForm()
                 updateReturnKeyForm()
+        }
+
+        val keyboardInterface: MutableStateFlow<KeyboardInterface> by lazy { MutableStateFlow(KeyboardInterface.PhonePortrait) }
+        fun updateKeyboardInterface(keyboardInterface: KeyboardInterface) {
+                if (this.keyboardInterface.value != keyboardInterface) {
+                        this.keyboardInterface.value = keyboardInterface
+                }
         }
 
         val qwertyForm: MutableStateFlow<QwertyForm> by lazy { MutableStateFlow(QwertyForm.Jyutping) }

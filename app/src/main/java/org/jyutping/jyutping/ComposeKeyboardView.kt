@@ -1,6 +1,7 @@
 package org.jyutping.jyutping
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.DeprecatedSinceApi
 import androidx.annotation.RequiresApi
@@ -20,6 +21,7 @@ import org.jyutping.jyutping.keyboard.CangjieKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseNumericKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseSymbolicKeyboard
 import org.jyutping.jyutping.keyboard.KeyboardForm
+import org.jyutping.jyutping.keyboard.KeyboardInterface
 import org.jyutping.jyutping.keyboard.NumericKeyboard
 import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.SettingsScreen
@@ -27,6 +29,7 @@ import org.jyutping.jyutping.keyboard.StrokeKeyboard
 import org.jyutping.jyutping.keyboard.SymbolicKeyboard
 import org.jyutping.jyutping.presets.PresetConstant
 import splitties.systemservices.windowManager
+import kotlin.math.min
 
 class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
 
@@ -69,25 +72,44 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
         @Composable
         @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
         private fun api34ResponsiveKeyHeight(): Dp {
+                val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
                 val windowMetrics = context.windowManager.currentWindowMetrics
                 val bounds = windowMetrics.bounds
                 val density = windowMetrics.density
-                val screenWidth: Int = (bounds.width() / density).toInt()
-                val screenHeight: Int = (bounds.height() / density).toInt()
-                val isPhoneLandscape: Boolean = (screenHeight < 500) && (screenWidth > screenHeight)
-                if (isPhoneLandscape) return 40.dp
-                val value: Int = 52 + ((screenWidth - 300) / 20)
-                return value.dp
+                val windowWidth: Int = (bounds.width() / density).toInt()
+                val windowHeight: Int = (bounds.height() / density).toInt()
+                val minDimension: Int = min(windowWidth, windowHeight)
+                val isPhone: Boolean = minDimension < 500
+                val keyboardInterface: KeyboardInterface = when {
+                        isPhone && isLandscape -> KeyboardInterface.PhoneLandscape
+                        isPhone -> KeyboardInterface.PhonePortrait
+                        isLandscape -> KeyboardInterface.PadLandscape
+                        else -> KeyboardInterface.PadPortrait
+                }
+                (context as JyutpingInputMethodService).updateKeyboardInterface(keyboardInterface)
+                if (keyboardInterface.isPhoneLandscape()) return 40.dp
+                val keyHeight: Int = 52 + ((windowWidth - 300) / 20)
+                return keyHeight.dp
         }
 
         @Composable
         @DeprecatedSinceApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
         private fun legacyResponsiveKeyHeight(): Dp {
-                val screenWidth = LocalConfiguration.current.screenWidthDp
-                val screenHeight = LocalConfiguration.current.screenHeightDp
-                val isPhoneLandscape: Boolean = (screenHeight < 500) && (screenWidth > screenHeight)
-                if (isPhoneLandscape) return 40.dp
-                val value: Int = 52 + ((screenWidth - 300) / 20)
-                return value.dp
+                val configuration = LocalConfiguration.current
+                val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+                val windowWidth = configuration.screenWidthDp
+                val windowHeight = configuration.screenHeightDp
+                val minDimension = min(windowWidth, windowHeight)
+                val isPhone: Boolean = minDimension < 500
+                val keyboardInterface: KeyboardInterface = when {
+                        isPhone && isLandscape -> KeyboardInterface.PhoneLandscape
+                        isPhone -> KeyboardInterface.PhonePortrait
+                        isLandscape -> KeyboardInterface.PadLandscape
+                        else -> KeyboardInterface.PadPortrait
+                }
+                (context as JyutpingInputMethodService).updateKeyboardInterface(keyboardInterface)
+                if (keyboardInterface.isPhoneLandscape()) return 40.dp
+                val keyHeight: Int = 52 + ((windowWidth - 300) / 20)
+                return keyHeight.dp
         }
 }
