@@ -44,6 +44,7 @@ import org.jyutping.jyutping.utilities.ShapeKeyMap
 fun StrokeKey(letter: Char, modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val keyboardInterface by context.keyboardInterface.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val keyboardCase by context.keyboardCase.collectAsState()
@@ -76,7 +77,7 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
         ) {
                 Box(
                         modifier = modifier
-                                .padding(horizontal = 3.dp, vertical = 6.dp)
+                                .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
                                 .onGloballyPositioned { layoutCoordinates ->
                                         val originalSize = layoutCoordinates.size
                                         val width = originalSize.width.div(density.density)

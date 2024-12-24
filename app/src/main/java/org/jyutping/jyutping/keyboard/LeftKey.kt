@@ -47,6 +47,7 @@ import org.jyutping.jyutping.shapes.BubbleShape
 fun LeftKey(modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val keyboardInterface by context.keyboardInterface.collectAsState()
         val inputMethodMode by context.inputMethodMode.collectAsState()
         val isBuffering by context.isBuffering.collectAsState()
         val keyForm: LeftKeyForm = when (inputMethodMode) {
@@ -80,7 +81,7 @@ fun LeftKey(modifier: Modifier) {
         ) {
                 Box(
                         modifier = modifier
-                                .padding(horizontal = 3.dp, vertical = 6.dp)
+                                .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
                                 .onGloballyPositioned { layoutCoordinates ->
                                         val originalSize = layoutCoordinates.size
                                         val width = originalSize.width.div(density.density)
