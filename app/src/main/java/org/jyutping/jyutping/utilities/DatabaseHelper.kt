@@ -128,8 +128,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         private fun fetchRomanizations(word: String): List<String> {
                 val romanizations: MutableList<String> = mutableListOf()
-                val command = "SELECT romanization FROM lexicontable WHERE word = '$word';"
-                val cursor = this.readableDatabase.rawQuery(command, null)
+                val command = "SELECT romanization FROM lexicontable WHERE word = ?;"
+                val cursor = this.readableDatabase.rawQuery(command, arrayOf(word))
                 while (cursor.moveToNext()) {
                         val romanization = cursor.getString(0)
                         romanizations.add(romanization)
@@ -139,8 +139,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         private fun fetchHomophones(romanization: String): List<String> {
                 val words: MutableList<String> = mutableListOf()
-                val command = "SELECT word FROM lexicontable WHERE romanization = '$romanization' LIMIT 11;"
-                val cursor = this.readableDatabase.rawQuery(command, null)
+                val command = "SELECT word FROM lexicontable WHERE romanization = ? LIMIT 11;"
+                val cursor = this.readableDatabase.rawQuery(command, arrayOf(romanization))
                 while (cursor.moveToNext()) {
                         val word = cursor.getString(0)
                         words.add(word)
@@ -149,8 +149,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return words
         }
         private fun fetchCollocations(word: String, romanization: String): List<String> {
-                val command = "SELECT collocation FROM collocationtable WHERE word = '$word' AND romanization = '$romanization' LIMIT 1;"
-                val cursor = this.readableDatabase.rawQuery(command, null)
+                val command = "SELECT collocation FROM collocationtable WHERE word = ? AND romanization = ? LIMIT 1;"
+                val cursor = this.readableDatabase.rawQuery(command, arrayOf(word, romanization))
                 if (cursor.moveToFirst()) {
                         val text = cursor.getString(0)
                         cursor.close()
@@ -188,8 +188,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         private fun fetchYingWaaHomophones(romanization: String): List<String> {
                 val homophones: MutableList<String> = mutableListOf()
-                val command = "SELECT word FROM yingwaatable WHERE romanization = '$romanization' LIMIT 11;"
-                val cursor = this.readableDatabase.rawQuery(command, null)
+                val command = "SELECT word FROM yingwaatable WHERE romanization = ? LIMIT 11;"
+                val cursor = this.readableDatabase.rawQuery(command, arrayOf(romanization))
                 while (cursor.moveToNext()) {
                         val word = cursor.getString(0)
                         homophones.add(word)
@@ -231,8 +231,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         private fun fetchChoHokHomophones(romanization: String): List<String> {
                 val homophones: MutableList<String> = mutableListOf()
-                val command = "SELECT word FROM chohoktable WHERE romanization = '$romanization' LIMIT 11;"
-                val cursor = this.readableDatabase.rawQuery(command, null)
+                val command = "SELECT word FROM chohoktable WHERE romanization = ? LIMIT 11;"
+                val cursor = this.readableDatabase.rawQuery(command, arrayOf(romanization))
                 while (cursor.moveToNext()) {
                         val word = cursor.getString(0)
                         homophones.add(word)
@@ -277,8 +277,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         private fun fetchFanWanHomophones(romanization: String): List<String> {
                 val homophones: MutableList<String> = mutableListOf()
-                val command = "SELECT word FROM fanwantable WHERE romanization = '$romanization' LIMIT 11;"
-                val cursor = this.readableDatabase.rawQuery(command, null)
+                val command = "SELECT word FROM fanwantable WHERE romanization = ? LIMIT 11;"
+                val cursor = this.readableDatabase.rawQuery(command, arrayOf(romanization))
                 while (cursor.moveToNext()) {
                         val word = cursor.getString(0)
                         homophones.add(word)
@@ -432,8 +432,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun characterReverseLookup(text: String): List<String> {
                 if (text.length != 1) return emptyList()
                 val romanizations: MutableList<String> = mutableListOf()
-                val command = "SELECT romanization FROM lexicontable WHERE shortcut < 50 AND word = '${text}';"
-                val cursor = this.readableDatabase.rawQuery(command, null)
+                val command = "SELECT romanization FROM lexicontable WHERE shortcut < 50 AND word = ?;"
+                val cursor = this.readableDatabase.rawQuery(command, arrayOf(text))
                 while (cursor.moveToNext()) {
                         val romanization = cursor.getString(0)
                         romanizations.add(romanization)
@@ -444,8 +444,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun reverseLookup(text: String): List<String> {
                 if (text.isBlank()) return emptyList()
                 val romanizations: MutableList<String> = mutableListOf()
-                val command = "SELECT romanization FROM lexicontable WHERE word = '${text}';"
-                val cursor = this.readableDatabase.rawQuery(command, null)
+                val command = "SELECT romanization FROM lexicontable WHERE word = ?;"
+                val cursor = this.readableDatabase.rawQuery(command, arrayOf(text))
                 while (cursor.moveToNext()) {
                         val romanization = cursor.getString(0)
                         romanizations.add(romanization)
@@ -623,8 +623,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return candidates
         }
         private fun mapSkinTone(source: String): String? {
-                val command = "SELECT target FROM emojiskinmapping WHERE source = '${source}';"
-                val cursor = this.readableDatabase.rawQuery(command, null)
+                val command = "SELECT target FROM emojiskinmapping WHERE source = ?;"
+                val cursor = this.readableDatabase.rawQuery(command, arrayOf(source))
                 if (cursor.moveToFirst()) {
                         val target = cursor.getString(0)
                         cursor.close()

@@ -304,7 +304,7 @@ object Engine {
                 if (symbols.isEmpty()) return fallback
                 val regular: MutableList<Candidate> = (fullMatch + preferredSearches).toMutableList()
                 for (symbol in symbols.reversed()) {
-                        val index = regular.indexOfFirst { it.lexiconText == symbol.lexiconText }
+                        val index = regular.indexOfFirst { it.lexiconText == symbol.lexiconText && it.romanization == symbol.romanization }
                         if (index != -1) {
                                 regular.add(index = index + 1, element = symbol)
                         }
