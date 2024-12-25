@@ -1,7 +1,9 @@
 package org.jyutping.jyutping.utilities
 
 import android.content.Context
+import android.util.Log
 import org.jyutping.jyutping.BuildConfig
+import org.jyutping.jyutping.presets.PresetConstant
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -9,65 +11,57 @@ import java.io.InputStream
 import java.io.OutputStream
 
 object DatabasePreparer {
-        private const val SOURCE_DATABASE_NAME = "appdb.sqlite3"
-        private val oldDatabaseNames: List<String> = listOf(
-                "appdb-v0.15.0-tmp.sqlite3",
-                "appdb-v0.15.0-tmp.sqlite3-journal",
-                "appdb-v0.16.0-tmp.sqlite3",
-                "appdb-v0.16.0-tmp.sqlite3-journal",
-                "appdb-v0.17.0-tmp.sqlite3",
-                "appdb-v0.17.0-tmp.sqlite3-journal",
-                "appdb-v0.18.0-tmp.sqlite3",
-                "appdb-v0.18.0-tmp.sqlite3-journal",
-                "appdb-v0.19.0-tmp.sqlite3",
-                "appdb-v0.19.0-tmp.sqlite3-journal",
-                "appdb-v0.20.0-tmp.sqlite3",
-                "appdb-v0.20.0-tmp.sqlite3-journal",
-                "appdb-v0.21.0-tmp.sqlite3",
-                "appdb-v0.21.0-tmp.sqlite3-journal",
-                "appdb-v0.23.0-tmp.sqlite3",
-                "appdb-v0.23.0-tmp.sqlite3-journal",
-                "appdb-v0.24.0-tmp.sqlite3",
-                "appdb-v0.24.0-tmp.sqlite3-journal",
-                "appdb-v0.25.0-tmp.sqlite3",
-                "appdb-v0.25.0-tmp.sqlite3-journal",
-        )
-        val databaseName: String = run {
-                val version = BuildConfig.VERSION_NAME
-                "appdb-v${version}-tmp.sqlite3"
-        }
-        private const val DATABASES_DIR = "/databases/"
+
+        /** App in-package file */
+        private const val SOURCE_DATABASE_NAME: String = "appdb.sqlite3"
+
+        /** App working database file */
+        const val DATABASE_NAME: String = "appdb-v${BuildConfig.VERSION_NAME}-tmp.sqlite3"
+
+        private const val DATABASES_DIR_NAME: String = "databases"
+        private const val DATABASES_PATH_BLOCK: String = "/databases/"
+        private const val FILENAME_PREFIX: String = "appdb-v"
+        private const val LOG_TAG: String = PresetConstant.keyboardPackageName + ".utilities.DatabasePreparer"
 
         fun prepare(context: Context) {
                 val databaseExists: Boolean = doesDatabaseExist(context)
-                if (!databaseExists) {
+                if (databaseExists.not()) {
                         deleteOldDatabases(context)
                         copyDatabase(context)
                 }
         }
 
-        @Throws(SecurityException::class)
-        private fun deleteOldDatabases(context: Context) {
-                oldDatabaseNames.map {
-                        try {
-                                val dbFile = context.getDatabasePath(it)
-                                if (dbFile.exists() && dbFile.isFile) {
-                                        dbFile.delete()
+        fun deleteOldDatabases(context: Context) {
+                val dbDirectory = File(context.filesDir.parentFile, DATABASES_DIR_NAME)
+                performDeletion(context, dbDirectory)
+                val altPath = context.applicationInfo.dataDir + DATABASES_PATH_BLOCK
+                val altDirectory = File(altPath)
+                performDeletion(context, altDirectory)
+        }
+
+        private fun performDeletion(context: Context, directory : File) {
+                if (directory.exists() && directory.isDirectory) {
+                        directory.listFiles { dir, name ->
+                                name.startsWith(FILENAME_PREFIX) && name.startsWith(DATABASE_NAME).not()
+                        }?.forEach { file ->
+                                try {
+                                        if (file.exists() && file.isFile) {
+                                                file.delete()
+                                        }
+                                        val altFile = context.getDatabasePath(file.name)
+                                        if (altFile.exists() && altFile.isFile) {
+                                                altFile.delete()
+                                        }
+                                } catch (err: Exception) {
+                                        err.message?.let { Log.e(LOG_TAG, it) }
                                 }
-                                val path = context.applicationInfo.dataDir + DATABASES_DIR + it
-                                val file = File(path)
-                                if (file.exists() && file.isFile) {
-                                        file.delete()
-                                } else { }
-                        } catch (e: SecurityException) {
-                                throw Error(e.message)
                         }
                 }
         }
 
         private fun doesDatabaseExist(context: Context): Boolean {
-                val dbFile = context.getDatabasePath(databaseName)
-                val path = context.applicationInfo.dataDir + DATABASES_DIR + databaseName
+                val dbFile = context.getDatabasePath(DATABASE_NAME)
+                val path = context.applicationInfo.dataDir + DATABASES_PATH_BLOCK + DATABASE_NAME
                 val file = File(path)
                 return dbFile.exists() && file.exists()
         }
@@ -76,7 +70,7 @@ object DatabasePreparer {
         private fun copyDatabase(context: Context) {
                 var inStream: InputStream? = null
                 var outStream: OutputStream? = null
-                val destinationPath = context.applicationInfo.dataDir + DATABASES_DIR + databaseName
+                val destinationPath = context.applicationInfo.dataDir + DATABASES_PATH_BLOCK + DATABASE_NAME
                 val destinationFile = File(destinationPath)
                 try {
                         inStream = context.assets.open(SOURCE_DATABASE_NAME)
@@ -87,8 +81,11 @@ object DatabasePreparer {
                                 outStream.write(buffer, 0, length)
                         }
                         outStream.flush()
-                } catch (e: IOException) {
-                        throw Error(e.message)
+                } catch (err: Exception) {
+                        err.message?.let {
+                                Log.e(LOG_TAG, it)
+                                throw Error(it)
+                        }
                 } finally {
                         inStream?.close()
                         outStream?.close()

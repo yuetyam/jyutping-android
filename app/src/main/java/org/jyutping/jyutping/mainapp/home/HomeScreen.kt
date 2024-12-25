@@ -63,7 +63,7 @@ fun HomeScreen(navController: NavHostController) {
         val choHokEntries = remember { mutableStateOf<List<ChoHokYuetYamCitYiu>>(listOf()) }
         val fanWanEntries = remember { mutableStateOf<List<FanWanCuetYiu>>(listOf()) }
         val gwongWanEntries = remember { mutableStateOf<List<GwongWanCharacter>>(listOf()) }
-        val helper: DatabaseHelper by lazy { DatabaseHelper(navController.context, DatabasePreparer.databaseName) }
+        val helper: DatabaseHelper by lazy { DatabaseHelper(navController.context, DatabasePreparer.DATABASE_NAME) }
         fun searchYingWan(text: String): List<YingWaaFanWan> {
                 val char = text.firstOrNull() ?: return emptyList()
                 val matched = helper.yingWaaFanWanMatch(char)

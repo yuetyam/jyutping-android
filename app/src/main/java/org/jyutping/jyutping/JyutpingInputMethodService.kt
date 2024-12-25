@@ -436,7 +436,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         val candidateState: MutableStateFlow<Int> by lazy { MutableStateFlow(1) }
         val candidates: MutableStateFlow<List<Candidate>> by lazy { MutableStateFlow(listOf()) }
-        private val db by lazy { DatabaseHelper(this, DatabasePreparer.databaseName) }
+        private val db by lazy { DatabaseHelper(this, DatabasePreparer.DATABASE_NAME) }
         private var bufferText: String = PresetString.EMPTY
                 set(value) {
                         candidates.value = emptyList()
