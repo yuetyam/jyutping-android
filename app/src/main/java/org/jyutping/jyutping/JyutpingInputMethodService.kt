@@ -39,6 +39,7 @@ import org.jyutping.jyutping.keyboard.Cangjie
 import org.jyutping.jyutping.keyboard.CangjieVariant
 import org.jyutping.jyutping.keyboard.CommentStyle
 import org.jyutping.jyutping.keyboard.Engine
+import org.jyutping.jyutping.keyboard.ExtraBottomPadding
 import org.jyutping.jyutping.keyboard.InputMethodMode
 import org.jyutping.jyutping.keyboard.KeyboardCase
 import org.jyutping.jyutping.keyboard.KeyboardForm
@@ -369,16 +370,16 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 editor.putInt(UserSettingsKey.RightKey, value2save)
                 editor.apply()
         }
-        val needsExtraBottomPadding: MutableStateFlow<Boolean> by lazy {
-                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.NeedsExtraBottomPadding, 0)
-                val needs: Boolean = (savedValue == 1)
-                MutableStateFlow(needs)
+        val extraBottomPadding: MutableStateFlow<ExtraBottomPadding> by lazy {
+                val savedIdentifier: Int = sharedPreferences.getInt(UserSettingsKey.ExtraBottomPadding, 0)
+                val paddingLevel = ExtraBottomPadding.paddingLevelOf(savedIdentifier)
+                MutableStateFlow(paddingLevel)
         }
-        fun updateNeedsExtraBottomPadding(needs: Boolean) {
-                needsExtraBottomPadding.value = needs
-                val value2save: Int = if (needs) 1 else 0
+        fun updateExtraBottomPadding(paddingLevel: ExtraBottomPadding) {
+                extraBottomPadding.value = paddingLevel
+                val identifier: Int = paddingLevel.identifier
                 val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.NeedsExtraBottomPadding, value2save)
+                editor.putInt(UserSettingsKey.ExtraBottomPadding, identifier)
                 editor.apply()
         }
         val isEmojiSuggestionsOn: MutableStateFlow<Boolean> by lazy {

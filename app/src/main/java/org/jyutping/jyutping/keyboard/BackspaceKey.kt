@@ -31,6 +31,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
@@ -55,21 +56,24 @@ fun BackspaceKey(modifier: Modifier) {
                         .pointerInput(Unit) {
                                 detectTapGestures(
                                         onLongPress = {
+                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                                                 isLongPressing = true
                                                 longPressJob = longPressCoroutineScope.launch {
-                                                        while (isLongPressing) {
+                                                        while (isActive && isLongPressing) {
+                                                                delay(100)
                                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.backspace()
-                                                                delay(100)
                                                         }
                                                 }
                                         },
                                         onPress = {
-                                                longPressJob?.cancel()
-                                                isPressing = true
                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
+                                                longPressJob?.cancel()
+                                                isLongPressing = false
+                                                isPressing = true
                                                 tryAwaitRelease()
                                                 isPressing = false
                                                 isLongPressing = false

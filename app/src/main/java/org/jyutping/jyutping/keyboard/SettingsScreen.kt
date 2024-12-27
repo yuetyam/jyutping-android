@@ -8,16 +8,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.mandatorySystemGestures
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.layout.systemGestures
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -31,6 +26,10 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonColors
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
@@ -53,7 +52,6 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jyutping.jyutping.BuildConfig
@@ -62,7 +60,6 @@ import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
-import org.jyutping.jyutping.presets.PresetConstant
 
 @Composable
 fun SettingsScreen(height: Dp) {
@@ -78,18 +75,7 @@ fun SettingsScreen(height: Dp) {
         val needsInputModeSwitchKey by context.needsInputModeSwitchKey.collectAsState()
         val needsLeftKey by context.needsLeftKey.collectAsState()
         val needsRightKey by context.needsRightKey.collectAsState()
-        val needsExtraBottomPadding by context.needsExtraBottomPadding.collectAsState()
-        val extraBottomPadding: Dp = when {
-                needsExtraBottomPadding -> {
-                        val navigationBarBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-                        val mandatorySystemGesturesBottom = WindowInsets.mandatorySystemGestures.asPaddingValues().calculateBottomPadding()
-                        val bottomPadding = max(navigationBarBottom, mandatorySystemGesturesBottom)
-                        if (bottomPadding > 0.dp) bottomPadding
-                        val systemGesturesBottom = WindowInsets.systemGestures.asPaddingValues().calculateBottomPadding()
-                        if (systemGesturesBottom > 0.dp) systemGesturesBottom else PresetConstant.FallbackExtraBottomPadding.dp
-                }
-                else -> 0.dp
-        }
+        val extraBottomPadding by context.extraBottomPadding.collectAsState()
         val commentStyle by context.commentStyle.collectAsState()
         val isEmojiSuggestionsOn by context.isEmojiSuggestionsOn.collectAsState()
         val cangjieVariant by context.cangjieVariant.collectAsState()
@@ -113,6 +99,11 @@ fun SettingsScreen(height: Dp) {
         } else {
                 SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = PresetColor.green, uncheckedThumbColor = Color.DarkGray, uncheckedTrackColor = Color.LightGray, uncheckedBorderColor = Color.Gray)
         }
+        val segmentedButtonColors: SegmentedButtonColors = if (isDarkMode) {
+                SegmentedButtonDefaults.colors(activeContainerColor = PresetColor.green, activeContentColor = Color.White, activeBorderColor = Color.DarkGray, inactiveContainerColor = Color.Black, inactiveContentColor = Color.White, inactiveBorderColor = Color.DarkGray)
+        } else {
+                SegmentedButtonDefaults.colors(activeContainerColor = PresetColor.green, activeContentColor = Color.White, activeBorderColor = Color.LightGray, inactiveContainerColor = Color.White, inactiveContentColor = Color.Black, inactiveBorderColor = Color.LightGray)
+        }
         val version: String by lazy { BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")" }
         Column(
                 modifier = Modifier
@@ -124,7 +115,7 @@ fun SettingsScreen(height: Dp) {
                                 }
                         )
                         .systemBarsPadding()
-                        .padding(bottom = extraBottomPadding)
+                        .padding(bottom = extraBottomPadding.paddingValue().dp)
                         .height(height)
                         .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(0.dp),
@@ -438,23 +429,41 @@ fun SettingsScreen(height: Dp) {
                                                         colors = switchColors
                                                 )
                                         }
-                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
-                                        Row(
-                                                modifier = Modifier.padding(horizontal = 8.dp),
-                                                verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                                Text(
-                                                        text = stringResource(id = R.string.keyboard_settings_bottom_padding_switch_title),
-                                                        color = tintColor
-                                                )
-                                                Spacer(modifier = Modifier.weight(1f))
-                                                Switch(
-                                                        checked = needsExtraBottomPadding,
-                                                        onCheckedChange = {
-                                                                context.updateNeedsExtraBottomPadding(it)
-                                                        },
-                                                        colors = switchColors
-                                                )
+                                }
+                        }
+                        item {
+                                Row(
+                                        modifier = Modifier
+                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                .padding(start = 8.dp, end = 4.dp)
+                                                .fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                        Text(
+                                                text = stringResource(id = R.string.keyboard_settings_bottom_padding_title),
+                                                color = tintColor
+                                        )
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        SingleChoiceSegmentedButtonRow {
+                                                ExtraBottomPadding.entries.forEachIndexed { index, level ->
+                                                        SegmentedButton(
+                                                                selected = extraBottomPadding == level,
+                                                                onClick = { context.updateExtraBottomPadding(level) },
+                                                                shape = SegmentedButtonDefaults.itemShape(index, ExtraBottomPadding.entries.count()),
+                                                                colors = segmentedButtonColors,
+                                                                icon = {}
+                                                        ) {
+                                                                Text(
+                                                                        text = stringResource(id = when (level) {
+                                                                                ExtraBottomPadding.None -> R.string.keyboard_settings_bottom_padding_none
+                                                                                ExtraBottomPadding.Low -> R.string.keyboard_settings_bottom_padding_low
+                                                                                ExtraBottomPadding.Medium -> R.string.keyboard_settings_bottom_padding_medium
+                                                                                ExtraBottomPadding.High -> R.string.keyboard_settings_bottom_padding_high
+                                                                        }),
+                                                                        color = if (extraBottomPadding == level) Color.White else tintColor
+                                                                )
+                                                        }
+                                                }
                                         }
                                 }
                         }
