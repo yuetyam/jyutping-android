@@ -96,7 +96,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 keyboardForm.value = KeyboardForm.Alphabetic
                 qwertyForm.value = QwertyForm.Jyutping
                 updateSpaceKeyForm()
-                updateReturnKeyForm()
+                updateReturnKeyForm(attribute)
                 inputClientMonitorJob = CoroutineScope(Dispatchers.Main).launch {
                         while (isActive) {
                                 delay(500L) // 0.5s
@@ -176,7 +176,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
 
         val returnKeyForm: MutableStateFlow<ReturnKeyForm> by lazy { MutableStateFlow(ReturnKeyForm.StandbyTraditional) }
-        private fun updateReturnKeyForm() {
+        val returnKeyText: MutableStateFlow<String?> by lazy { MutableStateFlow(null) }
+        private fun updateReturnKeyForm(editorInfo: EditorInfo? = null) {
                 val newForm: ReturnKeyForm = when (inputMethodMode.value) {
                         InputMethodMode.ABC -> ReturnKeyForm.StandbyABC
                         InputMethodMode.Cantonese -> {
@@ -189,6 +190,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
                 if (returnKeyForm.value != newForm) {
                         returnKeyForm.value = newForm
+                }
+                val imeAction = (editorInfo?.imeOptions ?: currentInputEditorInfo.imeOptions).and(EditorInfo.IME_MASK_ACTION)
+                val newKeyText: String? = newForm.keyText(imeAction)
+                if (returnKeyText.value != newKeyText) {
+                        returnKeyText.value = newKeyText
                 }
         }
 

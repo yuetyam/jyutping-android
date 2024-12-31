@@ -40,9 +40,9 @@ fun ReturnKey(modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val keyboardInterface by context.keyboardInterface.collectAsState()
-        val isBuffering by context.isBuffering.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
+        val keyText by context.returnKeyText.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
         Box(
                 modifier = modifier
@@ -89,18 +89,18 @@ fun ReturnKey(modifier: Modifier) {
                                 .fillMaxSize(),
                         contentAlignment = Alignment.Center
                 ) {
-                        if (isBuffering) {
-                                Text(
-                                        text = context.returnKeyForm.value.text() ?: "return",
-                                        color = if (isDarkMode) Color.White else Color.Black,
-                                        fontSize = 15.sp
-                                )
-                        } else {
+                        if (keyText == null) {
                                 Icon(
                                         imageVector = ImageVector.vectorResource(id = R.drawable.key_return),
                                         contentDescription = null,
                                         modifier = Modifier.size(22.dp),
                                         tint = if (isDarkMode) Color.White else Color.Black
+                                )
+                        } else {
+                                Text(
+                                        text = keyText ?: "return",
+                                        color = if (isDarkMode) Color.White else Color.Black,
+                                        fontSize = 15.sp
                                 )
                         }
                 }

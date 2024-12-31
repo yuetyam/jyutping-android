@@ -88,7 +88,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                 }
                 (context as JyutpingInputMethodService).updateKeyboardInterface(keyboardInterface)
                 if (keyboardInterface.isPhoneLandscape()) return 40.dp
-                val keyHeight: Int = 52 + ((windowWidth - 300) / 20)
+                val keyHeight: Int = 53 + ((windowWidth - 300) / 20)
                 return keyHeight.dp
         }
 
@@ -109,7 +109,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                 }
                 (context as JyutpingInputMethodService).updateKeyboardInterface(keyboardInterface)
                 if (keyboardInterface.isPhoneLandscape()) return 40.dp
-                val keyHeight: Int = 52 + ((windowWidth - 300) / 20)
+                val keyHeight: Int = 53 + ((windowWidth - 300) / 20)
                 return keyHeight.dp
         }
 }
