@@ -11,9 +11,9 @@ object Engine {
                 return when (text.length) {
                         0 -> emptyList()
                         1 -> when (text) {
-                                "a" -> db.pingMatch(text = text, input = text) + db.pingMatch(text = "aa", input = text, mark = text) + db.shortcutMatch(text)
-                                "o", "m", "e" -> db.pingMatch(text = text, input = text) + db.shortcutMatch(text)
-                                else -> db.shortcutMatch(text)
+                                "a" -> db.pingMatch(text = text, input = text) + db.pingMatch(text = "aa", input = text, mark = text) + db.shortcutMatch(text = text, limit = 100)
+                                "o", "m", "e" -> db.pingMatch(text = text, input = text) + db.shortcutMatch(text = text, limit = 100)
+                                else -> db.shortcutMatch(text = text, limit = 100)
                         }
                         else -> {
                                 if (asap) {

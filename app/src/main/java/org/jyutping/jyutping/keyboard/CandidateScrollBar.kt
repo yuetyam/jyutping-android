@@ -3,19 +3,16 @@ package org.jyutping.jyutping.keyboard
 import android.view.HapticFeedbackConstants
 import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,25 +38,9 @@ import org.jyutping.jyutping.presets.PresetColor
 fun CandidateScrollBar() {
         val expanderWidth: Dp = 44.dp
         val dividerHeight: Dp = 24.dp
-        val interactionSource = remember { MutableInteractionSource() }
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val commentStyle by context.commentStyle.collectAsState()
-        val candidateViewTopInset: Dp = when (commentStyle) {
-                CommentStyle.AboveCandidates -> 0.dp
-                CommentStyle.BelowCandidates -> 4.dp
-                CommentStyle.NoComments -> 0.dp
-        }
-        val candidateViewBottomInset: Dp = when (commentStyle) {
-                CommentStyle.AboveCandidates -> 12.dp
-                CommentStyle.BelowCandidates -> 0.dp
-                CommentStyle.NoComments -> 16.dp
-        }
-        val candidateRowVerticalAlignment: Alignment.Vertical = when (commentStyle) {
-                CommentStyle.AboveCandidates -> Alignment.Bottom
-                CommentStyle.BelowCandidates -> Alignment.Top
-                CommentStyle.NoComments -> Alignment.Bottom
-        }
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val state = rememberLazyListState()
@@ -76,22 +56,15 @@ fun CandidateScrollBar() {
                         modifier = Modifier.fillMaxSize(),
                         state = state,
                         horizontalArrangement = Arrangement.spacedBy(0.dp),
-                        verticalAlignment = candidateRowVerticalAlignment
+                        verticalAlignment = Alignment.CenterVertically
                 ) {
-                        itemsIndexed(candidates) { index, candidate ->
+                        items(candidates) {
                                 CandidateView(
-                                        candidate = candidate,
+                                        candidate = it,
                                         commentStyle = commentStyle,
                                         isDarkMode = isDarkMode,
-                                        modifier = Modifier
-                                                .clickable(interactionSource = interactionSource, indication = null) {
-                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                        context.selectCandidate(index = index)
-                                                }
-                                                .padding(horizontal = if (candidate.type.isCantonese()) 6.dp else 10.dp)
-                                                .padding(vertical = if (candidate.type.isCantonese()) 0.dp else 4.dp)
-                                                .padding(top = candidateViewTopInset, bottom = candidateViewBottomInset)
+                                        selection = { context.selectCandidate(it) },
+                                        deletion = { context.forgetCandidate(it) }
                                 )
                         }
                 }

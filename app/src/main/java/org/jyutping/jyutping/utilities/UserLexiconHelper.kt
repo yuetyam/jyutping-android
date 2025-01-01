@@ -22,17 +22,9 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                 db?.execSQL(createTable)
         }
 
-        fun handle(candidate: Candidate) {
-                val id: Int = (candidate.lexiconText + candidate.romanization).hashCode()
-                val frequency = find(id)
-                if (frequency != null) {
-                        update(id = id, frequency = frequency)
-                } else {
-                        val lexicon = UserLexicon.convert(candidate)
-                        insert(lexicon)
-                }
-        }
         fun process(candidates: List<Candidate>) {
+                val isNotAllCantonese = candidates.count { it.type.isNotCantonese() } > 0
+                if (isNotAllCantonese) return
                 val lexicon = UserLexicon.join(candidates)
                 val id = lexicon.id
                 val frequency = find(id)
@@ -65,6 +57,13 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                 } else {
                         return null
                 }
+        }
+
+        fun remove(candidate: Candidate) {
+                if (candidate.type.isNotCantonese()) return
+                val id: Int = (candidate.lexiconText + candidate.romanization).hashCode()
+                val command: String = "DELETE FROM memory WHERE id = ${id};"
+                this.writableDatabase.execSQL(command)
         }
         fun deleteAll() {
                 val command: String = "DELETE FROM memory;"

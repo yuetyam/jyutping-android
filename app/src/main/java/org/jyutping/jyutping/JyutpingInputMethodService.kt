@@ -437,6 +437,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         private val selectedCandidates: MutableList<Candidate> by lazy { mutableListOf() }
         private val userDB by lazy { UserLexiconHelper(this) }
+        fun forgetCandidate(candidate: Candidate) {
+                userDB.remove(candidate)
+        }
         fun clearUserLexicon() {
                 userDB.deleteAll()
         }
@@ -610,8 +613,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 currentInputConnection.commitText(text, 1)
                 adjustKeyboardCase()
         }
-        fun selectCandidate(candidate: Candidate? = null, index: Int = 0) {
-                val candidate: Candidate = candidate ?: candidates.value.getOrNull(index) ?: return
+        fun selectCandidate(candidate: Candidate) {
                 currentInputConnection.commitText(candidate.text, 1)
                 selectedCandidates.add(candidate)
                 val firstChar = bufferText.firstOrNull()
@@ -708,7 +710,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun space() {
                 if (isBuffering.value) {
                         if (candidates.value.isNotEmpty()) {
-                                selectCandidate()
+                                candidates.value.firstOrNull()?.let { selectCandidate(it) }
                         } else {
                                 currentInputConnection.commitText(bufferText, 1)
                                 bufferText = PresetString.EMPTY
