@@ -1,5 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
+import android.os.Build
 import android.view.HapticFeedbackConstants
 import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
@@ -80,7 +81,7 @@ fun SettingsScreen(height: Dp) {
         val isEmojiSuggestionsOn by context.isEmojiSuggestionsOn.collectAsState()
         val cangjieVariant by context.cangjieVariant.collectAsState()
         val isInputMemoryOn by context.isInputMemoryOn.collectAsState()
-        var isTryingToClearUserLexicon by remember { mutableStateOf(false) }
+        var isTryingToClearInputMemory by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()
         val tintColor: Color = if (isDarkMode) Color.White else Color.Black
         val backColor: Color = if (isDarkMode) Color.Black else Color.White
@@ -665,88 +666,82 @@ fun SettingsScreen(height: Dp) {
                         }
                         item {
                                 Column(
-                                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                                        modifier = Modifier
+                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                .fillMaxWidth()
                                 ) {
-                                        Text(
-                                                text = stringResource(id = R.string.keyboard_settings_user_lexicon_header),
+                                        Row(
                                                 modifier = Modifier.padding(horizontal = 8.dp),
-                                                color = tintColor,
-                                                style = MaterialTheme.typography.bodySmall
-                                        )
-                                        Column(
-                                                modifier = Modifier
-                                                        .background(color = backColor, shape = RoundedCornerShape(6.dp))
-                                                        .fillMaxWidth()
+                                                verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                                Row(
-                                                        modifier = Modifier.padding(horizontal = 8.dp),
-                                                        verticalAlignment = Alignment.CenterVertically
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_input_memory_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = isInputMemoryOn,
+                                                        onCheckedChange = {
+                                                                context.updateInputMemoryState(it)
+                                                        },
+                                                        colors = switchColors
+                                                )
+                                        }
+                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                        Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                TextButton(
+                                                        onClick = {
+                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                isTryingToClearInputMemory = true
+                                                        },
+                                                        colors = destructiveButtonColors,
+                                                        contentPadding = PaddingValues(end = 12.dp)
                                                 ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_input_memory_switch_title),
-                                                                color = tintColor
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Switch(
-                                                                checked = isInputMemoryOn,
-                                                                onCheckedChange = {
-                                                                        context.updateInputMemoryState(it)
-                                                                },
-                                                                colors = switchColors
-                                                        )
+                                                        if (isTryingToClearInputMemory) {
+                                                                Text(text = stringResource(id = R.string.keyboard_settings_clear_input_memory_message))
+                                                        } else {
+                                                                Text(text = stringResource(id = R.string.keyboard_settings_clear_input_memory))
+                                                        }
                                                 }
-                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
-                                                Row(
-                                                        modifier = Modifier.padding(horizontal = 8.dp),
-                                                        verticalAlignment = Alignment.CenterVertically
-                                                ) {
+                                                if (isTryingToClearInputMemory) {
+                                                        TextButton(
+                                                                onClick = {
+                                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                                                                view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+                                                                        } else {
+                                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                        }
+                                                                        context.clearInputMemory()
+                                                                        coroutineScope.launch {
+                                                                                delay(1000L) // 1s
+                                                                                isTryingToClearInputMemory = false
+                                                                        }
+                                                                },
+                                                                colors = destructiveButtonColors,
+                                                                contentPadding = PaddingValues(horizontal = 12.dp)
+                                                        ) {
+                                                                Text(text = stringResource(id = R.string.keyboard_settings_clear_input_memory_confirm))
+                                                        }
                                                         TextButton(
                                                                 onClick = {
                                                                         view.playSoundEffect(SoundEffectConstants.CLICK)
                                                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                        isTryingToClearUserLexicon = true
+                                                                        coroutineScope.launch {
+                                                                                delay(300L) // 0.3s
+                                                                                isTryingToClearInputMemory = false
+                                                                        }
                                                                 },
-                                                                colors = destructiveButtonColors,
-                                                                contentPadding = PaddingValues(end = 12.dp)
+                                                                contentPadding = PaddingValues(horizontal = 12.dp)
                                                         ) {
-                                                                if (isTryingToClearUserLexicon) {
-                                                                        Text(text = stringResource(id = R.string.keyboard_settings_clear_user_lexicon_message))
-                                                                } else {
-                                                                        Text(text = stringResource(id = R.string.keyboard_settings_clear_user_lexicon))
-                                                                }
+                                                                Text(text = stringResource(id = R.string.keyboard_settings_clear_input_memory_cancel))
                                                         }
-                                                        if (isTryingToClearUserLexicon) {
-                                                                TextButton(
-                                                                        onClick = {
-                                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                                context.clearUserLexicon()
-                                                                                coroutineScope.launch {
-                                                                                        delay(1000L) // 1s
-                                                                                        isTryingToClearUserLexicon = false
-                                                                                }
-                                                                        },
-                                                                        colors = destructiveButtonColors,
-                                                                        contentPadding = PaddingValues(horizontal = 12.dp)
-                                                                ) {
-                                                                        Text(text = stringResource(id = R.string.keyboard_settings_clear_user_lexicon_confirm))
-                                                                }
-                                                                TextButton(
-                                                                        onClick = {
-                                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                                coroutineScope.launch {
-                                                                                        delay(300L) // 0.3s
-                                                                                        isTryingToClearUserLexicon = false
-                                                                                }
-                                                                        },
-                                                                        contentPadding = PaddingValues(horizontal = 12.dp)
-                                                                ) {
-                                                                        Text(text = stringResource(id = R.string.keyboard_settings_clear_user_lexicon_cancel))
-                                                                }
-                                                        }
-                                                        Spacer(modifier = Modifier.weight(1f))
                                                 }
+                                                Spacer(modifier = Modifier.weight(1f))
                                         }
                                 }
                         }

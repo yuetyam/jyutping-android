@@ -25,6 +25,8 @@
     <string name="screen_title_introductions">更多介紹</string>
     <string name="introductions_heading_clear_buffer">一次過清除已輸入音節</string>
     <string name="introductions_content_clear_buffer">刪除鍵(Delete)從右向左滑，即可一次過清空預輸入拼寫。</string>
+    <string name="introductions_heading_forget_candidate">從輸入記憶刪除某個候選詞</string>
+    <string name="introductions_content_forget_candidate">長按某一個候選詞可以將佢從輸入記憶刪除。</string>
     <string name="introductions_heading_position_insertion_point">移動文字輸入位置</string>
     <string name="introductions_content_position_insertion_point">長按空格鍵(Space)直到觸發鍵盤聲音以及觸感回應，然後向左或者向右滑動手指。</string>
     <string name="jyutping_label_initials">粵拼聲母表</string>
@@ -69,7 +71,7 @@
     <string name="keyboard_settings_bottom_padding_low">低</string>
     <string name="keyboard_settings_bottom_padding_medium">中</string>
     <string name="keyboard_settings_bottom_padding_high">高</string>
-    <string name="keyboard_settings_comment_style_header">粵拼顯示</string>
+    <string name="keyboard_settings_comment_style_header">粵拼標示</string>
     <string name="keyboard_settings_comment_style_above">候選詞上邊</string>
     <string name="keyboard_settings_comment_style_below">候選詞下邊</string>
     <string name="keyboard_settings_comment_style_none">無</string>
@@ -79,12 +81,11 @@
     <string name="keyboard_settings_cangjie_variant_cangjie3">倉頡三代</string>
     <string name="keyboard_settings_cangjie_variant_quick5">速成五代</string>
     <string name="keyboard_settings_cangjie_variant_quick3">速成三代</string>
-    <string name="keyboard_settings_user_lexicon_header">個人詞庫</string>
     <string name="keyboard_settings_input_memory_switch_title">記憶輸入</string>
-    <string name="keyboard_settings_clear_user_lexicon">清空個人詞庫</string>
-    <string name="keyboard_settings_clear_user_lexicon_message">清空個人詞庫？</string>
-    <string name="keyboard_settings_clear_user_lexicon_confirm">清空</string>
-    <string name="keyboard_settings_clear_user_lexicon_cancel">取消</string>
+    <string name="keyboard_settings_clear_input_memory">清空輸入記憶</string>
+    <string name="keyboard_settings_clear_input_memory_message">清空輸入記憶？</string>
+    <string name="keyboard_settings_clear_input_memory_confirm">清空</string>
+    <string name="keyboard_settings_clear_input_memory_cancel">取消</string>
     <string name="editing_panel_key_back">返回</string>
     <string name="editing_panel_key_backspace">刪除</string>
     <string name="editing_panel_key_forward_delete">向右刪除</string>

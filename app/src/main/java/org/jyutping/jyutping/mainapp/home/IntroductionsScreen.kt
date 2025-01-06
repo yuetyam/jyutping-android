@@ -25,6 +25,12 @@ fun IntroductionsScreen() {
                         }
                         item {
                                 TextCard(
+                                        heading = stringResource(id = R.string.introductions_heading_forget_candidate),
+                                        content = stringResource(id = R.string.introductions_content_forget_candidate)
+                                )
+                        }
+                        item {
+                                TextCard(
                                         heading = stringResource(id = R.string.introductions_heading_position_insertion_point),
                                         content = stringResource(id = R.string.introductions_content_position_insertion_point)
                                 )

@@ -25,6 +25,8 @@
     <string name="screen_title_introductions">Introductions</string>
     <string name="introductions_heading_clear_buffer">Clear current pre-edit text</string>
     <string name="introductions_content_clear_buffer">Swipe from right to left on the Delete key will clear current pre-edit syllables.</string>
+    <string name="introductions_heading_forget_candidate">Remove a Candidate from Input Memory</string>
+    <string name="introductions_content_forget_candidate">Long-press on a Candidate can delete it from Input Memory.</string>
     <string name="introductions_heading_position_insertion_point">Moving the insertion point</string>
     <string name="introductions_content_position_insertion_point">Touch and hold the Space bar until the keyboard triggers sound and haptic feedback; then, slide your finger left or right.</string>
     <string name="jyutping_label_initials">Jyutping Initials</string>
@@ -79,12 +81,11 @@
     <string name="keyboard_settings_cangjie_variant_cangjie3">Cangjie3 (倉頡三代)</string>
     <string name="keyboard_settings_cangjie_variant_quick5">Quick5 (速成五代)</string>
     <string name="keyboard_settings_cangjie_variant_quick3">Quick3 (速成三代)</string>
-    <string name="keyboard_settings_user_lexicon_header">User Lexicon</string>
     <string name="keyboard_settings_input_memory_switch_title">Input Memory</string>
-    <string name="keyboard_settings_clear_user_lexicon">Clear User Lexicon</string>
-    <string name="keyboard_settings_clear_user_lexicon_message">Clear User Lexicon?</string>
-    <string name="keyboard_settings_clear_user_lexicon_confirm">Clear</string>
-    <string name="keyboard_settings_clear_user_lexicon_cancel">Cancel</string>
+    <string name="keyboard_settings_clear_input_memory">Clear Input Memory</string>
+    <string name="keyboard_settings_clear_input_memory_message">Clear Input Memory?</string>
+    <string name="keyboard_settings_clear_input_memory_confirm">Clear</string>
+    <string name="keyboard_settings_clear_input_memory_cancel">Cancel</string>
     <string name="editing_panel_key_back">Back</string>
     <string name="editing_panel_key_backspace">Delete</string>
     <string name="editing_panel_key_forward_delete">Forward Delete</string>

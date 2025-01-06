@@ -440,7 +440,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun forgetCandidate(candidate: Candidate) {
                 userDB.remove(candidate)
         }
-        fun clearUserLexicon() {
+        fun clearInputMemory() {
                 userDB.deleteAll()
         }
 
