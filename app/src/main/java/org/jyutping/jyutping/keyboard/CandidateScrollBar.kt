@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,7 +47,7 @@ fun CandidateScrollBar() {
         val candidates by context.candidates.collectAsState()
         val candidateState by context.candidateState.collectAsState()
         LaunchedEffect(candidateState) {
-                state.scrollToItem(index = 0, scrollOffset = 0)
+                state.animateScrollToItem(index = 0, scrollOffset = 0)
         }
         Box(
                 contentAlignment = Alignment.CenterEnd
@@ -58,13 +58,14 @@ fun CandidateScrollBar() {
                         horizontalArrangement = Arrangement.spacedBy(0.dp),
                         verticalAlignment = Alignment.CenterVertically
                 ) {
-                        items(candidates) {
+                        itemsIndexed(candidates) { index, candidate ->
                                 CandidateView(
-                                        candidate = it,
+                                        candidateState = candidateState,
+                                        candidate = candidate,
                                         commentStyle = commentStyle,
                                         isDarkMode = isDarkMode,
-                                        selection = { context.selectCandidate(it) },
-                                        deletion = { context.forgetCandidate(it) }
+                                        selection = { context.selectCandidate(index = index) },
+                                        deletion = { context.forgetCandidate(index = index) }
                                 )
                         }
                 }

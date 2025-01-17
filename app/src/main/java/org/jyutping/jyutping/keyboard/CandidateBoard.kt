@@ -80,7 +80,7 @@ fun CandidateBoard(height: Dp) {
         val candidates by context.candidates.collectAsState()
         val candidateState by context.candidateState.collectAsState()
         LaunchedEffect(candidateState) {
-                state.scrollToItem(index = 0, scrollOffset = 0)
+                state.animateScrollToItem(index = 0, scrollOffset = 0)
         }
         val minRowIdentifier: Int = 1000
         val candidateRows: List<CandidateRow> by lazy {
@@ -141,6 +141,7 @@ fun CandidateBoard(height: Dp) {
                                                         modifier = Modifier
                                                                 .padding(2.dp)
                                                                 .weight(it.width() / row.width),
+                                                        candidateState = candidateState,
                                                         candidate = it,
                                                         commentStyle = commentStyle,
                                                         isDarkMode = isDarkMode,

@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.presets.PresetString
 
 @Composable
-fun CandidateView(candidate: Candidate, commentStyle: CommentStyle, isDarkMode: Boolean, selection: () -> Unit, deletion: () -> Unit) {
+fun CandidateView(candidateState: Int, candidate: Candidate, commentStyle: CommentStyle, isDarkMode: Boolean, selection: () -> Unit, deletion: () -> Unit) {
         val isCantonese: Boolean = candidate.type.isCantonese()
         val textColor: Color = if (isDarkMode) Color.White else Color.Black
         val view = LocalView.current
@@ -35,6 +35,9 @@ fun CandidateView(candidate: Candidate, commentStyle: CommentStyle, isDarkMode: 
                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                                                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                                                 deletion()
+                                                if (candidateState < 0) { // Would not be true
+                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                }
                                         },
                                         onPress = {
                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -79,7 +82,7 @@ fun CandidateView(candidate: Candidate, commentStyle: CommentStyle, isDarkMode: 
 }
 
 @Composable
-fun AltCandidateView(modifier: Modifier, candidate: Candidate, commentStyle: CommentStyle, isDarkMode: Boolean, selection: () -> Unit, deletion: () -> Unit) {
+fun AltCandidateView(modifier: Modifier, candidateState: Int, candidate: Candidate, commentStyle: CommentStyle, isDarkMode: Boolean, selection: () -> Unit, deletion: () -> Unit) {
         val isCantonese: Boolean = candidate.type.isCantonese()
         val textColor: Color = if (isDarkMode) Color.White else Color.Black
         val view = LocalView.current
@@ -91,6 +94,9 @@ fun AltCandidateView(modifier: Modifier, candidate: Candidate, commentStyle: Com
                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
                                                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                                                 deletion()
+                                                if (candidateState < 0) { // Would not be true
+                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                }
                                         },
                                         onPress = {
                                                 view.playSoundEffect(SoundEffectConstants.CLICK)
