@@ -75,12 +75,12 @@
     <string name="keyboard_settings_comment_style_above">候選詞上邊</string>
     <string name="keyboard_settings_comment_style_below">候選詞下邊</string>
     <string name="keyboard_settings_comment_style_none">無</string>
-    <string name="keyboard_settings_emoji_switch_title">表情符號（Emoji）候選詞</string>
     <string name="keyboard_settings_cangjie_variant_header">倉頡／速成反查粵拼</string>
     <string name="keyboard_settings_cangjie_variant_cangjie5">倉頡五代</string>
     <string name="keyboard_settings_cangjie_variant_cangjie3">倉頡三代</string>
     <string name="keyboard_settings_cangjie_variant_quick5">速成五代</string>
     <string name="keyboard_settings_cangjie_variant_quick3">速成三代</string>
+    <string name="keyboard_settings_emoji_switch_title">表情符號（Emoji）候選詞</string>
     <string name="keyboard_settings_input_memory_switch_title">記憶輸入</string>
     <string name="keyboard_settings_clear_input_memory">清空輸入記憶</string>
     <string name="keyboard_settings_clear_input_memory_message">清空輸入記憶？</string>

@@ -51,6 +51,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
@@ -78,8 +79,8 @@ fun SettingsScreen(height: Dp) {
         val needsRightKey by context.needsRightKey.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
         val commentStyle by context.commentStyle.collectAsState()
-        val isEmojiSuggestionsOn by context.isEmojiSuggestionsOn.collectAsState()
         val cangjieVariant by context.cangjieVariant.collectAsState()
+        val isEmojiSuggestionsOn by context.isEmojiSuggestionsOn.collectAsState()
         val isInputMemoryOn by context.isInputMemoryOn.collectAsState()
         var isTryingToClearInputMemory by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()
@@ -185,7 +186,10 @@ fun SettingsScreen(height: Dp) {
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
-                                                        Text(text = stringResource(id = R.string.keyboard_settings_character_standard_traditional))
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_character_standard_traditional),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
@@ -205,7 +209,10 @@ fun SettingsScreen(height: Dp) {
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
-                                                        Text(text = stringResource(id = R.string.keyboard_settings_character_standard_hongkong))
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_character_standard_hongkong),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
@@ -225,7 +232,10 @@ fun SettingsScreen(height: Dp) {
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
-                                                        Text(text = stringResource(id = R.string.keyboard_settings_character_standard_taiwan))
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_character_standard_taiwan),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
@@ -245,7 +255,10 @@ fun SettingsScreen(height: Dp) {
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
-                                                        Text(text = stringResource(id = R.string.keyboard_settings_character_standard_simplified))
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_character_standard_simplified),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
@@ -461,7 +474,8 @@ fun SettingsScreen(height: Dp) {
                                                                                 ExtraBottomPadding.Medium -> R.string.keyboard_settings_bottom_padding_medium
                                                                                 ExtraBottomPadding.High -> R.string.keyboard_settings_bottom_padding_high
                                                                         }),
-                                                                        color = if (extraBottomPadding == level) Color.White else tintColor
+                                                                        color = if (extraBottomPadding == level) Color.White else tintColor,
+                                                                        fontWeight = FontWeight.Normal
                                                                 )
                                                         }
                                                 }
@@ -493,7 +507,10 @@ fun SettingsScreen(height: Dp) {
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
-                                                        Text(text = stringResource(id = R.string.keyboard_settings_comment_style_above))
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_comment_style_above),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
@@ -513,7 +530,10 @@ fun SettingsScreen(height: Dp) {
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
-                                                        Text(text = stringResource(id = R.string.keyboard_settings_comment_style_below))
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_comment_style_below),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
@@ -533,7 +553,10 @@ fun SettingsScreen(height: Dp) {
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
-                                                        Text(text = stringResource(id = R.string.keyboard_settings_comment_style_none))
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_comment_style_none),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
@@ -543,28 +566,6 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                 }
                                         }
-                                }
-                        }
-                        item {
-                                Row(
-                                        modifier = Modifier
-                                                .fillMaxWidth()
-                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
-                                                .padding(horizontal = 8.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                        Text(
-                                                text = stringResource(id = R.string.keyboard_settings_emoji_switch_title),
-                                                color = tintColor
-                                        )
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        Switch(
-                                                checked = isEmojiSuggestionsOn,
-                                                onCheckedChange = {
-                                                        context.updateEmojiSuggestionsState(it)
-                                                },
-                                                colors = switchColors
-                                        )
                                 }
                         }
                         item {
@@ -592,7 +593,10 @@ fun SettingsScreen(height: Dp) {
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
-                                                        Text(text = stringResource(id = R.string.keyboard_settings_cangjie_variant_cangjie5))
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_cangjie_variant_cangjie5),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
@@ -612,7 +616,10 @@ fun SettingsScreen(height: Dp) {
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
-                                                        Text(text = stringResource(id = R.string.keyboard_settings_cangjie_variant_cangjie3))
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_cangjie_variant_cangjie3),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
@@ -632,7 +639,10 @@ fun SettingsScreen(height: Dp) {
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
-                                                        Text(text = stringResource(id = R.string.keyboard_settings_cangjie_variant_quick5))
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_cangjie_variant_quick5),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
@@ -652,7 +662,10 @@ fun SettingsScreen(height: Dp) {
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
-                                                        Text(text = stringResource(id = R.string.keyboard_settings_cangjie_variant_quick3))
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_cangjie_variant_quick3),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
@@ -662,6 +675,28 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                 }
                                         }
+                                }
+                        }
+                        item {
+                                Row(
+                                        modifier = Modifier
+                                                .fillMaxWidth()
+                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                .padding(horizontal = 8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                        Text(
+                                                text = stringResource(id = R.string.keyboard_settings_emoji_switch_title),
+                                                color = tintColor
+                                        )
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        Switch(
+                                                checked = isEmojiSuggestionsOn,
+                                                onCheckedChange = {
+                                                        context.updateEmojiSuggestionsState(it)
+                                                },
+                                                colors = switchColors
+                                        )
                                 }
                         }
                         item {
@@ -702,9 +737,15 @@ fun SettingsScreen(height: Dp) {
                                                         contentPadding = PaddingValues(end = 12.dp)
                                                 ) {
                                                         if (isTryingToClearInputMemory) {
-                                                                Text(text = stringResource(id = R.string.keyboard_settings_clear_input_memory_message))
+                                                                Text(
+                                                                        text = stringResource(id = R.string.keyboard_settings_clear_input_memory_message),
+                                                                        fontWeight = FontWeight.Normal
+                                                                )
                                                         } else {
-                                                                Text(text = stringResource(id = R.string.keyboard_settings_clear_input_memory))
+                                                                Text(
+                                                                        text = stringResource(id = R.string.keyboard_settings_clear_input_memory),
+                                                                        fontWeight = FontWeight.Normal
+                                                                )
                                                         }
                                                 }
                                                 if (isTryingToClearInputMemory) {
@@ -725,7 +766,10 @@ fun SettingsScreen(height: Dp) {
                                                                 colors = destructiveButtonColors,
                                                                 contentPadding = PaddingValues(horizontal = 12.dp)
                                                         ) {
-                                                                Text(text = stringResource(id = R.string.keyboard_settings_clear_input_memory_confirm))
+                                                                Text(
+                                                                        text = stringResource(id = R.string.keyboard_settings_clear_input_memory_confirm),
+                                                                        fontWeight = FontWeight.Normal
+                                                                )
                                                         }
                                                         TextButton(
                                                                 onClick = {
@@ -738,7 +782,10 @@ fun SettingsScreen(height: Dp) {
                                                                 },
                                                                 contentPadding = PaddingValues(horizontal = 12.dp)
                                                         ) {
-                                                                Text(text = stringResource(id = R.string.keyboard_settings_clear_input_memory_cancel))
+                                                                Text(
+                                                                        text = stringResource(id = R.string.keyboard_settings_clear_input_memory_cancel),
+                                                                        fontWeight = FontWeight.Normal
+                                                                )
                                                         }
                                                 }
                                                 Spacer(modifier = Modifier.weight(1f))

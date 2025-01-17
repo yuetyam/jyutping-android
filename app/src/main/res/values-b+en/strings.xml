@@ -75,12 +75,12 @@
     <string name="keyboard_settings_comment_style_above">Above Candidates</string>
     <string name="keyboard_settings_comment_style_below">Below Candidates</string>
     <string name="keyboard_settings_comment_style_none">None</string>
-    <string name="keyboard_settings_emoji_switch_title">Emoji Suggestions</string>
     <string name="keyboard_settings_cangjie_variant_header">Cangjie / Quick(Sucheng) Reverse Lookup</string>
     <string name="keyboard_settings_cangjie_variant_cangjie5">Cangjie5 (倉頡五代)</string>
     <string name="keyboard_settings_cangjie_variant_cangjie3">Cangjie3 (倉頡三代)</string>
     <string name="keyboard_settings_cangjie_variant_quick5">Quick5 (速成五代)</string>
     <string name="keyboard_settings_cangjie_variant_quick3">Quick3 (速成三代)</string>
+    <string name="keyboard_settings_emoji_switch_title">Emoji Suggestions</string>
     <string name="keyboard_settings_input_memory_switch_title">Input Memory</string>
     <string name="keyboard_settings_clear_input_memory">Clear Input Memory</string>
     <string name="keyboard_settings_clear_input_memory_message">Clear Input Memory?</string>
