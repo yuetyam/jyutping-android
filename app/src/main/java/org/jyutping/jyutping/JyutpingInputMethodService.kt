@@ -792,8 +792,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 currentInputConnection.commitText(PresetString.EMPTY, 0)
         }
         fun clearAllText() {
-                currentInputConnection.performContextMenuAction(android.R.id.selectAll)
-                currentInputConnection.commitText(PresetString.EMPTY, 0)
+                val textLengthBeforeCursor = currentInputConnection.getTextBeforeCursor(1000, 0)?.length
+                if (textLengthBeforeCursor != null) {
+                        currentInputConnection.deleteSurroundingText(textLengthBeforeCursor, 0)
+                } else {
+                        currentInputConnection.performContextMenuAction(android.R.id.selectAll)
+                        currentInputConnection.commitText(PresetString.EMPTY, 0)
+                }
         }
         fun convertAllText() {
                 currentInputConnection.performContextMenuAction(android.R.id.selectAll)
