@@ -23,7 +23,7 @@ object Cangjie {
                 return (matched + globed)
                         .distinct()
                         .map { lexicon ->
-                                db.reverseLookup(lexicon.text)
+                                db.characterReverseLookup(lexicon.text)
                                         .map { romanization ->
                                                 Candidate(text = lexicon.text, romanization = romanization, input = lexicon.input, order = lexicon.order)
                                         }

@@ -3,6 +3,7 @@ package org.jyutping.jyutping.keyboard
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.PinyinLexicon
+import kotlin.math.max
 
 object Pinyin {
         fun reverseLookup(text: String, schemes: List<List<String>>, db: DatabaseHelper): List<Candidate> {
@@ -10,7 +11,7 @@ object Pinyin {
                 if (canSegment) {
                         return process(text, schemes, db)
                                 .map { lexicon ->
-                                        db.reverseLookup(lexicon.text)
+                                        lookupRomanization(lexicon.text, db)
                                                 .map {
                                                         Candidate(
                                                                 text = lexicon.text,
@@ -39,6 +40,41 @@ object Pinyin {
                                 .flatten()
                 }
         }
+
+        private fun lookupRomanization(text: String, db: DatabaseHelper): List<String> {
+                val matched = db.reverseLookup(text)
+                if (matched.isNotEmpty()) return matched
+                if (text.length == 1) return emptyList()
+                fun fetchLeading(word: String): Pair<String?, Int> {
+                        var chars = word
+                        var romanization: String? = null
+                        var matchedCount = 0
+                        while (romanization == null && chars.isNotEmpty()) {
+                                romanization = db.reverseLookup(chars).firstOrNull()
+                                matchedCount = chars.length
+                                chars = chars.dropLast(1)
+                        }
+                        return romanization?.let { it to matchedCount } ?: (null to 0)
+                }
+                var chars = text
+                val fetches = mutableListOf<String>()
+                while (chars.isNotEmpty()) {
+                        val leading = fetchLeading(chars)
+                        val romanization = leading.first
+                        if (romanization != null) {
+                                fetches.add(romanization)
+                                val length = max(1, leading.second)
+                                chars = chars.drop(length)
+                        } else {
+                                fetches.add("?")
+                                chars = chars.drop(1)
+                        }
+                }
+                if (fetches.isEmpty()) return emptyList()
+                val suggestion = fetches.joinToString(separator = PresetString.SPACE)
+                return listOf(suggestion)
+        }
+
         private fun processVerbatim(text: String, db: DatabaseHelper): List<PinyinLexicon> {
                 val rounds: MutableList<List<PinyinLexicon>> = mutableListOf()
                 for (number in text.indices) {
@@ -72,7 +108,21 @@ object Pinyin {
                         shortcuts.flatten()
                 }
                 if (prefixes.isNotEmpty()) return prefixes + primary
-                return primary
+                val headTexts = primary.map { it.input }.distinct()
+                val concatenated: MutableList<PinyinLexicon> = mutableListOf()
+                for (headText in headTexts) {
+                        val headInputLength = headText.length
+                        val tailText = text.drop(headInputLength)
+                        val tailSegmentation = PinyinSegmentor.segment(tailText, db)
+                        val tailLexicon = process(tailText, tailSegmentation, db).firstOrNull()
+                        if (tailLexicon == null) continue
+                        val headPinyinLexicon = primary.takeWhile { it.input == headText }.firstOrNull()
+                        if (headPinyinLexicon == null) continue
+                        val conjoined = headPinyinLexicon + tailLexicon
+                        concatenated.add(conjoined)
+                }
+                val preferredConcatenated = concatenated.distinct().sorted().take(1)
+                return preferredConcatenated + primary
         }
         private fun query(text: String, schemes: List<List<String>>, db: DatabaseHelper): List<PinyinLexicon> {
                 val textLength = text.length
@@ -90,14 +140,14 @@ object Pinyin {
                 }
                 if (perfectSchemes.isNotEmpty()) {
                         val matches: MutableList<List<PinyinLexicon>> = mutableListOf()
-                        for (scheme in schemes) {
+                        for (scheme in perfectSchemes) {
                                 for (number in scheme.indices) {
                                         val pingText = scheme.dropLast(number).joinToString(separator = PresetString.EMPTY)
                                         val matched = db.pinyinMatch(pingText)
                                         matches.add(matched)
                                 }
                         }
-                        return matches.flatten()
+                        return matches.flatten().sorted()
                 } else {
                         val matches: MutableList<List<PinyinLexicon>> = mutableListOf()
                         for (scheme in schemes) {
@@ -105,7 +155,7 @@ object Pinyin {
                                 val matched = db.pinyinMatch(pingText)
                                 matches.add(matched)
                         }
-                        return matches.flatten()
+                        return matches.flatten().sorted()
                 }
         }
 }
