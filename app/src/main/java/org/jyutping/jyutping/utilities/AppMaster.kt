@@ -1,5 +1,6 @@
 package org.jyutping.jyutping.utilities
 
+@Suppress("ConstPropertyName")
 object AppMaster {
         const val websiteAddress: String = "https://jyutping.app"
         const val sourceCodeAddress: String = "https://github.com/yuetyam/jyutping-android"
