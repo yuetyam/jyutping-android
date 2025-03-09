@@ -11,6 +11,7 @@ import android.view.inputmethod.ExtractedTextRequest
 import android.view.inputmethod.InputMethodManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.core.content.edit
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStore
@@ -28,9 +29,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.jyutping.jyutping.emoji.Emoji
+import org.jyutping.jyutping.emoji.EmojiCategory
 import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.extensions.convertedT2S
+import org.jyutping.jyutping.extensions.formattedCodePointText
 import org.jyutping.jyutping.extensions.formattedForMark
+import org.jyutping.jyutping.extensions.generateSymbol
 import org.jyutping.jyutping.extensions.isReverseLookupTrigger
 import org.jyutping.jyutping.extensions.isSeparatorOrTone
 import org.jyutping.jyutping.extensions.toneConverted
@@ -56,6 +61,7 @@ import org.jyutping.jyutping.keyboard.length
 import org.jyutping.jyutping.keyboard.transformed
 import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetColor
+import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
@@ -175,7 +181,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
-        val returnKeyForm: MutableStateFlow<ReturnKeyForm> by lazy { MutableStateFlow(ReturnKeyForm.StandbyTraditional) }
+        private val returnKeyForm: MutableStateFlow<ReturnKeyForm> by lazy { MutableStateFlow(ReturnKeyForm.StandbyTraditional) }
         val returnKeyText: MutableStateFlow<String?> by lazy { MutableStateFlow(null) }
         private fun updateReturnKeyForm(editorInfo: EditorInfo? = null) {
                 val newForm: ReturnKeyForm = when (inputMethodMode.value) {
@@ -276,9 +282,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 characterStandard.value = standard
                 updateSpaceKeyForm()
                 updateReturnKeyForm()
-                val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.CharacterStandard, standard.identifier)
-                editor.apply()
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.CharacterStandard, standard.identifier)
+                }
         }
         val isAudioFeedbackOn: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.AudioFeedback, 101)
@@ -288,9 +294,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun updateAudioFeedback(isOn: Boolean) {
                 isAudioFeedbackOn.value = isOn
                 val value: Int = if (isOn) 101 else 102
-                val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.AudioFeedback, value)
-                editor.apply()
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.AudioFeedback, value)
+                }
         }
         val isHapticFeedbackOn: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.HapticFeedback, 101)
@@ -300,9 +306,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun updateHapticFeedback(isOn: Boolean) {
                 isHapticFeedbackOn.value = isOn
                 val value: Int = if (isOn) 101 else 102
-                val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.HapticFeedback, value)
-                editor.apply()
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.HapticFeedback, value)
+                }
         }
         val showLowercaseKeys: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.KeyCase, 1)
@@ -312,9 +318,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun updateShowLowercaseKeys(isOn: Boolean) {
                 showLowercaseKeys.value = isOn
                 val value2save: Int = if (isOn) 1 else 2
-                val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.KeyCase, value2save)
-                editor.apply()
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.KeyCase, value2save)
+                }
         }
         val previewKeyText: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.KeyTextPreview, 1)
@@ -324,9 +330,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun updatePreviewKeyText(isOn: Boolean) {
                 previewKeyText.value = isOn
                 val value2save: Int = if (isOn) 1 else 2
-                val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.KeyTextPreview, value2save)
-                editor.apply()
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.KeyTextPreview, value2save)
+                }
         }
         val isHighContrastPreferred: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.HighContrast, 0)
@@ -336,9 +342,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun updateHighContrast(isOn: Boolean) {
                 isHighContrastPreferred.value = isOn
                 val value2save: Int = if (isOn) 1 else 2
-                val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.HighContrast, value2save)
-                editor.apply()
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.HighContrast, value2save)
+                }
         }
         val needsInputModeSwitchKey: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.GlobeKey, 0)
@@ -348,9 +354,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun updateNeedsInputModeSwitchKey(needs: Boolean) {
                 needsInputModeSwitchKey.value = needs
                 val value2save: Int = if (needs) 1 else 2
-                val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.GlobeKey, value2save)
-                editor.apply()
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.GlobeKey, value2save)
+                }
         }
         val needsLeftKey: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.LeftKey, 1)
@@ -360,9 +366,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun updateNeedsLeftKey(needs: Boolean) {
                 needsLeftKey.value = needs
                 val value2save: Int = if (needs) 1 else 2
-                val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.LeftKey, value2save)
-                editor.apply()
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.LeftKey, value2save)
+                }
         }
         val needsRightKey: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.RightKey, 1)
@@ -372,21 +378,20 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun updateNeedsRightKey(needs: Boolean) {
                 needsRightKey.value = needs
                 val value2save: Int = if (needs) 1 else 2
-                val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.RightKey, value2save)
-                editor.apply()
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.RightKey, value2save)
+                }
         }
         val extraBottomPadding: MutableStateFlow<ExtraBottomPadding> by lazy {
-                val savedIdentifier: Int = sharedPreferences.getInt(UserSettingsKey.ExtraBottomPadding, 0)
+                val savedIdentifier: Int = sharedPreferences.getInt(UserSettingsKey.ExtraBottomPadding, ExtraBottomPadding.None.identifier)
                 val paddingLevel = ExtraBottomPadding.paddingLevelOf(savedIdentifier)
                 MutableStateFlow(paddingLevel)
         }
         fun updateExtraBottomPadding(paddingLevel: ExtraBottomPadding) {
                 extraBottomPadding.value = paddingLevel
-                val identifier: Int = paddingLevel.identifier
-                val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.ExtraBottomPadding, identifier)
-                editor.apply()
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.ExtraBottomPadding, paddingLevel.identifier)
+                }
         }
         val isEmojiSuggestionsOn: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.Emoji, 1)
@@ -396,9 +401,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun updateEmojiSuggestionsState(isOn: Boolean) {
                 isEmojiSuggestionsOn.value = isOn
                 val value2save: Int = if (isOn) 1 else 2
-                val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.Emoji, value2save)
-                editor.apply()
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.Emoji, value2save)
+                }
         }
         val commentStyle: MutableStateFlow<CommentStyle> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CommentStyle, CommentStyle.AboveCandidates.identifier)
@@ -407,9 +412,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun updateCommentStyle(style: CommentStyle) {
                 commentStyle.value = style
-                val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.CommentStyle, style.identifier)
-                editor.apply()
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.CommentStyle, style.identifier)
+                }
         }
         val cangjieVariant: MutableStateFlow<CangjieVariant> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CangjieVariant, CangjieVariant.Cangjie5.identifier)
@@ -418,9 +423,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun updateCangjieVariant(variant: CangjieVariant) {
                 cangjieVariant.value = variant
-                val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.CangjieVariant, variant.identifier)
-                editor.apply()
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.CangjieVariant, variant.identifier)
+                }
         }
         val isInputMemoryOn: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.InputMemory, 1)
@@ -430,9 +435,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun updateInputMemoryState(isOn: Boolean) {
                 isInputMemoryOn.value = isOn
                 val value2save: Int = if (isOn) 1 else 2
-                val editor = sharedPreferences.edit()
-                editor.putInt(UserSettingsKey.InputMemory, value2save)
-                editor.apply()
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.InputMemory, value2save)
+                }
         }
 
         private val selectedCandidates: MutableList<Candidate> by lazy { mutableListOf() }
@@ -444,7 +449,51 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun clearInputMemory() {
                 userDB.deleteAll()
+                clearLocalEmojiFrequent()
         }
+
+        //region EmojiBoard
+        private val defaultFrequentEmojis: List<Emoji> by lazy { db.fetchDefaultFrequentEmojis() }
+        private val emojiSequence: List<Emoji> by lazy { db.fetchEmojiSequence() }
+        val categoryStartIndexMap: MutableStateFlow<Map<EmojiCategory, Int>> by lazy {
+                MutableStateFlow(Emoji.categoryStartIndexMap(emojiSequence))
+        }
+        val emojiBoardEmojis: MutableStateFlow<List<Emoji>> by lazy {
+                MutableStateFlow(frequentEmojis + emojiSequence)
+        }
+        private val frequentEmojis: MutableList<Emoji> by lazy {
+                val savedText: String = (sharedPreferences.getString(UserSettingsKey.EmojiFrequent, PresetString.EMPTY) ?: PresetString.EMPTY)
+                val codePointTexts: List<String> = savedText.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+                val emojiTexts = codePointTexts.map { it.generateSymbol() }
+                if (emojiTexts.count() != PresetConstant.FrequentEmojiCount) {
+                        defaultFrequentEmojis.toMutableList()
+                } else {
+                        Emoji.generateFrequentEmojis(emojiTexts).toMutableList()
+                }
+        }
+        fun updateEmojiFrequent(latest: Emoji) {
+                val previous: List<String> = frequentEmojis.map { it.text }
+                val combined: List<String> = (listOf(latest.text) + previous).distinct()
+                if (combined.count() < PresetConstant.FrequentEmojiCount) return
+                val update: List<String> = combined.take(PresetConstant.FrequentEmojiCount)
+                val value2save: String = update.joinToString(separator = ",") { it.formattedCodePointText() }
+                sharedPreferences.edit {
+                        putString(UserSettingsKey.EmojiFrequent, value2save)
+                }
+                frequentEmojis.clear()
+                val newFrequentEmojis = Emoji.generateFrequentEmojis(update)
+                frequentEmojis.addAll(newFrequentEmojis)
+                emojiBoardEmojis.value = newFrequentEmojis + emojiSequence
+        }
+        private fun clearLocalEmojiFrequent() {
+                sharedPreferences.edit {
+                        remove(UserSettingsKey.EmojiFrequent)
+                }
+                frequentEmojis.clear()
+                frequentEmojis.addAll(defaultFrequentEmojis)
+                emojiBoardEmojis.value = defaultFrequentEmojis + emojiSequence
+        }
+        //endregion
 
         val candidateState: MutableStateFlow<Int> by lazy { MutableStateFlow(1) }
         val candidates: MutableStateFlow<List<Candidate>> by lazy { MutableStateFlow(listOf()) }
@@ -616,14 +665,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 adjustKeyboardCase()
         }
         fun selectCandidate(candidate: Candidate? = null, index: Int = 0) {
-                val candidate: Candidate = candidate ?: candidates.value.getOrNull(index) ?: return
-                currentInputConnection.commitText(candidate.text, 1)
-                selectedCandidates.add(candidate)
+                val item: Candidate = candidate ?: candidates.value.getOrNull(index) ?: return
+                currentInputConnection.commitText(item.text, 1)
+                selectedCandidates.add(item)
                 val firstChar = bufferText.firstOrNull()
                 when {
                         (firstChar == null) -> {}
                         firstChar.isReverseLookupTrigger() -> {
-                                val inputLength = candidate.input.length
+                                val inputLength = item.input.length
                                 val leadingLength = inputLength + 1
                                 if (bufferText.length > leadingLength) {
                                         val tail = bufferText.drop(leadingLength)
@@ -633,7 +682,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                         }
                         else -> {
-                                val inputLength: Int = candidate.input.replace(Regex("([456])"), "RR").length
+                                val inputLength: Int = item.input.replace(Regex("([456])"), "RR").length
                                 var tail = bufferText.drop(inputLength)
                                 while (tail.startsWith(PresetCharacter.SEPARATOR)) {
                                         tail = tail.drop(1)
@@ -748,7 +797,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
-        // region EditingPanel
+        //region EditingPanel
         val isClipboardEmpty: MutableStateFlow<Boolean> by lazy { MutableStateFlow(true) }
         private fun isCurrentClipboardEmpty(): Boolean {
                 val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
@@ -837,4 +886,5 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
                 */
         }
+        //endregion
 }

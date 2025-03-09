@@ -3,6 +3,8 @@ package org.jyutping.jyutping.utilities
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import org.jyutping.jyutping.emoji.Emoji
+import org.jyutping.jyutping.emoji.EmojiCategory
 import org.jyutping.jyutping.extensions.charcode
 import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.extensions.generateSymbol
@@ -598,29 +600,28 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         fun symbolMatch(text: String, input: String): List<Candidate> {
                 val code = text.hashCode()
-                val command = "SELECT category, codepoint, cantonese, romanization FROM symboltable WHERE ping = ${code};"
+                val command = "SELECT category, unicodeversion, codepoint, cantonese, romanization FROM symboltable WHERE ping = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
-                val symbols: MutableList<SymbolEntry> = mutableListOf()
+                val emojis: MutableList<Emoji> = mutableListOf()
                 while (cursor.moveToNext()) {
                         val categoryCode = cursor.getInt(0)
-                        val codepoint = cursor.getString(1)
-                        val cantonese = cursor.getString(2)
-                        val romanization = cursor.getString(3)
-                        val entry = SymbolEntry(categoryCode = categoryCode, codepoint = codepoint, cantonese = cantonese, romanization = romanization)
-                        symbols.add(entry)
+                        val unicodeVersion = cursor.getInt(1)
+                        val codePointText = cursor.getString(2)
+                        val cantonese = cursor.getString(3)
+                        val romanization = cursor.getString(4)
+                        val category = EmojiCategory.categoryOf(categoryCode) ?: EmojiCategory.Frequent
+                        val entry = Emoji(category = category, unicodeVersion = unicodeVersion, identifier = categoryCode, text = codePointText, cantonese = cantonese, romanization = romanization)
+                        emojis.add(entry)
                 }
                 cursor.close()
-                val candidates: MutableList<Candidate> = mutableListOf()
-                for (entry in symbols) {
-                        val shouldMapSkinTone: Boolean = entry.categoryCode == 1 || entry.categoryCode == 4
-                        val codePointText: String = if (shouldMapSkinTone) (mapSkinTone(entry.codepoint) ?: entry.codepoint) else entry.codepoint
-                        val symbolText = generateSymbol(codePointText)
-                        val isEmoji: Boolean = entry.categoryCode != 9
-                        val type: CandidateType = if (isEmoji) CandidateType.Emoji else CandidateType.Symbol
-                        val instance = Candidate(type = type, text = symbolText, lexiconText = entry.cantonese, romanization = entry.romanization, input = input)
-                        candidates.add(instance)
+                return emojis.map { emoji ->
+                        val codePointText = emoji.text
+                        val shouldMapSkinTone: Boolean = emoji.category == EmojiCategory.SmileysAndPeople || emoji.category == EmojiCategory.Activity
+                        val mappedCodePointText: String = if (shouldMapSkinTone) (mapSkinTone(codePointText) ?: codePointText) else codePointText
+                        val symbolText: String = mappedCodePointText.generateSymbol()
+                        val type: CandidateType = if (emoji.identifier < 10) CandidateType.Emoji else CandidateType.Symbol
+                        Candidate(type = type, text = symbolText, lexiconText = emoji.cantonese, romanization = emoji.romanization, input = input)
                 }
-                return candidates
         }
         private fun mapSkinTone(source: String): String? {
                 val command = "SELECT target FROM emojiskinmapping WHERE source = ?;"
@@ -634,11 +635,42 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                         return null
                 }
         }
+        fun fetchDefaultFrequentEmojis(): List<Emoji> {
+                val command = "SELECT rowid, unicodeversion, codepoint, cantonese, romanization FROM symboltable WHERE category = 0"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                val emojis: MutableList<Emoji> = mutableListOf()
+                while (cursor.moveToNext()) {
+                        val rowId = cursor.getInt(0)
+                        val unicodeVersion = cursor.getInt(1)
+                        val codePointText = cursor.getString(2)
+                        val cantonese = cursor.getString(3)
+                        val romanization = cursor.getString(4)
+                        val identifier: Int = rowId + 50000
+                        val emojiText: String = codePointText.generateSymbol()
+                        val instance = Emoji(category = EmojiCategory.Frequent, unicodeVersion = unicodeVersion, identifier = identifier, text = emojiText, cantonese = cantonese, romanization = romanization)
+                        emojis.add(instance)
+                }
+                cursor.close()
+                return emojis
+        }
+        fun fetchEmojiSequence(): List<Emoji> {
+                val command = "SELECT rowid, category, unicodeversion, codepoint, cantonese, romanization FROM symboltable WHERE category > 0 AND category < 9"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                val emojis: MutableList<Emoji> = mutableListOf()
+                while (cursor.moveToNext()) {
+                        val rowId = cursor.getInt(0)
+                        val categoryCode = cursor.getInt(1)
+                        val unicodeVersion = cursor.getInt(2)
+                        val codePointText = cursor.getString(3)
+                        val cantonese = cursor.getString(4)
+                        val romanization = cursor.getString(5)
+                        val category: EmojiCategory = EmojiCategory.categoryOf(categoryCode) ?: continue
+                        val identifier: Int = rowId + 10000
+                        val emojiText: String = codePointText.generateSymbol()
+                        val instance = Emoji(category = category, unicodeVersion = unicodeVersion, identifier = identifier, text = emojiText, cantonese = cantonese, romanization = romanization)
+                        emojis.add(instance)
+                }
+                cursor.close()
+                return emojis.distinct()
+        }
 }
-
-private data class SymbolEntry(
-        val categoryCode: Int,
-        val codepoint: String,
-        val cantonese: String,
-        val romanization: String
-)

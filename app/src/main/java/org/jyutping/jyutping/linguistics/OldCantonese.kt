@@ -131,7 +131,7 @@ object OldCantonese {
                         "yu" -> "yː"
                         "yun" -> "yːn"
                         "yut" -> "yːt̚"
-                        "ii" -> "ɿ"
+                        "ir" -> "ɿ"
                         else -> null
                 }
         }

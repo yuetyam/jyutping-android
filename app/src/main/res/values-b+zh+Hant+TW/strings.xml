@@ -46,8 +46,10 @@
     <string name="about_label_faq">常問問題（FAQ）</string>
     <string name="about_label_telegram">加入 Telegram 交流羣</string>
     <string name="about_label_qq">加入 QQ 交流羣</string>
-    <string name="about_label_twitter">關注 X (Twitter)</string>
+    <string name="about_label_rednote">關注小紅書</string>
     <string name="about_label_instagram">關注 Instagram</string>
+    <string name="about_label_threads">關注 Threads</string>
+    <string name="about_label_twitter">關注 X (Twitter)</string>
     <string name="about_label_google_forms">Google Forms 反饋</string>
     <string name="about_label_tencent_survey">騰訊問卷反饋</string>
     <string name="about_label_email">電郵反饋</string>
@@ -97,4 +99,13 @@
     <string name="editing_panel_key_clear">清空</string>
     <string name="editing_panel_key_conversion">简↔繁</string>
     <string name="editing_panel_key_space">空格</string>
+    <string name="emoji_board_header_frequently_used">常用</string>
+    <string name="emoji_board_header_smileys_and_people">表情與人物</string>
+    <string name="emoji_board_header_animals_and_nature">動物與自然</string>
+    <string name="emoji_board_header_food_and_drink">飲食</string>
+    <string name="emoji_board_header_activity">活動</string>
+    <string name="emoji_board_header_travel_and_places">旅行與地點</string>
+    <string name="emoji_board_header_objects">物品</string>
+    <string name="emoji_board_header_symbols">符號</string>
+    <string name="emoji_board_header_flags">旗幟</string>
 </resources>

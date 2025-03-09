@@ -28,12 +28,19 @@ fun String.formattedForMark(): String {
 }
 
 /**
- * Create Emoji text from the given code point String.
- * @param codepoint Unicode code point. Example: 1F469.200D.1F373
- * @return Emoji / Symbol character(s)
+ * Convert Emoji text to Unicode code point text
+ * @return Formatted Unicode code point text. Example: 1F469.200D.1F373
  */
-fun generateSymbol(codepoint: String) = codepoint
-        .split(".")
-        .map { it.toInt(radix = 16) }
-        .flatMap { Character.toChars(it).toList() }
-        .joinToString(PresetString.EMPTY)
+fun String.formattedCodePointText(): String = this.codePoints().toArray().joinToString(separator = ".") { it.toString(radix = 16).uppercase() }
+
+/**
+ * Create Emoji/Symbol text from this code point text.
+ * Example: 1F469.200D.1F373
+ * @return Emoji / Symbol text
+ */
+fun String.generateSymbol(): String {
+        val text = this
+        return buildString {
+                text.split(".").map { it.toInt(radix = 16) }.forEach { appendCodePoint(it) }
+        }
+}

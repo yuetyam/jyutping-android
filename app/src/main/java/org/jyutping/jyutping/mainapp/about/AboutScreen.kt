@@ -2,7 +2,6 @@ package org.jyutping.jyutping.mainapp.about
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
@@ -22,6 +21,7 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.AlternateEmail
+import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.CenterFocusStrong
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Code
@@ -43,6 +43,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.presets.PresetConstant
@@ -89,13 +90,17 @@ fun AboutScreen() {
                                         .background(colorScheme.background)
                                         .fillMaxWidth()
                         ) {
-                                AppLinkLabel(icon = Icons.Outlined.Group, text = stringResource(id = R.string.about_label_telegram), uri = AppMaster.telegramWebAddress)
+                                AppLinkLabel(icon = Icons.Outlined.Group, text = stringResource(id = R.string.about_label_telegram), uri = AppMaster.TelegramWebAddress)
                                 HorizontalDivider()
-                                AppLinkLabel(icon = Icons.Outlined.Group, text = stringResource(id = R.string.about_label_qq), uri = AppMaster.qqWebAddress)
+                                AppLinkLabel(icon = Icons.Outlined.Group, text = stringResource(id = R.string.about_label_qq), uri = AppMaster.QQWebAddress)
                                 HorizontalDivider()
-                                AppLinkLabel(icon = Icons.Outlined.AlternateEmail, text = stringResource(id = R.string.about_label_twitter), uri = AppMaster.twitterWebAddress)
+                                AppLinkLabel(icon = Icons.Outlined.Book, text = stringResource(id = R.string.about_label_rednote), uri = AppMaster.RedNoteAddress)
                                 HorizontalDivider()
-                                AppLinkLabel(icon = Icons.Outlined.CenterFocusStrong, text = stringResource(id = R.string.about_label_instagram), uri = AppMaster.instagramWebAddress)
+                                AppLinkLabel(icon = Icons.Outlined.CenterFocusStrong, text = stringResource(id = R.string.about_label_instagram), uri = AppMaster.InstagramWebAddress)
+                                HorizontalDivider()
+                                AppLinkLabel(icon = Icons.Outlined.AlternateEmail, text = stringResource(id = R.string.about_label_threads), uri = AppMaster.ThreadsAddress)
+                                HorizontalDivider()
+                                AppLinkLabel(icon = Icons.Outlined.AlternateEmail, text = stringResource(id = R.string.about_label_twitter), uri = AppMaster.TwitterWebAddress)
                         }
                 }
                 item {
@@ -166,7 +171,7 @@ private fun EmailFeedbackButton() {
                                         Device: $manufacturer $deviceModel
                                 """.trimIndent()
                                 val intent = Intent(Intent.ACTION_SENDTO).apply {
-                                        data = Uri.parse("mailto:")
+                                        data = "mailto:".toUri()
                                         putExtra(Intent.EXTRA_EMAIL, arrayOf(AppMaster.EmailAddress))
                                         putExtra(Intent.EXTRA_SUBJECT, "Jyutping Feedback")
                                         putExtra(Intent.EXTRA_TEXT, "\n\n${information}")

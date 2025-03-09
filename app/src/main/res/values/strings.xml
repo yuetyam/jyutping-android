@@ -46,8 +46,10 @@
     <string name="about_label_faq">FAQ</string>
     <string name="about_label_telegram">Join Telegram Group</string>
     <string name="about_label_qq">Join QQ Group</string>
-    <string name="about_label_twitter">Follow us on X (Twitter)</string>
+    <string name="about_label_rednote">Follow us on RedNote</string>
     <string name="about_label_instagram">Follow us on Instagram</string>
+    <string name="about_label_threads">Follow us on Threads</string>
+    <string name="about_label_twitter">Follow us on X (Twitter)</string>
     <string name="about_label_google_forms">Google Forms Feedback</string>
     <string name="about_label_tencent_survey">Tencent Survey Feedback</string>
     <string name="about_label_email">Email Feedback</string>
@@ -97,4 +99,13 @@
     <string name="editing_panel_key_clear">Clear</string>
     <string name="editing_panel_key_conversion">简↔繁</string>
     <string name="editing_panel_key_space">space</string>
+    <string name="emoji_board_header_frequently_used">Frequently Used</string>
+    <string name="emoji_board_header_smileys_and_people">Smileys and People</string>
+    <string name="emoji_board_header_animals_and_nature">Animals and Nature</string>
+    <string name="emoji_board_header_food_and_drink">Food and Drink</string>
+    <string name="emoji_board_header_activity">Activity</string>
+    <string name="emoji_board_header_travel_and_places">Travel and Places</string>
+    <string name="emoji_board_header_objects">Objects</string>
+    <string name="emoji_board_header_symbols">Symbols</string>
+    <string name="emoji_board_header_flags">Flags</string>
 </resources>

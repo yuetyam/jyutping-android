@@ -46,7 +46,7 @@ fun CandidateView(candidateState: Int, candidate: Candidate, commentStyle: Comme
                                         onTap = { selection() }
                                 )
                         }
-                        .padding(horizontal = if (isCantonese) 6.dp else 10.dp)
+                        .padding(horizontal = if (isCantonese) 8.dp else 10.dp)
                         .fillMaxHeight(),
                 contentAlignment = Alignment.Center
         ) {

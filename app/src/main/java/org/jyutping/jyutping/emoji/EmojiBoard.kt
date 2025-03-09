@@ -3,14 +3,20 @@ package org.jyutping.jyutping.emoji
 import android.view.HapticFeedbackConstants
 import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.EmojiEmotions
 import androidx.compose.material.icons.outlined.EmojiFlags
@@ -28,6 +34,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +47,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.keyboard.KeyboardForm
@@ -49,8 +61,17 @@ fun EmojiBoard(height: Dp) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
+        val headerHeight: Dp = 20.dp
+        val footerHeight: Dp = 40.dp
+        val gridHeight: Dp = height - headerHeight - footerHeight
+        val cellHeight: Dp = gridHeight.div(5)
         val edgeIndicatorWeight: Float = 1f
         val indicatorWeight: Float = 1f
+        val emojis by context.emojiBoardEmojis.collectAsState()
+        val categoryStartIndexMap by context.categoryStartIndexMap.collectAsState()
+        var headerTitleId by remember { mutableIntStateOf(R.string.emoji_board_header_frequently_used) }
+        val gridState = rememberLazyGridState()
+        val coroutineScope = rememberCoroutineScope()
         Column(
                 modifier = Modifier
                         .background(
@@ -69,39 +90,48 @@ fun EmojiBoard(height: Dp) {
         ) {
                 Row(
                         modifier = Modifier
-                                .height(20.dp)
-                                .fillMaxWidth()
+                                .height(headerHeight)
                                 .padding(horizontal = 8.dp),
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically
                 ) {
                         Text(
-                                text = "<#Emoji Category Title#>",
+                                text = context.getString(headerTitleId),
                                 color = if (isDarkMode) Color.White else Color.Black,
-                                style = MaterialTheme.typography.labelMedium
+                                fontSize = 13.sp
                         )
                 }
-                LazyRow(
+                LazyHorizontalGrid(
+                        rows = GridCells.Fixed(5),
                         modifier = Modifier
-                                .height(height - 60.dp)
                                 .fillMaxWidth()
+                                .height(gridHeight),
+                        state = gridState,
+                        horizontalArrangement = Arrangement.spacedBy(0.dp),
+                        verticalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
-                        item {
-                                Text(
-                                        text = " 未實現 ",
-                                        color = if (isDarkMode) Color.White else Color.Black
-                                )
-                        }
-                        item {
-                                Text(
-                                        text = " Not Implemented Yet",
-                                        color = if (isDarkMode) Color.White else Color.Black
-                                )
+                        items(emojis) { emoji ->
+                                Box(
+                                        modifier = Modifier
+                                                .size(cellHeight)
+                                                .clickable {
+                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                        context.input(emoji.text)
+                                                        context.updateEmojiFrequent(emoji)
+                                                },
+                                        contentAlignment = Alignment.Center
+                                ) {
+                                        Text(
+                                                text = emoji.text,
+                                                fontSize = 28.sp
+                                        )
+                                }
                         }
                 }
                 Row(
                         modifier = Modifier
-                                .height(40.dp)
+                                .height(footerHeight)
                                 .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
@@ -124,6 +154,11 @@ fun EmojiBoard(height: Dp) {
                                 onClick = {
                                         view.playSoundEffect(SoundEffectConstants.CLICK)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                        headerTitleId = R.string.emoji_board_header_frequently_used
+                                        val targetIndex = categoryStartIndexMap[EmojiCategory.Frequent] ?: 0
+                                        coroutineScope.launch {
+                                                gridState.scrollToItem(targetIndex)
+                                        }
                                 },
                                 modifier = Modifier.weight(indicatorWeight)
                         ) {
@@ -137,6 +172,11 @@ fun EmojiBoard(height: Dp) {
                                 onClick = {
                                         view.playSoundEffect(SoundEffectConstants.CLICK)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                        headerTitleId = R.string.emoji_board_header_smileys_and_people
+                                        val targetIndex = categoryStartIndexMap[EmojiCategory.SmileysAndPeople] ?: 0
+                                        coroutineScope.launch {
+                                                gridState.scrollToItem(targetIndex)
+                                        }
                                 },
                                 modifier = Modifier.weight(indicatorWeight)
                         ) {
@@ -150,6 +190,11 @@ fun EmojiBoard(height: Dp) {
                                 onClick = {
                                         view.playSoundEffect(SoundEffectConstants.CLICK)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                        headerTitleId = R.string.emoji_board_header_animals_and_nature
+                                        val targetIndex = categoryStartIndexMap[EmojiCategory.AnimalsAndNature] ?: 0
+                                        coroutineScope.launch {
+                                                gridState.scrollToItem(targetIndex)
+                                        }
                                 },
                                 modifier = Modifier.weight(indicatorWeight)
                         ) {
@@ -163,6 +208,11 @@ fun EmojiBoard(height: Dp) {
                                 onClick = {
                                         view.playSoundEffect(SoundEffectConstants.CLICK)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                        headerTitleId = R.string.emoji_board_header_food_and_drink
+                                        val targetIndex = categoryStartIndexMap[EmojiCategory.FoodAndDrink] ?: 0
+                                        coroutineScope.launch {
+                                                gridState.scrollToItem(targetIndex)
+                                        }
                                 },
                                 modifier = Modifier.weight(indicatorWeight)
                         ) {
@@ -176,6 +226,11 @@ fun EmojiBoard(height: Dp) {
                                 onClick = {
                                         view.playSoundEffect(SoundEffectConstants.CLICK)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                        headerTitleId = R.string.emoji_board_header_activity
+                                        val targetIndex = categoryStartIndexMap[EmojiCategory.Activity] ?: 0
+                                        coroutineScope.launch {
+                                                gridState.scrollToItem(targetIndex)
+                                        }
                                 },
                                 modifier = Modifier.weight(indicatorWeight)
                         ) {
@@ -189,6 +244,11 @@ fun EmojiBoard(height: Dp) {
                                 onClick = {
                                         view.playSoundEffect(SoundEffectConstants.CLICK)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                        headerTitleId = R.string.emoji_board_header_travel_and_places
+                                        val targetIndex = categoryStartIndexMap[EmojiCategory.TravelAndPlaces] ?: 0
+                                        coroutineScope.launch {
+                                                gridState.scrollToItem(targetIndex)
+                                        }
                                 },
                                 modifier = Modifier.weight(indicatorWeight)
                         ) {
@@ -202,6 +262,11 @@ fun EmojiBoard(height: Dp) {
                                 onClick = {
                                         view.playSoundEffect(SoundEffectConstants.CLICK)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                        headerTitleId = R.string.emoji_board_header_objects
+                                        val targetIndex = categoryStartIndexMap[EmojiCategory.Objects] ?: 0
+                                        coroutineScope.launch {
+                                                gridState.scrollToItem(targetIndex)
+                                        }
                                 },
                                 modifier = Modifier.weight(indicatorWeight)
                         ) {
@@ -215,6 +280,11 @@ fun EmojiBoard(height: Dp) {
                                 onClick = {
                                         view.playSoundEffect(SoundEffectConstants.CLICK)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                        headerTitleId = R.string.emoji_board_header_symbols
+                                        val targetIndex = categoryStartIndexMap[EmojiCategory.Symbols] ?: 0
+                                        coroutineScope.launch {
+                                                gridState.scrollToItem(targetIndex)
+                                        }
                                 },
                                 modifier = Modifier.weight(indicatorWeight)
                         ) {
@@ -228,6 +298,11 @@ fun EmojiBoard(height: Dp) {
                                 onClick = {
                                         view.playSoundEffect(SoundEffectConstants.CLICK)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                        headerTitleId = R.string.emoji_board_header_flags
+                                        val targetIndex = categoryStartIndexMap[EmojiCategory.Flags] ?: 0
+                                        coroutineScope.launch {
+                                                gridState.scrollToItem(targetIndex)
+                                        }
                                 },
                                 modifier = Modifier.weight(indicatorWeight)
                         ) {

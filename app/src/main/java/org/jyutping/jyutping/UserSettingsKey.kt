@@ -18,4 +18,5 @@ object UserSettingsKey {
         const val Emoji: String = "emoji"
         const val CangjieVariant: String = "cangjie_variant"
         const val InputMemory: String = "input_memory"
+        const val EmojiFrequent: String = "emoji_frequent"
 }
