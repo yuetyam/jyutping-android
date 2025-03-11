@@ -24,7 +24,7 @@ fun CantoneseLexiconView(lexicon: CantoneseLexicon, unihanDefinition: UnihanDefi
                         .padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-                CantoneseTextLabel(text = lexicon.text)
+                WordTextLabel(lexicon.text)
                 lexicon.pronunciations.map {
                         Column(
                                 verticalArrangement = Arrangement.spacedBy(2.dp)

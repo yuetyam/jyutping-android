@@ -28,6 +28,11 @@ fun String.formattedForMark(): String {
 }
 
 /**
+ * Example: U+5929
+ */
+fun String.codePointText() = this.codePoints().toArray().joinToString(separator = PresetString.SPACE) { "U+" + it.toString(radix = 16).uppercase() }
+
+/**
  * Convert Emoji text to Unicode code point text
  * @return Formatted Unicode code point text. Example: 1F469.200D.1F373
  */

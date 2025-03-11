@@ -21,37 +21,32 @@ import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
 fun FanWanView(entries: List<FanWanCuetYiu>) {
-        Column(
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = colorScheme.background, shape = RoundedCornerShape(8.dp))
-                        .padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-                FanWanWordLabel(entries.firstOrNull()?.word ?: "?")
-                entries.map {
-                        Column(
-                                verticalArrangement = Arrangement.spacedBy(2.dp)
-                        ) {
-                                HorizontalDivider()
-                                FanWanPronunciationView(it)
-                        }
-                }
-        }
-}
-
-@Composable
-private fun FanWanWordLabel(word: String) {
-        Row {
-                Text(text = "文字", color = colorScheme.onBackground)
-                SeparatorMark()
-                Text(text = word, color = colorScheme.onBackground)
+        Column {
                 Text(
                         text = "《分韻撮要》 佚名 清初 廣州府",
-                        modifier = Modifier.alpha(0.75f),
+                        modifier = Modifier.padding(horizontal = 8.dp).alpha(0.75f),
                         color = colorScheme.onBackground,
-                        fontSize = 14.sp
+                        fontSize = 13.sp
                 )
+                Column(
+                        modifier = Modifier
+                                .fillMaxWidth()
+                                .background(color = colorScheme.background, shape = RoundedCornerShape(8.dp))
+                                .padding(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                        entries.firstOrNull()?.word?.let {
+                                WordTextLabel(it)
+                        }
+                        entries.map {
+                                Column(
+                                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                                ) {
+                                        HorizontalDivider()
+                                        FanWanPronunciationView(it)
+                                }
+                        }
+                }
         }
 }
 

@@ -19,37 +19,32 @@ import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
 fun GwongWanView(entries: List<GwongWanCharacter>) {
-        Column(
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = colorScheme.background, shape = RoundedCornerShape(8.dp))
-                        .padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-                GwongWanWordLabel(entries.firstOrNull()?.word ?: "?")
-                entries.map {
-                        Column(
-                                verticalArrangement = Arrangement.spacedBy(2.dp)
-                        ) {
-                                HorizontalDivider()
-                                GwongWanPronunciationView(it)
-                        }
-                }
-        }
-}
-
-@Composable
-private fun GwongWanWordLabel(word: String) {
-        Row {
-                Text(text = "文字", color = colorScheme.onBackground)
-                SeparatorMark()
-                Text(text = word, color = colorScheme.onBackground)
+        Column {
                 Text(
                         text = "《大宋重修廣韻》 陳彭年等 北宋",
-                        modifier = Modifier.alpha(0.75f),
+                        modifier = Modifier.padding(horizontal = 8.dp).alpha(0.75f),
                         color = colorScheme.onBackground,
-                        fontSize = 14.sp
+                        fontSize = 13.sp
                 )
+                Column(
+                        modifier = Modifier
+                                .fillMaxWidth()
+                                .background(color = colorScheme.background, shape = RoundedCornerShape(8.dp))
+                                .padding(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                        entries.firstOrNull()?.word?.let {
+                                WordTextLabel(it)
+                        }
+                        entries.map {
+                                Column(
+                                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                                ) {
+                                        HorizontalDivider()
+                                        GwongWanPronunciationView(it)
+                                }
+                        }
+                }
         }
 }
 

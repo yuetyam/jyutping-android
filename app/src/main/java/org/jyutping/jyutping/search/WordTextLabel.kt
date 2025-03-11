@@ -5,38 +5,40 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import org.jyutping.jyutping.extensions.codePointText
 import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
-fun CantoneseTextLabel(text: String) {
-        val unicode: String? = when (text.length) {
-                0 -> null
-                1 -> "U+" + text.first().code.toString(16).uppercase()
-                else -> null
-        }
+fun WordTextLabel(word: String) {
         Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
         ) {
-                Row {
+                Row(
+                        verticalAlignment = Alignment.CenterVertically
+                ) {
                         Text(
                                 text = "文字",
                                 color = colorScheme.onBackground
                         )
                         SeparatorMark()
                         Text(
-                                text = text,
+                                text = word,
                                 color = colorScheme.onBackground
                         )
                 }
-                unicode?.let {
+                if (word.length == 1) {
                         Text(
-                                text = it,
+                                text = word.codePointText(),
                                 modifier = Modifier.alpha(0.75f),
                                 color = colorScheme.onBackground,
+                                fontSize = 14.sp,
                                 fontFamily = FontFamily.Monospace
                         )
                 }

@@ -16,16 +16,9 @@ import org.jyutping.jyutping.ui.common.SeparatorMark
 @Composable
 fun PronunciationLabel(pronunciation: Pronunciation) {
         val romanization = pronunciation.romanization
-        val ipaText: String? = when {
-                romanization.contains(" ") -> null
-                else -> Jyutping2IPA.IPAText(romanization)
-        }
+        val ipaText: String? = if (romanization.contains(PresetString.SPACE)) null else Jyutping2IPA.IPAText(romanization)
         val homophoneText: String? = if (pronunciation.homophones.isEmpty()) null else pronunciation.homophones.joinToString(separator = PresetString.SPACE)
-        val collocationText: String? = when (pronunciation.collocations.size) {
-                0 -> null
-                in 1..5 -> pronunciation.collocations.joinToString(separator = PresetString.SPACE)
-                else -> pronunciation.collocations.take(5).joinToString(separator = PresetString.SPACE)
-        }
+        val collocationText: String? = if (pronunciation.collocations.isEmpty()) null else pronunciation.collocations.take(5).joinToString(separator = PresetString.SPACE)
         Column {
                 Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
