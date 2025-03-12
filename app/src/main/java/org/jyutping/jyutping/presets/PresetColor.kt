@@ -11,8 +11,10 @@ object PresetColor {
         val keyDarkEmphatic        : Color = Color(0xFF444444)
         val keyboardDarkBackground : Color = Color(0xFF222222)
 
-        val blue                   : Color = Color(0xFF2196F3)
+        val red                    : Color = Color(0xFFF44336)
         val green                  : Color = Color(0xFF4CAF50)
+        val blue                   : Color = Color(0xFF2196F3)
+        val orange                 : Color = Color(0xFFFF9800)
 }
 
 object AltPresetColor {

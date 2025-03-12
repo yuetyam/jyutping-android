@@ -55,6 +55,8 @@ fun CantoneseScreen(navController: NavHostController) {
                         ) {
                                 WebLinkLabel(icon = Icons.Outlined.Link, text = "懶音診療室 - PolyU", uri = "https://www.polyu.edu.hk/cbs/pronunciation")
                                 HorizontalDivider()
+                                WebLinkLabel(icon = Icons.Outlined.Link, text = "粵語語氣詞", uri = "https://jyutping.org/blog/particles")
+                                HorizontalDivider()
                                 WebLinkLabel(icon = Icons.Outlined.Link, text = "CANTONESE.com.hk", uri = "https://www.cantonese.com.hk")
                                 HorizontalDivider()
                                 WebLinkLabel(icon = Icons.Outlined.Link, text = "中國古詩文精讀", uri = "https://www.classicalchineseliterature.org")

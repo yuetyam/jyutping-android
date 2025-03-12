@@ -23,8 +23,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
 fun ExpressionsScreen() {
@@ -70,7 +72,7 @@ fun ExpressionsScreen() {
                                         "係 hai6：謂語，義同「是」。",
                                         "喺 hai2：表方位、時間，義同「在」。",
                                         "例：我係曹阿瞞。",
-                                        "例：我喺天后站落車。"
+                                        "例：我喺赤壁遊山玩水。"
                                 )
                         )
                 }
@@ -210,6 +212,12 @@ private fun IconLabel(entry: LabelEntry) {
                 LabelType.MISTAKE -> Icons.Outlined.Cancel
                 LabelType.WARNING -> Icons.Outlined.ErrorOutline
         }
+        val color: Color = when (entry.type) {
+                LabelType.CHECKED -> PresetColor.green
+                LabelType.INFO -> colorScheme.onBackground
+                LabelType.MISTAKE -> PresetColor.red
+                LabelType.WARNING -> PresetColor.orange
+        }
         Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -217,8 +225,8 @@ private fun IconLabel(entry: LabelEntry) {
                 Icon(
                         imageVector = image,
                         contentDescription = null,
-                        modifier = Modifier.size(16.dp),
-                        tint = colorScheme.onBackground
+                        modifier = Modifier.size(18.dp),
+                        tint = color
                 )
                 SelectionContainer {
                         Text(text = entry.text, color = colorScheme.onBackground)
