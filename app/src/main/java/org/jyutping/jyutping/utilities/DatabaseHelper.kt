@@ -21,7 +21,6 @@ import org.jyutping.jyutping.search.ChoHokYuetYamCitYiu
 import org.jyutping.jyutping.search.FanWanCuetYiu
 import org.jyutping.jyutping.search.GwongWanCharacter
 import org.jyutping.jyutping.search.Pronunciation
-import org.jyutping.jyutping.search.UnihanDefinition
 import org.jyutping.jyutping.search.YingWaaFanWan
 import kotlin.math.max
 
@@ -36,9 +35,9 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 db.execSQL("PRAGMA foreign_keys=ON;")
         }
 
-        fun searchCantoneseLexicon(text: String): CantoneseLexicon? {
+        fun searchCantoneseLexicon(text: String): CantoneseLexicon {
                 when (text.length) {
-                        0 -> return null
+                        0 -> return CantoneseLexicon(text)
                         1 -> {
                                 val romanizations = fetchRomanizations(text)
                                 if (romanizations.isNotEmpty()) {
@@ -47,7 +46,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                                 val collocations = fetchCollocations(word = text, romanization = romanization)
                                                 Pronunciation(romanization = romanization, homophones = homophones, collocations = collocations)
                                         }
-                                        return  CantoneseLexicon(text = text, pronunciations = pronunciations)
+                                        val unihanDefinition = unihanDefinitionMatch(text)
+                                        return  CantoneseLexicon(text = text, pronunciations = pronunciations, unihanDefinition = unihanDefinition)
                                 }
                                 val convertedText = text.convertedS2T()
                                 val altRomanizations = fetchRomanizations(convertedText)
@@ -57,7 +57,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                                 val collocations = fetchCollocations(word = convertedText, romanization = romanization)
                                                 Pronunciation(romanization = romanization, homophones = homophones, collocations = collocations)
                                         }
-                                        return CantoneseLexicon(text = convertedText, pronunciations = pronunciations)
+                                        val unihanDefinition = unihanDefinitionMatch(text)
+                                        return CantoneseLexicon(text = convertedText, pronunciations = pronunciations, unihanDefinition = unihanDefinition)
                                 }
                                 return CantoneseLexicon(text)
                         }
@@ -73,8 +74,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                         val pronunciations: List<Pronunciation> = altRomanizations.map { Pronunciation(it) }
                                         return CantoneseLexicon(text = convertedText, pronunciations = pronunciations)
                                 }
-                                val firstIdeographic = text.firstOrNull { it.isIdeographicChar() }
-                                if (firstIdeographic == null) return CantoneseLexicon(text)
+                                if (text.count { it.isIdeographicChar() } == 0) return CantoneseLexicon(text)
                                 var chars = text
                                 val fetches: MutableList<String> = mutableListOf()
                                 var newText = ""
@@ -84,8 +84,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                         if (leadingRomanization != null) {
                                                 fetches.add(leadingRomanization)
                                                 val leadLength: Int = max(1, leading.second)
-                                                val tailLength = chars.length - leadLength
-                                                newText += chars.dropLast(tailLength)
+                                                newText += chars.take(leadLength)
                                                 chars = chars.drop(leadLength)
                                         } else {
                                                 val traditionalChars = chars.convertedS2T()
@@ -94,8 +93,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                                 if (anotherRomanization != null) {
                                                         fetches.add(anotherRomanization)
                                                         val leadLength: Int = max(1, anotherLeading.second)
-                                                        val tailLength = traditionalChars.length - leadLength
-                                                        newText += traditionalChars.dropLast(tailLength)
+                                                        newText += traditionalChars.take(leadLength)
                                                         chars = traditionalChars.drop(leadLength)
                                                 } else {
                                                         val leadingChar = chars.first()
@@ -122,11 +120,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                         matchedCount = chars.length
                         chars = chars.dropLast(1)
                 }
-                if (romanization != null) {
-                        return Pair(romanization, matchedCount)
-                } else {
-                        return Pair(null, 0)
-                }
+                return if (romanization == null) Pair(null, 0) else Pair(romanization, matchedCount)
         }
         private fun fetchRomanizations(word: String): List<String> {
                 val romanizations: MutableList<String> = mutableListOf()
@@ -156,13 +150,21 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 if (cursor.moveToFirst()) {
                         val text = cursor.getString(0)
                         cursor.close()
-                        if (text == "X") return listOf()
-                        return text.split(";")
+                        return if (text == "X") emptyList() else text.split(";")
+                } else {
+                        cursor.close()
+                        return emptyList()
                 }
-                return listOf()
         }
 
-        fun yingWaaFanWanMatch(char: Char): List<YingWaaFanWan> {
+        fun searchYingWaaFanWan(char: Char): List<YingWaaFanWan> {
+                val matched = yingWaaFanWanMatch(char)
+                if (matched.isNotEmpty()) return matched
+                val traditionalText = char.toString().convertedS2T()
+                val traditionalChar = traditionalText.firstOrNull() ?: return matched
+                return yingWaaFanWanMatch(traditionalChar)
+        }
+        private fun yingWaaFanWanMatch(char: Char): List<YingWaaFanWan> {
                 val entries: MutableList<YingWaaFanWan> = mutableListOf()
                 val code = char.code
                 val command = "SELECT * FROM yingwaatable WHERE code = $code;"
@@ -200,7 +202,14 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return homophones
         }
 
-        fun choHokYuetYamCitYiuMatch(char: Char): List<ChoHokYuetYamCitYiu> {
+        fun searchChoHokYuetYamCitYiu(char: Char): List<ChoHokYuetYamCitYiu> {
+                val matched = choHokYuetYamCitYiuMatch(char)
+                if (matched.isNotEmpty()) return matched
+                val traditionalText = char.toString().convertedS2T()
+                val traditionalChar = traditionalText.firstOrNull() ?: return matched
+                return choHokYuetYamCitYiuMatch(traditionalChar)
+        }
+        private fun choHokYuetYamCitYiuMatch(char: Char): List<ChoHokYuetYamCitYiu> {
                 val entries: MutableList<ChoHokYuetYamCitYiu> = mutableListOf()
                 val code = char.code
                 val command = "SELECT * FROM chohoktable WHERE code = $code;"
@@ -243,7 +252,14 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return homophones
         }
 
-        fun fanWanCuetYiuMatch(char: Char): List<FanWanCuetYiu> {
+        fun searchFanWanCuetYiu(char: Char): List<FanWanCuetYiu> {
+                val matched = fanWanCuetYiuMatch(char)
+                if (matched.isNotEmpty()) return matched
+                val traditionalText = char.toString().convertedS2T()
+                val traditionalChar = traditionalText.firstOrNull() ?: return matched
+                return fanWanCuetYiuMatch(traditionalChar)
+        }
+        private fun fanWanCuetYiuMatch(char: Char): List<FanWanCuetYiu> {
                 val entries: MutableList<FanWanCuetYiu> = mutableListOf()
                 val code = char.code
                 val command = "SELECT * FROM fanwantable WHERE code = $code;"
@@ -289,7 +305,14 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return homophones
         }
 
-        fun gwongWanMatch(char: Char): List<GwongWanCharacter> {
+        fun searchGwongWan(char: Char): List<GwongWanCharacter> {
+                val matched = gwongWanMatch(char)
+                if (matched.isNotEmpty()) return matched
+                val traditionalText = char.toString().convertedS2T()
+                val traditionalChar = traditionalText.firstOrNull() ?: return matched
+                return gwongWanMatch(traditionalChar)
+        }
+        private fun gwongWanMatch(char: Char): List<GwongWanCharacter> {
                 val entries: MutableList<GwongWanCharacter> = mutableListOf()
                 val code = char.code
                 val command = "SELECT * FROM gwongwantable WHERE code = $code;"
@@ -328,19 +351,18 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return entries
         }
 
-        fun unihanDefinitionMatch(text: String): UnihanDefinition? {
-                if (text.length != 1) return null
-                val character = text.first()
-                val code = character.code
+        private fun unihanDefinitionMatch(text: String): String? {
+                val code = text.firstOrNull()?.code ?: return null
                 val command = "SELECT definition FROM definitiontable WHERE code = $code LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 if (cursor.moveToFirst()) {
                         val definition = cursor.getString(0)
                         cursor.close()
-                        return UnihanDefinition(character = character, definition = definition)
+                        return definition
+                } else {
+                        cursor.close()
+                        return null
                 }
-                cursor.close()
-                return null
         }
 
         fun t2s(char: Char): String {

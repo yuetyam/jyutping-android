@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -35,7 +36,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavHostController
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.Screen
-import org.jyutping.jyutping.extensions.convertedS2T
+import org.jyutping.jyutping.extensions.isIdeographicChar
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.search.CantoneseLexicon
 import org.jyutping.jyutping.search.CantoneseLexiconView
@@ -45,7 +46,6 @@ import org.jyutping.jyutping.search.FanWanCuetYiu
 import org.jyutping.jyutping.search.FanWanView
 import org.jyutping.jyutping.search.GwongWanCharacter
 import org.jyutping.jyutping.search.GwongWanView
-import org.jyutping.jyutping.search.UnihanDefinition
 import org.jyutping.jyutping.search.YingWaaFanWan
 import org.jyutping.jyutping.search.YingWaaView
 import org.jyutping.jyutping.ui.common.NavigationLabel
@@ -54,44 +54,28 @@ import org.jyutping.jyutping.ui.common.TextCard
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
 
+private typealias YingWaaLexicon = List<YingWaaFanWan>
+private typealias ChoHokLexicon = List<ChoHokYuetYamCitYiu>
+private typealias FanWanLexicon = List<FanWanCuetYiu>
+private typealias GwongWanLexicon = List<GwongWanCharacter>
+
 @Composable
 fun HomeScreen(navController: NavHostController) {
-        val textState: MutableState<String> = remember { mutableStateOf("") }
-        val lexiconState = remember { mutableStateOf<CantoneseLexicon?>(null) }
-        val unihanDefinition = remember { mutableStateOf<UnihanDefinition?>(null) }
-        val yingWaaEntries = remember { mutableStateOf<List<YingWaaFanWan>>(listOf()) }
-        val choHokEntries = remember { mutableStateOf<List<ChoHokYuetYamCitYiu>>(listOf()) }
-        val fanWanEntries = remember { mutableStateOf<List<FanWanCuetYiu>>(listOf()) }
-        val gwongWanEntries = remember { mutableStateOf<List<GwongWanCharacter>>(listOf()) }
+        val textState = remember { mutableStateOf<String>("") }
+        val lexicons = remember { mutableStateOf<List<CantoneseLexicon>>(listOf()) }
+        val yingWaaLexicons = remember { mutableStateOf<List<YingWaaLexicon>>(listOf()) }
+        val choHokLexicons = remember { mutableStateOf<List<ChoHokLexicon>>(listOf()) }
+        val fanWanLexicons = remember { mutableStateOf<List<FanWanLexicon>>(listOf())}
+        val gwongWanLexicons = remember { mutableStateOf<List<GwongWanLexicon>>(listOf())}
         val helper: DatabaseHelper by lazy { DatabaseHelper(navController.context, DatabasePreparer.DATABASE_NAME) }
-        fun searchYingWan(text: String): List<YingWaaFanWan> {
-                val char = text.firstOrNull() ?: return emptyList()
-                val matched = helper.yingWaaFanWanMatch(char)
-                if (matched.isNotEmpty()) return YingWaaFanWan.process(matched)
-                val traditionalChar = text.convertedS2T().firstOrNull() ?: char
-                val traditionalMatched = helper.yingWaaFanWanMatch(traditionalChar)
-                return YingWaaFanWan.process(traditionalMatched)
-        }
-        fun searchChoHok(text: String): List<ChoHokYuetYamCitYiu> {
-                val char = text.firstOrNull() ?: return emptyList()
-                val matched = helper.choHokYuetYamCitYiuMatch(char)
-                if (matched.isNotEmpty()) return matched
-                val traditionalChar = text.convertedS2T().firstOrNull() ?: char
-                return helper.choHokYuetYamCitYiuMatch(traditionalChar)
-        }
-        fun searchFanWan(text: String): List<FanWanCuetYiu> {
-                val char = text.firstOrNull() ?: return emptyList()
-                val matched = helper.fanWanCuetYiuMatch(char)
-                if (matched.isNotEmpty()) return matched
-                val traditionalChar = text.convertedS2T().firstOrNull() ?: char
-                return helper.fanWanCuetYiuMatch(traditionalChar)
-        }
-        fun searchGwongWan(text: String): List<GwongWanCharacter> {
-                val char = text.firstOrNull() ?: return emptyList()
-                val matched = helper.gwongWanMatch(char)
-                if (matched.isNotEmpty()) return matched
-                val traditionalChar = text.convertedS2T().firstOrNull() ?: char
-                return helper.gwongWanMatch(traditionalChar)
+        fun searchCantoneseLexicons(text: String): List<CantoneseLexicon> {
+                val ideographicCharacters = text.mapNotNull { if (it.isIdeographicChar()) it else null }.distinct()
+                if (ideographicCharacters.isEmpty()) return listOf(CantoneseLexicon(text))
+                val primary = helper.searchCantoneseLexicon(text)
+                val shouldReturnEarly: Boolean = text.length < 2 || ideographicCharacters.count() > 3
+                if (shouldReturnEarly) return listOf(primary)
+                val subLexicons = ideographicCharacters.map { helper.searchCantoneseLexicon(it.toString()) }
+                return listOf(primary) + subLexicons
         }
         val isKeyboardEnabled: MutableState<Boolean> = remember { mutableStateOf(false) }
         val isKeyboardSelected: MutableState<Boolean> = remember { mutableStateOf(false) }
@@ -122,39 +106,39 @@ fun HomeScreen(navController: NavHostController) {
                         item {
                                 SearchField(textState = textState) {
                                         val text = textState.value.trim()
-                                        lexiconState.value = helper.searchCantoneseLexicon(text)
-                                        val text4definition = lexiconState.value?.text ?: text
-                                        unihanDefinition.value = helper.unihanDefinitionMatch(text4definition)
-                                        yingWaaEntries.value = searchYingWan(text)
-                                        choHokEntries.value = searchChoHok(text)
-                                        fanWanEntries.value = searchFanWan(text)
-                                        gwongWanEntries.value = searchGwongWan(text)
+                                        if (text.isEmpty()) {
+                                                lexicons.value = emptyList()
+                                        } else {
+                                                lexicons.value = searchCantoneseLexicons(text)
+                                        }
+                                        val ideographicCharacters = text.mapNotNull { if (it.isIdeographicChar()) it else null }.distinct()
+                                        if (ideographicCharacters.isEmpty() || ideographicCharacters.count() > 3) {
+                                                yingWaaLexicons.value = emptyList()
+                                                choHokLexicons.value = emptyList()
+                                                fanWanLexicons.value = emptyList()
+                                                gwongWanLexicons.value = emptyList()
+                                        } else {
+                                                yingWaaLexicons.value = ideographicCharacters.map { helper.searchYingWaaFanWan(it) }.map { YingWaaFanWan.process(it) }.filter { it.isNotEmpty() }
+                                                choHokLexicons.value = ideographicCharacters.map { helper.searchChoHokYuetYamCitYiu(it) }.filter { it.isNotEmpty() }
+                                                fanWanLexicons.value = ideographicCharacters.map { helper.searchFanWanCuetYiu(it) }.filter { it.isNotEmpty() }
+                                                gwongWanLexicons.value = ideographicCharacters.map { helper.searchGwongWan(it) }.filter { it.isNotEmpty() }
+                                        }
                                 }
                         }
-                        lexiconState.value?.let {
-                                item {
-                                        CantoneseLexiconView(lexicon = it, unihanDefinition = unihanDefinition.value)
-                                }
+                        items(lexicons.value) {
+                                CantoneseLexiconView(it)
                         }
-                        if (yingWaaEntries.value.isNotEmpty()) {
-                                item {
-                                        YingWaaView(yingWaaEntries.value)
-                                }
+                        items(yingWaaLexicons.value) {
+                                YingWaaView(it)
                         }
-                        if (choHokEntries.value.isNotEmpty()) {
-                                item {
-                                        ChoHokView(choHokEntries.value)
-                                }
+                        items(choHokLexicons.value) {
+                                ChoHokView(it)
                         }
-                        if (fanWanEntries.value.isNotEmpty()) {
-                                item {
-                                        FanWanView(fanWanEntries.value)
-                                }
+                        items(fanWanLexicons.value) {
+                                FanWanView(it)
                         }
-                        if (gwongWanEntries.value.isNotEmpty()) {
-                                item {
-                                        GwongWanView(gwongWanEntries.value)
-                                }
+                        items(gwongWanLexicons.value) {
+                                GwongWanView(it)
                         }
                         if (isKeyboardEnabled.value.not()) {
                                 item {

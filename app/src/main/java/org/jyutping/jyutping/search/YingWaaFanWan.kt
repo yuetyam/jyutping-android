@@ -22,8 +22,8 @@ data class YingWaaFanWan(
                 fun process(entries: List<YingWaaFanWan>): List<YingWaaFanWan> {
                         if (entries.isEmpty()) return entries
                         val romanizations = entries.map { it.romanization }.distinct()
-                        val hasDuplicates: Boolean = romanizations.size != entries.size
-                        if (!hasDuplicates) return entries
+                        val shouldReturnEarly: Boolean = romanizations.size == entries.size
+                        if (shouldReturnEarly) return entries
                         val processedEntries: List<YingWaaFanWan> = romanizations.mapNotNull { syllable ->
                                 val filtered = entries.filter { it.romanization == syllable }
                                 when (filtered.size) {

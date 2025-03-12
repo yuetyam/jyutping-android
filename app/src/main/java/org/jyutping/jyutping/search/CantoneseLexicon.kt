@@ -20,5 +20,6 @@ data class Pronunciation(
 data class CantoneseLexicon(
         val text: String,
         val pronunciations: List<Pronunciation> = listOf(),
-        val note: String? = null
+        val note: String? = null,
+        val unihanDefinition: String? = null
 )

@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
-fun CantoneseLexiconView(lexicon: CantoneseLexicon, unihanDefinition: UnihanDefinition?) {
+fun CantoneseLexiconView(lexicon: CantoneseLexicon) {
         Column(
                 modifier = Modifier
                         .fillMaxWidth()
@@ -33,7 +33,7 @@ fun CantoneseLexiconView(lexicon: CantoneseLexicon, unihanDefinition: UnihanDefi
                                 PronunciationLabel(it)
                         }
                 }
-                unihanDefinition?.let {
+                lexicon.unihanDefinition?.let {
                         Column(
                                 verticalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
@@ -45,7 +45,7 @@ fun CantoneseLexiconView(lexicon: CantoneseLexicon, unihanDefinition: UnihanDefi
                                         )
                                         SeparatorMark()
                                         Text(
-                                                text = it.definition,
+                                                text = it,
                                                 color = colorScheme.onBackground
                                         )
                                 }
