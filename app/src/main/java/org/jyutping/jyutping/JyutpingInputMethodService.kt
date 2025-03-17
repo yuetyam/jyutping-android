@@ -72,6 +72,12 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         ViewModelStoreOwner,
         SavedStateRegistryOwner {
 
+        override fun onEvaluateInputViewShown(): Boolean {
+                super.onEvaluateInputViewShown()
+                // Always show on-screen keyboard even if a hardware keyboard is connected
+                return true
+        }
+
         override fun onCreate() {
                 super.onCreate()
                 savedStateRegistryController.performRestore(null)
@@ -91,6 +97,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 val isNightMode: Boolean = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
                 window?.window?.let {
                         WindowCompat.getInsetsController(it, it.decorView).isAppearanceLightNavigationBars = isNightMode.not()
+
+                        @Suppress("DEPRECATION") // Needs for Android 14 and below
                         it.navigationBarColor = if (isDarkMode.value) {
                                 if (isHighContrastPreferred.value) Color.Black.toArgb() else PresetColor.keyboardDarkBackground.toArgb()
                         } else {
@@ -623,17 +631,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val needsSymbols: Boolean = isEmojiSuggestionsOn.value && selectedCandidates.isEmpty()
                                         val asap: Boolean = userLexiconSuggestions.isNotEmpty()
                                         val suggestions = Engine.suggest(text = processingText, segmentation = segmentation, db = db, needsSymbols = needsSymbols, asap = asap)
-                                        val mark: String = run {
-                                                val userLexiconMark = userLexiconSuggestions.firstOrNull()?.mark
-                                                if (userLexiconMark != null) {
-                                                        userLexiconMark
-                                                } else if (processingText.any { it.isSeparatorOrTone() }){
+                                        val mark: String = userLexiconSuggestions.firstOrNull()?.mark
+                                                ?: if (processingText.any { it.isSeparatorOrTone() }) {
                                                         processingText.formattedForMark()
                                                 } else {
                                                         val firstCandidate = suggestions.firstOrNull()
                                                         if (firstCandidate != null && firstCandidate.input.length == processingText.length) firstCandidate.mark else processingText
                                                 }
-                                        }
                                         currentInputConnection.setComposingText(mark, 1)
                                         candidates.value = (userLexiconSuggestions + suggestions).map { it.transformed(characterStandard.value, db) }.distinct()
                                         if (isBuffering.value.not()) {

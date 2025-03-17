@@ -1,5 +1,8 @@
 package org.jyutping.jyutping
 
+/**
+ * Character Set. 字符集／字形標準
+ */
 enum class CharacterStandard(val identifier: Int) {
 
         Traditional(1),
@@ -13,15 +16,9 @@ enum class CharacterStandard(val identifier: Int) {
         Simplified(4);
 
         fun isSimplified(): Boolean = (this == Simplified)
-        fun isNotSimplified(): Boolean = (this != Simplified)
+        // fun isNotSimplified(): Boolean = (this != Simplified)
 
         companion object {
-                fun standardOf(value: Int): CharacterStandard = when (value) {
-                        Traditional.identifier -> Traditional
-                        HongKong.identifier -> HongKong
-                        Taiwan.identifier -> Taiwan
-                        Simplified.identifier -> Simplified
-                        else -> Traditional
-                }
+                fun standardOf(value: Int): CharacterStandard = CharacterStandard.entries.find { it.identifier == value } ?: Traditional
         }
 }

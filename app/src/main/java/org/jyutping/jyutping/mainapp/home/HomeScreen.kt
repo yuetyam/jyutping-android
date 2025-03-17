@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import android.view.inputmethod.InputMethodManager
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ import org.jyutping.jyutping.R
 import org.jyutping.jyutping.Screen
 import org.jyutping.jyutping.extensions.isIdeographicChar
 import org.jyutping.jyutping.presets.PresetConstant
+import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.search.CantoneseLexicon
 import org.jyutping.jyutping.search.CantoneseLexiconView
 import org.jyutping.jyutping.search.ChoHokView
@@ -61,12 +63,12 @@ private typealias GwongWanLexicon = List<GwongWanCharacter>
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
-        val textState = remember { mutableStateOf<String>("") }
+        val textState = remember { mutableStateOf(PresetString.EMPTY) }
         val lexicons = remember { mutableStateOf<List<CantoneseLexicon>>(listOf()) }
         val yingWaaLexicons = remember { mutableStateOf<List<YingWaaLexicon>>(listOf()) }
         val choHokLexicons = remember { mutableStateOf<List<ChoHokLexicon>>(listOf()) }
-        val fanWanLexicons = remember { mutableStateOf<List<FanWanLexicon>>(listOf())}
-        val gwongWanLexicons = remember { mutableStateOf<List<GwongWanLexicon>>(listOf())}
+        val fanWanLexicons = remember { mutableStateOf<List<FanWanLexicon>>(listOf()) }
+        val gwongWanLexicons = remember { mutableStateOf<List<GwongWanLexicon>>(listOf()) }
         val helper: DatabaseHelper by lazy { DatabaseHelper(navController.context, DatabasePreparer.DATABASE_NAME) }
         fun searchCantoneseLexicons(text: String): List<CantoneseLexicon> {
                 val ideographicCharacters = text.mapNotNull { if (it.isIdeographicChar()) it else null }.distinct()
@@ -125,20 +127,30 @@ fun HomeScreen(navController: NavHostController) {
                                         }
                                 }
                         }
-                        items(lexicons.value) {
-                                CantoneseLexiconView(it)
+                        items(lexicons.value) { lexicon ->
+                                AnimatedContent(targetState = lexicon) {
+                                        CantoneseLexiconView(it)
+                                }
                         }
-                        items(yingWaaLexicons.value) {
-                                YingWaaView(it)
+                        items(yingWaaLexicons.value) { lexicon ->
+                                AnimatedContent(targetState = lexicon) {
+                                        YingWaaView(it)
+                                }
                         }
-                        items(choHokLexicons.value) {
-                                ChoHokView(it)
+                        items(choHokLexicons.value) { lexicon ->
+                                AnimatedContent(targetState = lexicon) {
+                                        ChoHokView(it)
+                                }
                         }
-                        items(fanWanLexicons.value) {
-                                FanWanView(it)
+                        items(fanWanLexicons.value) { lexicon ->
+                                AnimatedContent(targetState = lexicon) {
+                                        FanWanView(it)
+                                }
                         }
-                        items(gwongWanLexicons.value) {
-                                GwongWanView(it)
+                        items(gwongWanLexicons.value) { lexicon ->
+                                AnimatedContent(targetState = lexicon) {
+                                        GwongWanView(it)
+                                }
                         }
                         if (isKeyboardEnabled.value.not()) {
                                 item {
