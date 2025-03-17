@@ -26,32 +26,32 @@ fun JyutpingTonesScreen() {
                                         .fillMaxWidth()
                                         .padding(horizontal = 8.dp)
                         ) {
-                                Text(text = "例字", modifier = Modifier.weight(0.3f))
-                                Text(text = "調值", modifier = Modifier.weight(0.25f))
+                                Text(text = "例字", modifier = Modifier.weight(0.25f))
+                                Text(text = "粵拼", modifier = Modifier.weight(0.25f))
                                 Text(text = "聲調", modifier = Modifier.weight(0.25f))
-                                Text(text = "粵拼", modifier = Modifier.weight(0.2f))
+                                Text(text = "調值", modifier = Modifier.weight(0.25f))
                         }
                 }
                 item {
                         Column(
                                 modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(8.dp))
                         ) {
-                                ToneLabel(word = "芬", syllable = "fan1", value = "55/53", name = "陰入", jyutping = "1")
-                                ToneLabel(word = "粉", syllable = "fan2", value = "35", name = "陰上", jyutping = "2")
-                                ToneLabel(word = "訓", syllable = "fan3", value = "33", name = "陰去", jyutping = "3")
-                                ToneLabel(word = "焚", syllable = "fan4", value = "21/11", name = "陽平", jyutping = "4")
-                                ToneLabel(word = "憤", syllable = "fan5", value = "13/23", name = "陽上", jyutping = "5")
-                                ToneLabel(word = "份", syllable = "fan6", value = "22", name = "陽去", jyutping = "6")
-                                ToneLabel(word = "忽", syllable = "fat1", value = "5", name = "高陰入", jyutping = "1")
-                                ToneLabel(word = "法", syllable = "faat3", value = "3", name = "低陰入", jyutping = "3")
-                                ToneLabel(word = "罰", syllable = "fat6", value = "2", name = "陽入", jyutping = "6")
+                                ToneLabel(word = "芬", syllable = "fan1", toneName = "陰入", toneValue = "55/53")
+                                ToneLabel(word = "粉", syllable = "fan2", toneName = "陰上", toneValue = "35")
+                                ToneLabel(word = "訓", syllable = "fan3", toneName = "陰去", toneValue = "33")
+                                ToneLabel(word = "焚", syllable = "fan4", toneName = "陽平", toneValue = "21/11")
+                                ToneLabel(word = "憤", syllable = "fan5", toneName = "陽上", toneValue = "13/23")
+                                ToneLabel(word = "份", syllable = "fan6", toneName = "陽去", toneValue = "22")
+                                ToneLabel(word = "忽", syllable = "fat1", toneName = "高陰入", toneValue = "5")
+                                ToneLabel(word = "法", syllable = "faat3", toneName = "低陰入", toneValue = "3")
+                                ToneLabel(word = "佛", syllable = "fat6", toneName = "陽入", toneValue = "2")
                         }
                 }
         }
 }
 
 @Composable
-private fun ToneLabel(word: String, syllable: String, value: String, name: String, jyutping: String) {
+private fun ToneLabel(word: String, syllable: String, toneName: String, toneValue: String) {
         SelectionContainer {
                 Row(
                         modifier = Modifier
@@ -59,23 +59,23 @@ private fun ToneLabel(word: String, syllable: String, value: String, name: Strin
                                 .padding(horizontal = 8.dp, vertical = 4.dp),
                 ) {
                         Text(
-                                text = "$word $syllable",
-                                modifier = Modifier.weight(0.3f),
-                                color = colorScheme.onBackground
-                        )
-                        Text(
-                                text = value,
+                                text = word,
                                 modifier = Modifier.weight(0.25f),
                                 color = colorScheme.onBackground
                         )
                         Text(
-                                text = name,
+                                text = syllable,
                                 modifier = Modifier.weight(0.25f),
                                 color = colorScheme.onBackground
                         )
                         Text(
-                                text = jyutping,
-                                modifier = Modifier.weight(0.2f),
+                                text = toneName,
+                                modifier = Modifier.weight(0.25f),
+                                color = colorScheme.onBackground
+                        )
+                        Text(
+                                text = toneValue,
+                                modifier = Modifier.weight(0.25f),
                                 color = colorScheme.onBackground
                         )
                 }
