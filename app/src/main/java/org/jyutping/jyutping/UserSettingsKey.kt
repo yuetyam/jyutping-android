@@ -7,6 +7,7 @@ object UserSettingsKey {
         const val CharacterStandard: String = "character_standard"
         const val AudioFeedback: String = "audio_feedback"
         const val HapticFeedback: String = "haptic_feedback"
+        const val NumericLayout: String = "numeric_layout"
         const val KeyCase: String = "key_case"
         const val KeyTextPreview: String = "key_preview"
         const val HighContrast: String = "high_contrast"

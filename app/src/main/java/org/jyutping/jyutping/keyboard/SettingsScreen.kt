@@ -71,6 +71,7 @@ fun SettingsScreen(height: Dp) {
         val characterStandard by context.characterStandard.collectAsState()
         val isAudioFeedbackOn by context.isAudioFeedbackOn.collectAsState()
         val isHapticFeedbackOn by context.isHapticFeedbackOn.collectAsState()
+        val useTenKeyNumberPad by context.useTenKeyNumberPad.collectAsState()
         val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
         val previewKeyText by context.previewKeyText.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
@@ -321,6 +322,28 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                 }
                                         }
+                                }
+                        }
+                        item {
+                                Row(
+                                        modifier = Modifier
+                                                .fillMaxWidth()
+                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                .padding(horizontal = 8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                        Text(
+                                                text = stringResource(id = R.string.keyboard_settings_numeric_layout_switch_title),
+                                                color = tintColor
+                                        )
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        Switch(
+                                                checked = useTenKeyNumberPad,
+                                                onCheckedChange = {
+                                                        context.updateUseTenKeyNumberPad(it)
+                                                },
+                                                colors = switchColors
+                                        )
                                 }
                         }
                         item {

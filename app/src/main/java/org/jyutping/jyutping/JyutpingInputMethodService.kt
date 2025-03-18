@@ -49,6 +49,7 @@ import org.jyutping.jyutping.keyboard.InputMethodMode
 import org.jyutping.jyutping.keyboard.KeyboardCase
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.KeyboardInterface
+import org.jyutping.jyutping.keyboard.NumericLayout
 import org.jyutping.jyutping.keyboard.Pinyin
 import org.jyutping.jyutping.keyboard.PinyinSegmentor
 import org.jyutping.jyutping.keyboard.QwertyForm
@@ -316,6 +317,18 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 val value: Int = if (isOn) 101 else 102
                 sharedPreferences.edit {
                         putInt(UserSettingsKey.HapticFeedback, value)
+                }
+        }
+        val useTenKeyNumberPad: MutableStateFlow<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.NumericLayout, NumericLayout.Default.identifier)
+                val shouldUseTenKeyNumberPad: Boolean = savedValue == NumericLayout.NumberKeyPad.identifier
+                MutableStateFlow(shouldUseTenKeyNumberPad)
+        }
+        fun updateUseTenKeyNumberPad(isOn: Boolean) {
+                useTenKeyNumberPad.value = isOn
+                val value2save: Int = if (isOn) NumericLayout.NumberKeyPad.identifier else NumericLayout.Default.identifier
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.NumericLayout, value2save)
                 }
         }
         val showLowercaseKeys: MutableStateFlow<Boolean> by lazy {

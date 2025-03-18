@@ -28,6 +28,7 @@ import org.jyutping.jyutping.keyboard.SettingsScreen
 import org.jyutping.jyutping.keyboard.StrokeKeyboard
 import org.jyutping.jyutping.keyboard.SymbolicKeyboard
 import org.jyutping.jyutping.presets.PresetConstant
+import org.jyutping.jyutping.tenkey.TenKeyNumericKeyboard
 import splitties.systemservices.windowManager
 import kotlin.math.min
 
@@ -50,6 +51,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                                 else -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight())
                         }
                         KeyboardForm.CandidateBoard -> CandidateBoard(height = keyboardHeight())
+                        KeyboardForm.TenKeyNumeric -> TenKeyNumericKeyboard(height = keyboardHeight())
                         KeyboardForm.Numeric -> if (inputMethodMode.isABC()) NumericKeyboard(keyHeight = responsiveKeyHeight()) else CantoneseNumericKeyboard(keyHeight = responsiveKeyHeight())
                         KeyboardForm.Symbolic -> if (inputMethodMode.isABC()) SymbolicKeyboard(keyHeight = responsiveKeyHeight()) else CantoneseSymbolicKeyboard(keyHeight = responsiveKeyHeight())
                         KeyboardForm.Settings -> SettingsScreen(height = keyboardHeight())
