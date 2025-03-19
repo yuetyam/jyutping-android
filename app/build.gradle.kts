@@ -12,8 +12,8 @@ android {
                 applicationId = "org.jyutping.jyutping"
                 minSdk = 29
                 targetSdk = 35
-                versionCode = 31
-                versionName = "0.31.0"
+                versionCode = 32
+                versionName = "0.32.0"
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 vectorDrawables.useSupportLibrary = true
         }
@@ -62,7 +62,7 @@ dependencies {
         implementation("androidx.core:core-ktx:1.15.0")
         implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
         implementation("androidx.lifecycle:lifecycle-service:2.8.7")
-        implementation("androidx.navigation:navigation-compose:2.8.8")
+        implementation("androidx.navigation:navigation-compose:2.8.9")
         implementation("com.louiscad.splitties:splitties-systemservices:3.0.0")
         implementation("com.louiscad.splitties:splitties-views:3.0.0")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
