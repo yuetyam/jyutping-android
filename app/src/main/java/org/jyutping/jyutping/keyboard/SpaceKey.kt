@@ -116,7 +116,7 @@ fun SpaceKey(modifier: Modifier) {
                         Text(
                                 text = if (isDragging) PresetConstant.SpaceKeyLongPressHint else keyForm.text(),
                                 color = if (isDarkMode) Color.White else Color.Black,
-                                fontSize = 15.sp
+                                fontSize = 16.sp
                         )
                 }
         }

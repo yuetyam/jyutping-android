@@ -89,7 +89,7 @@ fun TenKeyReturnKey(modifier: Modifier) {
                         Text(
                                 text = keyText ?: "return",
                                 color = if (isDarkMode) Color.White else Color.Black,
-                                fontSize = 15.sp
+                                fontSize = 16.sp
                         )
                 }
         }

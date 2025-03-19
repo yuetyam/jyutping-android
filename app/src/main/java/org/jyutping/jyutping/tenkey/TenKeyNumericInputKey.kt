@@ -75,7 +75,7 @@ fun TenKeyNumericInputKey(keyText: String, modifier: Modifier) {
                 Text(
                         text = keyText,
                         color = if (isDarkMode) Color.White else Color.Black,
-                        fontSize = 22.sp,
+                        fontSize = 24.sp,
                 )
         }
 }
