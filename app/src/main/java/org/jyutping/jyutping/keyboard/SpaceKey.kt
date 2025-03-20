@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
+import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 
@@ -103,11 +104,7 @@ fun SpaceKey(modifier: Modifier) {
                                 shape = RoundedCornerShape(6.dp)
                         )
                         .background(
-                                if (isDarkMode) {
-                                        if (isPressing || isDragging) PresetColor.keyDarkEmphatic else PresetColor.keyDark
-                                } else {
-                                        if (isPressing || isDragging) PresetColor.keyLightEmphatic else PresetColor.keyLight
-                                }
+                                color = backgroundColor(isDarkMode, isHighContrastPreferred, (isPressing || isDragging))
                         )
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -119,3 +116,18 @@ fun SpaceKey(modifier: Modifier) {
                 )
         }
 }
+
+private fun backgroundColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean): Color =
+        if (isDarkMode) {
+                if (isHighContrastPreferred) {
+                        if (isPressing) AltPresetColor.keyDarkEmphatic else AltPresetColor.keyDark
+                } else {
+                        if (isPressing) PresetColor.keyDarkEmphatic else PresetColor.keyDark
+                }
+        } else {
+                if (isHighContrastPreferred) {
+                        if (isPressing) AltPresetColor.keyLightEmphatic else AltPresetColor.keyLight
+                } else {
+                        if (isPressing) PresetColor.keyLightEmphatic else PresetColor.keyLight
+                }
+        }
