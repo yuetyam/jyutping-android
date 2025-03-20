@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,7 +21,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.keyboard.KeyboardForm
-import org.jyutping.jyutping.keyboard.TenKeyGlobeKey
 import org.jyutping.jyutping.keyboard.ToolBar
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
@@ -30,7 +28,6 @@ import org.jyutping.jyutping.presets.PresetConstant
 @Composable
 fun TenKeyNumericKeyboard(height: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
-        val needsInputModeSwitchKey by context.needsInputModeSwitchKey.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
@@ -66,95 +63,62 @@ fun TenKeyNumericKeyboard(height: Dp) {
                         ToolBar()
                 }
                 Row(
-                        modifier = Modifier
-                                .fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         horizontalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
                         Column(
-                                modifier = Modifier
-                                        .weight(0.2f)
-                                        .fillMaxHeight()
+                                modifier = Modifier.weight(0.2f)
                         ) {
                                 TenKeySymbolSidebar(
                                         unitHeight = sidebarUnitHeight,
-                                        modifier = Modifier
-                                                .weight(0.75f)
-                                                .fillMaxWidth()
+                                        modifier = Modifier.weight(0.75f)
                                 )
                                 TenKeyTransformKey(
                                         destination = KeyboardForm.Alphabetic,
-                                        modifier = Modifier
-                                                .weight(0.25f)
-                                                .fillMaxWidth()
+                                        modifier = Modifier.weight(0.25f)
                                 )
                         }
                         Column(
-                                modifier = Modifier
-                                        .weight(0.6f)
-                                        .fillMaxHeight()
+                                modifier = Modifier.weight(0.6f)
                         ) {
                                 Row(
-                                        modifier = Modifier
-                                                .weight(0.25f)
+                                        modifier = Modifier.weight(0.25f)
                                 ) {
-                                        TenKeyNumericInputKey(keyText = "1", modifier = Modifier.weight(1f / 3f))
-                                        TenKeyNumericInputKey(keyText = "2", modifier = Modifier.weight(1f / 3f))
-                                        TenKeyNumericInputKey(keyText = "3", modifier = Modifier.weight(1f / 3f))
+                                        TenKeyNumericInputKey(keyText = "1", modifier = Modifier.weight(1f))
+                                        TenKeyNumericInputKey(keyText = "2", modifier = Modifier.weight(1f))
+                                        TenKeyNumericInputKey(keyText = "3", modifier = Modifier.weight(1f))
                                 }
                                 Row(
-                                        modifier = Modifier
-                                                .weight(0.25f)
+                                        modifier = Modifier.weight(0.25f)
                                 ) {
-                                        TenKeyNumericInputKey(keyText = "4", modifier = Modifier.weight(1f / 3f))
-                                        TenKeyNumericInputKey(keyText = "5", modifier = Modifier.weight(1f / 3f))
-                                        TenKeyNumericInputKey(keyText = "6", modifier = Modifier.weight(1f / 3f))
+                                        TenKeyNumericInputKey(keyText = "4", modifier = Modifier.weight(1f))
+                                        TenKeyNumericInputKey(keyText = "5", modifier = Modifier.weight(1f))
+                                        TenKeyNumericInputKey(keyText = "6", modifier = Modifier.weight(1f))
                                 }
                                 Row(
-                                        modifier = Modifier
-                                                .weight(0.25f)
+                                        modifier = Modifier.weight(0.25f)
                                 ) {
-                                        TenKeyNumericInputKey(keyText = "7", modifier = Modifier.weight(1f / 3f))
-                                        TenKeyNumericInputKey(keyText = "8", modifier = Modifier.weight(1f / 3f))
-                                        TenKeyNumericInputKey(keyText = "9", modifier = Modifier.weight(1f / 3f))
+                                        TenKeyNumericInputKey(keyText = "7", modifier = Modifier.weight(1f))
+                                        TenKeyNumericInputKey(keyText = "8", modifier = Modifier.weight(1f))
+                                        TenKeyNumericInputKey(keyText = "9", modifier = Modifier.weight(1f))
                                 }
-                                if (needsInputModeSwitchKey) {
-                                        Row(
-                                                modifier = Modifier
-                                                        .weight(0.25f)
-                                        ) {
-                                                TenKeyGlobeKey(modifier = Modifier.weight(1f / 3f))
-                                                TenKeyNumericInputKey(keyText = "0", modifier = Modifier.weight(1f / 3f))
-                                                TenKeyNumericInputKey(keyText = ".", modifier = Modifier.weight(1f / 3f))
-                                        }
-                                } else {
-                                        Row(
-                                                modifier = Modifier
-                                                        .weight(0.25f)
-                                        ) {
-                                                TenKeyNumericInputKey(keyText = ".", modifier = Modifier.weight(1f / 3f))
-                                                TenKeyNumericInputKey(keyText = "0", modifier = Modifier.weight(1f / 3f))
-                                                TenKeySpaceKey(modifier = Modifier.weight(1f / 3f))
-                                        }
+                                Row(
+                                        modifier = Modifier.weight(0.25f)
+                                ) {
+                                        TenKeyNumericInputKey(keyText = ".", modifier = Modifier.weight(1f))
+                                        TenKeyNumericInputKey(keyText = "0", modifier = Modifier.weight(1f))
+                                        TenKeySpaceKey(modifier = Modifier.weight(1f))
                                 }
                         }
                         Column(
-                                modifier = Modifier
-                                        .weight(0.2f)
-                                        .fillMaxHeight()
+                                modifier = Modifier.weight(0.2f)
                         ) {
-                                TenKeyBackspaceKey(
-                                        modifier = Modifier
-                                                .weight(0.25f)
-                                )
+                                TenKeyBackspaceKey(modifier = Modifier.weight(0.25f))
                                 TenKeyTransformKey(
                                         destination = KeyboardForm.Numeric,
-                                        modifier = Modifier
-                                                .weight(0.25f)
+                                        modifier = Modifier.weight(0.25f)
                                 )
-                                TenKeyReturnKey(
-                                        modifier = Modifier
-                                                .weight(0.5f)
-                                )
+                                TenKeyReturnKey(modifier = Modifier.weight(0.5f))
                         }
                 }
         }

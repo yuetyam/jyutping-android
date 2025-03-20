@@ -70,38 +70,32 @@ fun GlobeKey(modifier: Modifier) {
                                         },
                                 )
                         }
+                        .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
+                        .border(
+                                width = 1.dp,
+                                color = if (isDarkMode) {
+                                        if (isHighContrastPreferred) Color.White else Color.Transparent
+                                } else {
+                                        if (isHighContrastPreferred) Color.Black else Color.Transparent
+                                },
+                                shape = RoundedCornerShape(6.dp)
+                        )
+                        .shadow(
+                                elevation = 0.5.dp,
+                                shape = RoundedCornerShape(6.dp)
+                        )
+                        .background(
+                                color = keyBackgroundColor(isDarkMode, isHighContrastPreferred, isPressing)
+                        )
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
         ) {
-                Box(
-                        modifier = modifier
-                                .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
-                                .border(
-                                        width = 1.dp,
-                                        color = if (isDarkMode) {
-                                                if (isHighContrastPreferred) Color.White else Color.Transparent
-                                        } else {
-                                                if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                        },
-                                        shape = RoundedCornerShape(6.dp)
-                                )
-                                .shadow(
-                                        elevation = 0.5.dp,
-                                        shape = RoundedCornerShape(6.dp)
-                                )
-                                .background(
-                                        color = keyBackgroundColor(isDarkMode, isHighContrastPreferred, isPressing)
-                                )
-                                .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                ) {
-                        Icon(
-                                imageVector = ImageVector.vectorResource(id = R.drawable.key_globe),
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp),
-                                tint = if (isDarkMode) Color.White else Color.Black
-                        )
-                }
+                Icon(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.key_globe),
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp),
+                        tint = if (isDarkMode) Color.White else Color.Black
+                )
         }
 }
 

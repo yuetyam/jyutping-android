@@ -64,45 +64,39 @@ fun ReturnKey(modifier: Modifier) {
                                         }
                                 )
                         }
+                        .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
+                        .border(
+                                width = 1.dp,
+                                color = if (isDarkMode) {
+                                        if (isHighContrastPreferred) Color.White else Color.Transparent
+                                } else {
+                                        if (isHighContrastPreferred) Color.Black else Color.Transparent
+                                },
+                                shape = RoundedCornerShape(6.dp)
+                        )
+                        .shadow(
+                                elevation = 0.5.dp,
+                                shape = RoundedCornerShape(6.dp)
+                        )
+                        .background(
+                                color = backgroundColor(isDarkMode, isHighContrastPreferred, isPressing)
+                        )
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
         ) {
-                Box(
-                        modifier = modifier
-                                .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
-                                .border(
-                                        width = 1.dp,
-                                        color = if (isDarkMode) {
-                                                if (isHighContrastPreferred) Color.White else Color.Transparent
-                                        } else {
-                                                if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                        },
-                                        shape = RoundedCornerShape(6.dp)
-                                )
-                                .shadow(
-                                        elevation = 0.5.dp,
-                                        shape = RoundedCornerShape(6.dp)
-                                )
-                                .background(
-                                        color = backgroundColor(isDarkMode, isHighContrastPreferred, isPressing)
-                                )
-                                .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                ) {
-                        if (keyText == null) {
-                                Icon(
-                                        imageVector = ImageVector.vectorResource(id = R.drawable.key_return),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(22.dp),
-                                        tint = if (isDarkMode) Color.White else Color.Black
-                                )
-                        } else {
-                                Text(
-                                        text = keyText ?: "return",
-                                        color = if (isDarkMode) Color.White else Color.Black,
-                                        fontSize = 16.sp
-                                )
-                        }
+                if (keyText == null) {
+                        Icon(
+                                imageVector = ImageVector.vectorResource(id = R.drawable.key_return),
+                                contentDescription = null,
+                                modifier = Modifier.size(22.dp),
+                                tint = if (isDarkMode) Color.White else Color.Black
+                        )
+                } else {
+                        Text(
+                                text = keyText ?: "return",
+                                color = if (isDarkMode) Color.White else Color.Black,
+                                fontSize = 15.sp
+                        )
                 }
         }
 }

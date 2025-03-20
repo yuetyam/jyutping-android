@@ -84,40 +84,34 @@ fun SpaceKey(modifier: Modifier) {
                                         }
                                 )
                         }
+                        .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
+                        .border(
+                                width = 1.dp,
+                                color = if (isDarkMode) {
+                                        if (isHighContrastPreferred) Color.White else Color.Transparent
+                                } else {
+                                        if (isHighContrastPreferred) Color.Black else Color.Transparent
+                                },
+                                shape = RoundedCornerShape(6.dp)
+                        )
+                        .shadow(
+                                elevation = 0.5.dp,
+                                shape = RoundedCornerShape(6.dp)
+                        )
+                        .background(
+                                if (isDarkMode) {
+                                        if (isPressing || isDragging) PresetColor.keyDarkEmphatic else PresetColor.keyDark
+                                } else {
+                                        if (isPressing || isDragging) PresetColor.keyLightEmphatic else PresetColor.keyLight
+                                }
+                        )
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
         ) {
-                Box(
-                        modifier = modifier
-                                .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
-                                .border(
-                                        width = 1.dp,
-                                        color = if (isDarkMode) {
-                                                if (isHighContrastPreferred) Color.White else Color.Transparent
-                                        } else {
-                                                if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                        },
-                                        shape = RoundedCornerShape(6.dp)
-                                )
-                                .shadow(
-                                        elevation = 0.5.dp,
-                                        shape = RoundedCornerShape(6.dp)
-                                )
-                                .background(
-                                        if (isDarkMode) {
-                                                if (isPressing || isDragging) PresetColor.keyDarkEmphatic else PresetColor.keyDark
-                                        } else {
-                                                if (isPressing || isDragging) PresetColor.keyLightEmphatic else PresetColor.keyLight
-                                        }
-                                )
-                                .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                ) {
-                        Text(
-                                text = if (isDragging) PresetConstant.SpaceKeyLongPressHint else keyForm.text(),
-                                color = if (isDarkMode) Color.White else Color.Black,
-                                fontSize = 16.sp
-                        )
-                }
+                Text(
+                        text = if (isDragging) PresetConstant.SpaceKeyLongPressHint else keyForm.text(),
+                        color = if (isDarkMode) Color.White else Color.Black,
+                        fontSize = 15.sp
+                )
         }
 }

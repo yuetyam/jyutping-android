@@ -68,7 +68,7 @@ fun EditingPanelSpaceKey(modifier: Modifier) {
                 Text(
                         text = stringResource(id = R.string.editing_panel_key_space),
                         color = if (isDarkMode) Color.White else Color.Black,
-                        fontSize = 13.sp,
+                        fontSize = 15.sp,
                 )
         }
 }

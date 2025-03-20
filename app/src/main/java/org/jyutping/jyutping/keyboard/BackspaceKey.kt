@@ -112,38 +112,32 @@ fun BackspaceKey(modifier: Modifier) {
                                         }
                                 )
                         }
+                        .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
+                        .border(
+                                width = 1.dp,
+                                color = if (isDarkMode) {
+                                        if (isHighContrastPreferred) Color.White else Color.Transparent
+                                } else {
+                                        if (isHighContrastPreferred) Color.Black else Color.Transparent
+                                },
+                                shape = RoundedCornerShape(6.dp)
+                        )
+                        .shadow(
+                                elevation = 0.5.dp,
+                                shape = RoundedCornerShape(6.dp)
+                        )
+                        .background(
+                                color = backgroundColor(isDarkMode, isHighContrastPreferred, (isPressing || isDragging))
+                        )
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
         ) {
-                Box(
-                        modifier = modifier
-                                .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
-                                .border(
-                                        width = 1.dp,
-                                        color = if (isDarkMode) {
-                                                if (isHighContrastPreferred) Color.White else Color.Transparent
-                                        } else {
-                                                if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                        },
-                                        shape = RoundedCornerShape(6.dp)
-                                )
-                                .shadow(
-                                        elevation = 0.5.dp,
-                                        shape = RoundedCornerShape(6.dp)
-                                )
-                                .background(
-                                        color = backgroundColor(isDarkMode, isHighContrastPreferred, (isPressing || isDragging))
-                                )
-                                .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                ) {
-                        Icon(
-                                imageVector = ImageVector.vectorResource(id = if (isPressing || isDragging) R.drawable.key_backspacing else R.drawable.key_backspace),
-                                contentDescription = null,
-                                modifier = Modifier.size(22.dp),
-                                tint = if (isDarkMode) Color.White else Color.Black
-                        )
-                }
+                Icon(
+                        imageVector = ImageVector.vectorResource(id = if (isPressing || isDragging) R.drawable.key_backspacing else R.drawable.key_backspace),
+                        contentDescription = null,
+                        modifier = Modifier.size(22.dp),
+                        tint = if (isDarkMode) Color.White else Color.Black
+                )
         }
 }
 
