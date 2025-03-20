@@ -911,7 +911,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         private val audioManager by lazy { getSystemService(AUDIO_SERVICE) as AudioManager }
         fun audioFeedback(effect: SoundEffect) {
                 if (isAudioFeedbackOn.value) {
-                        audioManager.playSoundEffect(effect.soundId)
+                        audioManager.playSoundEffect(effect.soundId())
                 }
         }
         //endregion

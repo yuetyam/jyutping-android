@@ -1,6 +1,5 @@
 package org.jyutping.jyutping.emoji
 
-import android.os.Build
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -139,11 +138,7 @@ fun EmojiBoard(height: Dp) {
                 ) {
                         IconButton(
                                 onClick = {
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                                context.audioFeedback(SoundEffect.Back)
-                                        } else {
-                                                context.audioFeedback(SoundEffect.Click)
-                                        }
+                                        context.audioFeedback(SoundEffect.Back)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         context.transformTo(KeyboardForm.Alphabetic)
                                 },

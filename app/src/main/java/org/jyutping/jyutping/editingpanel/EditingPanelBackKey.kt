@@ -1,6 +1,5 @@
 package org.jyutping.jyutping.editingpanel
 
-import android.os.Build
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -48,11 +47,7 @@ fun EditingPanelBackKey(modifier: Modifier) {
         Column(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                        context.audioFeedback(SoundEffect.Back)
-                                } else {
-                                        context.audioFeedback(SoundEffect.Click)
-                                }
+                                context.audioFeedback(SoundEffect.Back)
                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                 context.transformTo(KeyboardForm.Alphabetic)
                         }

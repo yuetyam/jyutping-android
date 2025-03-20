@@ -69,6 +69,7 @@ fun CandidateBoard(height: Dp) {
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
         val screenWidth: Dp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                // TODO: Consider SafeArea?
                 val windowMetrics = context.windowManager.currentWindowMetrics
                 (windowMetrics.bounds.width() / windowMetrics.density).dp
         } else {
@@ -165,11 +166,7 @@ fun CandidateBoard(height: Dp) {
                 }
                 IconButton(
                         onClick = {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                        context.audioFeedback(SoundEffect.Back)
-                                } else {
-                                        context.audioFeedback(SoundEffect.Click)
-                                }
+                                context.audioFeedback(SoundEffect.Back)
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                 context.transformTo(KeyboardForm.Alphabetic)
                         },
