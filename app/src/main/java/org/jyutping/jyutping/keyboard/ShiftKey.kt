@@ -1,7 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -32,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
@@ -69,7 +69,7 @@ fun ShiftKey(modifier: Modifier) {
                                 detectTapGestures(
                                         onPress = {
                                                 isPressing = true
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                context.audioFeedback(SoundEffect.Click)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                 tryAwaitRelease()
                                                 isPressing = false

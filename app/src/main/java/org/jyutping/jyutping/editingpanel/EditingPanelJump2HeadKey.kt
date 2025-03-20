@@ -1,7 +1,6 @@
 package org.jyutping.jyutping.editingpanel
 
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -29,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
@@ -43,7 +43,7 @@ fun EditingPanelJump2HeadKey(modifier: Modifier) {
         Column(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
-                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                context.audioFeedback(SoundEffect.Click)
                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                 context.jump2head()
                         }

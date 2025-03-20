@@ -1,7 +1,7 @@
 package org.jyutping.jyutping.keyboard
 
+import android.os.Build
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 
@@ -46,7 +47,7 @@ fun SpaceKey(modifier: Modifier) {
                                 detectTapGestures(
                                         onPress = {
                                                 isPressing = true
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                context.audioFeedback(SoundEffect.Space)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
                                                 tryAwaitRelease()
                                                 isPressing = false
@@ -59,11 +60,14 @@ fun SpaceKey(modifier: Modifier) {
                         .pointerInput(Unit) {
                                 detectDragGesturesAfterLongPress(
                                         onDragStart = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
+                                                context.audioFeedback(SoundEffect.Click)
+                                                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                                                 isDragging = true
                                         },
                                         onDragEnd = {
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                                        view.performHapticFeedback(HapticFeedbackConstants.GESTURE_END)
+                                                }
                                                 isDragging = false
                                         },
                                         onDragCancel = {
@@ -73,11 +77,11 @@ fun SpaceKey(modifier: Modifier) {
                                                 change.consume()
                                                 val moveX = dragAmount.x
                                                 if (moveX < -10f) {
-                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                        context.audioFeedback(SoundEffect.Click)
                                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                         context.moveBackward()
                                                 } else if (moveX > 10f) {
-                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                        context.audioFeedback(SoundEffect.Click)
                                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                         context.moveForward()
                                                 }

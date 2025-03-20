@@ -1,7 +1,7 @@
 package org.jyutping.jyutping.keyboard
 
+import android.os.Build
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
@@ -35,6 +35,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
@@ -56,20 +57,20 @@ fun BackspaceKey(modifier: Modifier) {
                         .pointerInput(Unit) {
                                 detectTapGestures(
                                         onLongPress = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                context.audioFeedback(SoundEffect.Delete)
                                                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                                                 isLongPressing = true
                                                 longPressJob = longPressCoroutineScope.launch {
                                                         while (isActive && isLongPressing) {
                                                                 delay(100)
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                context.audioFeedback(SoundEffect.Delete)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.backspace()
                                                         }
                                                 }
                                         },
                                         onPress = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                context.audioFeedback(SoundEffect.Delete)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
                                                 longPressJob?.cancel()
                                                 isLongPressing = false
@@ -103,8 +104,12 @@ fun BackspaceKey(modifier: Modifier) {
                                                 if (isDraggable) {
                                                         val offsetX = change.position.x - change.previousPosition.x
                                                         if (offsetX < -20f) {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_RELEASE)
+                                                                context.audioFeedback(SoundEffect.Delete)
+                                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                                                        view.performHapticFeedback(HapticFeedbackConstants.GESTURE_END)
+                                                                } else {
+                                                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_RELEASE)
+                                                                }
                                                                 context.clearBuffer()
                                                                 isDraggable = false
                                                         }

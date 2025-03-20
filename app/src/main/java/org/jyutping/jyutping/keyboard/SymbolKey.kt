@@ -1,7 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -35,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.shapes.BubbleShape
@@ -58,7 +58,7 @@ fun SymbolKey(symbol: String, modifier: Modifier, position: Alignment.Horizontal
                                 detectTapGestures(
                                         onPress = {
                                                 isPressing = true
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                context.audioFeedback(SoundEffect.Input)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                 tryAwaitRelease()
                                                 isPressing = false

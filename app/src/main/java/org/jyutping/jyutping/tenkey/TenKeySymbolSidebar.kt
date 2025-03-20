@@ -1,7 +1,6 @@
 package org.jyutping.jyutping.tenkey
 
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -35,6 +34,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
@@ -79,7 +79,7 @@ fun TenKeySymbolSidebar(unitHeight: Dp, modifier: Modifier) {
                                                         onPress = {
                                                                 isPressing = true
                                                                 pressingIndex = index
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                context.audioFeedback(SoundEffect.Input)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                                 tryAwaitRelease()
                                                                 isPressing = false

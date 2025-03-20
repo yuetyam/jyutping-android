@@ -2,7 +2,6 @@ package org.jyutping.jyutping.keyboard
 
 import android.os.Build
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -40,6 +39,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import splitties.systemservices.windowManager
@@ -165,7 +165,11 @@ fun CandidateBoard(height: Dp) {
                 }
                 IconButton(
                         onClick = {
-                                view.playSoundEffect(SoundEffectConstants.NAVIGATION_UP)
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                        context.audioFeedback(SoundEffect.Back)
+                                } else {
+                                        context.audioFeedback(SoundEffect.Click)
+                                }
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                 context.transformTo(KeyboardForm.Alphabetic)
                         },

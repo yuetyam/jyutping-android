@@ -1,7 +1,7 @@
 package org.jyutping.jyutping.emoji
 
+import android.os.Build
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.presets.PresetColor
 
@@ -115,8 +116,8 @@ fun EmojiBoard(height: Dp) {
                                         modifier = Modifier
                                                 .size(cellHeight)
                                                 .clickable {
-                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                        context.audioFeedback(SoundEffect.Input)
+                                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                         context.input(emoji.text)
                                                         context.updateEmojiFrequent(emoji)
                                                 },
@@ -138,7 +139,11 @@ fun EmojiBoard(height: Dp) {
                 ) {
                         IconButton(
                                 onClick = {
-                                        view.playSoundEffect(SoundEffectConstants.NAVIGATION_UP)
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                                context.audioFeedback(SoundEffect.Back)
+                                        } else {
+                                                context.audioFeedback(SoundEffect.Click)
+                                        }
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         context.transformTo(KeyboardForm.Alphabetic)
                                 },
@@ -152,7 +157,7 @@ fun EmojiBoard(height: Dp) {
                         }
                         IconButton(
                                 onClick = {
-                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                        context.audioFeedback(SoundEffect.Click)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         headerTitleId = R.string.emoji_board_header_frequently_used
                                         val targetIndex = categoryStartIndexMap[EmojiCategory.Frequent] ?: 0
@@ -170,7 +175,7 @@ fun EmojiBoard(height: Dp) {
                         }
                         IconButton(
                                 onClick = {
-                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                        context.audioFeedback(SoundEffect.Click)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         headerTitleId = R.string.emoji_board_header_smileys_and_people
                                         val targetIndex = categoryStartIndexMap[EmojiCategory.SmileysAndPeople] ?: 0
@@ -188,7 +193,7 @@ fun EmojiBoard(height: Dp) {
                         }
                         IconButton(
                                 onClick = {
-                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                        context.audioFeedback(SoundEffect.Click)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         headerTitleId = R.string.emoji_board_header_animals_and_nature
                                         val targetIndex = categoryStartIndexMap[EmojiCategory.AnimalsAndNature] ?: 0
@@ -206,7 +211,7 @@ fun EmojiBoard(height: Dp) {
                         }
                         IconButton(
                                 onClick = {
-                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                        context.audioFeedback(SoundEffect.Click)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         headerTitleId = R.string.emoji_board_header_food_and_drink
                                         val targetIndex = categoryStartIndexMap[EmojiCategory.FoodAndDrink] ?: 0
@@ -224,7 +229,7 @@ fun EmojiBoard(height: Dp) {
                         }
                         IconButton(
                                 onClick = {
-                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                        context.audioFeedback(SoundEffect.Click)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         headerTitleId = R.string.emoji_board_header_activity
                                         val targetIndex = categoryStartIndexMap[EmojiCategory.Activity] ?: 0
@@ -242,7 +247,7 @@ fun EmojiBoard(height: Dp) {
                         }
                         IconButton(
                                 onClick = {
-                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                        context.audioFeedback(SoundEffect.Click)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         headerTitleId = R.string.emoji_board_header_travel_and_places
                                         val targetIndex = categoryStartIndexMap[EmojiCategory.TravelAndPlaces] ?: 0
@@ -260,7 +265,7 @@ fun EmojiBoard(height: Dp) {
                         }
                         IconButton(
                                 onClick = {
-                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                        context.audioFeedback(SoundEffect.Click)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         headerTitleId = R.string.emoji_board_header_objects
                                         val targetIndex = categoryStartIndexMap[EmojiCategory.Objects] ?: 0
@@ -278,7 +283,7 @@ fun EmojiBoard(height: Dp) {
                         }
                         IconButton(
                                 onClick = {
-                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                        context.audioFeedback(SoundEffect.Click)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         headerTitleId = R.string.emoji_board_header_symbols
                                         val targetIndex = categoryStartIndexMap[EmojiCategory.Symbols] ?: 0
@@ -296,7 +301,7 @@ fun EmojiBoard(height: Dp) {
                         }
                         IconButton(
                                 onClick = {
-                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                        context.audioFeedback(SoundEffect.Click)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         headerTitleId = R.string.emoji_board_header_flags
                                         val targetIndex = categoryStartIndexMap[EmojiCategory.Flags] ?: 0
@@ -314,7 +319,7 @@ fun EmojiBoard(height: Dp) {
                         }
                         IconButton(
                                 onClick = {
-                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                        context.audioFeedback(SoundEffect.Delete)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         context.backspace()
                                 },

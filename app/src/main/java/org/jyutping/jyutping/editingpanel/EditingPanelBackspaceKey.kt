@@ -1,7 +1,6 @@
 package org.jyutping.jyutping.editingpanel
 
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -38,6 +37,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
@@ -56,20 +56,20 @@ fun EditingPanelBackspaceKey(modifier: Modifier) {
                         .pointerInput(Unit) {
                                 detectTapGestures(
                                         onLongPress = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                context.audioFeedback(SoundEffect.Delete)
                                                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                                                 isLongPressing = true
                                                 longPressJob = longPressCoroutineScope.launch {
                                                         while (isActive && isLongPressing) {
                                                                 delay(100) // 0.1s
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                context.audioFeedback(SoundEffect.Delete)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.backspace()
                                                         }
                                                 }
                                         },
                                         onPress = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                context.audioFeedback(SoundEffect.Delete)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
                                                 longPressJob?.cancel()
                                                 isLongPressing = false

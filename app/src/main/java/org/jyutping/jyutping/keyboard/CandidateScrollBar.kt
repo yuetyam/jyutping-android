@@ -1,7 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,6 +31,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
@@ -92,7 +92,7 @@ fun CandidateScrollBar() {
                         }
                         IconButton(
                                 onClick = {
-                                        view.playSoundEffect(SoundEffectConstants.NAVIGATION_DOWN)
+                                        context.audioFeedback(SoundEffect.Click)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         context.transformTo(KeyboardForm.CandidateBoard)
                                 },

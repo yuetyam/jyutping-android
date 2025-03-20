@@ -37,9 +37,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
         @Composable
         override fun Content() {
                 val ctx = context as JyutpingInputMethodService
-                val isAudioFeedbackOn by ctx.isAudioFeedbackOn.collectAsState()
                 val isHapticFeedbackOn by ctx.isHapticFeedbackOn.collectAsState()
-                LocalView.current.isSoundEffectsEnabled = isAudioFeedbackOn
                 LocalView.current.isHapticFeedbackEnabled = isHapticFeedbackOn
                 val keyboardForm by ctx.keyboardForm.collectAsState()
                 val qwertyForm by ctx.qwertyForm.collectAsState()

@@ -2,7 +2,6 @@ package org.jyutping.jyutping.keyboard
 
 import android.content.Context
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import android.view.inputmethod.InputMethodManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -31,6 +30,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
@@ -47,13 +47,13 @@ fun GlobeKey(modifier: Modifier) {
                         .pointerInput(Unit) {
                                 detectTapGestures(
                                         onLongPress = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                                context.audioFeedback(SoundEffect.Click)
+                                                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                                                 (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)?.showInputMethodPicker()
                                         },
                                         onPress = {
                                                 isPressing = true
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                context.audioFeedback(SoundEffect.Click)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
                                                 tryAwaitRelease()
                                                 isPressing = false

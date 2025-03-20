@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
 import android.content.ClipboardManager
 import android.content.res.Configuration
+import android.media.AudioManager
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -39,6 +40,7 @@ import org.jyutping.jyutping.extensions.generateSymbol
 import org.jyutping.jyutping.extensions.isReverseLookupTrigger
 import org.jyutping.jyutping.extensions.isSeparatorOrTone
 import org.jyutping.jyutping.extensions.toneConverted
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.Cangjie
 import org.jyutping.jyutping.keyboard.CangjieVariant
@@ -902,6 +904,15 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         currentInputConnection.setSelection(it, it)
                 }
                 */
+        }
+        //endregion
+
+        //region Keyboard Feedback
+        private val audioManager by lazy { getSystemService(AUDIO_SERVICE) as AudioManager }
+        fun audioFeedback(effect: SoundEffect) {
+                if (isAudioFeedbackOn.value) {
+                        audioManager.playSoundEffect(effect.soundId)
+                }
         }
         //endregion
 }

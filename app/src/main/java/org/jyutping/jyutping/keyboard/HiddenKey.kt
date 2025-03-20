@@ -1,7 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -15,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.feedback.SoundEffect
 
 @Composable
 fun HiddenKey(event: HiddenKeyEvent, modifier: Modifier) {
@@ -25,7 +25,7 @@ fun HiddenKey(event: HiddenKeyEvent, modifier: Modifier) {
         Box(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
-                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                context.audioFeedback(SoundEffect.Click)
                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                 val letter = event.letter()
                                 if (letter == null) {

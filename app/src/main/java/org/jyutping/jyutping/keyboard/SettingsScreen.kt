@@ -2,7 +2,6 @@ package org.jyutping.jyutping.keyboard
 
 import android.os.Build
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -60,6 +59,7 @@ import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.CharacterStandard
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
@@ -133,6 +133,12 @@ fun SettingsScreen(height: Dp) {
                 ) {
                         IconButton(
                                 onClick = {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                                context.audioFeedback(SoundEffect.Back)
+                                        } else {
+                                                context.audioFeedback(SoundEffect.Click)
+                                        }
+                                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         context.transformTo(KeyboardForm.Alphabetic)
                                 }
                         ) {
@@ -179,7 +185,7 @@ fun SettingsScreen(height: Dp) {
                                         ) {
                                                 Button(
                                                         onClick = {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCharacterStandard(CharacterStandard.Traditional)
                                                         },
@@ -202,7 +208,7 @@ fun SettingsScreen(height: Dp) {
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCharacterStandard(CharacterStandard.HongKong)
                                                         },
@@ -225,7 +231,7 @@ fun SettingsScreen(height: Dp) {
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCharacterStandard(CharacterStandard.Taiwan)
                                                         },
@@ -248,7 +254,7 @@ fun SettingsScreen(height: Dp) {
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCharacterStandard(CharacterStandard.Simplified)
                                                         },
@@ -522,7 +528,7 @@ fun SettingsScreen(height: Dp) {
                                         ) {
                                                 Button(
                                                         onClick = {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCommentStyle(CommentStyle.AboveCandidates)
                                                         },
@@ -545,7 +551,7 @@ fun SettingsScreen(height: Dp) {
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCommentStyle(CommentStyle.BelowCandidates)
                                                         },
@@ -568,7 +574,7 @@ fun SettingsScreen(height: Dp) {
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCommentStyle(CommentStyle.NoComments)
                                                         },
@@ -608,7 +614,7 @@ fun SettingsScreen(height: Dp) {
                                         ) {
                                                 Button(
                                                         onClick = {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCangjieVariant(CangjieVariant.Cangjie5)
                                                         },
@@ -631,7 +637,7 @@ fun SettingsScreen(height: Dp) {
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCangjieVariant(CangjieVariant.Cangjie3)
                                                         },
@@ -654,7 +660,7 @@ fun SettingsScreen(height: Dp) {
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCangjieVariant(CangjieVariant.Quick5)
                                                         },
@@ -677,7 +683,7 @@ fun SettingsScreen(height: Dp) {
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                 Button(
                                                         onClick = {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCangjieVariant(CangjieVariant.Quick3)
                                                         },
@@ -752,7 +758,7 @@ fun SettingsScreen(height: Dp) {
                                         ) {
                                                 TextButton(
                                                         onClick = {
-                                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                context.audioFeedback(SoundEffect.Delete)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 isTryingToClearInputMemory = true
                                                         },
@@ -774,7 +780,7 @@ fun SettingsScreen(height: Dp) {
                                                 if (isTryingToClearInputMemory) {
                                                         TextButton(
                                                                 onClick = {
-                                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                        context.audioFeedback(SoundEffect.Delete)
                                                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                                                                                 view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
                                                                         } else {
@@ -796,7 +802,7 @@ fun SettingsScreen(height: Dp) {
                                                         }
                                                         TextButton(
                                                                 onClick = {
-                                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                                        context.audioFeedback(SoundEffect.Click)
                                                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                         coroutineScope.launch {
                                                                                 delay(300L) // 0.3s

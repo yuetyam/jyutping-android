@@ -1,7 +1,7 @@
 package org.jyutping.jyutping.editingpanel
 
+import android.os.Build
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
@@ -46,8 +47,12 @@ fun EditingPanelReturnKey(modifier: Modifier) {
         Column(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
-                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                context.audioFeedback(SoundEffect.Return)
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                        view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+                                } else {
+                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                }
                                 context.performReturn()
                         }
                         .padding(4.dp)

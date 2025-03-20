@@ -1,7 +1,7 @@
 package org.jyutping.jyutping.tenkey
 
+import android.os.Build
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
@@ -48,8 +49,12 @@ fun TenKeyReturnKey(modifier: Modifier) {
                                 detectTapGestures(
                                         onPress = {
                                                 isPressing = true
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
-                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                                context.audioFeedback(SoundEffect.Return)
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                                        view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+                                                } else {
+                                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                                }
                                                 tryAwaitRelease()
                                                 isPressing = false
                                         },

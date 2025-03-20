@@ -1,7 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,31 +15,36 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.PresetString
 
+// For CandidateScrollBar
 @Composable
 fun CandidateView(candidateState: Int, candidate: Candidate, commentStyle: CommentStyle, isDarkMode: Boolean, selection: () -> Unit, deletion: () -> Unit) {
         val isCantonese: Boolean = candidate.type.isCantonese()
         val textColor: Color = if (isDarkMode) Color.White else Color.Black
         val view = LocalView.current
+        val context = LocalContext.current as JyutpingInputMethodService
         Box(
                 modifier = Modifier
                         .pointerInput(Unit) {
                                 detectTapGestures(
                                         onLongPress = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                context.audioFeedback(SoundEffect.Delete)
                                                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                                                 deletion()
                                                 if (candidateState < 0) { // Would not be true
-                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                        context.audioFeedback(SoundEffect.Click)
                                                 }
                                         },
                                         onPress = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                context.audioFeedback(SoundEffect.Click)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
                                         },
                                         onTap = { selection() }
@@ -81,25 +85,27 @@ fun CandidateView(candidateState: Int, candidate: Candidate, commentStyle: Comme
         }
 }
 
+// For CandidateBoard
 @Composable
 fun AltCandidateView(modifier: Modifier, candidateState: Int, candidate: Candidate, commentStyle: CommentStyle, isDarkMode: Boolean, selection: () -> Unit, deletion: () -> Unit) {
         val isCantonese: Boolean = candidate.type.isCantonese()
         val textColor: Color = if (isDarkMode) Color.White else Color.Black
         val view = LocalView.current
+        val context = LocalContext.current as JyutpingInputMethodService
         Column(
                 modifier = modifier
                         .pointerInput(Unit) {
                                 detectTapGestures(
                                         onLongPress = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                context.audioFeedback(SoundEffect.Delete)
                                                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                                                 deletion()
                                                 if (candidateState < 0) { // Would not be true
-                                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                        context.audioFeedback(SoundEffect.Click)
                                                 }
                                         },
                                         onPress = {
-                                                view.playSoundEffect(SoundEffectConstants.CLICK)
+                                                context.audioFeedback(SoundEffect.Click)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_PRESS)
                                         },
                                         onTap = { selection() }

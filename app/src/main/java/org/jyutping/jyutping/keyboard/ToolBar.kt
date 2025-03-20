@@ -1,7 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
 import android.view.HapticFeedbackConstants
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +26,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.feedback.SoundEffect
 
 @Composable
 fun ToolBar() {
@@ -46,7 +46,7 @@ fun ToolBar() {
         ) {
                 IconButton(
                         onClick = {
-                                view.playSoundEffect(SoundEffectConstants.NAVIGATION_DOWN)
+                                context.audioFeedback(SoundEffect.Click)
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                 context.transformTo(KeyboardForm.Settings)
                         },
@@ -63,7 +63,7 @@ fun ToolBar() {
                 }
                 IconButton(
                         onClick = {
-                                view.playSoundEffect(SoundEffectConstants.NAVIGATION_DOWN)
+                                context.audioFeedback(SoundEffect.Click)
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                 context.transformTo(KeyboardForm.EmojiBoard)
                         },
@@ -81,7 +81,7 @@ fun ToolBar() {
                 Box (
                         modifier = Modifier
                                 .clickable(interactionSource = interactionSource, indication = null) {
-                                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                                        context.audioFeedback(SoundEffect.Click)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         context.toggleInputMethodMode()
                                 }
@@ -93,7 +93,7 @@ fun ToolBar() {
                 }
                 IconButton(
                         onClick = {
-                                view.playSoundEffect(SoundEffectConstants.NAVIGATION_DOWN)
+                                context.audioFeedback(SoundEffect.Click)
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                 context.transformTo(KeyboardForm.EditingPanel)
                         },
@@ -110,7 +110,7 @@ fun ToolBar() {
                 }
                 IconButton(
                         onClick = {
-                                view.playSoundEffect(SoundEffectConstants.NAVIGATION_DOWN)
+                                context.audioFeedback(SoundEffect.Click)
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                 context.dismissKeyboard()
                         },
