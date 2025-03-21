@@ -144,8 +144,16 @@ fun CandidateBoard(height: Dp) {
                                                         candidate = it,
                                                         commentStyle = commentStyle,
                                                         isDarkMode = isDarkMode,
-                                                        selection = { context.selectCandidate(it) },
-                                                        deletion = { context.forgetCandidate(it) }
+                                                        selection = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.selectCandidate(it)
+                                                        },
+                                                        deletion = {
+                                                                context.audioFeedback(SoundEffect.Delete)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                                                                context.forgetCandidate(it)
+                                                        }
                                                 )
                                         }
                                         if (row.identifier == minRowIdentifier) {

@@ -64,8 +64,16 @@ fun CandidateScrollBar() {
                                         candidate = candidate,
                                         commentStyle = commentStyle,
                                         isDarkMode = isDarkMode,
-                                        selection = { context.selectCandidate(index = index) },
-                                        deletion = { context.forgetCandidate(index = index) }
+                                        selection = {
+                                                context.audioFeedback(SoundEffect.Click)
+                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                context.selectCandidate(index = index)
+                                        },
+                                        deletion = {
+                                                context.audioFeedback(SoundEffect.Delete)
+                                                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                                                context.forgetCandidate(index = index)
+                                        }
                                 )
                         }
                 }
