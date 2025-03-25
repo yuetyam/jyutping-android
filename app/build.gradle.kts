@@ -31,21 +31,16 @@ android {
                 }
         }
         compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_17
-                targetCompatibility = JavaVersion.VERSION_17
+                sourceCompatibility = JavaVersion.VERSION_21
+                targetCompatibility = JavaVersion.VERSION_21
         }
         kotlinOptions {
-                jvmTarget = JavaVersion.VERSION_17.toString()
+                jvmTarget = JavaVersion.VERSION_21.toString()
         }
         buildFeatures {
                 compose = true
                 buildConfig = true
         }
-        /*
-        composeOptions {
-                kotlinCompilerExtensionVersion = "1.5.14"
-        }
-        */
         packaging {
                 resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }

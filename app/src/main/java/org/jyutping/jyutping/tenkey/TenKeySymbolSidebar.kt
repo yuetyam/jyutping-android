@@ -51,7 +51,7 @@ fun TenKeySymbolSidebar(unitHeight: Dp, modifier: Modifier) {
         LaunchedEffect(pressingState) {
                 state.animateScrollToItem(index = 0, scrollOffset = 0)
         }
-        val symbols: List<String> = listOf("+", "-", "*", "/", "%", "=", ":", "@", "#", "~", "≈")
+        val symbols: List<String> = listOf("+", "-", "*", "/", "=", "%", ":", "@", "#", ",", "~", "≈")
         LazyColumn(
                 modifier = modifier
                         .padding(3.dp)
