@@ -645,7 +645,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val userLexiconSuggestions: List<Candidate> = if (isInputMemoryOn.value) userDB.suggest(text = processingText, segmentation = segmentation) else emptyList()
                                         val needsSymbols: Boolean = isEmojiSuggestionsOn.value && selectedCandidates.isEmpty()
                                         val asap: Boolean = userLexiconSuggestions.isNotEmpty()
-                                        val suggestions = Engine.suggest(text = processingText, segmentation = segmentation, db = db, needsSymbols = needsSymbols, asap = asap)
+                                        val suggestions = Engine.suggest(origin = value, text = processingText, segmentation = segmentation, db = db, needsSymbols = needsSymbols, asap = asap)
                                         val mark: String = userLexiconSuggestions.firstOrNull()?.mark
                                                 ?: if (processingText.any { it.isSeparatorOrTone() }) {
                                                         processingText.formattedForMark()

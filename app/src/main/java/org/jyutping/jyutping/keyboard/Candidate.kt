@@ -42,7 +42,6 @@ data class Candidate(
         }
         override fun compareTo(other: Candidate): Int {
                 return this.input.length.compareTo(other.input.length).unaryMinus()
-                        .takeIf { it != 0 } ?: this.text.length.compareTo(other.text.length)
                         .takeIf { it != 0 } ?: this.order.compareTo(other.order)
         }
 }

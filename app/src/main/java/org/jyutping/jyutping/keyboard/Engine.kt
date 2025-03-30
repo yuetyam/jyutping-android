@@ -7,7 +7,7 @@ import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 
 object Engine {
-        fun suggest(text: String, segmentation: Segmentation, db: DatabaseHelper, needsSymbols: Boolean, asap: Boolean): List<Candidate> {
+        fun suggest(origin: String, text: String, segmentation: Segmentation, db: DatabaseHelper, needsSymbols: Boolean, asap: Boolean): List<Candidate> {
                 return when (text.length) {
                         0 -> emptyList()
                         1 -> when (text) {
@@ -16,7 +16,8 @@ object Engine {
                                 else -> db.shortcutMatch(text = text, limit = 100)
                         }
                         else -> {
-                                if (asap) {
+                                val textMarkCandidates = db.fetchTextMarks(origin)
+                                textMarkCandidates + if (asap) {
                                         if (segmentation.maxSchemeLength() > 0) {
                                                 val candidates = query(text = text, segmentation = segmentation, db = db, needsSymbols = needsSymbols)
                                                 if (candidates.isEmpty()) processVerbatim(text = text, db = db) else candidates
@@ -61,17 +62,17 @@ object Engine {
                         when {
                                 textToneCount == 1 && continuousToneCount == 1 -> {
                                         if (textTones != continuousTones) continue
-                                        val isCorrectPosition: Boolean = text.drop(item.input.length).firstOrNull()?.isDigit() ?: false
+                                        val isCorrectPosition: Boolean = text.drop(item.input.length).firstOrNull()?.isDigit() == true
                                         if (!isCorrectPosition) continue
                                         val combinedInput = item.input + textTones
                                         val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
                                         qualified.add(newItem)
                                 }
                                 textToneCount == 1 && continuousToneCount == 2 -> {
-                                        val isToneLast: Boolean = text.lastOrNull()?.isDigit() ?: false
+                                        val isToneLast: Boolean = text.lastOrNull()?.isDigit() == true
                                         if (isToneLast) {
                                                 if (!(continuousTones.endsWith(textTones))) continue
-                                                val isCorrectPosition: Boolean = text.drop(item.input.length).firstOrNull()?.isDigit() ?: false
+                                                val isCorrectPosition: Boolean = text.drop(item.input.length).firstOrNull()?.isDigit() == true
                                                 if (!isCorrectPosition) continue
                                                 val newItem = Candidate(text = item.text, romanization = item.romanization, input = text)
                                                 qualified.add(newItem)
@@ -83,7 +84,7 @@ object Engine {
                                 }
                                 textToneCount == 2 && continuousToneCount == 1 -> {
                                         if (!(textTones.startsWith(continuousTones))) continue
-                                        val isCorrectPosition: Boolean = text.drop(item.input.length).firstOrNull()?.isDigit() ?: false
+                                        val isCorrectPosition: Boolean = text.drop(item.input.length).firstOrNull()?.isDigit() == true
                                         if (!isCorrectPosition) continue
                                         val combinedInput = item.input + continuousTones
                                         val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
@@ -91,7 +92,7 @@ object Engine {
                                 }
                                 textToneCount == 2 && continuousToneCount == 2 -> {
                                         if (textTones != continuousTones) continue
-                                        val isLastTone: Boolean = text.lastOrNull()?.isDigit() ?: false
+                                        val isLastTone: Boolean = text.lastOrNull()?.isDigit() == true
                                         if (isLastTone) {
                                                 if (item.input.length != (text.length - 2)) continue
                                                 val newItem = Candidate(text = item.text, romanization = item.romanization, input = text, mark = text)
@@ -123,8 +124,8 @@ object Engine {
         private fun processWithSeparators(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
                 val separatorCount = text.count { it.isSeparatorChar() }
                 val textParts = text.split(PresetCharacter.SEPARATOR).filter { it.isNotEmpty() }
-                val isHeadingSeparator: Boolean = text.firstOrNull()?.isSeparatorChar() ?: false
-                val isTrailingSeparator: Boolean = text.lastOrNull()?.isSeparatorChar() ?: false
+                val isHeadingSeparator: Boolean = text.firstOrNull()?.isSeparatorChar() == true
+                val isTrailingSeparator: Boolean = text.lastOrNull()?.isSeparatorChar() == true
                 val rawText = text.filter { !(it.isSeparatorChar()) }
                 val candidates = query(text = rawText, segmentation = segmentation, db = db, needsSymbols = false)
                 val qualified: MutableList<Candidate> = mutableListOf()
@@ -281,9 +282,9 @@ object Engine {
                         val tailText = text.drop(headInputLength)
                         if (db.canProcess(tailText).not()) continue
                         val tailSegmentation = Segmentor.segment(tailText, db)
-                        val tailCandidate = process(text = tailText, segmentation = tailSegmentation, db = db, needsSymbols = false, limit = 50).sorted().firstOrNull()
+                        val tailCandidate = process(text = tailText, segmentation = tailSegmentation, db = db, needsSymbols = false, limit = 50).minOrNull()
                         if (tailCandidate == null) continue
-                        val headCandidate = primary.takeWhile { it.input == headText }.sorted().firstOrNull()
+                        val headCandidate = primary.takeWhile { it.input == headText }.minOrNull()
                         if (headCandidate == null) continue
                         val conjoined = headCandidate + tailCandidate
                         concatenated.add(conjoined)
@@ -296,20 +297,19 @@ object Engine {
                 val fullMatch = db.pingMatch(text = text, input = text, limit = limit)
                 val fullShortcut = db.shortcutMatch(text, limit)
                 val searches = search(text, segmentation, db, limit)
-                val preferredSearches = searches.filter { it.input.length == textLength }
-                val fallback by lazy { (fullMatch + preferredSearches + fullShortcut + searches).distinct() }
-                val shouldNotContinue: Boolean = (!needsSymbols) || (limit != null) || (fullMatch.isEmpty() && preferredSearches.isEmpty())
-                if (shouldNotContinue) return fallback
+                val queried = ordered(textLength, (fullMatch + fullShortcut + searches))
+                val shouldNotContinue: Boolean = !needsSymbols || (limit != null) || queried.isEmpty()
+                if (shouldNotContinue) return queried
                 val symbols: List<Candidate> = searchSymbols(text = text, segmentation = segmentation, db = db)
-                if (symbols.isEmpty()) return fallback
-                val regular: MutableList<Candidate> = (fullMatch + preferredSearches).toMutableList()
+                if (symbols.isEmpty()) return queried
+                val combined = queried.toMutableList()
                 for (symbol in symbols.reversed()) {
-                        val index = regular.indexOfFirst { it.lexiconText == symbol.lexiconText && it.romanization == symbol.romanization }
+                        val index = combined.indexOfFirst { it.lexiconText == symbol.lexiconText && it.romanization == symbol.romanization }
                         if (index != -1) {
-                                regular.add(index = index + 1, element = symbol)
+                                combined.add(index = index + 1, element = symbol)
                         }
                 }
-                return (regular + fullShortcut + searches).distinct()
+                return combined
         }
         private fun search(text: String, segmentation: Segmentation, db: DatabaseHelper, limit: Int? = null): List<Candidate> {
                 val textLength = text.length
@@ -321,50 +321,35 @@ object Engine {
                                         val slice = scheme.dropLast(number)
                                         val shortcutCode = slice.mapNotNull { it.text.firstOrNull() }.shortcutCode()
                                         if (shortcutCode == null) continue
-                                        val pingCode = slice.map { it.origin }.joinToString(separator = PresetString.EMPTY).hashCode()
+                                        val pingCode = slice.joinToString(separator = PresetString.EMPTY) { it.origin }.hashCode()
                                         val input = slice.joinToString(separator = PresetString.EMPTY) { it.text }
                                         val mark = slice.joinToString(separator = PresetString.SPACE) { it.text }
                                         val matched = db.strictMatch(shortcut = shortcutCode, ping = pingCode, input = input, mark = mark, limit = limit)
                                         matches.add(matched)
                                 }
                         }
-                        return ordered(textLength, matches.flatten())
+                        return matches.flatten()
                 } else {
                         val matches: MutableList<List<Candidate>> = mutableListOf()
                         for (scheme in segmentation) {
                                 val shortcutCode = scheme.mapNotNull { it.text.firstOrNull() }.shortcutCode()
                                 if (shortcutCode == null) continue
-                                val pingCode = scheme.map { it.origin }.joinToString(separator = PresetString.EMPTY).hashCode()
+                                val pingCode = scheme.joinToString(separator = PresetString.EMPTY) { it.origin }.hashCode()
                                 val input = scheme.joinToString(separator = PresetString.EMPTY) { it.text }
                                 val mark = scheme.joinToString(separator = PresetString.SPACE) { it.text }
                                 val matched = db.strictMatch(shortcut = shortcutCode, ping = pingCode, input = input, mark = mark, limit = limit)
                                 matches.add(matched)
                         }
-                        return ordered(textLength, matches.flatten())
+                        return matches.flatten()
                 }
         }
         private fun ordered(textLength: Int, candidates: List<Candidate>): List<Candidate> {
-                val perfectCandidates = candidates.filter { it.input.length == textLength }.sortedBy { it.order }
-                // val imperfectCandidates = candidates.filter { it.input.length != textLength }.sortedBy { -(it.input.length) }
-                val leadingCandidates = candidates.filter { it.order <= 40000 && it.input.length != textLength }.sortedBy { -(it.input.length) }
-                val trailingCandidates = candidates.filter { it.order > 40000 && it.input.length != textLength }.sortedBy { -(it.input.length) }
-                return perfectCandidates + leadingCandidates + trailingCandidates
-                // TODO: Candidate sorting
-                /*
-                val comparator = Comparator<Candidate> { lhs, rhs ->
-                        val lhsInputLength = lhs.input.length
-                        val rhsInputLength = rhs.input.length
-                        val lhsOrder = lhs.order
-                        val rhsOrder = max(0, rhs.order - 5000)
-                        val shouldCompareOrder = lhsInputLength != textLength && rhsInputLength != textLength && (lhsOrder < rhsOrder)
-                        if (shouldCompareOrder) {
-                                return@Comparator lhsOrder.compareTo(rhsOrder)
-                        } else {
-                                return@Comparator rhsInputLength.compareTo(lhsInputLength)
-                        }
-                }
-                return candidates.sortedWith(comparator)
-                */
+                val matched = candidates.filter { it.input.length == textLength }.sortedBy { it.order }.distinct()
+                val others = candidates.filter { it.input.length != textLength }.distinct().sorted()
+                val primary = matched.take(15)
+                val secondary = others.take(10)
+                val tertiary = others.sortedBy { it.order }.take(5)
+                return (primary + secondary + tertiary + matched + others).distinct()
         }
         private fun searchSymbols(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
                 val regular = db.symbolMatch(text = text, input = text)

@@ -367,12 +367,12 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
 
         fun t2s(char: Char): String {
                 val code = char.code
-                val query = "SELECT simplified FROM t2stable WHERE traditional = ${code};"
+                val query = "SELECT simplified FROM t2stable WHERE traditional = $code LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(query, null)
                 if (cursor.moveToFirst()) {
-                        val simplified = cursor.getString(0)
+                        val simplifiedCode = cursor.getInt(0)
                         cursor.close()
-                        return simplified
+                        return buildString { appendCodePoint(simplifiedCode) }
                 } else {
                         return char.toString()
                 }
@@ -381,7 +381,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun canProcess(text: String): Boolean {
                 val value: Int = text.firstOrNull()?.intercode() ?: return false
                 val code: Int = if (value == 44) 29 else value // Replace 'y' with 'j'
-                val command = "SELECT rowid FROM lexicontable WHERE shortcut = $code LIMIT 1;"
+                val command = "SELECT rowid FROM lexicontable WHERE anchors = $code LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 if (cursor.moveToFirst()) {
                         cursor.close()
@@ -394,7 +394,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 val code = text.shortcutCharcode() ?: return emptyList()
                 val limitValue: Int = limit ?: 50
                 val candidates: MutableList<Candidate> = mutableListOf()
-                val command = "SELECT rowid, word, romanization FROM lexicontable WHERE shortcut = $code LIMIT ${limitValue};"
+                val command = "SELECT rowid, word, romanization FROM lexicontable WHERE anchors = $code LIMIT ${limitValue};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val order = cursor.getInt(0)
@@ -427,7 +427,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun strictMatch(shortcut: Long, ping: Int, input: String, mark: String? = null, limit: Int? = null): List<Candidate> {
                 val candidates: MutableList<Candidate> = mutableListOf()
                 val limitValue: Int = limit ?: -1
-                val command = "SELECT rowid, word, romanization FROM lexicontable WHERE ping = $ping AND shortcut = $shortcut LIMIT ${limitValue};"
+                val command = "SELECT rowid, word, romanization FROM lexicontable WHERE ping = $ping AND anchors = $shortcut LIMIT ${limitValue};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val order = cursor.getInt(0)
@@ -694,5 +694,18 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
                 cursor.close()
                 return emojis.distinct()
+        }
+
+        fun fetchTextMarks(input: String): List<Candidate> {
+                val code = input.hashCode()
+                val command = "SELECT mark FROM marktable WHERE ping = ${code};"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                val textMarks: MutableList<String> = mutableListOf()
+                while (cursor.moveToNext()) {
+                        val textMark = cursor.getString(0)
+                        textMarks.add(textMark)
+                }
+                cursor.close()
+                return textMarks.map { Candidate(type = CandidateType.Text, text = it, input = input, romanization = input) }
         }
 }

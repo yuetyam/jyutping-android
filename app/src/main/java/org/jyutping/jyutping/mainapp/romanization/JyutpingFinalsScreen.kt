@@ -145,6 +145,14 @@ fun JyutpingFinalsScreen() {
                                 FinalLabel(word = "雪", syllable = "syut3", jyutping = "yut", ipa = "[ yːt̚ ]")
                         }
                 }
+                item {
+                        Column(
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                        ) {
+                                FinalLabel(word = "唔", syllable = "m4", jyutping = "m", ipa = "[ m̩ ]")
+                                FinalLabel(word = "吳", syllable = "ng4", jyutping = "ng", ipa = "[ ŋ̩ ]")
+                        }
+                }
         }
 }
 
