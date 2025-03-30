@@ -38,8 +38,8 @@ fun ExpressionsScreen() {
                                 heading = "第一人稱代詞",
                                 labels = listOf(
                                         LabelEntry(type = LabelType.CHECKED, text = "單數：我"),
-                                        LabelEntry(type = LabelType.CHECKED, text = "複數：我哋（我等）"),
-                                        LabelEntry(type = LabelType.WARNING, text = "毋用「咱、咱們」")
+                                        LabelEntry(type = LabelType.CHECKED, text = "複數：我哋"),
+                                        LabelEntry(type = LabelType.MISTAKE, text = "咱、咱們")
                                 )
                         )
                 }
@@ -48,9 +48,9 @@ fun ExpressionsScreen() {
                                 heading = "第二人稱代詞",
                                 labels = listOf(
                                         LabelEntry(type = LabelType.CHECKED, text = "單數：你"),
-                                        LabelEntry(type = LabelType.CHECKED, text = "複數：你哋（你等）"),
-                                        LabelEntry(type = LabelType.WARNING, text = "毋用「您」。「您」係北京方言用字，好少見於其他漢語。如果要用敬詞，粵語一般用「閣下」。"),
-                                        LabelEntry(type = LabelType.WARNING, text = "毋推薦用「妳」，冇必要畫蛇添足。")
+                                        LabelEntry(type = LabelType.CHECKED, text = "複數：你哋"),
+                                        LabelEntry(type = LabelType.WARNING, text = "「您」係北京方言用字，好少見於其他漢語。如果要用敬詞，粵語一般用「閣下」。"),
+                                        LabelEntry(type = LabelType.WARNING, text = "冇必要畫蛇添足用「妳」。")
                                 )
                         )
                 }
@@ -59,8 +59,8 @@ fun ExpressionsScreen() {
                                 heading = "第三人稱代詞",
                                 labels = listOf(
                                         LabelEntry(type = LabelType.CHECKED, text = "單數：佢"),
-                                        LabelEntry(type = LabelType.CHECKED, text = "複數：佢哋（佢等）"),
-                                        LabelEntry(type = LabelType.INFO, text = "毋分性別、人、物，一律用佢。"),
+                                        LabelEntry(type = LabelType.CHECKED, text = "複數：佢哋"),
+                                        LabelEntry(type = LabelType.INFO, text = "無論性別、人、物，一律用佢。"),
                                         LabelEntry(type = LabelType.INFO, text = "佢 亦作 渠、𠍲{⿰亻渠}")
                                 )
                         )
@@ -100,6 +100,17 @@ fun ExpressionsScreen() {
                 }
                 item {
                         DifferentView(
+                                heading = "區分【會】以及【識】",
+                                lines = listOf(
+                                        "會：（接下來）將會；（接下來）將要",
+                                        "識：識得；曉得；懂得；明白",
+                                        "例：我會煮飯。（我將要煮飯）",
+                                        "例：我識煮飯。（我懂得如何煮飯）"
+                                )
+                        )
+                }
+                item {
+                        DifferentView(
                                 heading = "推薦【嘅／個得噉】，避免【的得地】",
                                 lines = listOf(
                                         "例：我嘅細佬／我個細佬。",
@@ -113,9 +124,9 @@ fun ExpressionsScreen() {
                                 heading = "推薦【啩、啊嘛】，避免【吧】",
                                 labels = listOf(
                                         LabelEntry(type = LabelType.CHECKED, text = "下個禮拜會出啩。"),
-                                        LabelEntry(type = LabelType.CHECKED, text = "毋係啊嘛，真係冇？"),
+                                        LabelEntry(type = LabelType.CHECKED, text = "唔係啊嘛，真係冇？"),
                                         LabelEntry(type = LabelType.MISTAKE, text = "下個禮拜會出吧。"),
-                                        LabelEntry(type = LabelType.MISTAKE, text = "毋係吧，真係冇？")
+                                        LabelEntry(type = LabelType.MISTAKE, text = "唔係吧，真係冇？")
                                 )
                         )
                 }
@@ -123,10 +134,10 @@ fun ExpressionsScreen() {
                         Expression(
                                 heading = "推薦【啦、嘞】，避免【了】",
                                 labels = listOf(
-                                        LabelEntry(type = LabelType.CHECKED, text = "各位，我毋客氣啦。"),
-                                        LabelEntry(type = LabelType.CHECKED, text = "係嘞，你試過箇間餐廳未啊？"),
-                                        LabelEntry(type = LabelType.MISTAKE, text = "各位，我毋客氣了。"),
-                                        LabelEntry(type = LabelType.MISTAKE, text = "係了，你試過箇間餐廳未啊？")
+                                        LabelEntry(type = LabelType.CHECKED, text = "我識用粵拼打字啦！"),
+                                        LabelEntry(type = LabelType.CHECKED, text = "係嘞，你試過招牌菜未啊？"),
+                                        LabelEntry(type = LabelType.MISTAKE, text = "我識用粵拼打字了！"),
+                                        LabelEntry(type = LabelType.MISTAKE, text = "係了，你試過招牌菜未啊？")
                                 )
                         )
                 }
@@ -134,9 +145,9 @@ fun ExpressionsScreen() {
                         Expression(
                                 heading = "推薦【使】，避免【駛、洗】",
                                 labels = listOf(
-                                        LabelEntry(type = LabelType.CHECKED, text = "毋使驚"),
-                                        LabelEntry(type = LabelType.MISTAKE, text = "毋駛驚"),
-                                        LabelEntry(type = LabelType.MISTAKE, text = "毋洗驚")
+                                        LabelEntry(type = LabelType.CHECKED, text = "唔使驚"),
+                                        LabelEntry(type = LabelType.MISTAKE, text = "唔駛驚"),
+                                        LabelEntry(type = LabelType.MISTAKE, text = "唔洗驚")
                                 )
                         )
                 }
