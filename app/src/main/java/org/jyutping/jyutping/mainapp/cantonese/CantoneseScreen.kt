@@ -63,7 +63,7 @@ fun CantoneseScreen(navController: NavHostController) {
                                 HorizontalDivider()
                                 WebLinkLabel(icon = Icons.Outlined.Link, text = "冚唪唥粵文", uri = "https://hambaanglaang.hk")
                                 HorizontalDivider()
-                                WebLinkLabel(icon = Icons.Outlined.Link, text = "迴響", uri = "https://resonate.hk")
+                                WebLinkLabel(icon = Icons.Outlined.Link, text = "迴響", uri = "https://www.resonatehk.com")
                         }
                 }
         }

@@ -1,7 +1,7 @@
 package org.jyutping.jyutping.keyboard
 
 import org.jyutping.jyutping.extensions.isSeparatorChar
-import org.jyutping.jyutping.extensions.shortcutCode
+import org.jyutping.jyutping.extensions.anchorsCode
 import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
@@ -319,7 +319,7 @@ object Engine {
                         for (scheme in perfectSchemes) {
                                 for (number in scheme.indices) {
                                         val slice = scheme.dropLast(number)
-                                        val shortcutCode = slice.mapNotNull { it.text.firstOrNull() }.shortcutCode()
+                                        val shortcutCode = slice.mapNotNull { it.text.firstOrNull() }.anchorsCode()
                                         if (shortcutCode == null) continue
                                         val pingCode = slice.joinToString(separator = PresetString.EMPTY) { it.origin }.hashCode()
                                         val input = slice.joinToString(separator = PresetString.EMPTY) { it.text }
@@ -332,7 +332,7 @@ object Engine {
                 } else {
                         val matches: MutableList<List<Candidate>> = mutableListOf()
                         for (scheme in segmentation) {
-                                val shortcutCode = scheme.mapNotNull { it.text.firstOrNull() }.shortcutCode()
+                                val shortcutCode = scheme.mapNotNull { it.text.firstOrNull() }.anchorsCode()
                                 if (shortcutCode == null) continue
                                 val pingCode = scheme.joinToString(separator = PresetString.EMPTY) { it.origin }.hashCode()
                                 val input = scheme.joinToString(separator = PresetString.EMPTY) { it.text }

@@ -10,7 +10,7 @@ import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.extensions.generateSymbol
 import org.jyutping.jyutping.extensions.intercode
 import org.jyutping.jyutping.extensions.isIdeographicChar
-import org.jyutping.jyutping.extensions.shortcutCharcode
+import org.jyutping.jyutping.extensions.anchorsCode
 import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.CandidateType
 import org.jyutping.jyutping.keyboard.SegmentToken
@@ -391,7 +391,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
         }
         fun shortcutMatch(text: String, limit: Int? = null): List<Candidate> {
-                val code = text.shortcutCharcode() ?: return emptyList()
+                val code = text.anchorsCode() ?: return emptyList()
                 val limitValue: Int = limit ?: 50
                 val candidates: MutableList<Candidate> = mutableListOf()
                 val command = "SELECT rowid, word, romanization FROM lexicontable WHERE anchors = $code LIMIT ${limitValue};"
@@ -456,7 +456,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun characterReverseLookup(text: String): List<String> {
                 if (text.length != 1) return emptyList()
                 val romanizations: MutableList<String> = mutableListOf()
-                val command = "SELECT romanization FROM lexicontable WHERE shortcut < 50 AND word = ?;"
+                val command = "SELECT romanization FROM lexicontable WHERE anchors < 50 AND word = ?;"
                 val cursor = this.readableDatabase.rawQuery(command, arrayOf(text))
                 while (cursor.moveToNext()) {
                         val romanization = cursor.getString(0)
@@ -477,19 +477,6 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 cursor.close()
                 return romanizations
         }
-        fun pinyinSyllableMatch(text: String): String? {
-                val code = text.charcode() ?: return null
-                val command = "SELECT syllable FROM pinyinsyllabletable WHERE code = $code LIMIT 1;"
-                val cursor = this.readableDatabase.rawQuery(command, null)
-                if (cursor.moveToFirst()) {
-                        val syllable = cursor.getString(0)
-                        cursor.close()
-                        return syllable
-                } else {
-                        cursor.close()
-                        return null
-                }
-        }
         fun structureMatch(text: String): List<Candidate> {
                 if (text.isBlank()) return emptyList()
                 val candidates: MutableList<Candidate> = mutableListOf()
@@ -504,6 +491,19 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
                 cursor.close()
                 return candidates
+        }
+        fun pinyinSyllableMatch(text: String): String? {
+                val code = text.charcode() ?: return null
+                val command = "SELECT syllable FROM pinyinsyllabletable WHERE code = $code LIMIT 1;"
+                val cursor = this.readableDatabase.rawQuery(command, null)
+                if (cursor.moveToFirst()) {
+                        val syllable = cursor.getString(0)
+                        cursor.close()
+                        return syllable
+                } else {
+                        cursor.close()
+                        return null
+                }
         }
         fun pinyinShortcut(text: String, limit: Int? = null): List<PinyinLexicon> {
                 val code = text.charcode() ?: return emptyList()
