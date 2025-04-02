@@ -550,7 +550,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 val suggestions = Pinyin.reverseLookup(text, segmentation, db)
                                                 val tailMark: String = run {
                                                         val firstCandidate = suggestions.firstOrNull()
-                                                        if (firstCandidate != null && firstCandidate.input.length == text.length) {
+                                                        if (firstCandidate != null && firstCandidate.inputCount == text.length) {
                                                                 firstCandidate.mark
                                                         } else {
                                                                 val bestScheme = segmentation.firstOrNull()
@@ -651,7 +651,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                         processingText.formattedForMark()
                                                 } else {
                                                         val firstCandidate = suggestions.firstOrNull()
-                                                        if (firstCandidate != null && firstCandidate.input.length == processingText.length) firstCandidate.mark else processingText
+                                                        if (firstCandidate != null && firstCandidate.inputCount == processingText.length) firstCandidate.mark else processingText
                                                 }
                                         currentInputConnection.setComposingText(mark, 1)
                                         candidates.value = (userLexiconSuggestions + suggestions).map { it.transformed(characterStandard.value, db) }.distinct()
@@ -691,8 +691,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 when {
                         (firstChar == null) -> {}
                         firstChar.isReverseLookupTrigger() -> {
-                                val inputLength = item.input.length
-                                val leadingLength = inputLength + 1
+                                val leadingLength = item.inputCount + 1
                                 if (bufferText.length > leadingLength) {
                                         val tail = bufferText.drop(leadingLength)
                                         bufferText = "${firstChar}${tail}"

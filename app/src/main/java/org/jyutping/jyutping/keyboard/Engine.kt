@@ -62,7 +62,7 @@ object Engine {
                         when {
                                 textToneCount == 1 && continuousToneCount == 1 -> {
                                         if (textTones != continuousTones) continue
-                                        val isCorrectPosition: Boolean = text.drop(item.input.length).firstOrNull()?.isDigit() == true
+                                        val isCorrectPosition: Boolean = text.drop(item.inputCount).firstOrNull()?.isDigit() == true
                                         if (!isCorrectPosition) continue
                                         val combinedInput = item.input + textTones
                                         val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
@@ -72,7 +72,7 @@ object Engine {
                                         val isToneLast: Boolean = text.lastOrNull()?.isDigit() == true
                                         if (isToneLast) {
                                                 if (!(continuousTones.endsWith(textTones))) continue
-                                                val isCorrectPosition: Boolean = text.drop(item.input.length).firstOrNull()?.isDigit() == true
+                                                val isCorrectPosition: Boolean = text.drop(item.inputCount).firstOrNull()?.isDigit() == true
                                                 if (!isCorrectPosition) continue
                                                 val newItem = Candidate(text = item.text, romanization = item.romanization, input = text)
                                                 qualified.add(newItem)
@@ -84,7 +84,7 @@ object Engine {
                                 }
                                 textToneCount == 2 && continuousToneCount == 1 -> {
                                         if (!(textTones.startsWith(continuousTones))) continue
-                                        val isCorrectPosition: Boolean = text.drop(item.input.length).firstOrNull()?.isDigit() == true
+                                        val isCorrectPosition: Boolean = text.drop(item.inputCount).firstOrNull()?.isDigit() == true
                                         if (!isCorrectPosition) continue
                                         val combinedInput = item.input + continuousTones
                                         val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
@@ -94,11 +94,11 @@ object Engine {
                                         if (textTones != continuousTones) continue
                                         val isLastTone: Boolean = text.lastOrNull()?.isDigit() == true
                                         if (isLastTone) {
-                                                if (item.input.length != (text.length - 2)) continue
+                                                if (item.inputCount != (text.length - 2)) continue
                                                 val newItem = Candidate(text = item.text, romanization = item.romanization, input = text, mark = text)
                                                 qualified.add(newItem)
                                         } else {
-                                                val tail = text.drop(item.input.length + 1)
+                                                val tail = text.drop(item.inputCount + 1)
                                                 val isCorrectPosition: Boolean = tail.firstOrNull() == textTones.lastOrNull()
                                                 if (!isCorrectPosition) continue
                                                 val combinedInput = item.input + textTones
@@ -140,7 +140,7 @@ object Engine {
                         when {
                                 separatorCount == 1 && isTrailingSeparator -> {
                                         if (syllables.size != 1) continue
-                                        val isLengthNotMatched: Boolean = item.input.length != (text.length - 1)
+                                        val isLengthNotMatched: Boolean = item.inputCount != (text.length - 1)
                                         if (isLengthNotMatched) continue
                                         val newItem = Candidate(text = item.text, romanization = item.romanization, input = text, mark = text)
                                         qualified.add(newItem)
@@ -171,7 +171,7 @@ object Engine {
                                                         qualified.add(newItem)
                                                 }
                                                 2 -> {
-                                                        val isLengthNotMatched: Boolean = item.input.length != (text.length - 2)
+                                                        val isLengthNotMatched: Boolean = item.inputCount != (text.length - 2)
                                                         if (isLengthNotMatched) continue
                                                         if (syllables.firstOrNull() != textParts.firstOrNull()) continue
                                                         val newItem = Candidate(text = item.text, romanization = item.romanization, input = text)
@@ -344,11 +344,11 @@ object Engine {
                 }
         }
         private fun ordered(textLength: Int, candidates: List<Candidate>): List<Candidate> {
-                val matched = candidates.filter { it.input.length == textLength }.sortedBy { it.order }.distinct()
-                val others = candidates.filter { it.input.length != textLength }.distinct().sorted()
+                val matched = candidates.filter { it.inputCount == textLength }.sortedBy { it.order }.distinct()
+                val others = candidates.filter { it.inputCount != textLength }.distinct().sorted()
                 val primary = matched.take(15)
                 val secondary = others.take(10)
-                val tertiary = others.sortedBy { it.order }.take(5)
+                val tertiary = others.sortedBy { it.order }.take(7)
                 return (primary + secondary + tertiary + matched + others).distinct()
         }
         private fun searchSymbols(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {

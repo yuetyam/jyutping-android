@@ -8,12 +8,29 @@ import org.jyutping.jyutping.utilities.Simplifier
 import org.jyutping.jyutping.utilities.TaiwanVariantConverter
 
 data class Candidate(
+
+        /** Candidate Type. */
         val type: CandidateType = CandidateType.Cantonese,
+
+        /** Candidate text for display. */
         val text: String,
+
+        /** Candidate text (the real one). */
         val lexiconText: String = text,
+
+        /** Jyutping. */
         val romanization: String,
+
+        /** User input. */
         val input: String,
+
+        /** Length of the input text. */
+        val inputCount: Int = input.length,
+
+        /** Formatted user input for pre-edit display. */
         val mark: String = input,
+
+        /** Rank. Smaller is preferred.. */
         val order: Int = 0
 ) : Comparable<Candidate>
 {
@@ -21,10 +38,10 @@ data class Candidate(
                 if (this === other) return true
                 if (other !is Candidate) return false
                 if (this.type != other.type) return false
-                if (this.type.isCantonese() && other.type.isCantonese()) {
-                        return (this.text == other.text) && (this.romanization == other.romanization)
+                return if (this.type.isCantonese() && other.type.isCantonese()) {
+                        (this.text == other.text) && (this.romanization == other.romanization)
                 } else {
-                        return this.text == other.text
+                        this.text == other.text
                 }
         }
         override fun hashCode(): Int = when (type) {
@@ -36,12 +53,12 @@ data class Candidate(
                 val newRomanization = this.romanization + PresetString.SPACE + another.romanization
                 val newInput = this.input + another.input
                 val newMark = this.mark + PresetString.SPACE + another.mark
-                val step: Int = 100_0000
+                val step = 100_0000
                 val newOrder = (this.order + step) + (another.order + step)
                 return Candidate(text = newText, romanization = newRomanization, input = newInput, mark = newMark, order = newOrder)
         }
         override fun compareTo(other: Candidate): Int {
-                return this.input.length.compareTo(other.input.length).unaryMinus()
+                return this.inputCount.compareTo(other.inputCount).unaryMinus()
                         .takeIf { it != 0 } ?: this.order.compareTo(other.order)
         }
 }

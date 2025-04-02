@@ -127,7 +127,7 @@ object Pinyin {
         private fun query(text: String, schemes: List<List<String>>, db: DatabaseHelper): List<PinyinLexicon> {
                 val textLength = text.length
                 val searches = search(text, schemes, db)
-                val preferredSearches = searches.filter { it.input.length == textLength }
+                val preferredSearches = searches.filter { it.inputCount == textLength }
                 val matched = db.pinyinMatch(text)
                 val shortcut = db.pinyinShortcut(text)
                 return (matched + preferredSearches + shortcut + searches).distinct()

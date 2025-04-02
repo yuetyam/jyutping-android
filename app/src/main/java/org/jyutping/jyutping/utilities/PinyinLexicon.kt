@@ -4,19 +4,22 @@ import org.jyutping.jyutping.presets.PresetString
 
 data class PinyinLexicon(
 
-        /// Cantonese Chinese word.
+        /** Cantonese Chinese word. */
         val text: String,
 
-        /// Pinyin romanization for word text.
+        /** Pinyin romanization for word text. */
         val pinyin: String,
 
-        /// User input.
+        /** User input. */
         val input: String,
 
-        /// Formatted user input for pre-edit display
+        /** Length of the input text. */
+        val inputCount: Int = input.length,
+
+        /** Formatted user input for pre-edit display.  */
         val mark: String,
 
-        /// Rank, smaller is preferred.
+        /** Rank, smaller is preferred. */
         val order: Int
 ) : Comparable<PinyinLexicon> {
         override fun equals(other: Any?): Boolean {
@@ -28,14 +31,15 @@ data class PinyinLexicon(
                 return text.hashCode() * 31 + input.hashCode()
         }
         override fun compareTo(other: PinyinLexicon): Int {
-                return this.input.length.compareTo(other.input.length).unaryMinus()
+                return this.inputCount.compareTo(other.inputCount).unaryMinus()
+                        .takeIf { it != 0 } ?: this.order.compareTo(other.order)
         }
         operator fun plus(another: PinyinLexicon): PinyinLexicon {
                 val newText: String = this.text + another.text
                 val newPinyin: String = this.pinyin + PresetString.SPACE + another.pinyin
                 val newInput: String = this.input + another.input
                 val newMark: String = this.mark + PresetString.SPACE + another.mark
-                val step: Int = 100_0000
+                val step = 100_0000
                 val newOrder: Int = (this.order * step) + (another.order * step)
                 return PinyinLexicon(text = newText, pinyin = newPinyin, input = newInput, mark = newMark, order = newOrder)
         }
