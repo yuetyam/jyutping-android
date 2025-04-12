@@ -509,7 +509,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 val code = text.charcode() ?: return emptyList()
                 val items: MutableList<PinyinLexicon> = mutableListOf()
                 val limitValue: Int = limit ?: 50
-                val command = "SELECT rowid, word, pinyin FROM pinyintable WHERE shortcut = $code LIMIT ${limitValue};"
+                val command = "SELECT rowid, word, romanization FROM pinyintable WHERE anchors = $code LIMIT ${limitValue};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
@@ -524,7 +524,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun pinyinMatch(text: String): List<PinyinLexicon> {
                 val items: MutableList<PinyinLexicon> = mutableListOf()
                 val code: Int = text.hashCode()
-                val command = "SELECT rowid, word, pinyin FROM pinyintable WHERE ping = ${code};"
+                val command = "SELECT rowid, word, romanization FROM pinyintable WHERE ping = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)

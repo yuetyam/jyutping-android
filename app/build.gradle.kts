@@ -12,8 +12,8 @@ android {
                 applicationId = "org.jyutping.jyutping"
                 minSdk = 29
                 targetSdk = 35
-                versionCode = 34
-                versionName = "0.34.0"
+                versionCode = 35
+                versionName = "0.35.0"
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 vectorDrawables.useSupportLibrary = true
         }
@@ -51,17 +51,17 @@ dependencies {
         implementation("androidx.activity:activity-compose:1.10.1")
         implementation("androidx.activity:activity-ktx:1.10.1")
         implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-        implementation("androidx.compose.material3:material3:1.3.1")
+        implementation("androidx.compose.material3:material3:1.3.2")
         implementation("androidx.compose.ui:ui:$composeVersion")
         implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-        implementation("androidx.core:core-ktx:1.15.0")
+        implementation("androidx.core:core-ktx:1.16.0")
         implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
         implementation("androidx.lifecycle:lifecycle-service:2.8.7")
         implementation("androidx.navigation:navigation-compose:2.8.9")
         implementation("com.louiscad.splitties:splitties-systemservices:3.0.0")
         implementation("com.louiscad.splitties:splitties-views:3.0.0")
-        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
-        testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.2")
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
+        testImplementation("org.junit.jupiter:junit-jupiter-api:5.12.1")
         androidTestImplementation("androidx.test.ext:junit:1.2.1")
         androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
         androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")

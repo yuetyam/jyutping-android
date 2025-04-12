@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">粵拼</string>
+    <string name="app_name">粤拼</string>
     <string name="screen_title_home">首䈎</string>
     <string name="screen_title_jyutping">粵拼</string>
     <string name="screen_title_cantonese">粵語</string>
