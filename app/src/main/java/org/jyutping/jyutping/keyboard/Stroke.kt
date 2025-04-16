@@ -11,9 +11,10 @@ object Stroke {
          * @return List of Candidate.
          */
         fun reverseLookup(text: String, db: DatabaseHelper): List<Candidate> {
-                val matched = db.strokeMatch(text)
-                val globed = db.strokeGlob(text).sortedWith(compareBy({it.complex}, {it.order}))
-                return (matched + globed)
+                val isWildcardSearch: Boolean = text.contains('x')
+                val keyText: String = if (isWildcardSearch) text.replace("x", "[wsadz]") else text
+                val matched = if (isWildcardSearch) db.strokeWildcardMatch(keyText) else db.strokeMatch(keyText)
+                return (matched + db.strokeGlob(keyText))
                         .distinct()
                         .map { lexicon ->
                                 db.reverseLookup(lexicon.text)

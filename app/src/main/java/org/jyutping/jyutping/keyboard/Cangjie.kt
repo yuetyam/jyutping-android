@@ -17,30 +17,24 @@ object Cangjie {
                 CangjieVariant.Quick5 -> quickReverseLookup(5, text, db)
                 CangjieVariant.Quick3 -> quickReverseLookup(3, text, db)
         }
-        private fun cangjieReverseLookup(version: Int, text: String, db: DatabaseHelper): List<Candidate> {
-                val matched = db.cangjieMatch(version, text)
-                val globed = db.cangjieGlob(version, text).sortedWith(compareBy({it.complex}, {it.order}))
-                return (matched + globed)
-                        .distinct()
-                        .map { lexicon ->
-                                db.characterReverseLookup(lexicon.text)
-                                        .map { romanization ->
-                                                Candidate(text = lexicon.text, romanization = romanization, input = lexicon.input, order = lexicon.order)
-                                        }
-                        }
-                        .flatten()
-        }
-        private fun quickReverseLookup(version: Int, text: String, db: DatabaseHelper): List<Candidate> {
-                val matched = db.quickMatch(version, text)
-                val globed = db.quickGlob(version, text).sortedWith(compareBy({it.complex}, {it.order}))
-                return (matched + globed)
-                        .distinct()
-                        .map { lexicon ->
-                                db.reverseLookup(lexicon.text)
-                                        .map { romanization ->
-                                                Candidate(text = lexicon.text, romanization = romanization, input = lexicon.input, order = lexicon.order)
-                                        }
-                        }
-                        .flatten()
-        }
+
+        private fun cangjieReverseLookup(version: Int, text: String, db: DatabaseHelper): List<Candidate> = (db.cangjieMatch(version, text) + db.cangjieGlob(version, text))
+                .distinct()
+                .map { lexicon ->
+                        db.characterReverseLookup(lexicon.text)
+                                .map { romanization ->
+                                        Candidate(text = lexicon.text, romanization = romanization, input = lexicon.input, order = lexicon.order)
+                                }
+                }
+                .flatten()
+
+        private fun quickReverseLookup(version: Int, text: String, db: DatabaseHelper): List<Candidate> = (db.quickMatch(version, text) + db.quickGlob(version, text))
+                .distinct()
+                .map { lexicon ->
+                        db.reverseLookup(lexicon.text)
+                                .map { romanization ->
+                                        Candidate(text = lexicon.text, romanization = romanization, input = lexicon.input, order = lexicon.order)
+                                }
+                }
+                .flatten()
 }

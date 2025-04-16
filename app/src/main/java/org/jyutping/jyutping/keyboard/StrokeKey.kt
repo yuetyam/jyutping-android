@@ -51,7 +51,7 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
         val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
         val shouldPreviewKey by context.previewKeyText.collectAsState()
         val displayKeyLetter: String = if (showLowercaseKeys && keyboardCase.isLowercased()) letter.lowercase() else letter.uppercase()
-        val keyStroke: Char? = ShapeKeyMap.strokeCode(letter)
+        val keyStroke: Char? = ShapeKeyMap.keyStroke(letter)
         val density = LocalDensity.current
         var baseSize by remember { mutableStateOf(Size.Zero) }
         var isPressing by remember { mutableStateOf(false) }
