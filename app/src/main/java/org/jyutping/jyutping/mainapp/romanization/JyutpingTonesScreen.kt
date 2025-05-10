@@ -38,11 +38,11 @@ fun JyutpingTonesScreen() {
                         ) {
                                 ToneLabel(word = "芬", syllable = "fan1", toneName = "陰入", toneValue = "55/53")
                                 ToneLabel(word = "粉", syllable = "fan2", toneName = "陰上", toneValue = "35")
-                                ToneLabel(word = "訓", syllable = "fan3", toneName = "陰去", toneValue = "33")
+                                ToneLabel(word = "糞", syllable = "fan3", toneName = "陰去", toneValue = "33")
                                 ToneLabel(word = "焚", syllable = "fan4", toneName = "陽平", toneValue = "21/11")
                                 ToneLabel(word = "憤", syllable = "fan5", toneName = "陽上", toneValue = "13/23")
                                 ToneLabel(word = "份", syllable = "fan6", toneName = "陽去", toneValue = "22")
-                                ToneLabel(word = "忽", syllable = "fat1", toneName = "高陰入", toneValue = "5")
+                                ToneLabel(word = "弗", syllable = "fat1", toneName = "高陰入", toneValue = "5")
                                 ToneLabel(word = "法", syllable = "faat3", toneName = "低陰入", toneValue = "3")
                                 ToneLabel(word = "佛", syllable = "fat6", toneName = "陽入", toneValue = "2")
                         }

@@ -7,11 +7,11 @@ plugins {
 
 android {
         namespace = "org.jyutping.jyutping"
-        compileSdk = 35
+        compileSdk = 36
         defaultConfig {
                 applicationId = "org.jyutping.jyutping"
                 minSdk = 29
-                targetSdk = 35
+                targetSdk = 36
                 versionCode = 35
                 versionName = "0.35.0"
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -46,18 +46,18 @@ android {
         }
 }
 
-val composeVersion = "1.7.8"
+val composeVersion = "1.8.1"
 dependencies {
         implementation("androidx.activity:activity-compose:1.10.1")
         implementation("androidx.activity:activity-ktx:1.10.1")
-        implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+        implementation("androidx.compose.material:material-icons-extended:1.7.8")
         implementation("androidx.compose.material3:material3:1.3.2")
         implementation("androidx.compose.ui:ui:$composeVersion")
         implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
         implementation("androidx.core:core-ktx:1.16.0")
-        implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
-        implementation("androidx.lifecycle:lifecycle-service:2.8.7")
-        implementation("androidx.navigation:navigation-compose:2.8.9")
+        implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.0")
+        implementation("androidx.lifecycle:lifecycle-service:2.9.0")
+        implementation("androidx.navigation:navigation-compose:2.9.0")
         implementation("com.louiscad.splitties:splitties-systemservices:3.0.0")
         implementation("com.louiscad.splitties:splitties-views:3.0.0")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
