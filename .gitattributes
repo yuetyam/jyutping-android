@@ -1,13 +1,10 @@
-# SQLite
-*.sqlite binary
-*.sqlite3 binary
-
 # Image
 *.apng binary
 *.avif binary
 *.gif binary
 *.heic binary
 *.heif binary
+*.ico binary
 *.jpeg binary
 *.jpg binary
 *.pdf binary

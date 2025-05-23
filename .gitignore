@@ -116,6 +116,7 @@ obj/
 *.iws
 /out/
 .idea/
+.kotlin/
 
 ### AndroidStudio Patch ###
 

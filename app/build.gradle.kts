@@ -46,7 +46,7 @@ android {
         }
 }
 
-val composeVersion = "1.8.1"
+val composeVersion = "1.8.2"
 dependencies {
         implementation("androidx.activity:activity-compose:1.10.1")
         implementation("androidx.activity:activity-ktx:1.10.1")
