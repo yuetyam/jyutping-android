@@ -110,18 +110,8 @@ fun ExpressionsScreen() {
                         )
                 }
                 item {
-                        DifferentView(
-                                heading = "推薦【嘅／個得噉】，避免【的得地】",
-                                lines = listOf(
-                                        "例：我嘅細佬／我個細佬。",
-                                        "例：講得好！",
-                                        "例：細細聲噉講話。"
-                                )
-                        )
-                }
-                item {
                         Expression(
-                                heading = "推薦【啩、啊嘛】，避免【吧】",
+                                heading = "啩、啊嘛",
                                 labels = listOf(
                                         LabelEntry(type = LabelType.CHECKED, text = "下個禮拜會出啩。"),
                                         LabelEntry(type = LabelType.CHECKED, text = "唔係啊嘛，真係冇？"),
@@ -132,18 +122,18 @@ fun ExpressionsScreen() {
                 }
                 item {
                         Expression(
-                                heading = "推薦【啦、嘞】，避免【了】",
+                                heading = "啦、嘞",
                                 labels = listOf(
                                         LabelEntry(type = LabelType.CHECKED, text = "我識用粵拼打字啦！"),
-                                        LabelEntry(type = LabelType.CHECKED, text = "係嘞，你試過招牌菜未啊？"),
+                                        LabelEntry(type = LabelType.CHECKED, text = "係嘞，你試過粵拼輸入法未啊？"),
                                         LabelEntry(type = LabelType.MISTAKE, text = "我識用粵拼打字了！"),
-                                        LabelEntry(type = LabelType.MISTAKE, text = "係了，你試過招牌菜未啊？")
+                                        LabelEntry(type = LabelType.MISTAKE, text = "係了，你試過粵拼輸入法未啊？")
                                 )
                         )
                 }
                 item {
                         Expression(
-                                heading = "推薦【使】，避免【駛、洗】",
+                                heading = "使",
                                 labels = listOf(
                                         LabelEntry(type = LabelType.CHECKED, text = "唔使驚"),
                                         LabelEntry(type = LabelType.MISTAKE, text = "唔駛驚"),
@@ -153,10 +143,31 @@ fun ExpressionsScreen() {
                 }
                 item {
                         Expression(
-                                heading = "推薦【而家】，避免【宜家】",
+                                heading = "而家",
                                 labels = listOf(
                                         LabelEntry(type = LabelType.CHECKED, text = "我而家食緊飯。"),
                                         LabelEntry(type = LabelType.MISTAKE, text = "我宜家食緊飯。")
+                                )
+                        )
+                }
+                item {
+                        Expression(
+                                heading = "甲（形容詞）過乙",
+                                labels = listOf(
+                                        LabelEntry(type = LabelType.CHECKED, text = "苦過黃連。"),
+                                        LabelEntry(type = LabelType.CHECKED, text = "狼過華秀隻狗。"),
+                                        LabelEntry(type = LabelType.MISTAKE, text = "比黃連更苦。"),
+                                        LabelEntry(type = LabelType.MISTAKE, text = "比華秀隻狗更狼。")
+                                )
+                        )
+                }
+                item {
+                        Expression(
+                                heading = "兩樣都得",
+                                labels = listOf(
+                                        LabelEntry(type = LabelType.INFO, text = "甲：「你飲茶定係飲咖啡？」"),
+                                        LabelEntry(type = LabelType.CHECKED, text = "乙：「兩樣都得。」"),
+                                        LabelEntry(type = LabelType.MISTAKE, text = "乙：「都得。」")
                                 )
                         )
                 }
