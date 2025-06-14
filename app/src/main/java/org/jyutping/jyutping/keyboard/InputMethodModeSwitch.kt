@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,10 +34,8 @@ fun InputMethodModeSwitch() {
         val shapeWidth: Dp = 72.dp
         val shapeHeight: Dp = 25.dp
         val partWidth: Dp = 36.dp
-        val cornerRadius: Dp = 5.dp
         val largerFontSize = 17.sp
         val normalFontSize = 13.sp
-        val shape = RoundedCornerShape(cornerRadius)
         Box(
                 modifier = Modifier
                         .border(
@@ -47,7 +45,7 @@ fun InputMethodModeSwitch() {
                                 } else {
                                         if (isHighContrastPreferred) Color.Black else Color.Transparent
                                 },
-                                shape = shape
+                                shape = CircleShape
                         )
                         .background(
                                 color = if (isDarkMode) {
@@ -55,7 +53,7 @@ fun InputMethodModeSwitch() {
                                 } else {
                                         if (isHighContrastPreferred) AltPresetColor.keyLightEmphatic else PresetColor.keyLightEmphatic
                                 },
-                                shape = shape
+                                shape = CircleShape
                         )
                         .width(shapeWidth)
                         .height(shapeHeight),
@@ -70,11 +68,11 @@ fun InputMethodModeSwitch() {
                                         .border(
                                                 width = 1.dp,
                                                 color = optionBorderColor(inputMethodMode.isCantonese(), isDarkMode, isHighContrastPreferred),
-                                                shape = shape
+                                                shape = CircleShape
                                         )
                                         .background(
                                                 color = optionBackgroundColor(inputMethodMode.isCantonese(), isDarkMode, isHighContrastPreferred),
-                                                shape = shape
+                                                shape = CircleShape
                                         )
                                         .width(partWidth)
                                         .fillMaxHeight(),
@@ -91,11 +89,11 @@ fun InputMethodModeSwitch() {
                                         .border(
                                                 width = 1.dp,
                                                 color = optionBorderColor(inputMethodMode.isABC(), isDarkMode, isHighContrastPreferred),
-                                                shape = shape
+                                                shape = CircleShape
                                         )
                                         .background(
                                                 color = optionBackgroundColor(inputMethodMode.isABC(), isDarkMode, isHighContrastPreferred),
-                                                shape = shape
+                                                shape = CircleShape
                                         )
                                         .width(partWidth)
                                         .fillMaxHeight(),
