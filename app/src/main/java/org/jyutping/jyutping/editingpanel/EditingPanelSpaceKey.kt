@@ -97,11 +97,11 @@ fun EditingPanelSpaceKey(modifier: Modifier) {
                                 } else {
                                         if (isHighContrastPreferred) Color.Black else Color.Transparent
                                 },
-                                shape = RoundedCornerShape(6.dp)
+                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
                         )
                         .shadow(
                                 elevation = 0.5.dp,
-                                shape = RoundedCornerShape(6.dp)
+                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
                         )
                         .background(
                                 color = backgroundColor(isDarkMode, isHighContrastPreferred, (isPressing || isDragging))

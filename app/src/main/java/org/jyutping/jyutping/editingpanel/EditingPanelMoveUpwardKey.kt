@@ -30,6 +30,7 @@ import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
+import org.jyutping.jyutping.presets.PresetConstant
 
 @Composable
 fun EditingPanelMoveUpwardKey(modifier: Modifier) {
@@ -54,11 +55,11 @@ fun EditingPanelMoveUpwardKey(modifier: Modifier) {
                                 } else {
                                         if (isHighContrastPreferred) Color.Black else Color.Transparent
                                 },
-                                shape = RoundedCornerShape(6.dp)
+                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
                         )
                         .shadow(
                                 elevation = 0.5.dp,
-                                shape = RoundedCornerShape(6.dp)
+                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
                         )
                         .background(
                                 color = backgroundColor(isDarkMode, isHighContrastPreferred, isPressed)
