@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
@@ -46,7 +47,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
@@ -107,6 +107,7 @@ fun SettingsScreen(height: Dp) {
         } else {
                 SegmentedButtonDefaults.colors(activeContainerColor = PresetColor.green, activeContentColor = Color.White, activeBorderColor = Color.LightGray, inactiveContainerColor = Color.White, inactiveContentColor = Color.Black, inactiveBorderColor = Color.LightGray)
         }
+        val sectionCornerRadius: Float = 10f
         val version: String by lazy { BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")" }
         Column(
                 modifier = Modifier
@@ -176,7 +177,7 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Column(
                                                 modifier = Modifier
-                                                        .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                        .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
                                                         .fillMaxWidth()
                                         ) {
                                                 Button(
@@ -185,7 +186,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCharacterStandard(CharacterStandard.Traditional)
                                                         },
-                                                        shape = RectangleShape,
+                                                        shape = CircleShape,
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
@@ -208,7 +209,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCharacterStandard(CharacterStandard.HongKong)
                                                         },
-                                                        shape = RectangleShape,
+                                                        shape = CircleShape,
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
@@ -231,7 +232,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCharacterStandard(CharacterStandard.Taiwan)
                                                         },
-                                                        shape = RectangleShape,
+                                                        shape = CircleShape,
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
@@ -254,7 +255,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCharacterStandard(CharacterStandard.Simplified)
                                                         },
-                                                        shape = RectangleShape,
+                                                        shape = CircleShape,
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
@@ -285,7 +286,7 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Column(
                                                 modifier = Modifier
-                                                        .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                        .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
                                                         .fillMaxWidth()
                                         ) {
                                                 Row(
@@ -330,7 +331,7 @@ fun SettingsScreen(height: Dp) {
                                 Row(
                                         modifier = Modifier
                                                 .fillMaxWidth()
-                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
                                                 .padding(horizontal = 8.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -351,7 +352,7 @@ fun SettingsScreen(height: Dp) {
                         item {
                                 Column(
                                         modifier = Modifier
-                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
                                                 .fillMaxWidth()
                                 ) {
                                         Row(
@@ -412,7 +413,7 @@ fun SettingsScreen(height: Dp) {
                         item {
                                 Column(
                                         modifier = Modifier
-                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
                                                 .fillMaxWidth()
                                 ) {
                                         Row(
@@ -473,7 +474,7 @@ fun SettingsScreen(height: Dp) {
                         item {
                                 Row(
                                         modifier = Modifier
-                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
                                                 .padding(start = 8.dp, end = 4.dp)
                                                 .fillMaxWidth(),
                                         verticalAlignment = Alignment.CenterVertically
@@ -519,7 +520,7 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Column(
                                                 modifier = Modifier
-                                                        .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                        .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
                                                         .fillMaxWidth()
                                         ) {
                                                 Button(
@@ -528,7 +529,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCommentStyle(CommentStyle.AboveCandidates)
                                                         },
-                                                        shape = RectangleShape,
+                                                        shape = CircleShape,
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
@@ -551,7 +552,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCommentStyle(CommentStyle.BelowCandidates)
                                                         },
-                                                        shape = RectangleShape,
+                                                        shape = CircleShape,
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
@@ -574,7 +575,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCommentStyle(CommentStyle.NoComments)
                                                         },
-                                                        shape = RectangleShape,
+                                                        shape = CircleShape,
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
@@ -605,7 +606,7 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Column(
                                                 modifier = Modifier
-                                                        .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                        .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
                                                         .fillMaxWidth()
                                         ) {
                                                 Button(
@@ -614,7 +615,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCangjieVariant(CangjieVariant.Cangjie5)
                                                         },
-                                                        shape = RectangleShape,
+                                                        shape = CircleShape,
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
@@ -637,7 +638,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCangjieVariant(CangjieVariant.Cangjie3)
                                                         },
-                                                        shape = RectangleShape,
+                                                        shape = CircleShape,
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
@@ -660,7 +661,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCangjieVariant(CangjieVariant.Quick5)
                                                         },
-                                                        shape = RectangleShape,
+                                                        shape = CircleShape,
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
@@ -683,7 +684,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCangjieVariant(CangjieVariant.Quick3)
                                                         },
-                                                        shape = RectangleShape,
+                                                        shape = CircleShape,
                                                         colors = buttonColors,
                                                         contentPadding = PaddingValues(horizontal = 8.dp)
                                                 ) {
@@ -706,7 +707,7 @@ fun SettingsScreen(height: Dp) {
                                 Row(
                                         modifier = Modifier
                                                 .fillMaxWidth()
-                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
                                                 .padding(horizontal = 8.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -727,7 +728,7 @@ fun SettingsScreen(height: Dp) {
                         item {
                                 Column(
                                         modifier = Modifier
-                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
                                                 .fillMaxWidth()
                                 ) {
                                         Row(
@@ -821,7 +822,7 @@ fun SettingsScreen(height: Dp) {
                                 Row(
                                         modifier = Modifier
                                                 .fillMaxWidth()
-                                                .background(color = backColor, shape = RoundedCornerShape(6.dp))
+                                                .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
                                                 .padding(horizontal = 8.dp, vertical = 12.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
