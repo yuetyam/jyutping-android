@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.keyboard
+package org.jyutping.jyutping.tenkey
 
 import android.content.Context
 import android.view.HapticFeedbackConstants
@@ -33,6 +33,7 @@ import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
+import org.jyutping.jyutping.presets.PresetConstant
 
 @Composable
 fun TenKeyGlobeKey(modifier: Modifier) {
@@ -77,11 +78,11 @@ fun TenKeyGlobeKey(modifier: Modifier) {
                                 } else {
                                         if (isHighContrastPreferred) Color.Black else Color.Transparent
                                 },
-                                shape = RoundedCornerShape(6.dp)
+                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
                         )
                         .shadow(
                                 elevation = 0.5.dp,
-                                shape = RoundedCornerShape(6.dp)
+                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
                         )
                         .background(
                                 color = keyBackgroundColor(isDarkMode, isHighContrastPreferred, isPressing)

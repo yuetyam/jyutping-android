@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
+import org.jyutping.jyutping.presets.PresetConstant
 
 //    F---------------G---+
 //    +   |           |   +
@@ -29,8 +30,8 @@ class LeftHalfBubbleShape : Shape {
                 val width = size.width
                 val height = size.height
                 val isPhoneLandscape: Boolean = (width > height)
-                val keyCornerRadius: Float = 12F * density.density
-                val previewCornerRadius: Float = 20F * density.density
+                val keyCornerRadius: Float = PresetConstant.keyCornerRadius * 2 * density.density
+                val previewCornerRadius: Float = 24F * density.density
                 val curveWidth: Float = width / 3F
                 val curveHeight: Float = if (isPhoneLandscape) (height / 3F) else (height / 5F)
                 val keyWidth: Float = width - curveWidth

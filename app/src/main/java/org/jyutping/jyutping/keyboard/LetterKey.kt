@@ -37,6 +37,7 @@ import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
+import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.shapes.BubbleShape
 import org.jyutping.jyutping.shapes.LeftHalfBubbleShape
 import org.jyutping.jyutping.shapes.RightHalfBubbleShape
@@ -91,11 +92,11 @@ fun LetterKey(letter: String, modifier: Modifier, position: Alignment.Horizontal
                                         } else {
                                                 if (isHighContrastPreferred) Color.Black else Color.Transparent
                                         },
-                                        shape = RoundedCornerShape(6.dp)
+                                        shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
                                 )
                                 .shadow(
                                         elevation = 0.5.dp,
-                                        shape = RoundedCornerShape(6.dp)
+                                        shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
                                 )
                                 .background(
                                         color = keyBackgroundColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey, isPressing)

@@ -34,6 +34,7 @@ import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
+import org.jyutping.jyutping.presets.PresetConstant
 
 @Composable
 fun ShiftKey(modifier: Modifier) {
@@ -98,11 +99,11 @@ fun ShiftKey(modifier: Modifier) {
                                 } else {
                                         if (isHighContrastPreferred) Color.Black else Color.Transparent
                                 },
-                                shape = RoundedCornerShape(6.dp)
+                                shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
                         )
                         .shadow(
                                 elevation = 0.5.dp,
-                                shape = RoundedCornerShape(6.dp)
+                                shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
                         )
                         .background(
                                 color = backgroundColor(isDarkMode, isHighContrastPreferred, isPressing)

@@ -28,6 +28,7 @@ import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
+import org.jyutping.jyutping.presets.PresetConstant
 
 @Composable
 fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
@@ -68,11 +69,11 @@ fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
                                 } else {
                                         if (isHighContrastPreferred) Color.Black else Color.Transparent
                                 },
-                                shape = RoundedCornerShape(6.dp)
+                                shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
                         )
                         .shadow(
                                 elevation = 0.5.dp,
-                                shape = RoundedCornerShape(6.dp)
+                                shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
                         )
                         .background(
                                 color = backgroundColor(isDarkMode, isHighContrastPreferred, isPressing)
