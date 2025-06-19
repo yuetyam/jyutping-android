@@ -30,8 +30,8 @@ class RightHalfBubbleShape : Shape {
                 val width = size.width
                 val height = size.height
                 val isPhoneLandscape: Boolean = (width > height)
-                val keyCornerRadius: Float = PresetConstant.keyCornerRadius * 2 * density.density
-                val previewCornerRadius: Float = 24F * density.density
+                val keyCornerRadius: Float = PresetConstant.keyCornerRadius * 2F * density.density
+                val previewCornerRadius: Float = PresetConstant.keyCornerRadius * 1.62F * 2F * density.density
                 val curveWidth: Float = width / 3F
                 val curveHeight: Float = if (isPhoneLandscape) (height / 3F) else (height / 5F)
                 val keyWidth: Float = width - curveWidth
