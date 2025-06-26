@@ -34,9 +34,6 @@ android {
                 sourceCompatibility = JavaVersion.VERSION_21
                 targetCompatibility = JavaVersion.VERSION_21
         }
-        kotlinOptions {
-                jvmTarget = JavaVersion.VERSION_21.toString()
-        }
         buildFeatures {
                 compose = true
                 buildConfig = true
@@ -46,7 +43,7 @@ android {
         }
 }
 
-val composeVersion = "1.8.2"
+val composeVersion = "1.8.3"
 dependencies {
         implementation("androidx.activity:activity-compose:1.10.1")
         implementation("androidx.activity:activity-ktx:1.10.1")
@@ -61,7 +58,7 @@ dependencies {
         implementation("com.louiscad.splitties:splitties-systemservices:3.0.0")
         implementation("com.louiscad.splitties:splitties-views:3.0.0")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
-        testImplementation("org.junit.jupiter:junit-jupiter-api:5.12.1")
+        testImplementation("org.junit.jupiter:junit-jupiter-api:5.13.2")
         androidTestImplementation("androidx.test.ext:junit:1.2.1")
         androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
         androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")

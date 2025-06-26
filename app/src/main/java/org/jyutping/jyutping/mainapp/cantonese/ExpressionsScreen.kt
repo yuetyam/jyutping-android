@@ -171,8 +171,24 @@ fun ExpressionsScreen() {
                                 )
                         )
                 }
+                item {
+                        SelectionContainer {
+                                Text(
+                                        text = etymologyNote,
+                                        modifier = Modifier.padding(8.dp),
+                                        color = colorScheme.onBackground,
+                                        style = MaterialTheme.typography.bodySmall
+                                )
+                        }
+                }
         }
 }
+
+private const val etymologyNote: String =
+"""
+當前市面上盛傳嘅各種「粵語正字、本字」，大多數係穿鑿附會、郢書燕說、阿茂整餅，係錯嘅。
+用字從衆、從俗更好，利於交流。唔好理會嗰啲老作。
+"""
 
 @Composable
 private fun DifferentView(heading: String, lines: List<String>) {
