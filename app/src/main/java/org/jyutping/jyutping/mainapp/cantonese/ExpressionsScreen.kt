@@ -122,9 +122,9 @@ fun ExpressionsScreen() {
                 }
                 item {
                         Expression(
-                                heading = "啦、嘞",
+                                heading = "喇、嘞",
                                 labels = listOf(
-                                        LabelEntry(type = LabelType.CHECKED, text = "我識用粵拼打字啦！"),
+                                        LabelEntry(type = LabelType.CHECKED, text = "我識用粵拼打字喇！"),
                                         LabelEntry(type = LabelType.CHECKED, text = "係嘞，你試過粵拼輸入法未啊？"),
                                         LabelEntry(type = LabelType.MISTAKE, text = "我識用粵拼打字了！"),
                                         LabelEntry(type = LabelType.MISTAKE, text = "係了，你試過粵拼輸入法未啊？")

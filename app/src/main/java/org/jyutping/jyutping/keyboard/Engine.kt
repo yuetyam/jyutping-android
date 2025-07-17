@@ -20,7 +20,7 @@ object Engine {
                                 textMarkCandidates + if (asap) {
                                         if (segmentation.maxSchemeLength() > 0) {
                                                 val candidates = query(text = text, segmentation = segmentation, db = db, needsSymbols = needsSymbols)
-                                                if (candidates.isEmpty()) processVerbatim(text = text, db = db) else candidates
+                                                candidates.ifEmpty { processVerbatim(text = text, db = db) }
                                         } else {
                                                 processVerbatim(text = text, db = db)
                                         }
@@ -214,10 +214,11 @@ object Engine {
                         }
         }
         private fun processVerbatim(text: String, db: DatabaseHelper, limit: Int? = null): List<Candidate> {
+                val anchorLimit: Int = if (limit == null) 250 else 100
                 val rounds: MutableList<List<Candidate>> = mutableListOf()
                 for (number in text.indices) {
                         val leading = text.dropLast(number)
-                        val round = db.pingMatch(text = leading, input = leading, limit = limit) + db.shortcutMatch(leading, limit)
+                        val round = db.pingMatch(text = leading, input = leading, limit = limit) + db.shortcutMatch(text = leading, limit = anchorLimit)
                         rounds.add(round)
                 }
                 val candidates: MutableList<Candidate> = mutableListOf()
@@ -247,6 +248,7 @@ object Engine {
                 if (firstInputLength == 0) return processVerbatim(text, db, limit)
                 if (firstInputLength == textLength) return primary
                 val prefixes: List<Candidate> = if (segmentation.maxSchemeLength() >= textLength) emptyList() else {
+                        val anchorLimit: Int = if (limit == null) 400 else 100
                         val shortcuts: MutableList<List<Candidate>> = mutableListOf()
                         for (scheme in segmentation) {
                                 val tail = text.drop(scheme.length())
@@ -257,7 +259,7 @@ object Engine {
                                 val schemeMark: String = scheme.joinToString(separator = PresetString.SPACE) { it.text }
                                 val spacedMark: String = schemeMark + PresetString.SPACE + tail.toList().joinToString(separator = PresetString.SPACE)
                                 val anchorMark: String = schemeMark + PresetString.SPACE + tail
-                                val conjoinedShortcuts = db.shortcutMatch(conjoined, limit)
+                                val conjoinedShortcuts = db.shortcutMatch(conjoined, anchorLimit)
                                         .filter { item ->
                                                 val rawRomanization = item.romanization.filterNot { it.isDigit() }
                                                 rawRomanization.startsWith(schemeMark) && run {
@@ -267,7 +269,7 @@ object Engine {
                                         }
                                         .map { Candidate(text = it.text, romanization = it.romanization, input = text, mark = spacedMark, order = it.order) }
                                 shortcuts.add(conjoinedShortcuts)
-                                val anchorShortcuts = db.shortcutMatch(anchors, limit)
+                                val anchorShortcuts = db.shortcutMatch(anchors, anchorLimit)
                                         .filter { item -> item.romanization.filterNot { it.isDigit() }.startsWith(anchorMark) }
                                         .map { Candidate(text = it.text, romanization = it.romanization, input = text, mark = anchorMark, order = it.order) }
                                 shortcuts.add(anchorShortcuts)
