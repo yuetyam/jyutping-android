@@ -185,7 +185,8 @@ object Engine {
                                         val checks = syllables.indices.map { syllables[it] == textParts[it] }
                                         val isMatched = checks.fold(true) { acc, b -> acc && b }
                                         if (!isMatched) continue
-                                        val tail = List(syllables.size - 1) { 'i' }
+                                        val separatorNumber = syllables.size - 1
+                                        val tail = CharArray(separatorNumber) { 'i' }.concatToString()
                                         val combinedInput = item.input + tail
                                         val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
                                         qualified.add(newItem)
