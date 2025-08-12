@@ -78,6 +78,8 @@ fun JyutpingScreen(navController: NavHostController) {
                                 HorizontalDivider()
                                 WebLinkLabel(icon = Icons.Outlined.Link, text = "粵語拼音速遞 - CUHK", uri = "https://www.ilc.cuhk.edu.hk/workshop/Chinese/Cantonese/Romanization")
                                 HorizontalDivider()
+                                WebLinkLabel(icon = Icons.Outlined.Link, text = "粵語網路課堂 - CUHK", uri = "https://www.ilc.cuhk.edu.hk/workshop/Chinese/Cantonese/OnlineTutorial")
+                                HorizontalDivider()
                                 WebLinkLabel(icon = Icons.Outlined.Link, text = "翻轉粵語教室 - PolyU", uri = "https://www.polyu.edu.hk/clc/cantonese/home")
                                 HorizontalDivider()
                                 WebLinkLabel(icon = Icons.Outlined.Link, text = "Zidou - 粵拼版 Wordle", uri = "https://chaaklau.github.io/zidou")
