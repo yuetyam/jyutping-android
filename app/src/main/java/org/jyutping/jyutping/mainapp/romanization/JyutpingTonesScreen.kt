@@ -34,7 +34,7 @@ fun JyutpingTonesScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 ToneLabel(word = "芬", syllable = "fan1", toneName = "陰入", toneValue = "55/53")
                                 ToneLabel(word = "粉", syllable = "fan2", toneName = "陰上", toneValue = "35")

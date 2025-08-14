@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -160,8 +161,7 @@ fun HomeScreen(navController: NavHostController) {
                                                                 val intent = Intent(Settings.ACTION_INPUT_METHOD_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
                                                                 navController.context.startActivity(intent)
                                                         },
-                                                        shape = RoundedCornerShape(8.dp),
-                                                        contentPadding = PaddingValues(horizontal = 4.dp)
+                                                        shape = CircleShape
                                                 ) {
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Text(text = stringResource(id = R.string.home_button_enable_keyboard))
@@ -176,8 +176,7 @@ fun HomeScreen(navController: NavHostController) {
                                                         onClick = {
                                                                 (navController.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showInputMethodPicker()
                                                         },
-                                                        shape = RoundedCornerShape(8.dp),
-                                                        contentPadding = PaddingValues(horizontal = 4.dp)
+                                                        shape = CircleShape
                                                 ) {
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Text(text = stringResource(id = R.string.home_button_select_keyboard))
@@ -230,7 +229,7 @@ fun HomeScreen(navController: NavHostController) {
                                 DisableSelection {
                                         Column(
                                                 modifier = Modifier
-                                                        .clip(RoundedCornerShape(8.dp))
+                                                        .clip(RoundedCornerShape(10.dp))
                                                         .background(colorScheme.background)
                                                         .fillMaxWidth()
                                         ) {

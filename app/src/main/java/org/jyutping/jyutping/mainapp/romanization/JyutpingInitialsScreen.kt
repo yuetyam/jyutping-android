@@ -36,7 +36,7 @@ fun JyutpingInitialsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 InitialLabel(word = "巴", syllable = "baa1", jyutping = "b", ipa = "[ p ]")
                                 InitialLabel(word = "趴", syllable = "paa1", jyutping = "p", ipa = "[ pʰ ]")
@@ -46,7 +46,7 @@ fun JyutpingInitialsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 InitialLabel(word = "打", syllable = "daa2", jyutping = "d", ipa = "[ t ]")
                                 InitialLabel(word = "他", syllable = "taa1", jyutping = "t", ipa = "[ tʰ ]")
@@ -56,7 +56,7 @@ fun JyutpingInitialsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 InitialLabel(word = "家", syllable = "gaa1", jyutping = "g", ipa = "[ k ]")
                                 InitialLabel(word = "卡", syllable = "kaa1", jyutping = "k", ipa = "[ kʰ ]")
@@ -66,7 +66,7 @@ fun JyutpingInitialsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 InitialLabel(word = "瓜", syllable = "gwaa1", jyutping = "gw", ipa = "[ kʷ ]")
                                 InitialLabel(word = "夸", syllable = "kwaa1", jyutping = "kw", ipa = "[ kʷʰ ]")
@@ -74,7 +74,7 @@ fun JyutpingInitialsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 InitialLabel(word = "渣", syllable = "zaa1", jyutping = "z", ipa = "t͡s ~ t͡ʃ")
                                 InitialLabel(word = "叉", syllable = "caa1", jyutping = "c", ipa = "t͡sʰ ~ t͡ʃʰ")
@@ -83,7 +83,7 @@ fun JyutpingInitialsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 InitialLabel(word = "蛙", syllable = "waa1", jyutping = "w", ipa = "[ w ]")
                                 InitialLabel(word = "也", syllable = "jaa5", jyutping = "j", ipa = "[ j ]")

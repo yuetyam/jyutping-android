@@ -36,7 +36,7 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 FinalLabel(word = "駕", syllable = "gaa3", jyutping = "aa", ipa = "[ aː ]")
                                 FinalLabel(word = "界", syllable = "gaai3", jyutping = "aai", ipa = "[ aːi ]")
@@ -51,7 +51,7 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 FinalLabel(word = "㗎", syllable = "ga3", jyutping = "a", ipa = "[ ɐ ]")
                                 FinalLabel(word = "計", syllable = "gai3", jyutping = "ai", ipa = "[ ɐi ]")
@@ -66,7 +66,7 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 FinalLabel(word = "嘅", syllable = "ge3", jyutping = "e", ipa = "[ ɛː ]")
                                 FinalLabel(word = "記", syllable = "gei3", jyutping = "ei", ipa = "[ ei ]")
@@ -80,7 +80,7 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 FinalLabel(word = "意", syllable = "ji3", jyutping = "i", ipa = "[ iː ]")
                                 FinalLabel(word = "叫", syllable = "giu3", jyutping = "iu", ipa = "[ iːu ]")
@@ -94,7 +94,7 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 FinalLabel(word = "個", syllable = "go3", jyutping = "o", ipa = "[ ɔː ]")
                                 FinalLabel(word = "蓋", syllable = "goi3", jyutping = "oi", ipa = "[ ɔːi ]")
@@ -107,7 +107,7 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 FinalLabel(word = "夫", syllable = "fu1", jyutping = "u", ipa = "[ uː ]")
                                 FinalLabel(word = "灰", syllable = "fui1", jyutping = "ui", ipa = "[ uːi ]")
@@ -119,7 +119,7 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 FinalLabel(word = "鋸", syllable = "goe3", jyutping = "oe", ipa = "[ œː ]")
                                 FinalLabel(word = "姜", syllable = "goeng1", jyutping = "oeng", ipa = "[ œːŋ ]")
@@ -129,7 +129,7 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 FinalLabel(word = "歲", syllable = "seoi3", jyutping = "eoi", ipa = "[ ɵːi ]")
                                 FinalLabel(word = "信", syllable = "seon3", jyutping = "eon", ipa = "[ ɵːn ]")
@@ -138,7 +138,7 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 FinalLabel(word = "恕", syllable = "syu3", jyutping = "yu", ipa = "[ yː ]")
                                 FinalLabel(word = "算", syllable = "syun3", jyutping = "yun", ipa = "[ yːn ]")
@@ -147,7 +147,7 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(size = 8.dp))
+                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         ) {
                                 FinalLabel(word = "唔", syllable = "m4", jyutping = "m", ipa = "[ m̩ ]")
                                 FinalLabel(word = "吳", syllable = "ng4", jyutping = "ng", ipa = "[ ŋ̩ ]")

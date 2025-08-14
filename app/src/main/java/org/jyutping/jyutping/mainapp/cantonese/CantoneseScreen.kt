@@ -33,7 +33,7 @@ fun CantoneseScreen(navController: NavHostController) {
                 item {
                         Column(
                                 modifier = Modifier
-                                        .clip(RoundedCornerShape(8.dp))
+                                        .clip(RoundedCornerShape(10.dp))
                                         .background(colorScheme.background)
                                         .fillMaxWidth()
                         ) {
@@ -49,7 +49,7 @@ fun CantoneseScreen(navController: NavHostController) {
                 item {
                         Column(
                                 modifier = Modifier
-                                        .clip(RoundedCornerShape(8.dp))
+                                        .clip(RoundedCornerShape(10.dp))
                                         .background(colorScheme.background)
                                         .fillMaxWidth()
                         ) {
