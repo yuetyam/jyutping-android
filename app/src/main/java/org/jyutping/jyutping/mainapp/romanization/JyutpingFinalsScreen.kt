@@ -2,6 +2,7 @@ package org.jyutping.jyutping.mainapp.romanization
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,9 +14,12 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import org.jyutping.jyutping.speech.Speaker
 
 @Composable
 fun JyutpingFinalsScreen() {
@@ -29,14 +33,18 @@ fun JyutpingFinalsScreen() {
                                         .fillMaxWidth()
                                         .padding(horizontal = 8.dp)
                         ) {
-                                Text(text = "例字", modifier = Modifier.weight(0.4f))
-                                Text(text = "韻母", modifier = Modifier.weight(0.3f))
+                                Text(text = "例字", modifier = Modifier.weight(0.45f))
+                                Text(text = "韻母", modifier = Modifier.weight(0.25f))
                                 Text(text = "國際音標", modifier = Modifier.weight(0.3f))
                         }
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                                 FinalLabel(word = "駕", syllable = "gaa3", jyutping = "aa", ipa = "[ aː ]")
                                 FinalLabel(word = "界", syllable = "gaai3", jyutping = "aai", ipa = "[ aːi ]")
@@ -51,7 +59,11 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                                 FinalLabel(word = "㗎", syllable = "ga3", jyutping = "a", ipa = "[ ɐ ]")
                                 FinalLabel(word = "計", syllable = "gai3", jyutping = "ai", ipa = "[ ɐi ]")
@@ -66,7 +78,11 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                                 FinalLabel(word = "嘅", syllable = "ge3", jyutping = "e", ipa = "[ ɛː ]")
                                 FinalLabel(word = "記", syllable = "gei3", jyutping = "ei", ipa = "[ ei ]")
@@ -80,7 +96,11 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                                 FinalLabel(word = "意", syllable = "ji3", jyutping = "i", ipa = "[ iː ]")
                                 FinalLabel(word = "叫", syllable = "giu3", jyutping = "iu", ipa = "[ iːu ]")
@@ -94,7 +114,11 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                                 FinalLabel(word = "個", syllable = "go3", jyutping = "o", ipa = "[ ɔː ]")
                                 FinalLabel(word = "蓋", syllable = "goi3", jyutping = "oi", ipa = "[ ɔːi ]")
@@ -107,7 +131,11 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                                 FinalLabel(word = "夫", syllable = "fu1", jyutping = "u", ipa = "[ uː ]")
                                 FinalLabel(word = "灰", syllable = "fui1", jyutping = "ui", ipa = "[ uːi ]")
@@ -119,7 +147,11 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                                 FinalLabel(word = "鋸", syllable = "goe3", jyutping = "oe", ipa = "[ œː ]")
                                 FinalLabel(word = "姜", syllable = "goeng1", jyutping = "oeng", ipa = "[ œːŋ ]")
@@ -129,7 +161,11 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                                 FinalLabel(word = "歲", syllable = "seoi3", jyutping = "eoi", ipa = "[ ɵːi ]")
                                 FinalLabel(word = "信", syllable = "seon3", jyutping = "eon", ipa = "[ ɵːn ]")
@@ -138,7 +174,11 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                                 FinalLabel(word = "恕", syllable = "syu3", jyutping = "yu", ipa = "[ yː ]")
                                 FinalLabel(word = "算", syllable = "syun3", jyutping = "yun", ipa = "[ yːn ]")
@@ -147,7 +187,11 @@ fun JyutpingFinalsScreen() {
                 }
                 item {
                         Column(
-                                modifier = Modifier.background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                                 FinalLabel(word = "唔", syllable = "m4", jyutping = "m", ipa = "[ m̩ ]")
                                 FinalLabel(word = "吳", syllable = "ng4", jyutping = "ng", ipa = "[ ŋ̩ ]")
@@ -160,25 +204,30 @@ fun JyutpingFinalsScreen() {
 private fun FinalLabel(word: String, syllable: String, jyutping: String, ipa: String) {
         SelectionContainer {
                 Row(
-                        modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp, vertical = 5.dp)
+                        verticalAlignment = Alignment.CenterVertically
                 ) {
-                        Text(
-                                text = "$word $syllable",
-                                modifier = Modifier.weight(0.4f),
-                                color = colorScheme.onBackground
-                        )
+                        Row(
+                                modifier = Modifier.weight(0.45f),
+                                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                        ) {
+                                Box {
+                                        Text(
+                                                text = "佔 gaang4",
+                                                modifier = Modifier.alpha(0f)
+                                        )
+                                        Text(text = "$word $syllable")
+                                }
+                                Speaker(cantonese = word, romanization = syllable)
+                        }
                         Text(
                                 text = jyutping,
-                                modifier = Modifier.weight(0.3f),
-                                color = colorScheme.onBackground,
+                                modifier = Modifier.weight(0.25f),
                                 fontFamily = FontFamily.Monospace
                         )
                         Text(
                                 text = ipa,
-                                modifier = Modifier.weight(0.3f),
-                                color = colorScheme.onBackground
+                                modifier = Modifier.weight(0.3f)
                         )
                 }
         }

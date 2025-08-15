@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import org.jyutping.jyutping.speech.Speaker
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -59,17 +60,11 @@ fun ConfusionScreen(navController: NavHostController) {
         }
         SelectionContainer {
                 LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                ) {
-                        if (entries.value.isNotEmpty()) {
-                                items(entries.value) {
-                                        ConfusionElementView(it)
-                                }
-                        } else {
-                                item {
-                                        Text(text = "No data")
-                                }
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                        items(entries.value) {
+                                ConfusionElementView(it)
                         }
                 }
         }
@@ -80,32 +75,43 @@ private fun ConfusionElementView(element: ConfusionElement) {
         Row(
                 modifier = Modifier
                         .background(color = colorScheme.background, RoundedCornerShape(10.dp))
-                        .padding(6.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        .padding(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
-                Text(text = element.simplified, color = colorScheme.onBackground)
-                Column {
+                Text(text = element.simplified)
+                Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                         element.traditional.map {
-                                Row {
-                                        Box {
-                                                Row(
-                                                        modifier = Modifier.alpha(0f),
-                                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                                        verticalAlignment = Alignment.CenterVertically
-                                                ) {
-                                                        Text(text = "佔")
-                                                        Text(text = "gwaang6")
-                                                }
-                                                Row(
-                                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                                        verticalAlignment = Alignment.CenterVertically
-                                                ) {
-                                                        Text(text = it.character, color = colorScheme.onBackground)
-                                                        Text(text = it.romanization, color = colorScheme.onBackground)
+                                Row(
+                                        horizontalArrangement = Arrangement.spacedBy(14.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                        Row(
+                                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Speaker(romanization = it.romanization, cantonese = it.character)
+                                                Box {
+                                                        Row(
+                                                                modifier = Modifier.alpha(0f),
+                                                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                                                verticalAlignment = Alignment.CenterVertically
+                                                        ) {
+                                                                Text(text = "佔")
+                                                                Text(text = "cung4")
+                                                        }
+                                                        Row(
+                                                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                                                verticalAlignment = Alignment.CenterVertically
+                                                        ) {
+                                                                Text(text = it.character)
+                                                                Text(text = it.romanization)
+                                                        }
                                                 }
                                         }
-                                        Text(text = it.note, color = colorScheme.onBackground)
+                                        Text(text = it.note)
                                 }
                         }
                 }

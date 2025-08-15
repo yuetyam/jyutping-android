@@ -443,12 +443,12 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun syllableMatch(text: String): SegmentToken? {
                 val code = text.charcode() ?: return null
                 var token: SegmentToken? = null
-                val command = "SELECT token, origin FROM syllabletable WHERE code = $code LIMIT 1;"
+                val command = "SELECT alias, origin FROM syllabletable WHERE aliascode = $code LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 if (cursor.moveToFirst()) {
-                        val tokenText = cursor.getString(0)
+                        val alias = cursor.getString(0)
                         val origin = cursor.getString(1)
-                        token = SegmentToken(text = tokenText, origin = origin)
+                        token = SegmentToken(text = alias, origin = origin)
                 }
                 cursor.close()
                 return token
@@ -660,7 +660,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
         }
         private fun mapSkinTone(source: String): String? {
-                val command = "SELECT target FROM emojiskinmapping WHERE source = ?;"
+                val command = "SELECT target FROM emojiskinmap WHERE source = ?;"
                 val cursor = this.readableDatabase.rawQuery(command, arrayOf(source))
                 if (cursor.moveToFirst()) {
                         val target = cursor.getString(0)

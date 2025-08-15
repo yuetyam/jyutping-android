@@ -2,6 +2,7 @@ package org.jyutping.jyutping.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.extensions.codePointText
+import org.jyutping.jyutping.speech.Speaker
 import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
@@ -42,5 +44,7 @@ fun WordTextLabel(word: String) {
                                 fontFamily = FontFamily.Monospace
                         )
                 }
+                Spacer(modifier = Modifier.weight(1f))
+                Speaker(cantonese = word)
         }
 }

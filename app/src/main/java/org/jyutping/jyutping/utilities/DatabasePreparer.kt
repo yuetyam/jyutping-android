@@ -31,7 +31,7 @@ object DatabasePreparer {
                 }
         }
 
-        fun deleteOldDatabases(context: Context) {
+        private fun deleteOldDatabases(context: Context) {
                 val dbDirectory = File(context.filesDir.parentFile, DATABASES_DIR_NAME)
                 performDeletion(context, dbDirectory)
                 val altPath = context.applicationInfo.dataDir + DATABASES_PATH_BLOCK

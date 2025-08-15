@@ -2,7 +2,7 @@ package org.jyutping.jyutping.ui.common
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -65,7 +65,7 @@ fun SearchField(
                         imeAction = ImeAction.Search
                 ),
                 singleLine = true,
-                shape = RoundedCornerShape(8.dp),
+                shape = CircleShape,
                 colors = TextFieldDefaults.colors(
                         unfocusedContainerColor = MaterialTheme.colorScheme.background,
                         focusedContainerColor = MaterialTheme.colorScheme.background,

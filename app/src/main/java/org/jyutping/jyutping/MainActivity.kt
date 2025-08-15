@@ -16,57 +16,74 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import org.jyutping.jyutping.speech.TTSProvider
 import org.jyutping.jyutping.ui.theme.JyutpingTheme
 import org.jyutping.jyutping.utilities.DatabasePreparer
 
+val LocalTTSProvider = staticCompositionLocalOf<TTSProvider> {
+        error("No TTSProvider provided")
+}
+
 class MainActivity : ComponentActivity() {
+
+        private lateinit var ttsProvider: TTSProvider
 
         @OptIn(ExperimentalMaterial3Api::class)
         override fun onCreate(savedInstanceState: Bundle?) {
                 enableEdgeToEdge()
                 super.onCreate(savedInstanceState)
                 DatabasePreparer.prepare(this)
+                ttsProvider = TTSProvider(this)
                 setContent {
                         val navController = rememberNavController()
                         val entry by navController.currentBackStackEntryAsState()
                         val route: String? = entry?.destination?.route
                         val topTitle: String = stringResource(id = titleOf(route = route))
                         val canNavigateUp: Boolean = canNavigateUp(route = route)
-                        JyutpingTheme {
-                                Scaffold(
-                                        topBar = {
-                                                TopAppBar(
-                                                        title = { Text(text = topTitle) },
-                                                        navigationIcon = {
-                                                                if (canNavigateUp) {
-                                                                        IconButton(onClick = { navController.navigateUp() }) {
-                                                                                Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
+                        CompositionLocalProvider(LocalTTSProvider provides ttsProvider) {
+                                JyutpingTheme {
+                                        Scaffold(
+                                                topBar = {
+                                                        TopAppBar(
+                                                                title = { Text(text = topTitle) },
+                                                                navigationIcon = {
+                                                                        if (canNavigateUp) {
+                                                                                IconButton(onClick = { navController.navigateUp() }) {
+                                                                                        Icon(imageVector = Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
+                                                                                }
                                                                         }
-                                                                }
-                                                        },
-                                                        colors = TopAppBarDefaults.topAppBarColors(
-                                                                containerColor = colorScheme.secondaryContainer,
-                                                                scrolledContainerColor = colorScheme.tertiaryContainer,
-                                                                navigationIconContentColor = colorScheme.onBackground,
-                                                                titleContentColor = colorScheme.onBackground,
-                                                                actionIconContentColor = colorScheme.onBackground
+                                                                },
+                                                                colors = TopAppBarDefaults.topAppBarColors(
+                                                                        containerColor = colorScheme.secondaryContainer,
+                                                                        scrolledContainerColor = colorScheme.tertiaryContainer,
+                                                                        navigationIconContentColor = colorScheme.onBackground,
+                                                                        titleContentColor = colorScheme.onBackground,
+                                                                        actionIconContentColor = colorScheme.onBackground
+                                                                )
                                                         )
-                                                )
-                                        },
-                                        bottomBar = { AppBottomBar(navController = navController) },
-                                        containerColor = colorScheme.tertiaryContainer
-                                ) { paddingValues ->
-                                        Box(modifier = Modifier.padding(paddingValues)) {
-                                                AppContent(navController = navController)
+                                                },
+                                                bottomBar = { AppBottomBar(navController = navController) },
+                                                containerColor = colorScheme.tertiaryContainer
+                                        ) { paddingValues ->
+                                                Box(modifier = Modifier.padding(paddingValues)) {
+                                                        AppContent(navController = navController)
+                                                }
                                         }
                                 }
                         }
                 }
+        }
+
+        override fun onDestroy() {
+                ttsProvider.shutdown()
+                super.onDestroy()
         }
 
         private fun titleOf(route: String?): Int = when (route) {
