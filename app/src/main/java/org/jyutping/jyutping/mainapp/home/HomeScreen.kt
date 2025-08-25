@@ -10,7 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,7 +20,10 @@ import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Keyboard
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +31,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -163,9 +167,14 @@ fun HomeScreen(navController: NavHostController) {
                                                         },
                                                         shape = CircleShape
                                                 ) {
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Text(text = stringResource(id = R.string.home_button_enable_keyboard))
-                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Row(
+                                                                modifier = Modifier.fillMaxWidth(),
+                                                                horizontalArrangement = Arrangement.spacedBy(space = 12.dp, alignment = Alignment.CenterHorizontally),
+                                                                verticalAlignment = Alignment.CenterVertically
+                                                        ) {
+                                                                Icon(imageVector = Icons.Outlined.Settings, contentDescription = null)
+                                                                Text(text = stringResource(id = R.string.home_button_enable_keyboard))
+                                                        }
                                                 }
                                         }
                                 }
@@ -178,9 +187,14 @@ fun HomeScreen(navController: NavHostController) {
                                                         },
                                                         shape = CircleShape
                                                 ) {
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Text(text = stringResource(id = R.string.home_button_select_keyboard))
-                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Row(
+                                                                modifier = Modifier.fillMaxWidth(),
+                                                                horizontalArrangement = Arrangement.spacedBy(space = 12.dp, alignment = Alignment.CenterHorizontally),
+                                                                verticalAlignment = Alignment.CenterVertically
+                                                        ) {
+                                                                Icon(imageVector = Icons.Outlined.Keyboard, contentDescription = null)
+                                                                Text(text = stringResource(id = R.string.home_button_select_keyboard))
+                                                        }
                                                 }
                                         }
                                 }
@@ -188,7 +202,7 @@ fun HomeScreen(navController: NavHostController) {
                         item {
                                 TextCard(
                                         heading = stringResource(id = R.string.home_heading_tone_input),
-                                        content = stringResource(id = R.string.home_content_tones_input),
+                                        content = stringResource(id = R.string.home_content_tone_input),
                                         subContent = stringResource(id = R.string.home_subcontent_tones_input_examples),
                                         shouldMonospaceContent = true
                                 )
