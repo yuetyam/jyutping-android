@@ -30,7 +30,7 @@ import org.jyutping.jyutping.feedback.SoundEffect
 
 @Composable
 fun ToolBar() {
-        val inputMethodModeSwitchWidth = 72.dp
+        val inputMethodModeSwitchWidth = 70.dp
         val buttonWidth = 50.dp
         val iconSize = 24.dp
         val editingIconSize = 28.dp

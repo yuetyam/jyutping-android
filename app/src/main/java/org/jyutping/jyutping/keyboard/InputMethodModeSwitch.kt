@@ -31,9 +31,9 @@ fun InputMethodModeSwitch() {
         val characterStandard by context.characterStandard.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
-        val shapeWidth: Dp = 70.dp
+        val partWidth: Dp = 34.dp
+        val shapeWidth: Dp = 68.dp
         val shapeHeight: Dp = 25.dp
-        val partWidth: Dp = 35.dp
         val largerFontSize = 17.sp
         val normalFontSize = 13.sp
         Box(

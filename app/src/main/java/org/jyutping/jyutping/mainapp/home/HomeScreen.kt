@@ -33,6 +33,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -174,6 +175,7 @@ fun HomeScreen(navController: NavHostController) {
                                                         ) {
                                                                 Icon(imageVector = Icons.Outlined.Settings, contentDescription = null)
                                                                 Text(text = stringResource(id = R.string.home_button_enable_keyboard))
+                                                                Icon(imageVector = Icons.Outlined.Settings, contentDescription = null, modifier = Modifier.alpha(0f))
                                                         }
                                                 }
                                         }
@@ -194,6 +196,7 @@ fun HomeScreen(navController: NavHostController) {
                                                         ) {
                                                                 Icon(imageVector = Icons.Outlined.Keyboard, contentDescription = null)
                                                                 Text(text = stringResource(id = R.string.home_button_select_keyboard))
+                                                                Icon(imageVector = Icons.Outlined.Keyboard, contentDescription = null, modifier = Modifier.alpha(0f))
                                                         }
                                                 }
                                         }
