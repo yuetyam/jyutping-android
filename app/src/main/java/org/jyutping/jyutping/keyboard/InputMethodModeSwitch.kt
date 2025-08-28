@@ -79,7 +79,7 @@ fun InputMethodModeSwitch() {
                                 contentAlignment = Alignment.Center
                         ) {
                                 Text(
-                                        text = if (characterStandard.isSimplified()) "粤" else "粵",
+                                        text = if (characterStandard.isSimplified) "粤" else "粵",
                                         color = if (isDarkMode) Color.White else Color.Black,
                                         fontSize = if (inputMethodMode.isCantonese()) largerFontSize else normalFontSize
                                 )

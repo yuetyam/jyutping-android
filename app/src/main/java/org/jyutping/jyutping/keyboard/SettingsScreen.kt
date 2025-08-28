@@ -267,7 +267,7 @@ fun SettingsScreen(height: Dp) {
                                                         Icon(
                                                                 imageVector = Icons.Outlined.Check,
                                                                 contentDescription = null,
-                                                                modifier = Modifier.alpha(if (characterStandard.isSimplified()) 1f else 0f),
+                                                                modifier = Modifier.alpha(if (characterStandard.isSimplified) 1f else 0f),
                                                                 tint = PresetColor.blue
                                                         )
                                                 }

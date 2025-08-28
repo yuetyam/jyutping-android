@@ -171,7 +171,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         inputMethodMode.value.isABC() -> SpaceKeyForm.English
                         keyboardForm.value == KeyboardForm.TenKeyNumeric -> SpaceKeyForm.Fallback
                         else -> {
-                                val isSimplified: Boolean = characterStandard.value.isSimplified()
+                                val isSimplified: Boolean = characterStandard.value.isSimplified
                                 if (isBuffering.value) {
                                         if (candidates.value.isEmpty()) {
                                                 if (isSimplified) SpaceKeyForm.ConfirmSimplified else SpaceKeyForm.Confirm
@@ -199,9 +199,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         InputMethodMode.ABC -> ReturnKeyForm.StandbyABC
                         InputMethodMode.Cantonese -> {
                                 if (isBuffering.value) {
-                                        if (characterStandard.value.isSimplified()) ReturnKeyForm.BufferingSimplified else ReturnKeyForm.BufferingTraditional
+                                        if (characterStandard.value.isSimplified) ReturnKeyForm.BufferingSimplified else ReturnKeyForm.BufferingTraditional
                                 } else {
-                                        if (characterStandard.value.isSimplified()) ReturnKeyForm.StandbySimplified else ReturnKeyForm.StandbyTraditional
+                                        if (characterStandard.value.isSimplified) ReturnKeyForm.StandbySimplified else ReturnKeyForm.StandbyTraditional
                                 }
                         }
                 }

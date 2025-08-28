@@ -7,16 +7,16 @@ enum class CharacterStandard(val identifier: Int) {
 
         Traditional(1),
 
-        /// Traditional, Hong Kong
+        /** Traditional, Hong Kong */
         HongKong(2),
 
-        /// Traditional, Taiwan
+        /** Traditional, Taiwan */
         Taiwan(3),
 
         Simplified(4);
 
-        fun isSimplified(): Boolean = (this == Simplified)
-        // fun isNotSimplified(): Boolean = (this != Simplified)
+        val isSimplified: Boolean
+                get() = (this == Simplified)
 
         companion object {
                 fun standardOf(value: Int): CharacterStandard = CharacterStandard.entries.find { it.identifier == value } ?: Traditional

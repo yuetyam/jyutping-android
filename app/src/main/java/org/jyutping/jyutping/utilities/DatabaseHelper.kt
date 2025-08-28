@@ -595,7 +595,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun strokeMatch(text: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
                 val code = text.hashCode()
-                val command = "SELECT rowid, word FROM stroketable WHERE code = ${code};"
+                val command = "SELECT rowid, word FROM stroketable WHERE ping = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
