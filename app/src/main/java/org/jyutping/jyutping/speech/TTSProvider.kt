@@ -32,6 +32,7 @@ class TTSProvider(context: Context) : TextToSpeech.OnInitListener {
                                 TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE,
                                 TextToSpeech.LANG_COUNTRY_AVAILABLE -> {
                                         tts?.language = cantonese
+                                        tts?.setSpeechRate(0.85f)
                                         _isCantoneseSupported.value = true
                                 }
                                 else -> {
