@@ -8,21 +8,23 @@ fun Char.isSeparatorOrTone(): Boolean = (this.isSeparatorChar() || this.isCanton
 
 fun Char.isReverseLookupTrigger(): Boolean = PresetCharacter.reverseLookupTriggers.contains(this)
 
-/// is CJKV character
-fun Char.isIdeographicChar(): Boolean = when (this.code) {
-        0x3007 -> true
-        in 0x4E00..0x9FFF -> true
-        in 0x3400..0x4DBF -> true
-        in 0x20000..0x2A6DF -> true
-        in 0x2A700..0x2B73F -> true
-        in 0x2B740..0x2B81F -> true
-        in 0x2B820..0x2CEAF -> true
-        in 0x2CEB0..0x2EBEF -> true
-        in 0x30000..0x3134F -> true
-        in 0x31350..0x323AF -> true
-        in 0x2EBF0..0x2EE5F -> true
-        else -> false
-}
+/** is CJKV character Unicode code point */
+val Int.isIdeographicCodePoint: Boolean
+        get() = when (this) {
+                0x3007 -> true
+                in 0x4E00..0x9FFF -> true
+                in 0x3400..0x4DBF -> true
+                in 0x20000..0x2A6DF -> true
+                in 0x2A700..0x2B73F -> true
+                in 0x2B740..0x2B81F -> true
+                in 0x2B820..0x2CEAF -> true
+                in 0x2CEB0..0x2EBEF -> true
+                in 0x30000..0x3134F -> true
+                in 0x31350..0x323AF -> true
+                in 0x2EBF0..0x2EE5F -> true
+                in 0x323B0..0x33479 -> true
+                else -> false
+        }
 
 /*
 U+3007: 〇
@@ -36,4 +38,5 @@ U+2CEB0-U+2EBEF: CJK Unified Ideographs Extension F
 U+30000-U+3134F: CJK Unified Ideographs Extension G
 U+31350-U+323AF: CJK Unified Ideographs Extension H
 U+2EBF0-U+2EE5F: CJK Unified Ideographs Extension I
+U+323B0-U+33479: CJK Unified Ideographs Extension J
 */

@@ -43,7 +43,8 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.Screen
-import org.jyutping.jyutping.extensions.isIdeographicChar
+import org.jyutping.jyutping.extensions.characterCount
+import org.jyutping.jyutping.extensions.isIdeographicCodePoint
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.search.CantoneseLexicon
@@ -77,12 +78,12 @@ fun HomeScreen(navController: NavHostController) {
         val gwongWanLexicons = remember { mutableStateOf<List<GwongWanLexicon>>(listOf()) }
         val helper: DatabaseHelper by lazy { DatabaseHelper(navController.context, DatabasePreparer.DATABASE_NAME) }
         fun searchCantoneseLexicons(text: String): List<CantoneseLexicon> {
-                val ideographicCharacters = text.mapNotNull { if (it.isIdeographicChar()) it else null }.distinct()
-                if (ideographicCharacters.isEmpty()) return listOf(CantoneseLexicon(text))
+                val ideographicCodePoints = text.codePoints().toArray().filter { it.isIdeographicCodePoint }.distinct()
+                if (ideographicCodePoints.isEmpty()) return listOf(CantoneseLexicon(text))
                 val primary = helper.searchCantoneseLexicon(text)
-                val shouldReturnEarly: Boolean = text.length < 2 || ideographicCharacters.count() > 3
+                val shouldReturnEarly: Boolean = text.characterCount() < 2 || ideographicCodePoints.count() > 3
                 if (shouldReturnEarly) return listOf(primary)
-                val subLexicons = ideographicCharacters.map { helper.searchCantoneseLexicon(it.toString()) }
+                val subLexicons = ideographicCodePoints.map { helper.searchCantoneseLexicon(Character.toString(it)) }
                 return listOf(primary) + subLexicons
         }
         val isKeyboardEnabled: MutableState<Boolean> = remember { mutableStateOf(false) }
@@ -119,17 +120,18 @@ fun HomeScreen(navController: NavHostController) {
                                         } else {
                                                 lexicons.value = searchCantoneseLexicons(text)
                                         }
-                                        val ideographicCharacters = text.mapNotNull { if (it.isIdeographicChar()) it else null }.distinct()
-                                        if (ideographicCharacters.isEmpty() || ideographicCharacters.count() > 3) {
+                                        val codePoints = text.codePoints().toArray().filter { it.isIdeographicCodePoint }.distinct()
+                                        if (codePoints.isEmpty() || codePoints.count() > 3) {
                                                 yingWaaLexicons.value = emptyList()
                                                 choHokLexicons.value = emptyList()
                                                 fanWanLexicons.value = emptyList()
                                                 gwongWanLexicons.value = emptyList()
                                         } else {
-                                                yingWaaLexicons.value = ideographicCharacters.map { helper.searchYingWaaFanWan(it) }.map { YingWaaFanWan.process(it) }.filter { it.isNotEmpty() }
-                                                choHokLexicons.value = ideographicCharacters.map { helper.searchChoHokYuetYamCitYiu(it) }.filter { it.isNotEmpty() }
-                                                fanWanLexicons.value = ideographicCharacters.map { helper.searchFanWanCuetYiu(it) }.filter { it.isNotEmpty() }
-                                                gwongWanLexicons.value = ideographicCharacters.map { helper.searchGwongWan(it) }.filter { it.isNotEmpty() }
+                                                val characters = codePoints.map { Character.toString(it) }
+                                                yingWaaLexicons.value = characters.map { helper.searchYingWaaFanWan(it) }.map { YingWaaFanWan.process(it) }.filter { it.isNotEmpty() }
+                                                choHokLexicons.value = characters.map { helper.searchChoHokYuetYamCitYiu(it) }.filter { it.isNotEmpty() }
+                                                fanWanLexicons.value = characters.map { helper.searchFanWanCuetYiu(it) }.filter { it.isNotEmpty() }
+                                                gwongWanLexicons.value = characters.map { helper.searchGwongWan(it) }.filter { it.isNotEmpty() }
                                         }
                                 }
                         }

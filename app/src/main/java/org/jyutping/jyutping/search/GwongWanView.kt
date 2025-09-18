@@ -29,7 +29,7 @@ fun GwongWanView(entries: List<GwongWanCharacter>) {
                 Column(
                         modifier = Modifier
                                 .fillMaxWidth()
-                                .background(color = colorScheme.background, shape = RoundedCornerShape(8.dp))
+                                .background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                                 .padding(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -50,7 +50,9 @@ fun GwongWanView(entries: List<GwongWanCharacter>) {
 
 @Composable
 private fun GwongWanPronunciationView(entry: GwongWanCharacter) {
-        Column {
+        Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
                 Row {
                         Text(text = "讀音", color = colorScheme.onBackground)
                         SeparatorMark()

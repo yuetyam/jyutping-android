@@ -49,3 +49,10 @@ fun String.generateSymbol(): String {
                 text.split(".").map { it.toInt(radix = 16) }.forEach { appendCodePoint(it) }
         }
 }
+
+/**
+ * Count of characters.
+ *
+ * A non-BMP character would count as one.
+ * */
+fun String.characterCount(): Int = this.codePoints().count().toInt()

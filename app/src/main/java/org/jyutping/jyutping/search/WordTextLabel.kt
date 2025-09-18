@@ -12,6 +12,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.codePointText
 import org.jyutping.jyutping.speech.Speaker
 import org.jyutping.jyutping.ui.common.SeparatorMark
@@ -19,7 +20,7 @@ import org.jyutping.jyutping.ui.common.SeparatorMark
 @Composable
 fun WordTextLabel(word: String) {
         Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
                 Row(
@@ -35,12 +36,12 @@ fun WordTextLabel(word: String) {
                                 color = colorScheme.onBackground
                         )
                 }
-                if (word.length == 1) {
+                if (word.characterCount() == 1) {
                         Text(
                                 text = word.codePointText(),
                                 modifier = Modifier.alpha(0.75f),
                                 color = colorScheme.onBackground,
-                                fontSize = 14.sp,
+                                fontSize = 13.sp,
                                 fontFamily = FontFamily.Monospace
                         )
                 }

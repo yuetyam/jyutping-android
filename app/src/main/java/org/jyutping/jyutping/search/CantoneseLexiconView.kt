@@ -20,7 +20,7 @@ fun CantoneseLexiconView(lexicon: CantoneseLexicon) {
         Column(
                 modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = colorScheme.background, shape = RoundedCornerShape(8.dp))
+                        .background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                         .padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {

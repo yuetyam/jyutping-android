@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,12 +12,14 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.linguistics.OldCantonese
 import org.jyutping.jyutping.presets.PresetString
+import org.jyutping.jyutping.speech.Speaker
 import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
@@ -31,7 +34,7 @@ fun ChoHokView(entries: List<ChoHokYuetYamCitYiu>) {
                 Column(
                         modifier = Modifier
                                 .fillMaxWidth()
-                                .background(color = colorScheme.background, shape = RoundedCornerShape(8.dp))
+                                .background(color = colorScheme.background, shape = RoundedCornerShape(10.dp))
                                 .padding(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -79,7 +82,8 @@ private fun ChoHokPronunciationView(entry: ChoHokYuetYamCitYiu) {
                         )
                 }
                 Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
                 ) {
                         Row {
                                 Text(
@@ -97,6 +101,8 @@ private fun ChoHokPronunciationView(entry: ChoHokYuetYamCitYiu) {
                                 modifier = Modifier.alpha(0.75f),
                                 color = colorScheme.onBackground
                         )
+                        Spacer(modifier = Modifier.weight(1f))
+                        Speaker(romanization = entry.romanization)
                 }
                 homophoneText?.let {
                         Row {
