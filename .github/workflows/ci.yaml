@@ -2,8 +2,22 @@ name: CI
 on: [push, pull_request, release]
 
 jobs:
-  buildproject:
-    name: Build Project
+  prepare:
+    name: Prepare Database
+    runs-on: ubuntu-latest
+    working-directory: ./preparing
+    steps:
+      - uses: actions/checkout@v5
+      - name: setup JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: gradle
+      - name: Run gradlew
+        run: ./gradlew run
+  buildapp:
+    name: Build App
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -13,7 +27,7 @@ jobs:
           java-version: "21"
           distribution: "temurin"
           cache: gradle
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+#      - name: Grant execute permission for gradlew
+#        run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build

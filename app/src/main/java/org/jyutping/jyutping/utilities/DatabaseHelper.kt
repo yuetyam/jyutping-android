@@ -538,7 +538,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun cangjieMatch(version: Int, text: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
                 val code = text.charcode() ?: return emptyList()
-                val command = "SELECT rowid, word FROM cangjietable WHERE cj${version}code = ${code};"
+                val command = "SELECT rowid, word FROM cangjietable WHERE c${version}code = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
@@ -551,7 +551,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         fun cangjieGlob(version: Int, text: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
-                val command = "SELECT rowid, word, cj${version}complex FROM cangjietable WHERE cangjie${version} GLOB '${text}*' ORDER BY cj${version}complex ASC LIMIT 100;"
+                val command = "SELECT rowid, word, c${version}complex FROM cangjietable WHERE cangjie${version} GLOB '${text}*' ORDER BY c${version}complex ASC LIMIT 100;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
