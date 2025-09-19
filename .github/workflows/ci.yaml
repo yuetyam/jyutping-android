@@ -5,7 +5,6 @@ jobs:
   prepare:
     name: Prepare Database
     runs-on: ubuntu-latest
-    working-directory: ./preparing
     steps:
       - uses: actions/checkout@v5
       - name: setup JDK
@@ -16,8 +15,10 @@ jobs:
           cache: gradle
       - name: Run gradlew
         run: ./gradlew run
+        working-directory: ./preparing
   buildapp:
     name: Build App
+    needs: [prepare]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5

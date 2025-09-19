@@ -51,6 +51,23 @@ Jyutping for iOS & macOS: [yuetyam/jyutping](https://github.com/yuetyam/jyutping
 <br>
 Also available on our website: https://jyutping.app/android
 
+## How to build
+Build requirements:
+- Android Studio 2025.1.1+
+
+Clone with `--depth` to reduce code size:
+~~~bash
+git clone --depth 1 https://github.com/yuetyam/jyutping-android.git
+~~~
+Prepare databases:
+~~~bash
+# cd path/to/jyutping-android
+cd ./preparing/
+./gradlew run
+~~~
+
+Then open this project with Android Studio.
+
 ## Credits
 - [Rime-Cantonese](https://github.com/rime/rime-cantonese) (Cantonese Lexicon)
 - [OpenCC](https://github.com/BYVoid/OpenCC) (Traditional-Simplified Character Conversion)

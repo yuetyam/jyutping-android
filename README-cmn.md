@@ -45,6 +45,23 @@ Android 粵語拼音輸入法。
 <br>
 更多下載方式請前往官網: https://jyutping.app/android
 
+## 如何構建（How to build）
+前置要求（Build requirements）：
+- Android Studio 2025.1.1+
+
+倉庫體積比較大，建議加 `--depth` 來 clone：
+~~~bash
+git clone --depth 1 https://github.com/yuetyam/jyutping-android.git
+~~~
+先構建數據庫 (Prepare databases)：
+~~~bash
+# cd path/to/jyutping-android
+cd ./preparing/
+./gradlew run
+~~~
+
+接着就可以用 Android Studio 開啓。
+
 ## 鳴謝（Credits）
 - [Rime-Cantonese](https://github.com/rime/rime-cantonese) (Cantonese Lexicon)
 - [OpenCC](https://github.com/BYVoid/OpenCC) (Traditional-Simplified Character Conversion)
