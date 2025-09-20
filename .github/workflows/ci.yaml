@@ -18,7 +18,7 @@ jobs:
         working-directory: ./preparing
   buildapp:
     name: Build App
-    needs: [prepare]
+#    needs: [prepare]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5

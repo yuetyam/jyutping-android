@@ -121,6 +121,7 @@ obj/
 ### AndroidStudio Patch ###
 
 !/gradle/wrapper/gradle-wrapper.jar
+!/preparing/gradle/wrapper/gradle-wrapper.jar
 
 
 ### SQLite ###
