@@ -21,14 +21,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Job
@@ -52,6 +54,7 @@ fun EditingPanelBackspaceKey(modifier: Modifier) {
         var isLongPressing by remember { mutableStateOf(false) }
         var longPressJob: Job? by remember { mutableStateOf(null) }
         val longPressCoroutineScope = rememberCoroutineScope()
+        val keyShape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
         Column(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -93,14 +96,19 @@ fun EditingPanelBackspaceKey(modifier: Modifier) {
                                 } else {
                                         if (isHighContrastPreferred) Color.Black else Color.Transparent
                                 },
-                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+                                shape = keyShape
                         )
-                        .shadow(
-                                elevation = 0.5.dp,
-                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+                        .dropShadow(
+                                shape = keyShape,
+                                shadow = Shadow(
+                                        radius = 0.5.dp,
+                                        color = PresetColor.shadowGray,
+                                        offset = DpOffset(x = 0.dp, 0.5.dp)
+                                )
                         )
                         .background(
-                                color = backgroundColor(isDarkMode, isHighContrastPreferred, isPressing)
+                                color = backgroundColor(isDarkMode, isHighContrastPreferred, isPressing),
+                                shape = keyShape
                         )
                         .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,

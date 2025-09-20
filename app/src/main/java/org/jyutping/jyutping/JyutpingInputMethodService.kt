@@ -5,6 +5,7 @@ import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
 import android.content.ClipboardManager
 import android.content.res.Configuration
 import android.media.AudioManager
+import android.os.Build
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -70,6 +71,7 @@ import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
 import org.jyutping.jyutping.utilities.ShapeKeyMap
 import org.jyutping.jyutping.utilities.UserLexiconHelper
+import kotlin.math.roundToInt
 
 class JyutpingInputMethodService: LifecycleInputMethodService(),
         ViewModelStoreOwner,
@@ -85,6 +87,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 super.onCreate()
                 savedStateRegistryController.performRestore(null)
                 DatabasePreparer.prepare(this)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        val density = resources.displayMetrics.density
+                        val blurPixel = (20 * density).roundToInt()
+                        window?.window?.setBackgroundBlurRadius(blurPixel)
+                }
         }
         override fun onCreateInputView(): View {
                 window?.window?.decorView?.let { decorView ->

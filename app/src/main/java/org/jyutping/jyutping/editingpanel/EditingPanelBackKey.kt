@@ -22,11 +22,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
@@ -45,6 +47,7 @@ fun EditingPanelBackKey(modifier: Modifier) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
+        val keyShape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
         Column(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
@@ -60,14 +63,19 @@ fun EditingPanelBackKey(modifier: Modifier) {
                                 } else {
                                         if (isHighContrastPreferred) Color.Black else Color.Transparent
                                 },
-                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+                                shape = keyShape
                         )
-                        .shadow(
-                                elevation = 0.5.dp,
-                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+                        .dropShadow(
+                                shape = keyShape,
+                                shadow = Shadow(
+                                        radius = 0.5.dp,
+                                        color = PresetColor.shadowGray,
+                                        offset = DpOffset(x = 0.dp, 0.5.dp)
+                                )
                         )
                         .background(
-                                color = backgroundColor(isDarkMode, isHighContrastPreferred, isPressed)
+                                color = backgroundColor(isDarkMode, isHighContrastPreferred, isPressed),
+                                shape = keyShape
                         )
                         .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,

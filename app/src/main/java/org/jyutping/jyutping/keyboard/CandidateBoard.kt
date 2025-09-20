@@ -19,7 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,9 +31,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -73,7 +73,7 @@ fun CandidateBoard(height: Dp) {
                 val windowMetrics = context.windowManager.currentWindowMetrics
                 (windowMetrics.bounds.width() / windowMetrics.density).dp
         } else {
-                LocalConfiguration.current.screenWidthDp.dp
+                LocalWindowInfo.current.containerSize.width.dp
         }
         val state = rememberLazyListState()
         val candidates by context.candidates.collectAsState()
@@ -188,7 +188,7 @@ fun CandidateBoard(height: Dp) {
                                         } else {
                                                 if (isHighContrastPreferred) Color.Black else Color.Transparent
                                         },
-                                        shape = RoundedCornerShape(4.dp)
+                                        shape = CircleShape
                                 )
                                 .background(
                                         color = if (isDarkMode) {
@@ -196,13 +196,16 @@ fun CandidateBoard(height: Dp) {
                                         } else {
                                                 if (isHighContrastPreferred) AltPresetColor.keyLightEmphatic else PresetColor.keyLightEmphatic
                                         },
-                                        shape = RoundedCornerShape(4.dp)
+                                        shape = CircleShape
                                 )
+                                .padding(top = 4.dp, end = 4.dp)
                 ) {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.chevron_up),
                                 contentDescription = null,
-                                modifier = Modifier.size(20.dp),
+                                modifier = Modifier
+                                        .padding(bottom = 4.dp, start = 4.dp)
+                                        .size(20.dp),
                                 tint = if (isDarkMode) Color.White else Color.Black
                         )
                 }

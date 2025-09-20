@@ -20,15 +20,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,6 +58,7 @@ fun LetterKey(letter: String, modifier: Modifier, position: Alignment.Horizontal
         val density = LocalDensity.current
         var baseSize by remember { mutableStateOf(Size.Zero) }
         var isPressing by remember { mutableStateOf(false) }
+        val keyShape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -92,14 +95,19 @@ fun LetterKey(letter: String, modifier: Modifier, position: Alignment.Horizontal
                                         } else {
                                                 if (isHighContrastPreferred) Color.Black else Color.Transparent
                                         },
-                                        shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
+                                        shape = keyShape
                                 )
-                                .shadow(
-                                        elevation = 0.5.dp,
-                                        shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
+                                .dropShadow(
+                                        shape = keyShape,
+                                        shadow = Shadow(
+                                                radius = 0.5.dp,
+                                                color = PresetColor.shadowGray,
+                                                offset = DpOffset(x = 0.dp, 0.5.dp)
+                                        )
                                 )
                                 .background(
-                                        color = keyBackgroundColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey, isPressing)
+                                        color = keyBackgroundColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey, isPressing),
+                                        shape = keyShape
                                 )
                                 .fillMaxSize(),
                         contentAlignment = Alignment.Center

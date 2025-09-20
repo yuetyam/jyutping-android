@@ -16,8 +16,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
@@ -35,7 +35,7 @@ fun EditingPanel(height: Dp) {
                 val windowMetrics = context.windowManager.currentWindowMetrics
                 (windowMetrics.bounds.width() / windowMetrics.density)
         } else {
-                LocalConfiguration.current.screenWidthDp.toFloat()
+                LocalWindowInfo.current.containerSize.width.toFloat()
         }
         val edgeKeyWidth: Float = min(135f, screenWidth / 4.0f)
         val edgeKeyWeight: Float = edgeKeyWidth / screenWidth

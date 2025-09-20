@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.editingpanel.EditingPanel
@@ -95,10 +96,10 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
         @Composable
         @DeprecatedSinceApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
         private fun legacyResponsiveKeyHeight(): Dp {
-                val configuration = LocalConfiguration.current
-                val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-                val windowWidth = configuration.screenWidthDp
-                val windowHeight = configuration.screenHeightDp
+                val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+                val containerSize = LocalWindowInfo.current.containerSize
+                val windowWidth = containerSize.width
+                val windowHeight = containerSize.height
                 val minDimension = min(windowWidth, windowHeight)
                 val isPhone: Boolean = minDimension < 500
                 val keyboardInterface: KeyboardInterface = when {

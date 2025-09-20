@@ -1,15 +1,27 @@
 package org.jyutping.jyutping.presets
 
+import android.os.Build
 import androidx.compose.ui.graphics.Color
 
 object PresetColor {
+
+        /**
+         * Should blur keyboard background
+         *
+         * True if API Level 31+, that is, Android 12+
+         */
+        val isBlurPreferred: Boolean = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+
         val keyLight               : Color = Color.White
         val keyLightEmphatic       : Color = Color(0xFFAAAFBA)
-        val keyboardLightBackground: Color = Color(0xFFD0D4D8)
+        val keyboardLightBackground: Color = if (isBlurPreferred) Color(0xCCD0D4D8) else Color(0xFFD0D4D8)
 
         val keyDark                : Color = Color(0xFF666666)
         val keyDarkEmphatic        : Color = Color(0xFF444444)
-        val keyboardDarkBackground : Color = Color(0xFF222222)
+        val keyboardDarkBackground : Color = if (isBlurPreferred) Color(0xCC222222) else Color(0xFF222222)
+
+        // Key shadow
+        val shadowGray: Color = Color(0x88888888)
 
         val red                    : Color = Color(0xFFF44336)
         val green                  : Color = Color(0xFF4CAF50)

@@ -43,13 +43,6 @@ fun SymbolicKeyboard(keyHeight: Dp) {
         ) {
                 Box(
                         modifier = Modifier
-                                .background(
-                                        if (isDarkMode) {
-                                                if (isHighContrastPreferred) Color.Black else PresetColor.keyboardDarkBackground
-                                        } else {
-                                                if (isHighContrastPreferred) Color.White else PresetColor.keyboardLightBackground
-                                        }
-                                )
                                 .height(PresetConstant.ToolBarHeight.dp)
                                 .fillMaxWidth(),
                         contentAlignment = Alignment.Center

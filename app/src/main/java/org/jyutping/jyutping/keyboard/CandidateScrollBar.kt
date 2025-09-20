@@ -1,9 +1,9 @@
 package org.jyutping.jyutping.keyboard
 
 import android.view.HapticFeedbackConstants
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
 fun CandidateScrollBar() {
@@ -42,18 +41,19 @@ fun CandidateScrollBar() {
         val context = LocalContext.current as JyutpingInputMethodService
         val commentStyle by context.commentStyle.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
-        val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val state = rememberLazyListState()
         val candidates by context.candidates.collectAsState()
         val candidateState by context.candidateState.collectAsState()
         LaunchedEffect(candidateState) {
                 state.animateScrollToItem(index = 0, scrollOffset = 0)
         }
-        Box(
-                contentAlignment = Alignment.CenterEnd
+        Row(
+                modifier = Modifier.fillMaxSize()
         ) {
                 LazyRow(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(1f),
                         state = state,
                         horizontalArrangement = Arrangement.spacedBy(0.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -79,13 +79,6 @@ fun CandidateScrollBar() {
                 }
                 Box(
                         modifier = Modifier
-                                .background(
-                                        if (isDarkMode) {
-                                                if (isHighContrastPreferred) Color.Black else PresetColor.keyboardDarkBackground
-                                        } else {
-                                                if (isHighContrastPreferred) Color.White else PresetColor.keyboardLightBackground
-                                        }
-                                )
                                 .width(expanderWidth)
                                 .fillMaxHeight(),
                         contentAlignment = Alignment.Center
