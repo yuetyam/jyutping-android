@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.mainapp.home
+package org.jyutping.jyutping.app.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues

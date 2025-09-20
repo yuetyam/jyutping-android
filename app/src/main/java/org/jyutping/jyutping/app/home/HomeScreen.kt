@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.mainapp.home
+package org.jyutping.jyutping.app.home
 
 import android.content.Context
 import android.content.Intent

@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.mainapp.about
+package org.jyutping.jyutping.app.about
 
 import android.content.ActivityNotFoundException
 import android.content.Intent

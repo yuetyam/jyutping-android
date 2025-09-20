@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.mainapp.romanization
+package org.jyutping.jyutping.app.romanization
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

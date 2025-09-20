@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.mainapp.cantonese
+package org.jyutping.jyutping.app.cantonese
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
