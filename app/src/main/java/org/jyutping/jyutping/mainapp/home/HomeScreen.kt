@@ -206,42 +206,49 @@ fun HomeScreen(navController: NavHostController) {
                         }
                         item {
                                 TextCard(
-                                        heading = stringResource(id = R.string.home_heading_tone_input),
-                                        content = stringResource(id = R.string.home_content_tone_input),
-                                        subContent = stringResource(id = R.string.home_subcontent_tones_input_examples),
-                                        shouldMonospaceContent = true
+                                        heading = stringResource(id = R.string.guide_abbreviated_input_heading),
+                                        content = stringResource(id = R.string.guide_abbreviated_input_row1),
+                                        subContent = stringResource(id = R.string.guide_abbreviated_input_row2)
                                 )
                         }
                         item {
                                 TextCard(
-                                        heading = stringResource(id = R.string.home_heading_pinyin_reverse_lookup),
-                                        content = stringResource(id = R.string.home_content_pinyin_reverse_lookup)
+                                        heading = stringResource(id = R.string.guide_pinyin_reverse_lookup_heading),
+                                        content = stringResource(id = R.string.guide_pinyin_reverse_lookup_body)
                                 )
                         }
                         item {
                                 TextCard(
-                                        heading = stringResource(id = R.string.home_heading_cangjie_reverse_lookup),
-                                        content = stringResource(id = R.string.home_content_cangjie_reverse_lookup),
-                                        subContent = stringResource(id = R.string.home_subcontent_cangjie_reverse_lookup_note)
+                                        heading = stringResource(id = R.string.guide_cangjie_reverse_lookup_heading),
+                                        content = stringResource(id = R.string.guide_cangjie_reverse_lookup_body),
+                                        subContent = stringResource(id = R.string.guide_cangjie_reverse_lookup_note)
                                 )
                         }
                         item {
                                 TextCard(
-                                        heading = stringResource(id = R.string.home_heading_stroke_reverse_lookup),
-                                        content = stringResource(id = R.string.home_content_stroke_reverse_lookup)
+                                        heading = stringResource(id = R.string.guide_stroke_reverse_lookup_heading),
+                                        content = stringResource(id = R.string.guide_stroke_reverse_lookup_body)
                                 )
                         }
                         item {
                                 TextCard(
-                                        heading = stringResource(id = R.string.home_heading_stroke_code),
+                                        heading = stringResource(id = R.string.guide_stroke_reverse_lookup_examples),
                                         content = "w = 橫(waang)\ns = 豎(syu)\na = 撇\nd = 點(dim)\nz = 折(zit)",
                                         shouldMonospaceContent = true
                                 )
                         }
                         item {
                                 TextCard(
-                                        heading = stringResource(id = R.string.home_heading_compose_reverse_lookup),
-                                        content = stringResource(id = R.string.home_content_compose_reverse_lookup)
+                                        heading = stringResource(id = R.string.guide_structure_reverse_lookup_heading),
+                                        content = stringResource(id = R.string.guide_structure_reverse_lookup_body)
+                                )
+                        }
+                        item {
+                                TextCard(
+                                        heading = stringResource(id = R.string.guide_tones_input_heading),
+                                        content = stringResource(id = R.string.guide_tones_input_body),
+                                        subContent = stringResource(id = R.string.guide_tones_input_examples),
+                                        shouldMonospaceContent = true
                                 )
                         }
                         item {
