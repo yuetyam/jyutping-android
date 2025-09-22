@@ -11,7 +11,6 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.ExtractedTextRequest
 import android.view.inputmethod.InputMethodManager
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.edit
 import androidx.core.view.WindowCompat
@@ -63,6 +62,7 @@ import org.jyutping.jyutping.keyboard.Stroke
 import org.jyutping.jyutping.keyboard.Structure
 import org.jyutping.jyutping.keyboard.length
 import org.jyutping.jyutping.keyboard.transformed
+import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
@@ -89,7 +89,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 DatabasePreparer.prepare(this)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                         val density = resources.displayMetrics.density
-                        val blurPixel = (20 * density).roundToInt()
+                        val blurPixel = (24 * density).roundToInt()
                         window?.window?.setBackgroundBlurRadius(blurPixel)
                 }
         }
@@ -109,10 +109,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         WindowCompat.getInsetsController(it, it.decorView).isAppearanceLightNavigationBars = isNightMode.not()
 
                         @Suppress("DEPRECATION") // Needs for Android 14 and below
-                        it.navigationBarColor = if (isDarkMode.value) {
-                                if (isHighContrastPreferred.value) Color.Black.toArgb() else PresetColor.keyboardDarkBackground.toArgb()
+                        it.navigationBarColor = if (isHighContrastPreferred.value) {
+                                if (isDarkMode.value) AltPresetColor.darkBackground.toArgb() else AltPresetColor.lightBackground.toArgb()
                         } else {
-                                if (isHighContrastPreferred.value) Color.White.toArgb() else PresetColor.keyboardLightBackground.toArgb()
+                                if (isDarkMode.value) PresetColor.darkBackground.toArgb() else PresetColor.lightBackground.toArgb()
                         }
                 }
                 isDarkMode.value = isNightMode

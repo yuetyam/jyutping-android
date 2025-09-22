@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
+import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
 fun InputMethodModeSwitch() {
@@ -40,18 +41,14 @@ fun InputMethodModeSwitch() {
                 modifier = Modifier
                         .border(
                                 width = 1.dp,
-                                color = if (isDarkMode) {
-                                        if (isHighContrastPreferred) Color.White else Color.Transparent
-                                } else {
-                                        if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                },
+                                color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
                                 shape = CircleShape
                         )
                         .background(
-                                color = if (isDarkMode) {
-                                        if (isHighContrastPreferred) AltPresetColor.keyDarkEmphatic else PresetColor.keyDarkEmphatic
+                                color = if (isHighContrastPreferred) {
+                                        if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
                                 } else {
-                                        if (isHighContrastPreferred) AltPresetColor.keyLightEmphatic else PresetColor.keyLightEmphatic
+                                        if (isDarkMode) PresetColor.emphaticDark else PresetColor.emphaticLight
                                 },
                                 shape = CircleShape
                         )
@@ -109,24 +106,18 @@ fun InputMethodModeSwitch() {
         }
 }
 
-private fun optionBorderColor(isSelected: Boolean, isDarkMode: Boolean, isHighContrastPreferred: Boolean): Color =
-        if (isSelected) {
-                if (isDarkMode) {
-                        if (isHighContrastPreferred) Color.White else Color.Transparent
-                } else {
-                        if (isHighContrastPreferred) Color.Black else Color.Transparent
-                }
-        } else {
-                Color.Transparent
-        }
+private fun optionBorderColor(isSelected: Boolean, isDarkMode: Boolean, isHighContrastPreferred: Boolean): Color = if (isHighContrastPreferred && isSelected) {
+        if (isDarkMode) Color.White else Color.Black
+} else {
+        Color.Transparent
+}
 
-private fun optionBackgroundColor(isSelected: Boolean, isDarkMode: Boolean, isHighContrastPreferred: Boolean): Color =
-        if (isSelected) {
-                if (isDarkMode) {
-                        if (isHighContrastPreferred) AltPresetColor.keyDark else PresetColor.keyDark
-                } else {
-                        if (isHighContrastPreferred) AltPresetColor.keyLight else PresetColor.keyLight
-                }
+private fun optionBackgroundColor(isSelected: Boolean, isDarkMode: Boolean, isHighContrastPreferred: Boolean): Color = if (isSelected) {
+        if (isHighContrastPreferred) {
+                if (isDarkMode) AltPresetColor.shallowDark else AltPresetColor.shallowLight
         } else {
-                Color.Transparent
+                if (isDarkMode) PresetColor.shallowDark else PresetColor.shallowLight
         }
+} else {
+        Color.Transparent
+}

@@ -25,7 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -38,6 +38,7 @@ import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
+import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
 fun TenKeySymbolSidebar(unitHeight: Dp, modifier: Modifier) {
@@ -58,17 +59,10 @@ fun TenKeySymbolSidebar(unitHeight: Dp, modifier: Modifier) {
                         .padding(3.dp)
                         .border(
                                 width = 1.dp,
-                                color = if (isDarkMode) {
-                                        if (isHighContrastPreferred) Color.White else Color.Transparent
-                                } else {
-                                        if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                },
+                                color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
                                 shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
                         )
-                        .shadow(
-                                elevation = 0.5.dp,
-                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
-                        )
+                        .clip(RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp))
                         .fillMaxSize(),
                 state = state
         ) {
@@ -93,7 +87,7 @@ fun TenKeySymbolSidebar(unitHeight: Dp, modifier: Modifier) {
                                                 )
                                         }
                                         .background(
-                                                color = backgroundColor(isDarkMode, isHighContrastPreferred, isPressing && pressingIndex == index)
+                                                color = keyBackColor(isDarkMode, isHighContrastPreferred, isPressing && pressingIndex == index)
                                         )
                                         .height(unitHeight)
                                         .fillMaxWidth(),
@@ -113,17 +107,16 @@ fun TenKeySymbolSidebar(unitHeight: Dp, modifier: Modifier) {
         }
 }
 
-private fun backgroundColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean) =
+private fun keyBackColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean): Color = if (isHighContrastPreferred) {
         if (isDarkMode) {
-                if (isHighContrastPreferred) {
-                        if (isPressing) AltPresetColor.keyDark else AltPresetColor.keyDarkEmphatic
-                } else {
-                        if (isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
-                }
+                if (isPressing) AltPresetColor.shallowDark else AltPresetColor.emphaticDark
         } else {
-                if (isHighContrastPreferred) {
-                        if (isPressing) AltPresetColor.keyLight else AltPresetColor.keyLightEmphatic
-                } else {
-                        if (isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
-                }
+                if (isPressing) AltPresetColor.shallowLight else AltPresetColor.emphaticLight
         }
+} else {
+        if (isDarkMode) {
+                if (isPressing) PresetColor.shallowDark else PresetColor.emphaticDark
+        } else {
+                if (isPressing) PresetColor.shallowLight else PresetColor.emphaticLight
+        }
+}

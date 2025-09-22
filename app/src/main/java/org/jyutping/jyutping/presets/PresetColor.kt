@@ -5,23 +5,21 @@ import androidx.compose.ui.graphics.Color
 
 object PresetColor {
 
-        /**
-         * Should blur keyboard background
-         *
-         * True if API Level 31+, that is, Android 12+
-         */
-        val isBlurPreferred: Boolean = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+        /** Blur keyboard background on Android 12+ */
+        private val isBlurPreferred: Boolean = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
 
-        val keyLight               : Color = Color.White
-        val keyLightEmphatic       : Color = Color(0xFFAAAFBA)
-        val keyboardLightBackground: Color = if (isBlurPreferred) Color(0xCCD0D4D8) else Color(0xFFD0D4D8)
+        val lightBackground: Color = if (isBlurPreferred) Color(0xCCD0D4D8) else Color(0xFFD0D4D8)
+        val darkBackground : Color = if (isBlurPreferred) Color(0xCC222222) else Color(0xFF222222)
 
-        val keyDark                : Color = Color(0xFF666666)
-        val keyDarkEmphatic        : Color = Color(0xFF444444)
-        val keyboardDarkBackground : Color = if (isBlurPreferred) Color(0xCC222222) else Color(0xFF222222)
+        val shallowLight      : Color = Color.White.copy(0.95f)
+        val emphaticLight     : Color = Color(0x40686E80)
+        val solidShallowLight : Color = Color.White
+        val solidEmphaticLight: Color = Color(0xFFAAAFBA)
 
-        // Key shadow
-        val shadowGray: Color = Color(0x88888888)
+        val shallowDark       : Color = Color.White.copy(alpha = 0.3f)
+        val emphaticDark      : Color = Color.White.copy(alpha = 0.15f)
+        val solidShallowDark  : Color = Color(0xFF666666)
+        val solidEmphaticDark : Color = Color(0xFF444444)
 
         val red                    : Color = Color(0xFFF44336)
         val green                  : Color = Color(0xFF4CAF50)
@@ -30,35 +28,10 @@ object PresetColor {
 }
 
 object AltPresetColor {
-        val keyLight               : Color = Color.White
-        val keyLightEmphatic       : Color = Color(0xFFBBBBBB)
-        val keyboardLightBackground: Color = Color(0xFFDDDDDD)
-
-        val keyDark                : Color = Color(0xFF666666)
-        val keyDarkEmphatic        : Color = Color(0xFF444444)
-        val keyboardDarkBackground : Color = Color(0xFF222222)
+        val lightBackground: Color = Color.White
+        val darkBackground : Color = Color.Black
+        val shallowLight : Color = Color.White
+        val emphaticLight: Color = Color(0xFFBBBBBB)
+        val shallowDark  : Color = Color(0xFF666666)
+        val emphaticDark : Color = Color(0xFF444444)
 }
-
-/*
-object ShallowPresetColor {
-        val keyLight               : Color = Color.White
-        val keyLightEmphatic       : Color = Color(0xFFB8BCC4)
-        val keyboardLightBackground: Color = Color(0xFFDDDFE4)
-
-        val keyDark                : Color = Color(0xFF666666)
-        val keyDarkEmphatic        : Color = Color(0xFF444444)
-        val keyboardDarkBackground : Color = Color(0xFF222222)
-}
-
-object IOSPresetColor {
-        val keyLight               : Color = Color.White
-        val keyLightEmphatic       : Color = Color(0xFFACB1B9)
-        val keyboardLightBackground: Color = Color(0xFFD0D4D8)
-
-        val keyDark                : Color = Color.White.copy(alpha = 0.35f)
-        val keyDarkEmphatic        : Color = Color.White.copy(alpha = 0.15f)
-        val keyDarkOpacity         : Color = Color(0xFF686868)
-        val keyDarkEmphaticOpacity : Color = Color(0xFF464646)
-        val keyboardDarkBackground : Color = Color(0xFF333333)
-}
-*/

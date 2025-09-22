@@ -34,6 +34,7 @@ import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
+import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
 fun TenKeyGlobeKey(modifier: Modifier) {
@@ -42,6 +43,7 @@ fun TenKeyGlobeKey(modifier: Modifier) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
+        val keyShape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -73,19 +75,12 @@ fun TenKeyGlobeKey(modifier: Modifier) {
                         .padding(3.dp)
                         .border(
                                 width = 1.dp,
-                                color = if (isDarkMode) {
-                                        if (isHighContrastPreferred) Color.White else Color.Transparent
-                                } else {
-                                        if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                },
-                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
-                        )
-                        .shadow(
-                                elevation = 0.5.dp,
-                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+                                color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
+                                shape = keyShape
                         )
                         .background(
-                                color = keyBackgroundColor(isDarkMode, isHighContrastPreferred, isPressing)
+                                color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressing),
+                                shape = keyShape
                         )
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -98,18 +93,3 @@ fun TenKeyGlobeKey(modifier: Modifier) {
                 )
         }
 }
-
-private fun keyBackgroundColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean): Color =
-        if (isDarkMode) {
-                if (isHighContrastPreferred) {
-                        if (isPressing) AltPresetColor.keyDark else AltPresetColor.keyDarkEmphatic
-                } else {
-                        if (isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
-                }
-        } else {
-                if (isHighContrastPreferred) {
-                        if (isPressing) AltPresetColor.keyLight else AltPresetColor.keyLightEmphatic
-                } else {
-                        if (isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
-                }
-        }

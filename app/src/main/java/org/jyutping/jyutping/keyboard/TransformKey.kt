@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -26,9 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.presets.AltPresetColor
-import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
+import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
 fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
@@ -45,6 +43,7 @@ fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
                 KeyboardForm.Symbolic -> "#+="
                 else -> "???"
         }
+        val keyShape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -64,19 +63,12 @@ fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
                         .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
                         .border(
                                 width = 1.dp,
-                                color = if (isDarkMode) {
-                                        if (isHighContrastPreferred) Color.White else Color.Transparent
-                                } else {
-                                        if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                },
-                                shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
-                        )
-                        .shadow(
-                                elevation = 0.5.dp,
-                                shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
+                                color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
+                                shape = keyShape
                         )
                         .background(
-                                color = backgroundColor(isDarkMode, isHighContrastPreferred, isPressing)
+                                color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressing),
+                                shape = keyShape
                         )
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -88,18 +80,3 @@ fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
                 )
         }
 }
-
-private fun backgroundColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean): Color =
-        if (isDarkMode) {
-                if (isHighContrastPreferred) {
-                        if (isPressing) AltPresetColor.keyDark else AltPresetColor.keyDarkEmphatic
-                } else {
-                        if (isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
-                }
-        } else {
-                if (isHighContrastPreferred) {
-                        if (isPressing) AltPresetColor.keyLight else AltPresetColor.keyLightEmphatic
-                } else {
-                        if (isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
-                }
-        }

@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -29,6 +28,7 @@ import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
+import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
 fun TenKeyNumericInputKey(keyText: String, modifier: Modifier) {
@@ -37,6 +37,7 @@ fun TenKeyNumericInputKey(keyText: String, modifier: Modifier) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
+        val keyShape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -56,19 +57,12 @@ fun TenKeyNumericInputKey(keyText: String, modifier: Modifier) {
                         .padding(3.dp)
                         .border(
                                 width = 1.dp,
-                                color = if (isDarkMode) {
-                                        if (isHighContrastPreferred) Color.White else Color.Transparent
-                                } else {
-                                        if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                },
-                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
-                        )
-                        .shadow(
-                                elevation = 0.5.dp,
-                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+                                color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
+                                shape = keyShape
                         )
                         .background(
-                                color = backgroundColor(isDarkMode, isHighContrastPreferred, isPressing)
+                                color = keyBackColor(isDarkMode, isHighContrastPreferred, isPressing),
+                                shape = keyShape
                         )
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -81,17 +75,16 @@ fun TenKeyNumericInputKey(keyText: String, modifier: Modifier) {
         }
 }
 
-private fun backgroundColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean) =
+private fun keyBackColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean): Color = if (isHighContrastPreferred) {
         if (isDarkMode) {
-                if (isHighContrastPreferred) {
-                        if (isPressing) AltPresetColor.keyDarkEmphatic else AltPresetColor.keyDark
-                } else {
-                        if (isPressing) PresetColor.keyDarkEmphatic else PresetColor.keyDark
-                }
+                if (isPressing) AltPresetColor.emphaticDark else AltPresetColor.shallowDark
         } else {
-                if (isHighContrastPreferred) {
-                        if (isPressing) AltPresetColor.keyLightEmphatic else AltPresetColor.keyLight
-                } else {
-                        if (isPressing) PresetColor.keyLightEmphatic else PresetColor.keyLight
-                }
+                if (isPressing) AltPresetColor.emphaticLight else AltPresetColor.shallowLight
         }
+} else {
+        if (isDarkMode) {
+                if (isPressing) PresetColor.emphaticDark else PresetColor.shallowDark
+        } else {
+                if (isPressing) PresetColor.emphaticLight else PresetColor.shallowLight
+        }
+}

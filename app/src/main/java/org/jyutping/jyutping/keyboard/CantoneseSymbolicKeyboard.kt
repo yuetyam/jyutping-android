@@ -14,11 +14,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 
@@ -31,10 +31,10 @@ fun CantoneseSymbolicKeyboard(keyHeight: Dp) {
         Column(
                 modifier = Modifier
                         .background(
-                                if (isDarkMode) {
-                                        if (isHighContrastPreferred) Color.Black else PresetColor.keyboardDarkBackground
+                                if (isHighContrastPreferred) {
+                                        if (isDarkMode) AltPresetColor.darkBackground else AltPresetColor.lightBackground
                                 } else {
-                                        if (isHighContrastPreferred) Color.White else PresetColor.keyboardLightBackground
+                                        if (isDarkMode) PresetColor.darkBackground else PresetColor.lightBackground
                                 }
                         )
                         .systemBarsPadding()

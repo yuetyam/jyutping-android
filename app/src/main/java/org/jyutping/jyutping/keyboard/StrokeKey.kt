@@ -21,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -35,11 +34,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.presets.AltPresetColor
-import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.shapes.BubbleShape
 import org.jyutping.jyutping.utilities.ShapeKeyMap
+import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
 fun StrokeKey(letter: Char, modifier: Modifier) {
@@ -56,6 +54,7 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
         val density = LocalDensity.current
         var baseSize by remember { mutableStateOf(Size.Zero) }
         var isPressing by remember { mutableStateOf(false) }
+        val keyShape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -87,19 +86,12 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
                                 }
                                 .border(
                                         width = 1.dp,
-                                        color = if (isDarkMode) {
-                                                if (isHighContrastPreferred) Color.White else Color.Transparent
-                                        } else {
-                                                if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                        },
-                                        shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
-                                )
-                                .shadow(
-                                        elevation = 0.5.dp,
-                                        shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
+                                        color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
+                                        shape = keyShape
                                 )
                                 .background(
-                                        color = keyBackgroundColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey, isPressing)
+                                        color = ToolBox.inputKeyBackColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey, isPressing),
+                                        shape = keyShape
                                 )
                                 .fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -145,19 +137,11 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
                                         modifier = modifier
                                                 .border(
                                                         width = 1.dp,
-                                                        color = if (isDarkMode) {
-                                                                if (isHighContrastPreferred) Color.White else Color.DarkGray
-                                                        } else {
-                                                                if (isHighContrastPreferred) Color.Black else Color.LightGray
-                                                        },
+                                                        color = ToolBox.previewKeyBorderColor(isDarkMode, isHighContrastPreferred),
                                                         shape = shape
                                                 )
                                                 .background(
-                                                        color = if (isDarkMode) {
-                                                                if (isHighContrastPreferred) AltPresetColor.keyDark else PresetColor.keyDark
-                                                        } else {
-                                                                if (isHighContrastPreferred) AltPresetColor.keyLight else PresetColor.keyLight
-                                                        },
+                                                        color = ToolBox.previewInputKeyBackColor(isDarkMode, isHighContrastPreferred),
                                                         shape = shape
                                                 )
                                                 .width(width.dp)
@@ -175,18 +159,3 @@ fun StrokeKey(letter: Char, modifier: Modifier) {
                 }
         }
 }
-
-private fun keyBackgroundColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, shouldPreviewKey: Boolean, isPressing: Boolean): Color =
-        if (isDarkMode) {
-                if (isHighContrastPreferred) {
-                        if (shouldPreviewKey.not() && isPressing) AltPresetColor.keyDarkEmphatic else AltPresetColor.keyDark
-                } else {
-                        if (shouldPreviewKey.not() && isPressing) PresetColor.keyDarkEmphatic else PresetColor.keyDark
-                }
-        } else {
-                if (isHighContrastPreferred) {
-                        if (shouldPreviewKey.not() && isPressing) AltPresetColor.keyLightEmphatic else AltPresetColor.keyLight
-                } else {
-                        if (shouldPreviewKey.not() && isPressing) PresetColor.keyLightEmphatic else PresetColor.keyLight
-                }
-        }

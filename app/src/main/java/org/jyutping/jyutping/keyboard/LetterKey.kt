@@ -20,29 +20,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.presets.AltPresetColor
-import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.shapes.BubbleShape
 import org.jyutping.jyutping.shapes.LeftHalfBubbleShape
 import org.jyutping.jyutping.shapes.RightHalfBubbleShape
+import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
 fun LetterKey(letter: String, modifier: Modifier, position: Alignment.Horizontal = Alignment.CenterHorizontally) {
@@ -90,23 +86,11 @@ fun LetterKey(letter: String, modifier: Modifier, position: Alignment.Horizontal
                                 }
                                 .border(
                                         width = 1.dp,
-                                        color = if (isDarkMode) {
-                                                if (isHighContrastPreferred) Color.White else Color.Transparent
-                                        } else {
-                                                if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                        },
+                                        color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
                                         shape = keyShape
                                 )
-                                .dropShadow(
-                                        shape = keyShape,
-                                        shadow = Shadow(
-                                                radius = 0.5.dp,
-                                                color = PresetColor.shadowGray,
-                                                offset = DpOffset(x = 0.dp, 0.5.dp)
-                                        )
-                                )
                                 .background(
-                                        color = keyBackgroundColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey, isPressing),
+                                        color = ToolBox.inputKeyBackColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey, isPressing),
                                         shape = keyShape
                                 )
                                 .fillMaxSize(),
@@ -144,19 +128,11 @@ fun LetterKey(letter: String, modifier: Modifier, position: Alignment.Horizontal
                                         modifier = modifier
                                                 .border(
                                                         width = 1.dp,
-                                                        color = if (isDarkMode) {
-                                                                if (isHighContrastPreferred) Color.White else Color.DarkGray
-                                                        } else {
-                                                                if (isHighContrastPreferred) Color.Black else Color.LightGray
-                                                        },
+                                                        color = ToolBox.previewKeyBorderColor(isDarkMode, isHighContrastPreferred),
                                                         shape = shape
                                                 )
                                                 .background(
-                                                        color = if (isDarkMode) {
-                                                                if (isHighContrastPreferred) AltPresetColor.keyDark else PresetColor.keyDark
-                                                        } else {
-                                                                if (isHighContrastPreferred) AltPresetColor.keyLight else PresetColor.keyLight
-                                                        },
+                                                        color = ToolBox.previewInputKeyBackColor(isDarkMode, isHighContrastPreferred),
                                                         shape = shape
                                                 )
                                                 .width(width.dp)
@@ -174,18 +150,3 @@ fun LetterKey(letter: String, modifier: Modifier, position: Alignment.Horizontal
                 }
         }
 }
-
-private fun keyBackgroundColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, shouldPreviewKey: Boolean, isPressing: Boolean): Color =
-        if (isDarkMode) {
-                if (isHighContrastPreferred) {
-                        if (shouldPreviewKey.not() && isPressing) AltPresetColor.keyDarkEmphatic else AltPresetColor.keyDark
-                } else {
-                        if (shouldPreviewKey.not() && isPressing) PresetColor.keyDarkEmphatic else PresetColor.keyDark
-                }
-        } else {
-                if (isHighContrastPreferred) {
-                        if (shouldPreviewKey.not() && isPressing) AltPresetColor.keyLightEmphatic else AltPresetColor.keyLight
-                } else {
-                        if (shouldPreviewKey.not() && isPressing) PresetColor.keyLightEmphatic else PresetColor.keyLight
-                }
-        }

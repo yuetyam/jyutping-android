@@ -21,7 +21,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
@@ -38,9 +37,8 @@ import kotlinx.coroutines.launch
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.presets.AltPresetColor
-import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
+import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
 fun EditingPanelForwardDeleteKey(modifier: Modifier) {
@@ -52,6 +50,7 @@ fun EditingPanelForwardDeleteKey(modifier: Modifier) {
         var isLongPressing by remember { mutableStateOf(false) }
         var longPressJob: Job? by remember { mutableStateOf(null) }
         val longPressCoroutineScope = rememberCoroutineScope()
+        val keyShape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
         Column(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -88,19 +87,12 @@ fun EditingPanelForwardDeleteKey(modifier: Modifier) {
                         .padding(4.dp)
                         .border(
                                 width = 1.dp,
-                                color = if (isDarkMode) {
-                                        if (isHighContrastPreferred) Color.White else Color.Transparent
-                                } else {
-                                        if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                },
-                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
-                        )
-                        .shadow(
-                                elevation = 0.5.dp,
-                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+                                color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
+                                shape = keyShape
                         )
                         .background(
-                                color = backgroundColor(isDarkMode, isHighContrastPreferred, isPressing)
+                                color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressing),
+                                shape = keyShape
                         )
                         .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -119,18 +111,3 @@ fun EditingPanelForwardDeleteKey(modifier: Modifier) {
                 )
         }
 }
-
-private fun backgroundColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean) =
-        if (isDarkMode) {
-                if (isHighContrastPreferred) {
-                        if (isPressing) AltPresetColor.keyDark else AltPresetColor.keyDarkEmphatic
-                } else {
-                        if (isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
-                }
-        } else {
-                if (isHighContrastPreferred) {
-                        if (isPressing) AltPresetColor.keyLight else AltPresetColor.keyLightEmphatic
-                } else {
-                        if (isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
-                }
-        }

@@ -21,7 +21,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
@@ -36,9 +35,8 @@ import kotlinx.coroutines.launch
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.presets.AltPresetColor
-import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
+import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
 fun BackspaceKey(modifier: Modifier) {
@@ -53,6 +51,7 @@ fun BackspaceKey(modifier: Modifier) {
         val longPressCoroutineScope = rememberCoroutineScope()
         var isDraggable by remember { mutableStateOf(true) }
         var isDragging by remember { mutableStateOf(false) }
+        val keyShape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -121,19 +120,12 @@ fun BackspaceKey(modifier: Modifier) {
                         .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
                         .border(
                                 width = 1.dp,
-                                color = if (isDarkMode) {
-                                        if (isHighContrastPreferred) Color.White else Color.Transparent
-                                } else {
-                                        if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                },
-                                shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
-                        )
-                        .shadow(
-                                elevation = 0.5.dp,
-                                shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
+                                color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
+                                shape = keyShape
                         )
                         .background(
-                                color = backgroundColor(isDarkMode, isHighContrastPreferred, (isPressing || isDragging))
+                                color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, (isPressing || isDragging)),
+                                shape = keyShape
                         )
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -146,18 +138,3 @@ fun BackspaceKey(modifier: Modifier) {
                 )
         }
 }
-
-private fun backgroundColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean): Color =
-        if (isDarkMode) {
-                if (isHighContrastPreferred) {
-                        if (isPressing) AltPresetColor.keyDark else AltPresetColor.keyDarkEmphatic
-                } else {
-                        if (isPressing) PresetColor.keyDark else PresetColor.keyDarkEmphatic
-                }
-        } else {
-                if (isHighContrastPreferred) {
-                        if (isPressing) AltPresetColor.keyLight else AltPresetColor.keyLightEmphatic
-                } else {
-                        if (isPressing) PresetColor.keyLight else PresetColor.keyLightEmphatic
-                }
-        }

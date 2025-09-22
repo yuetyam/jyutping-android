@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -31,6 +30,7 @@ import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
+import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
 fun SpaceKey(modifier: Modifier) {
@@ -42,6 +42,7 @@ fun SpaceKey(modifier: Modifier) {
         val keyForm by context.spaceKeyForm.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
         var isDragging by remember { mutableStateOf(false) }
+        val keyShape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -92,19 +93,12 @@ fun SpaceKey(modifier: Modifier) {
                         .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
                         .border(
                                 width = 1.dp,
-                                color = if (isDarkMode) {
-                                        if (isHighContrastPreferred) Color.White else Color.Transparent
-                                } else {
-                                        if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                },
-                                shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
-                        )
-                        .shadow(
-                                elevation = 0.5.dp,
-                                shape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
+                                color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
+                                shape = keyShape
                         )
                         .background(
-                                color = backgroundColor(isDarkMode, isHighContrastPreferred, (isPressing || isDragging))
+                                color = keyBackColor(isDarkMode, isHighContrastPreferred, (isPressing || isDragging)),
+                                shape = keyShape
                         )
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -117,17 +111,16 @@ fun SpaceKey(modifier: Modifier) {
         }
 }
 
-private fun backgroundColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean): Color =
+private fun keyBackColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean): Color = if (isHighContrastPreferred) {
         if (isDarkMode) {
-                if (isHighContrastPreferred) {
-                        if (isPressing) AltPresetColor.keyDarkEmphatic else AltPresetColor.keyDark
-                } else {
-                        if (isPressing) PresetColor.keyDarkEmphatic else PresetColor.keyDark
-                }
+                if (isPressing) AltPresetColor.emphaticDark else AltPresetColor.shallowDark
         } else {
-                if (isHighContrastPreferred) {
-                        if (isPressing) AltPresetColor.keyLightEmphatic else AltPresetColor.keyLight
-                } else {
-                        if (isPressing) PresetColor.keyLightEmphatic else PresetColor.keyLight
-                }
+                if (isPressing) AltPresetColor.emphaticLight else AltPresetColor.shallowLight
         }
+} else {
+        if (isDarkMode) {
+                if (isPressing) PresetColor.emphaticDark else PresetColor.shallowDark
+        } else {
+                if (isPressing) PresetColor.emphaticLight else PresetColor.shallowLight
+        }
+}

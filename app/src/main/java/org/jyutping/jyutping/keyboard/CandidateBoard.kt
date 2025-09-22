@@ -109,10 +109,10 @@ fun CandidateBoard(height: Dp) {
         Box(
                 modifier = Modifier
                         .background(
-                                if (isDarkMode) {
-                                        if (isHighContrastPreferred) Color.Black else PresetColor.keyboardDarkBackground
+                                if (isHighContrastPreferred) {
+                                        if (isDarkMode) AltPresetColor.darkBackground else AltPresetColor.lightBackground
                                 } else {
-                                        if (isHighContrastPreferred) Color.White else PresetColor.keyboardLightBackground
+                                        if (isDarkMode) PresetColor.darkBackground else PresetColor.lightBackground
                                 }
                         )
                         .systemBarsPadding()
@@ -164,10 +164,10 @@ fun CandidateBoard(height: Dp) {
                                 }
                                 HorizontalDivider(
                                         thickness = 1.dp,
-                                        color = if (isDarkMode) {
-                                                if (isHighContrastPreferred) AltPresetColor.keyDarkEmphatic else PresetColor.keyDarkEmphatic
+                                        color = if (isHighContrastPreferred) {
+                                                if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
                                         } else {
-                                                if (isHighContrastPreferred) AltPresetColor.keyLightEmphatic else PresetColor.keyLightEmphatic
+                                                if (isDarkMode) PresetColor.emphaticDark else PresetColor.emphaticLight
                                         }
                                 )
                         }
@@ -191,10 +191,10 @@ fun CandidateBoard(height: Dp) {
                                         shape = CircleShape
                                 )
                                 .background(
-                                        color = if (isDarkMode) {
-                                                if (isHighContrastPreferred) AltPresetColor.keyDarkEmphatic else PresetColor.keyDarkEmphatic
+                                        color = if (isHighContrastPreferred) {
+                                                if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
                                         } else {
-                                                if (isHighContrastPreferred) AltPresetColor.keyLightEmphatic else PresetColor.keyLightEmphatic
+                                                if (isDarkMode) PresetColor.solidEmphaticDark else PresetColor.solidEmphaticLight
                                         },
                                         shape = CircleShape
                                 )

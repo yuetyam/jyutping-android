@@ -52,6 +52,7 @@ import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.keyboard.KeyboardForm
+import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
@@ -75,10 +76,10 @@ fun EmojiBoard(height: Dp) {
         Column(
                 modifier = Modifier
                         .background(
-                                if (isDarkMode) {
-                                        if (isHighContrastPreferred) Color.Black else PresetColor.keyboardDarkBackground
+                                if (isHighContrastPreferred) {
+                                        if (isDarkMode) AltPresetColor.darkBackground else AltPresetColor.lightBackground
                                 } else {
-                                        if (isHighContrastPreferred) Color.White else PresetColor.keyboardLightBackground
+                                        if (isDarkMode) PresetColor.darkBackground else PresetColor.lightBackground
                                 }
                         )
                         .systemBarsPadding()

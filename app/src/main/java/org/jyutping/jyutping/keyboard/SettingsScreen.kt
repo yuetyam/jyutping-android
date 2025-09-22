@@ -112,10 +112,10 @@ fun SettingsScreen(height: Dp) {
         Column(
                 modifier = Modifier
                         .background(
-                                if (isDarkMode) {
-                                        if (isHighContrastPreferred) AltPresetColor.keyboardDarkBackground else PresetColor.keyboardDarkBackground
+                                if (isHighContrastPreferred) {
+                                        if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
                                 } else {
-                                        if (isHighContrastPreferred) AltPresetColor.keyboardLightBackground else PresetColor.keyboardLightBackground
+                                        if (isDarkMode) PresetColor.darkBackground else PresetColor.lightBackground
                                 }
                         )
                         .systemBarsPadding()
@@ -848,10 +848,10 @@ private fun ResponsiveDivider(isDarkMode: Boolean, isHighContrastPreferred: Bool
         HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 thickness = 1.dp,
-                color = if (isDarkMode) {
-                        if (isHighContrastPreferred) AltPresetColor.keyDarkEmphatic else PresetColor.keyDarkEmphatic
+                color = if (isHighContrastPreferred) {
+                        if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
                 } else {
-                        if (isHighContrastPreferred) AltPresetColor.keyLightEmphatic else PresetColor.keyLightEmphatic
+                        if (isDarkMode) PresetColor.emphaticDark else PresetColor.emphaticLight
                 }
         )
 }
