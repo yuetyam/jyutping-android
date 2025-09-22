@@ -85,6 +85,7 @@ fun SettingsScreen(height: Dp) {
         val isInputMemoryOn by context.isInputMemoryOn.collectAsState()
         var isTryingToClearInputMemory by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()
+        val sectionShape = RoundedCornerShape(12.dp)
         val tintColor: Color = if (isDarkMode) Color.White else Color.Black
         val backColor: Color = if (isDarkMode) Color.Black else Color.White
         val buttonColors: ButtonColors = if (isDarkMode) {
@@ -107,7 +108,6 @@ fun SettingsScreen(height: Dp) {
         } else {
                 SegmentedButtonDefaults.colors(activeContainerColor = PresetColor.green, activeContentColor = Color.White, activeBorderColor = Color.LightGray, inactiveContainerColor = Color.White, inactiveContentColor = Color.Black, inactiveBorderColor = Color.LightGray)
         }
-        val sectionCornerRadius: Float = 10f
         val version: String by lazy { BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")" }
         Column(
                 modifier = Modifier
@@ -177,7 +177,7 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Column(
                                                 modifier = Modifier
-                                                        .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
+                                                        .background(color = backColor, shape = sectionShape)
                                                         .fillMaxWidth()
                                         ) {
                                                 Button(
@@ -286,7 +286,7 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Column(
                                                 modifier = Modifier
-                                                        .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
+                                                        .background(color = backColor, shape = sectionShape)
                                                         .fillMaxWidth()
                                         ) {
                                                 Row(
@@ -331,7 +331,7 @@ fun SettingsScreen(height: Dp) {
                                 Row(
                                         modifier = Modifier
                                                 .fillMaxWidth()
-                                                .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
+                                                .background(color = backColor, shape = sectionShape)
                                                 .padding(horizontal = 8.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -352,7 +352,7 @@ fun SettingsScreen(height: Dp) {
                         item {
                                 Column(
                                         modifier = Modifier
-                                                .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
+                                                .background(color = backColor, shape = sectionShape)
                                                 .fillMaxWidth()
                                 ) {
                                         Row(
@@ -413,7 +413,7 @@ fun SettingsScreen(height: Dp) {
                         item {
                                 Column(
                                         modifier = Modifier
-                                                .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
+                                                .background(color = backColor, shape = sectionShape)
                                                 .fillMaxWidth()
                                 ) {
                                         Row(
@@ -474,7 +474,7 @@ fun SettingsScreen(height: Dp) {
                         item {
                                 Row(
                                         modifier = Modifier
-                                                .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
+                                                .background(color = backColor, shape = sectionShape)
                                                 .padding(start = 8.dp, end = 4.dp)
                                                 .fillMaxWidth(),
                                         verticalAlignment = Alignment.CenterVertically
@@ -520,7 +520,7 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Column(
                                                 modifier = Modifier
-                                                        .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
+                                                        .background(color = backColor, shape = sectionShape)
                                                         .fillMaxWidth()
                                         ) {
                                                 Button(
@@ -606,7 +606,7 @@ fun SettingsScreen(height: Dp) {
                                         )
                                         Column(
                                                 modifier = Modifier
-                                                        .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
+                                                        .background(color = backColor, shape = sectionShape)
                                                         .fillMaxWidth()
                                         ) {
                                                 Button(
@@ -707,7 +707,7 @@ fun SettingsScreen(height: Dp) {
                                 Row(
                                         modifier = Modifier
                                                 .fillMaxWidth()
-                                                .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
+                                                .background(color = backColor, shape = sectionShape)
                                                 .padding(horizontal = 8.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -728,7 +728,7 @@ fun SettingsScreen(height: Dp) {
                         item {
                                 Column(
                                         modifier = Modifier
-                                                .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
+                                                .background(color = backColor, shape = sectionShape)
                                                 .fillMaxWidth()
                                 ) {
                                         Row(
@@ -822,7 +822,7 @@ fun SettingsScreen(height: Dp) {
                                 Row(
                                         modifier = Modifier
                                                 .fillMaxWidth()
-                                                .background(color = backColor, shape = RoundedCornerShape(sectionCornerRadius.dp))
+                                                .background(color = backColor, shape = sectionShape)
                                                 .padding(horizontal = 8.dp, vertical = 12.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {

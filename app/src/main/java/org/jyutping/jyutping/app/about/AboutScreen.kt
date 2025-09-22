@@ -60,7 +60,7 @@ fun AboutScreen() {
                 item {
                         Column(
                                 modifier = Modifier
-                                        .clip(RoundedCornerShape(10.dp))
+                                        .clip(RoundedCornerShape(12.dp))
                                         .background(colorScheme.background)
                                         .fillMaxWidth()
                         ) {
@@ -70,7 +70,7 @@ fun AboutScreen() {
                 item {
                         Column(
                                 modifier = Modifier
-                                        .clip(RoundedCornerShape(10.dp))
+                                        .clip(RoundedCornerShape(12.dp))
                                         .background(colorScheme.background)
                                         .fillMaxWidth()
                         ) {
@@ -86,7 +86,7 @@ fun AboutScreen() {
                 item {
                         Column(
                                 modifier = Modifier
-                                        .clip(RoundedCornerShape(10.dp))
+                                        .clip(RoundedCornerShape(12.dp))
                                         .background(colorScheme.background)
                                         .fillMaxWidth()
                         ) {
@@ -106,7 +106,7 @@ fun AboutScreen() {
                 item {
                         Column(
                                 modifier = Modifier
-                                        .clip(RoundedCornerShape(10.dp))
+                                        .clip(RoundedCornerShape(12.dp))
                                         .background(colorScheme.background)
                                         .fillMaxWidth()
                         ) {
@@ -126,7 +126,7 @@ private fun VersionLabel() {
         Row(
                 modifier = Modifier
                         .fillMaxWidth()
-                        .clip(shape = RoundedCornerShape(10.dp))
+                        .clip(shape = RoundedCornerShape(12.dp))
                         .background(color = colorScheme.background)
                         .padding(horizontal = 8.dp, vertical = 10.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),

@@ -255,7 +255,7 @@ fun HomeScreen(navController: NavHostController) {
                                 DisableSelection {
                                         Column(
                                                 modifier = Modifier
-                                                        .clip(RoundedCornerShape(10.dp))
+                                                        .clip(RoundedCornerShape(12.dp))
                                                         .background(colorScheme.background)
                                                         .fillMaxWidth()
                                         ) {
