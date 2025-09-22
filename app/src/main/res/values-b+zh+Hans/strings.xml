@@ -68,7 +68,7 @@
     <string name="keyboard_settings_numeric_layout_switch_title">使用九宮格數字鍵盤</string>
     <string name="keyboard_settings_show_lowercase_keys_switch_title">鍵文字母小寫顯示</string>
     <string name="keyboard_settings_key_text_preview_switch_title">鍵文氣泡預覽</string>
-    <string name="keyboard_settings_high_contrast_switch_title">鍵盤使用黑白高對比度配色</string>
+    <string name="keyboard_settings_high_contrast_switch_title">使用黑白高對比度配色</string>
     <string name="keyboard_settings_globe_key_switch_title">顯示輸入法切換鍵（地球鍵）</string>
     <string name="keyboard_settings_left_key_switch_title">顯示逗號鍵</string>
     <string name="keyboard_settings_right_key_switch_title">顯示句號鍵</string>

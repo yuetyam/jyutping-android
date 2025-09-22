@@ -534,7 +534,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         field = value
                         when (value.firstOrNull()) {
                                 null -> {
-                                        currentInputConnection.setComposingText(value, 0)
+                                        currentInputConnection.setComposingText(PresetString.EMPTY, 1)
                                         currentInputConnection.finishComposingText()
                                         if (isBuffering.value) {
                                                 if (isInputMemoryOn.value && selectedCandidates.isNotEmpty()) {
@@ -731,7 +731,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         */
                 } else {
-                        currentInputConnection.commitText(PresetString.EMPTY, 0)
+                        currentInputConnection.commitText(PresetString.EMPTY, 1)
                 }
         }
         fun forwardDelete() {
@@ -745,7 +745,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         */
                 } else {
-                        currentInputConnection.commitText(PresetString.EMPTY, 0)
+                        currentInputConnection.commitText(PresetString.EMPTY, 1)
                 }
         }
         fun performReturn() {
@@ -863,7 +863,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         (getSystemService(CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(clip)
                         isClipboardEmpty.value = false
                 }
-                currentInputConnection.commitText(PresetString.EMPTY, 0)
+                currentInputConnection.commitText(PresetString.EMPTY, 1)
         }
         fun clearAllText() {
                 val textLengthBeforeCursor = currentInputConnection.getTextBeforeCursor(1000, 0)?.length
@@ -871,7 +871,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         currentInputConnection.deleteSurroundingText(textLengthBeforeCursor, 0)
                 } else {
                         currentInputConnection.performContextMenuAction(android.R.id.selectAll)
-                        currentInputConnection.commitText(PresetString.EMPTY, 0)
+                        currentInputConnection.commitText(PresetString.EMPTY, 1)
                 }
         }
         fun convertAllText() {
