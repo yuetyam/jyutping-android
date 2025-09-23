@@ -31,6 +31,7 @@ import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -48,6 +49,7 @@ import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.ui.common.AppLinkLabel
+import org.jyutping.jyutping.ui.common.EnhancedHorizontalDivider
 import org.jyutping.jyutping.ui.common.WebLinkLabel
 import org.jyutping.jyutping.utilities.AppMaster
 
@@ -74,12 +76,12 @@ fun AboutScreen() {
                                         .background(colorScheme.background)
                                         .fillMaxWidth()
                         ) {
-                                WebLinkLabel(icon = Icons.Outlined.Link, text = stringResource(id = R.string.about_label_website), uri = AppMaster.websiteAddress)
-                                HorizontalDivider()
+                                WebLinkLabel(icon = Icons.Outlined.Public, text = stringResource(id = R.string.about_label_website), uri = AppMaster.websiteAddress)
+                                EnhancedHorizontalDivider()
                                 WebLinkLabel(icon = Icons.Outlined.Code, text = stringResource(id = R.string.about_label_source_code), uri = AppMaster.sourceCodeAddress)
-                                HorizontalDivider()
+                                EnhancedHorizontalDivider()
                                 WebLinkLabel(icon = Icons.Outlined.Lock, text = stringResource(id = R.string.about_label_privacy_policy), uri = AppMaster.privacyPolicyAddress)
-                                HorizontalDivider()
+                                EnhancedHorizontalDivider()
                                 WebLinkLabel(icon = Icons.AutoMirrored.Outlined.HelpOutline, text = stringResource(id = R.string.about_label_faq), uri = AppMaster.faqAddress)
                         }
                 }
@@ -91,15 +93,15 @@ fun AboutScreen() {
                                         .fillMaxWidth()
                         ) {
                                 AppLinkLabel(icon = Icons.Outlined.Group, text = stringResource(id = R.string.about_label_telegram), uri = AppMaster.TelegramWebAddress)
-                                HorizontalDivider()
+                                EnhancedHorizontalDivider()
                                 AppLinkLabel(icon = Icons.Outlined.Group, text = stringResource(id = R.string.about_label_qq), uri = AppMaster.QQWebAddress)
-                                HorizontalDivider()
+                                EnhancedHorizontalDivider()
                                 AppLinkLabel(icon = Icons.Outlined.Book, text = stringResource(id = R.string.about_label_rednote), uri = AppMaster.RedNoteAddress)
-                                HorizontalDivider()
+                                EnhancedHorizontalDivider()
                                 AppLinkLabel(icon = Icons.Outlined.CenterFocusStrong, text = stringResource(id = R.string.about_label_instagram), uri = AppMaster.InstagramWebAddress)
-                                HorizontalDivider()
+                                EnhancedHorizontalDivider()
                                 AppLinkLabel(icon = Icons.Outlined.AlternateEmail, text = stringResource(id = R.string.about_label_threads), uri = AppMaster.ThreadsAddress)
-                                HorizontalDivider()
+                                EnhancedHorizontalDivider()
                                 AppLinkLabel(icon = Icons.Outlined.AlternateEmail, text = stringResource(id = R.string.about_label_twitter), uri = AppMaster.TwitterWebAddress)
                         }
                 }
@@ -111,9 +113,9 @@ fun AboutScreen() {
                                         .fillMaxWidth()
                         ) {
                                 WebLinkLabel(icon = Icons.Outlined.CheckCircle, text = stringResource(id = R.string.about_label_google_forms), uri = AppMaster.GoogleFormsAddress)
-                                HorizontalDivider()
+                                EnhancedHorizontalDivider()
                                 WebLinkLabel(icon = Icons.Outlined.CheckCircle, text = stringResource(id = R.string.about_label_tencent_survey), uri = AppMaster.TencentSurveyAddress)
-                                HorizontalDivider()
+                                EnhancedHorizontalDivider()
                                 EmailFeedbackButton()
                         }
                 }
@@ -126,9 +128,7 @@ private fun VersionLabel() {
         Row(
                 modifier = Modifier
                         .fillMaxWidth()
-                        .clip(shape = RoundedCornerShape(12.dp))
-                        .background(color = colorScheme.background)
-                        .padding(horizontal = 8.dp, vertical = 10.dp),
+                        .padding(horizontal = 12.dp, vertical = 10.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
@@ -154,6 +154,8 @@ private fun VersionLabel() {
 @Composable
 private fun EmailFeedbackButton() {
         val context = LocalContext.current
+
+        // TODO: Use Button instead
         Row(
                 modifier = Modifier
                         .fillMaxWidth()
@@ -184,7 +186,7 @@ private fun EmailFeedbackButton() {
                                         Toast.makeText(context, "Email Unavailable", Toast.LENGTH_LONG).show()
                                 }
                         }
-                        .padding(8.dp),
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {

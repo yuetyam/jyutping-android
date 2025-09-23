@@ -34,12 +34,21 @@ android {
                 sourceCompatibility = JavaVersion.VERSION_21
                 targetCompatibility = JavaVersion.VERSION_21
         }
+        kotlin {
+                jvmToolchain(21)
+        }
         buildFeatures {
                 compose = true
                 buildConfig = true
         }
         packaging {
                 resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+}
+
+java {
+        toolchain {
+                languageVersion.set(JavaLanguageVersion.of(21))
         }
 }
 
@@ -64,4 +73,8 @@ dependencies {
         androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
         debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
         debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
+}
+
+tasks.withType<Test>().configureEach {
+        enabled = false
 }

@@ -30,7 +30,7 @@ fun TextCard(
                                 color = colorScheme.background,
                                 shape = RoundedCornerShape(12.dp)
                         )
-                        .padding(8.dp),
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
                 Text(

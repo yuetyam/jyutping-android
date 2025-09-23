@@ -14,7 +14,7 @@ jobs:
           distribution: "temurin"
           cache: gradle
       - name: Run gradlew
-        run: ./gradlew run
+        run: ./gradlew run --warning-mode all
         working-directory: ./preparing
   buildapp:
     name: Build App
@@ -31,4 +31,4 @@ jobs:
 #      - name: Grant execute permission for gradlew
 #        run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build --warning-mode all
