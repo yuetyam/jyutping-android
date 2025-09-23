@@ -38,7 +38,6 @@ class MainActivity : ComponentActivity() {
                 enableEdgeToEdge()
                 super.onCreate(savedInstanceState)
                 DatabasePreparer.prepare(this)
-                ttsProvider = TTSProvider(this)
                 setContent {
                         val navController = rememberNavController()
                         val entry by navController.currentBackStackEntryAsState()
@@ -77,6 +76,7 @@ class MainActivity : ComponentActivity() {
                                 }
                         }
                 }
+                ttsProvider = TTSProvider(this)
         }
 
         override fun onDestroy() {

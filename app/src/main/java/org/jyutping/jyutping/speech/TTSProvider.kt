@@ -74,7 +74,9 @@ class TTSProvider(context: Context?) : TextToSpeech.OnInitListener {
         }
 
         fun shutdown() {
-                tts?.stop()
-                tts?.shutdown()
+                if (_isReady.value) {
+                        tts?.stop()
+                        tts?.shutdown()
+                }
         }
 }
