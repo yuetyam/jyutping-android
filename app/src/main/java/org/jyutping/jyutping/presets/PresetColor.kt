@@ -1,15 +1,31 @@
 package org.jyutping.jyutping.presets
 
+import android.content.Context
 import android.os.Build
+import android.view.WindowManager
 import androidx.compose.ui.graphics.Color
 
 object PresetColor {
 
-        /** Blur keyboard background on Android 12+ */
-        private val isBlurPreferred: Boolean = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+        fun attach(context: Context) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        val canBlur: Boolean = context.getSystemService(WindowManager::class.java)?.isCrossWindowBlurEnabled ?: false
+                        lightBackground = if (canBlur) semiLight else fullLight
+                        darkBackground = if (canBlur) semiDark else fullDark
+                }
+        }
 
-        val lightBackground: Color = if (isBlurPreferred) Color(0xCCD0D4D8) else Color(0xFFD0D4D8)
-        val darkBackground : Color = if (isBlurPreferred) Color(0xCC222222) else Color(0xFF222222)
+        val supportsBlur: Boolean = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+
+        private val semiLight = Color(0xCCD0D4D8)
+        private val fullLight = Color(0xFFD0D4D8)
+        var lightBackground: Color = if (supportsBlur) semiLight else fullLight
+                private set
+
+        private val semiDark = Color(0xCC222222)
+        private val fullDark = Color(0xFF222222)
+        var darkBackground: Color = if (supportsBlur) semiDark else fullDark
+                private set
 
         val shallowLight      : Color = Color.White.copy(0.95f)
         val emphaticLight     : Color = Color(0x40686E80)

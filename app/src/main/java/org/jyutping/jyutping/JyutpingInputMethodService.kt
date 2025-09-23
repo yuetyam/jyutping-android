@@ -92,6 +92,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         val blurPixel = (24 * density).roundToInt()
                         window?.window?.setBackgroundBlurRadius(blurPixel)
                 }
+                PresetColor.attach(this)
         }
         override fun onCreateInputView(): View {
                 window?.window?.decorView?.let { decorView ->
@@ -99,6 +100,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         decorView.setViewTreeViewModelStoreOwner(this)
                         decorView.setViewTreeSavedStateRegistryOwner(this)
                 }
+                PresetColor.attach(this)
                 return ComposeKeyboardView(this)
         }
         override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
