@@ -74,12 +74,15 @@ fun ConfusionScreen(navController: NavHostController) {
 private fun ConfusionElementView(element: ConfusionElement) {
         Row(
                 modifier = Modifier
-                        .background(color = colorScheme.background, RoundedCornerShape(12.dp))
+                        .background(
+                                color = colorScheme.background,
+                                shape = RoundedCornerShape(12.dp)
+                        )
                         .padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(14.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
-                Text(text = element.simplified)
+                Text(text = element.simplified, color = colorScheme.onBackground)
                 Column(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
@@ -106,12 +109,12 @@ private fun ConfusionElementView(element: ConfusionElement) {
                                                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                                                 verticalAlignment = Alignment.CenterVertically
                                                         ) {
-                                                                Text(text = it.character)
-                                                                Text(text = it.romanization)
+                                                                Text(text = it.character, color = colorScheme.onBackground)
+                                                                Text(text = it.romanization, color = colorScheme.onBackground)
                                                         }
                                                 }
                                         }
-                                        Text(text = it.note)
+                                        Text(text = it.note, color = colorScheme.onBackground)
                                 }
                         }
                 }

@@ -67,7 +67,8 @@ private fun ToneLabel(word: String, syllable: String, toneName: String, toneValu
                 ) {
                         Text(
                                 text = word,
-                                modifier = Modifier.weight(0.16f)
+                                modifier = Modifier.weight(0.16f),
+                                color = colorScheme.onBackground
                         )
                         Row(
                                 modifier = Modifier.weight(0.34f),
@@ -79,17 +80,19 @@ private fun ToneLabel(word: String, syllable: String, toneName: String, toneValu
                                                 text = "faat3",
                                                 modifier = Modifier.alpha(0f)
                                         )
-                                        Text(text = syllable)
+                                        Text(text = syllable, color = colorScheme.onBackground)
                                 }
                                 Speaker(cantonese = word, romanization = syllable)
                         }
                         Text(
                                 text = toneName,
-                                modifier = Modifier.weight(0.25f)
+                                modifier = Modifier.weight(0.25f),
+                                color = colorScheme.onBackground
                         )
                         Text(
                                 text = toneValue,
-                                modifier = Modifier.weight(0.25f)
+                                modifier = Modifier.weight(0.25f),
+                                color = colorScheme.onBackground
                         )
                 }
         }

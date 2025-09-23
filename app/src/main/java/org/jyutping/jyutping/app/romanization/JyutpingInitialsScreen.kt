@@ -136,18 +136,20 @@ private fun InitialLabel(word: String, syllable: String, jyutping: String, ipa: 
                                                 text = "牙 ngaa4",
                                                 modifier = Modifier.alpha(0f)
                                         )
-                                        Text(text = "$word $syllable")
+                                        Text(text = "$word $syllable", color = colorScheme.onBackground)
                                 }
                                 Speaker(cantonese = word, romanization = syllable)
                         }
                         Text(
                                 text = jyutping,
                                 modifier = Modifier.weight(0.25f),
+                                color = colorScheme.onBackground,
                                 fontFamily = FontFamily.Monospace
                         )
                         Text(
                                 text = ipa,
-                                modifier = Modifier.weight(0.3f)
+                                modifier = Modifier.weight(0.3f),
+                                color = colorScheme.onBackground
                         )
                 }
         }

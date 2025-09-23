@@ -197,7 +197,10 @@ private fun DifferentView(heading: String, lines: List<String>) {
                         modifier = Modifier
                                 .padding(vertical = 8.dp)
                                 .fillMaxWidth()
-                                .background(color = colorScheme.background, shape = RoundedCornerShape(12.dp))
+                                .background(
+                                        color = colorScheme.background,
+                                        shape = RoundedCornerShape(12.dp)
+                                )
                                 .padding(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -225,7 +228,10 @@ private fun Expression(heading: String, labels: List<LabelEntry>) {
                 modifier = Modifier
                         .padding(vertical = 8.dp)
                         .fillMaxWidth()
-                        .background(color = colorScheme.background, shape = RoundedCornerShape(12.dp))
+                        .background(
+                                color = colorScheme.background,
+                                shape = RoundedCornerShape(12.dp)
+                        )
                         .padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
