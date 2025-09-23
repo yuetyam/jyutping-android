@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -35,7 +36,7 @@ fun EditingPanel(height: Dp) {
                 val windowMetrics = context.windowManager.currentWindowMetrics
                 (windowMetrics.bounds.width() / windowMetrics.density)
         } else {
-                LocalWindowInfo.current.containerSize.width.toFloat()
+                (LocalWindowInfo.current.containerSize.width / LocalDensity.current.density)
         }
         val edgeKeyWidth: Float = min(135f, screenWidth / 4.0f)
         val edgeKeyWeight: Float = edgeKeyWidth / screenWidth

@@ -27,13 +27,11 @@ import org.jyutping.jyutping.speech.TTSProvider
 import org.jyutping.jyutping.ui.theme.JyutpingTheme
 import org.jyutping.jyutping.utilities.DatabasePreparer
 
-val LocalTTSProvider = staticCompositionLocalOf<TTSProvider> {
-        error("No TTSProvider provided")
-}
+val LocalTTSProvider = staticCompositionLocalOf<TTSProvider?> { null }
 
 class MainActivity : ComponentActivity() {
 
-        private lateinit var ttsProvider: TTSProvider
+        private var ttsProvider: TTSProvider? = null
 
         @OptIn(ExperimentalMaterial3Api::class)
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,7 +80,7 @@ class MainActivity : ComponentActivity() {
         }
 
         override fun onDestroy() {
-                ttsProvider.shutdown()
+                ttsProvider?.shutdown()
                 super.onDestroy()
         }
 

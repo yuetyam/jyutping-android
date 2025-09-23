@@ -10,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
@@ -32,6 +33,7 @@ import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.tenkey.TenKeyNumericKeyboard
 import splitties.systemservices.windowManager
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
 
@@ -98,8 +100,9 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
         private fun legacyResponsiveKeyHeight(): Dp {
                 val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
                 val containerSize = LocalWindowInfo.current.containerSize
-                val windowWidth = containerSize.width
-                val windowHeight = containerSize.height
+                val density = LocalDensity.current.density
+                val windowWidth: Int = (containerSize.width / density).roundToInt()
+                val windowHeight: Int = (containerSize.height / density).roundToInt()
                 val minDimension = min(windowWidth, windowHeight)
                 val isPhone: Boolean = minDimension < 500
                 val keyboardInterface: KeyboardInterface = when {

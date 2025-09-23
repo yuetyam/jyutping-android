@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.vectorResource
@@ -73,7 +74,7 @@ fun CandidateBoard(height: Dp) {
                 val windowMetrics = context.windowManager.currentWindowMetrics
                 (windowMetrics.bounds.width() / windowMetrics.density).dp
         } else {
-                LocalWindowInfo.current.containerSize.width.dp
+                (LocalWindowInfo.current.containerSize.width / LocalDensity.current.density).dp
         }
         val state = rememberLazyListState()
         val candidates by context.candidates.collectAsState()

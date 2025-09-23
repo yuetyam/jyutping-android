@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.jyutping.jyutping.presets.PresetConstant
 
-class TTSProvider(context: Context) : TextToSpeech.OnInitListener {
+class TTSProvider(context: Context?) : TextToSpeech.OnInitListener {
 
-        private var tts: TextToSpeech? = TextToSpeech(context, this)
+        private var tts: TextToSpeech? = context?.let { TextToSpeech(it, this) }
 
         private val cantonese = Locale.Builder()
                 .setLanguage("yue")

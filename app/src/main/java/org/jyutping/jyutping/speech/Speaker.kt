@@ -10,6 +10,8 @@ import androidx.compose.material.icons.automirrored.outlined.VolumeUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.LocalTTSProvider
@@ -17,14 +19,14 @@ import org.jyutping.jyutping.LocalTTSProvider
 @Composable
 fun Speaker(romanization: String? = null, cantonese: String? = null) {
         val ttsProvider = LocalTTSProvider.current
-        val isReady by ttsProvider.isReady.collectAsState()
-        val isCantoneseSupported by ttsProvider.isCantoneseSupported.collectAsState()
+        val isReady by ttsProvider?.isReady?.collectAsState() ?: remember { mutableStateOf(false) }
+        val isCantoneseSupported by ttsProvider?.isCantoneseSupported?.collectAsState() ?: remember { mutableStateOf(false) }
         Button(
                 onClick = {
                         if (romanization != null) {
-                                ttsProvider.ssmlSpeak(romanization = romanization, cantonese = cantonese)
+                                ttsProvider?.ssmlSpeak(romanization = romanization, cantonese = cantonese)
                         } else if (cantonese != null) {
-                                ttsProvider.speak(cantonese)
+                                ttsProvider?.speak(cantonese)
                         }
                 },
                 modifier = Modifier.size(32.dp),
