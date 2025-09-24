@@ -18,6 +18,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -31,7 +33,7 @@ val LocalTTSProvider = staticCompositionLocalOf<TTSProvider?> { null }
 
 class MainActivity : ComponentActivity() {
 
-        private var ttsProvider: TTSProvider? = null
+        private var ttsProvider by mutableStateOf<TTSProvider?>(null)
 
         @OptIn(ExperimentalMaterial3Api::class)
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +78,14 @@ class MainActivity : ComponentActivity() {
                                 }
                         }
                 }
-                ttsProvider = TTSProvider(this)
+        }
+
+        override fun onResume() {
+                super.onResume()
+                val isTTSReady: Boolean = ttsProvider?.isReady?.value ?: false
+                if (isTTSReady.not()) {
+                        ttsProvider = TTSProvider(this)
+                }
         }
 
         override fun onDestroy() {
