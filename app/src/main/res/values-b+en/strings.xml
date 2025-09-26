@@ -72,6 +72,7 @@
     <string name="keyboard_settings_globe_key_switch_title">Show Input Method Switch Key</string>
     <string name="keyboard_settings_left_key_switch_title">Show Comma Key</string>
     <string name="keyboard_settings_right_key_switch_title">Show Period Key</string>
+    <string name="keyboard_settings_key_height_offset_title">Key Height Adjustment</string>
     <string name="keyboard_settings_bottom_padding_title">Bottom Padding</string>
     <string name="keyboard_settings_bottom_padding_none">0</string>
     <string name="keyboard_settings_bottom_padding_low">L</string>

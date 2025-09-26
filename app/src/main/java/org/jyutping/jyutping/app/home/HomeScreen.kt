@@ -186,7 +186,7 @@ fun HomeScreen(navController: NavHostController) {
                                                                 Text(
                                                                         text = stringResource(id = R.string.home_button_enable_keyboard),
                                                                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                                                                        fontWeight = FontWeight.Bold
+                                                                        fontWeight = FontWeight.Medium
                                                                 )
                                                                 Icon(imageVector = Icons.Outlined.Settings, contentDescription = null, modifier = Modifier.alpha(0f))
                                                         }
@@ -213,7 +213,7 @@ fun HomeScreen(navController: NavHostController) {
                                                                 Text(
                                                                         text = stringResource(id = R.string.home_button_select_keyboard),
                                                                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                                                                        fontWeight = FontWeight.Bold
+                                                                        fontWeight = FontWeight.Medium
                                                                 )
                                                                 Icon(imageVector = Icons.Outlined.Keyboard, contentDescription = null, modifier = Modifier.alpha(0f))
                                                         }

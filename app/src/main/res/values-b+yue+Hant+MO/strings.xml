@@ -72,6 +72,7 @@
     <string name="keyboard_settings_globe_key_switch_title">顯示輸入法切換鍵（地球鍵）</string>
     <string name="keyboard_settings_left_key_switch_title">顯示逗號鍵</string>
     <string name="keyboard_settings_right_key_switch_title">顯示句號鍵</string>
+    <string name="keyboard_settings_key_height_offset_title">按鍵高度調整</string>
     <string name="keyboard_settings_bottom_padding_title">墊高鍵盤</string>
     <string name="keyboard_settings_bottom_padding_none">無</string>
     <string name="keyboard_settings_bottom_padding_low">低</string>

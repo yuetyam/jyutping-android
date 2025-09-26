@@ -415,6 +415,16 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         putInt(UserSettingsKey.RightKey, value2save)
                 }
         }
+        val keyHeightOffset: MutableStateFlow<Int> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.KeyHeightOffset, 0)
+                MutableStateFlow(savedValue)
+        }
+        fun updateKeyHeightOffset(offset: Int) {
+                keyHeightOffset.value = offset
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.KeyHeightOffset, offset)
+                }
+        }
         val extraBottomPadding: MutableStateFlow<ExtraBottomPadding> by lazy {
                 val savedIdentifier: Int = sharedPreferences.getInt(UserSettingsKey.ExtraBottomPadding, ExtraBottomPadding.None.identifier)
                 val paddingLevel = ExtraBottomPadding.paddingLevelOf(savedIdentifier)

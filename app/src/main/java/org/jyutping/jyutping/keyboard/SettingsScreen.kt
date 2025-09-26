@@ -4,6 +4,7 @@ import android.os.Build
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -31,6 +32,8 @@ import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonColors
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
@@ -39,6 +42,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -50,6 +54,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -62,6 +67,7 @@ import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
+import kotlin.math.roundToInt
 
 @Composable
 fun SettingsScreen(height: Dp) {
@@ -78,6 +84,8 @@ fun SettingsScreen(height: Dp) {
         val needsInputModeSwitchKey by context.needsInputModeSwitchKey.collectAsState()
         val needsLeftKey by context.needsLeftKey.collectAsState()
         val needsRightKey by context.needsRightKey.collectAsState()
+        val keyHeightOffset by context.keyHeightOffset.collectAsState()
+        var keyHeightSliderPosition by remember { mutableFloatStateOf(keyHeightOffset.toFloat()) }
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
         val commentStyle by context.commentStyle.collectAsState()
         val cangjieVariant by context.cangjieVariant.collectAsState()
@@ -167,7 +175,7 @@ fun SettingsScreen(height: Dp) {
                 ) {
                         item {
                                 Column(
-                                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                                        verticalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
                                         Text(
                                                 text = stringResource(id = R.string.keyboard_settings_character_standard_header),
@@ -276,7 +284,7 @@ fun SettingsScreen(height: Dp) {
                         }
                         item {
                                 Column(
-                                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                                        verticalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
                                         Text(
                                                 text = stringResource(id = R.string.keyboard_settings_keyboard_feedback_header),
@@ -472,6 +480,59 @@ fun SettingsScreen(height: Dp) {
                                 }
                         }
                         item {
+                                Column(
+                                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                                ) {
+                                        Text(
+                                                text = stringResource(id = R.string.keyboard_settings_key_height_offset_title),
+                                                modifier = Modifier.padding(horizontal = 2.dp),
+                                                color = tintColor
+                                        )
+                                        Box(
+                                                modifier = Modifier
+                                                        .background(color = backColor, shape = sectionShape)
+                                                        .padding(start = 2.dp, top = 4.dp, end = 2.dp, bottom = 6.dp)
+                                                        .fillMaxWidth()
+                                        ) {
+                                                Row(
+                                                        modifier = Modifier
+                                                                .matchParentSize()
+                                                                .padding(top = 32.dp, start = 1.dp, end = 5.dp),
+                                                        horizontalArrangement = Arrangement.SpaceBetween
+                                                ) {
+                                                        for (number in -9..9) {
+                                                                Text(
+                                                                        text = when {
+                                                                                (number < 0) -> "$number"
+                                                                                (number == 0) -> " 0"
+                                                                                else -> "+$number"
+                                                                        },
+                                                                        color = tintColor,
+                                                                        fontSize = MaterialTheme.typography.labelSmall.fontSize,
+                                                                        fontFamily = FontFamily.Monospace
+                                                                )
+                                                        }
+                                                }
+                                                Slider(
+                                                        value = keyHeightSliderPosition,
+                                                        onValueChange = { keyHeightSliderPosition = it },
+                                                        onValueChangeFinished = {
+                                                                context.updateKeyHeightOffset(keyHeightSliderPosition.roundToInt())
+                                                        },
+                                                        steps = 17,
+                                                        valueRange = -9f..9f,
+                                                        colors = SliderDefaults.colors(
+                                                                thumbColor = tintColor,
+                                                                activeTrackColor = PresetColor.blue,
+                                                                inactiveTrackColor = PresetColor.green,
+                                                                activeTickColor = Color.White,
+                                                                inactiveTickColor = Color.White
+                                                        )
+                                                )
+                                        }
+                                }
+                        }
+                        item {
                                 Row(
                                         modifier = Modifier
                                                 .background(color = backColor, shape = sectionShape)
@@ -510,7 +571,7 @@ fun SettingsScreen(height: Dp) {
                         }
                         item {
                                 Column(
-                                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                                        verticalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
                                         Text(
                                                 text = stringResource(id = R.string.keyboard_settings_comment_style_header),
@@ -596,7 +657,7 @@ fun SettingsScreen(height: Dp) {
                         }
                         item {
                                 Column(
-                                        verticalArrangement = Arrangement.spacedBy(2.dp),
+                                        verticalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
                                         Text(
                                                 text = stringResource(id = R.string.keyboard_settings_cangjie_variant_header),
