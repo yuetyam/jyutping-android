@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.models.InputKeyEvent
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
@@ -60,16 +61,16 @@ fun StrokeKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth()
                                 .height(keyHeight)
                 ) {
-                        StrokeKey(letter = 'q', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'w', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'e', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'r', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 't', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'y', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'u', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'i', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'o', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'p', modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterQ, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterW, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterE, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterR, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterT, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterY, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterU, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterI, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterO, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterP, modifier = Modifier.weight(1f))
                 }
                 Row(
                         modifier = Modifier
@@ -77,15 +78,15 @@ fun StrokeKeyboard(keyHeight: Dp) {
                                 .height(keyHeight)
                 ) {
                         Spacer(modifier = Modifier.weight(0.5f))
-                        StrokeKey(letter = 'a', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 's', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'd', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'f', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'g', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'h', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'j', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'k', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'l', modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterA, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterS, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterD, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterF, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterG, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterH, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterJ, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterK, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterL, modifier = Modifier.weight(1f))
                         Spacer(modifier = Modifier.weight(0.5f))
                 }
                 Row(
@@ -95,13 +96,13 @@ fun StrokeKeyboard(keyHeight: Dp) {
                 ) {
                         ShiftKey(modifier = Modifier.weight(1.3f))
                         Spacer(modifier = Modifier.weight(0.2f))
-                        StrokeKey(letter = 'z', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'x', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'c', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'v', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'b', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'n', modifier = Modifier.weight(1f))
-                        StrokeKey(letter = 'm', modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterZ, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterX, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterC, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterV, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterB, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterN, modifier = Modifier.weight(1f))
+                        StrokeKey(event = InputKeyEvent.letterM, modifier = Modifier.weight(1f))
                         Spacer(modifier = Modifier.weight(0.2f))
                         BackspaceKey(modifier = Modifier.weight(1.3f))
                 }

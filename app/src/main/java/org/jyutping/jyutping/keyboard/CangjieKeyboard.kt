@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.models.InputKeyEvent
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
@@ -60,16 +61,16 @@ fun CangjieKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth()
                                 .height(keyHeight)
                 ) {
-                        CangjieKey(letter = 'q', modifier = Modifier.weight(1f), position = Alignment.Start)
-                        CangjieKey(letter = 'w', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'e', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'r', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 't', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'y', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'u', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'i', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'o', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'p', modifier = Modifier.weight(1f), position = Alignment.End)
+                        CangjieKey(event = InputKeyEvent.letterQ, modifier = Modifier.weight(1f), position = Alignment.Start)
+                        CangjieKey(event = InputKeyEvent.letterW, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterE, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterR, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterT, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterY, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterU, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterI, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterO, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterP, modifier = Modifier.weight(1f), position = Alignment.End)
                 }
                 Row(
                         modifier = Modifier
@@ -77,15 +78,15 @@ fun CangjieKeyboard(keyHeight: Dp) {
                                 .height(keyHeight)
                 ) {
                         Spacer(modifier = Modifier.weight(0.5f))
-                        CangjieKey(letter = 'a', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 's', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'd', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'f', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'g', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'h', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'j', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'k', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'l', modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterA, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterS, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterD, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterF, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterG, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterH, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterJ, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterK, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterL, modifier = Modifier.weight(1f))
                         Spacer(modifier = Modifier.weight(0.5f))
                 }
                 Row(
@@ -95,13 +96,13 @@ fun CangjieKeyboard(keyHeight: Dp) {
                 ) {
                         ShiftKey(modifier = Modifier.weight(1.3f))
                         Spacer(modifier = Modifier.weight(0.2f))
-                        CangjieKey(letter = 'z', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'x', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'c', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'v', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'b', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'n', modifier = Modifier.weight(1f))
-                        CangjieKey(letter = 'm', modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterZ, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterX, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterC, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterV, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterB, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterN, modifier = Modifier.weight(1f))
+                        CangjieKey(event = InputKeyEvent.letterM, modifier = Modifier.weight(1f))
                         Spacer(modifier = Modifier.weight(0.2f))
                         BackspaceKey(modifier = Modifier.weight(1.3f))
                 }

@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.models.InputKeyEvent
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
@@ -59,16 +60,16 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth()
                                 .height(keyHeight)
                 ) {
-                        LetterKey(letter = "q", modifier = Modifier.weight(1f), position = Alignment.Start)
-                        LetterKey(letter = "w", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "e", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "r", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "t", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "y", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "u", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "i", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "o", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "p", modifier = Modifier.weight(1f), position = Alignment.End)
+                        LetterKey(event = InputKeyEvent.letterQ, modifier = Modifier.weight(1f), position = Alignment.Start)
+                        LetterKey(event = InputKeyEvent.letterW, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterE, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterR, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterT, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterY, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterU, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterI, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterO, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterP, modifier = Modifier.weight(1f), position = Alignment.End)
                 }
                 Row(
                         modifier = Modifier
@@ -76,15 +77,15 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
                                 .height(keyHeight)
                 ) {
                         HiddenKey(event = HiddenKeyEvent.LetterA, modifier = Modifier.weight(0.5f))
-                        LetterKey(letter = "a", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "s", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "d", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "f", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "g", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "h", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "j", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "k", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "l", modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterA, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterS, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterD, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterF, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterG, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterH, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterJ, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterK, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterL, modifier = Modifier.weight(1f))
                         HiddenKey(event = HiddenKeyEvent.LetterL, modifier = Modifier.weight(0.5f))
                 }
                 Row(
@@ -94,13 +95,13 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
                 ) {
                         ShiftKey(modifier = Modifier.weight(1.3f))
                         HiddenKey(event = HiddenKeyEvent.LetterZ, modifier = Modifier.weight(0.2f))
-                        LetterKey(letter = "z", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "x", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "c", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "v", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "b", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "n", modifier = Modifier.weight(1f))
-                        LetterKey(letter = "m", modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterZ, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterX, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterC, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterV, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterB, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterN, modifier = Modifier.weight(1f))
+                        LetterKey(event = InputKeyEvent.letterM, modifier = Modifier.weight(1f))
                         HiddenKey(event = HiddenKeyEvent.Backspace, modifier = Modifier.weight(0.2f))
                         BackspaceKey(modifier = Modifier.weight(1.3f))
                 }

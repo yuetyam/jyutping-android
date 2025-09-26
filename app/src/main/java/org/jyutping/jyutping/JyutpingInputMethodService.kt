@@ -62,6 +62,7 @@ import org.jyutping.jyutping.keyboard.Stroke
 import org.jyutping.jyutping.keyboard.Structure
 import org.jyutping.jyutping.keyboard.length
 import org.jyutping.jyutping.keyboard.transformed
+import org.jyutping.jyutping.models.InputKeyEvent
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetColor
@@ -586,8 +587,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 currentInputConnection.setComposingText(value, 1)
                                         } else {
                                                 val text = value.drop(1)
-                                                val converted = text.mapNotNull { ShapeKeyMap.cangjieCode(it) }
-                                                val isValidSequence: Boolean = converted.isNotEmpty() && (converted.size == text.length)
+                                                val converted = text.mapNotNull { ShapeKeyMap.cangjieCode(it.toString()) }
+                                                val isValidSequence: Boolean = converted.isNotEmpty() && (converted.size == text.count())
                                                 if (isValidSequence) {
                                                         val mark = converted.joinToString(separator = PresetString.EMPTY)
                                                         currentInputConnection.setComposingText(mark, 1)
@@ -677,7 +678,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun clearBuffer() {
                 bufferText = PresetString.EMPTY
         }
-        fun process(text: String) {
+        fun handle(event: InputKeyEvent) {
+                val text: String = if (keyboardCase.value.isLowercased()) event.text else event.text.uppercase()
                 when (inputMethodMode.value) {
                         InputMethodMode.Cantonese -> {
                                 bufferText += text

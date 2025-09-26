@@ -1,34 +1,34 @@
 package org.jyutping.jyutping.utilities
 
 object ShapeKeyMap {
-        fun cangjieCode(char: Char): Char? = cangjieMap[char]
-        private val cangjieMap: HashMap<Char, Char> = hashMapOf(
-                'a' to '日',
-                'b' to '月',
-                'c' to '金',
-                'd' to '木',
-                'e' to '水',
-                'f' to '火',
-                'g' to '土',
-                'h' to '竹',
-                'i' to '戈',
-                'j' to '十',
-                'k' to '大',
-                'l' to '中',
-                'm' to '一',
-                'n' to '弓',
-                'o' to '人',
-                'p' to '心',
-                'q' to '手',
-                'r' to '口',
-                's' to '尸',
-                't' to '廿',
-                'u' to '山',
-                'v' to '女',
-                'w' to '田',
-                'x' to '難',
-                'y' to '卜',
-                'z' to '重'
+        fun cangjieCode(letter: String): String? = cangjieMap[letter]
+        private val cangjieMap: HashMap<String, String> = hashMapOf(
+                "a" to "日",
+                "b" to "月",
+                "c" to "金",
+                "d" to "木",
+                "e" to "水",
+                "f" to "火",
+                "g" to "土",
+                "h" to "竹",
+                "i" to "戈",
+                "j" to "十",
+                "k" to "大",
+                "l" to "中",
+                "m" to "一",
+                "n" to "弓",
+                "o" to "人",
+                "p" to "心",
+                "q" to "手",
+                "r" to "口",
+                "s" to "尸",
+                "t" to "廿",
+                "u" to "山",
+                "v" to "女",
+                "w" to "田",
+                "x" to "難",
+                "y" to "卜",
+                "z" to "重"
         )
 
         fun strokeCode(char: Char): Char? = strokeMap[char]
@@ -41,21 +41,21 @@ object ShapeKeyMap {
                 'x' to '＊'
         )
 
-        fun keyStroke(char: Char): Char? = keyStrokeMap[char]
-        private val keyStrokeMap: HashMap<Char, Char> = hashMapOf(
-                'w' to '⼀',
-                's' to '⼁',
-                'a' to '⼃',
-                'd' to '⼂',
-                'z' to '乛',
-                'x' to '＊',
+        fun keyStroke(letter: String): String? = keyStrokeMap[letter]
+        private val keyStrokeMap: HashMap<String, String> = hashMapOf(
+                "w" to "⼀",
+                "s" to "⼁",
+                "a" to "⼃",
+                "d" to "⼂",
+                "z" to "乛",
+                "x" to "＊",
 
-                'j' to '⼀',
-                'k' to '⼁',
-                'l' to '⼃',
-                'u' to '⼂',
-                'i' to '乛',
-                'o' to '＊'
+                "j" to "⼀",
+                "k" to "⼁",
+                "l" to "⼃",
+                "u" to "⼂",
+                "i" to "乛",
+                "o" to "＊"
         )
 
         fun strokeTransform(text: String): String = text.mapNotNull { mapStrokeKey[it] }.joinToString(separator = "")

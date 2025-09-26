@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
+import org.jyutping.jyutping.models.InputKeyEvent
 
 @Composable
 fun HiddenKey(event: HiddenKeyEvent, modifier: Modifier) {
@@ -27,12 +28,11 @@ fun HiddenKey(event: HiddenKeyEvent, modifier: Modifier) {
                         .clickable(interactionSource = interactionSource, indication = null) {
                                 context.audioFeedback(SoundEffect.Click)
                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                val letter = event.letter()
-                                if (letter == null) {
+                                val inputEvent = event.inputEvent
+                                if (inputEvent == null) {
                                         context.backspace()
                                 } else {
-                                        val text: String = if (keyboardCase.isLowercased()) letter else letter.uppercase()
-                                        context.process(text)
+                                        context.handle(inputEvent)
                                 }
                         }
                         .fillMaxSize()
@@ -46,10 +46,12 @@ enum class HiddenKeyEvent {
         LetterL,
         LetterZ,
         Backspace;
-        fun letter(): String? = when (this) {
-                LetterA -> "a"
-                LetterL -> "l"
-                LetterZ -> "z"
-                Backspace -> null
-        }
+
+        val inputEvent: InputKeyEvent?
+                get() = when (this) {
+                        LetterA -> InputKeyEvent.letterA
+                        LetterL -> InputKeyEvent.letterL
+                        LetterZ -> InputKeyEvent.letterZ
+                        else -> null
+                }
 }
