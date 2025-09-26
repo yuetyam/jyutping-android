@@ -23,7 +23,9 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Keyboard
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +37,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -45,6 +49,7 @@ import org.jyutping.jyutping.R
 import org.jyutping.jyutping.Screen
 import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.isIdeographicCodePoint
+import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.search.CantoneseLexicon
@@ -168,7 +173,9 @@ fun HomeScreen(navController: NavHostController) {
                                                                 val intent = Intent(Settings.ACTION_INPUT_METHOD_SETTINGS).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
                                                                 navController.context.startActivity(intent)
                                                         },
-                                                        shape = CircleShape
+                                                        shape = CircleShape,
+                                                        colors = ButtonDefaults.buttonColors(containerColor = PresetColor.blue, contentColor = Color.White),
+                                                        contentPadding = PaddingValues(top = 12.dp, bottom = 12.dp)
                                                 ) {
                                                         Row(
                                                                 modifier = Modifier.fillMaxWidth(),
@@ -176,7 +183,11 @@ fun HomeScreen(navController: NavHostController) {
                                                                 verticalAlignment = Alignment.CenterVertically
                                                         ) {
                                                                 Icon(imageVector = Icons.Outlined.Settings, contentDescription = null)
-                                                                Text(text = stringResource(id = R.string.home_button_enable_keyboard))
+                                                                Text(
+                                                                        text = stringResource(id = R.string.home_button_enable_keyboard),
+                                                                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                                                        fontWeight = FontWeight.Bold
+                                                                )
                                                                 Icon(imageVector = Icons.Outlined.Settings, contentDescription = null, modifier = Modifier.alpha(0f))
                                                         }
                                                 }
@@ -189,7 +200,9 @@ fun HomeScreen(navController: NavHostController) {
                                                         onClick = {
                                                                 (navController.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showInputMethodPicker()
                                                         },
-                                                        shape = CircleShape
+                                                        shape = CircleShape,
+                                                        colors = ButtonDefaults.buttonColors(containerColor = PresetColor.blue, contentColor = Color.White),
+                                                        contentPadding = PaddingValues(top = 12.dp, bottom = 12.dp)
                                                 ) {
                                                         Row(
                                                                 modifier = Modifier.fillMaxWidth(),
@@ -197,7 +210,11 @@ fun HomeScreen(navController: NavHostController) {
                                                                 verticalAlignment = Alignment.CenterVertically
                                                         ) {
                                                                 Icon(imageVector = Icons.Outlined.Keyboard, contentDescription = null)
-                                                                Text(text = stringResource(id = R.string.home_button_select_keyboard))
+                                                                Text(
+                                                                        text = stringResource(id = R.string.home_button_select_keyboard),
+                                                                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                                                        fontWeight = FontWeight.Bold
+                                                                )
                                                                 Icon(imageVector = Icons.Outlined.Keyboard, contentDescription = null, modifier = Modifier.alpha(0f))
                                                         }
                                                 }

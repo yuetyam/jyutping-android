@@ -26,6 +26,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.presets.PresetString
 
 @Composable
 fun SearchField(
@@ -46,7 +47,7 @@ fun SearchField(
                 trailingIcon = {
                         if (textState.value.isNotEmpty()) {
                                 IconButton(
-                                        onClick = { textState.value = "" }
+                                        onClick = { textState.value = PresetString.EMPTY }
                                 ) {
                                         Icon(Icons.Outlined.Close, contentDescription = null)
                                 }
