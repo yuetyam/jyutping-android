@@ -65,6 +65,10 @@
     <string name="keyboard_settings_keyboard_feedback_header">Keyboard Feedback</string>
     <string name="keyboard_settings_keyboard_feedback_audio_switch_title">Sound</string>
     <string name="keyboard_settings_keyboard_feedback_haptic_switch_title">Haptic</string>
+    <string name="keyboard_settings_keyboard_layout_header">Keyboard Layout</string>
+    <string name="keyboard_settings_keyboard_layout_qwerty">QWERTY (26鍵全鍵盤)</string>
+    <string name="keyboard_settings_keyboard_layout_triple_stroke">Triple-Stroke (26鍵三拼)</string>
+    <string name="keyboard_settings_keyboard_layout_ten_key">10 Key (九宮格)</string>
     <string name="keyboard_settings_numeric_layout_switch_title">Use 10 Key Number Pad</string>
     <string name="keyboard_settings_show_lowercase_keys_switch_title">Show Lowercase Keys</string>
     <string name="keyboard_settings_key_text_preview_switch_title">Key Text Preview</string>

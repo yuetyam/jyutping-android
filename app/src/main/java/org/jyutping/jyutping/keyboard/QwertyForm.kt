@@ -8,16 +8,18 @@ enum class QwertyForm {
         /// Alphabetic, Cantonese (粵拼全鍵盤)
         Jyutping,
 
-        /// Cantonese SaamPing (粵拼三拼)
+        /** Cantonese Triple-Stroke 粵拼三拼 */
         TripleStroke,
 
+        /** 普通話拼音 */
         Pinyin,
 
-        /// Cangjie or Quick(Sucheng)
+        /** 倉頡或速成 */
         Cangjie,
 
+        /** 筆畫 */
         Stroke,
 
-        /// LoengFan Reverse Lookup. 拆字、兩分反查. 例如 木 + 旦 = 查: mukdaan
+        /** 拆字、兩分反查. 例如 木 + 木 = 林: mukmuk */
         Structure
 }

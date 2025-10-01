@@ -95,7 +95,7 @@ fun SymbolKey(symbol: String, modifier: Modifier, position: Alignment.Horizontal
                         Text(
                                 text = symbol,
                                 color = if (isDarkMode) Color.White else Color.Black,
-                                fontSize = 22.sp
+                                fontSize = 24.sp
                         )
                 }
                 if (shouldPreviewKey && isPressing) {

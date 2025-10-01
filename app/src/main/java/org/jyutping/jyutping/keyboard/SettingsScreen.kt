@@ -77,6 +77,7 @@ fun SettingsScreen(height: Dp) {
         val characterStandard by context.characterStandard.collectAsState()
         val isAudioFeedbackOn by context.isAudioFeedbackOn.collectAsState()
         val isHapticFeedbackOn by context.isHapticFeedbackOn.collectAsState()
+        val keyboardLayout by context.keyboardLayout.collectAsState()
         val useTenKeyNumberPad by context.useTenKeyNumberPad.collectAsState()
         val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
         val previewKeyText by context.previewKeyText.collectAsState()
@@ -336,6 +337,96 @@ fun SettingsScreen(height: Dp) {
                                 }
                         }
                         item {
+                                Column(
+                                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                                ) {
+                                        Text(
+                                                text = stringResource(id = R.string.keyboard_settings_keyboard_layout_header),
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                color = tintColor,
+                                                style = MaterialTheme.typography.bodySmall
+                                        )
+                                        Column(
+                                                modifier = Modifier
+                                                        .background(color = backColor, shape = sectionShape)
+                                                        .fillMaxWidth()
+                                        ) {
+                                                Button(
+                                                        onClick = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateKeyboardLayout(KeyboardLayout.Qwerty)
+                                                        },
+                                                        shape = CircleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_keyboard_layout_qwerty),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (keyboardLayout.isQwerty) 1f else 0f),
+                                                                tint = PresetColor.blue
+                                                        )
+                                                }
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                                Button(
+                                                        onClick = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateKeyboardLayout(KeyboardLayout.TripleStroke)
+                                                        },
+                                                        shape = CircleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_keyboard_layout_triple_stroke),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (keyboardLayout.isTripleStroke) 1f else 0f),
+                                                                tint = PresetColor.blue
+                                                        )
+                                                }
+
+                                                // TODO: 10 key keyboard layout
+                                                if (BuildConfig.DEBUG) {
+                                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                                        Button(
+                                                                onClick = {
+                                                                        context.audioFeedback(SoundEffect.Click)
+                                                                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                        context.updateKeyboardLayout(KeyboardLayout.TenKey)
+                                                                },
+                                                                shape = CircleShape,
+                                                                colors = buttonColors,
+                                                                contentPadding = PaddingValues(horizontal = 8.dp)
+                                                        ) {
+                                                                Text(
+                                                                        text = stringResource(id = R.string.keyboard_settings_keyboard_layout_ten_key),
+                                                                        fontWeight = FontWeight.Normal
+                                                                )
+                                                                Spacer(modifier = Modifier.weight(1f))
+                                                                Icon(
+                                                                        imageVector = Icons.Outlined.Check,
+                                                                        contentDescription = null,
+                                                                        modifier = Modifier.alpha(if (keyboardLayout.isTenKey) 1f else 0f),
+                                                                        tint = PresetColor.blue
+                                                                )
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+                        item {
                                 Row(
                                         modifier = Modifier
                                                 .fillMaxWidth()
@@ -522,7 +613,7 @@ fun SettingsScreen(height: Dp) {
                                                         steps = 17,
                                                         valueRange = -9f..9f,
                                                         colors = SliderDefaults.colors(
-                                                                thumbColor = tintColor,
+                                                                thumbColor = PresetColor.blue,
                                                                 activeTrackColor = PresetColor.blue,
                                                                 inactiveTrackColor = PresetColor.green,
                                                                 activeTickColor = Color.White,

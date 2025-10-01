@@ -30,6 +30,7 @@ import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.SettingsScreen
 import org.jyutping.jyutping.keyboard.StrokeKeyboard
 import org.jyutping.jyutping.keyboard.SymbolicKeyboard
+import org.jyutping.jyutping.keyboard.TripleStrokeKeyboard
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.tenkey.TenKeyNumericKeyboard
 import splitties.systemservices.windowManager
@@ -51,6 +52,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                         KeyboardForm.Alphabetic -> when (qwertyForm) {
                                 QwertyForm.Cangjie -> CangjieKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                 QwertyForm.Stroke -> StrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                                QwertyForm.TripleStroke -> TripleStrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                 else -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                         }
                         KeyboardForm.Numeric -> when (inputMethodMode) {

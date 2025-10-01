@@ -102,7 +102,7 @@ fun ExpressionsScreen() {
                         DifferentView(
                                 heading = "區分【會】以及【識】",
                                 lines = listOf(
-                                        "會：位於動詞前，表示將要做某事。",
+                                        "會：位於動詞前，將要做某事。",
                                         "識：識得；曉得；懂得；明白。",
                                         "例：我會煮飯。（我將要煮飯。）",
                                         "例：我識煮飯。（我懂得如何煮飯。）"
@@ -156,7 +156,7 @@ fun ExpressionsScreen() {
                                 labels = listOf(
                                         LabelEntry(type = LabelType.CHECKED, text = "苦過黃連。"),
                                         LabelEntry(type = LabelType.CHECKED, text = "狼過華秀隻狗。"),
-                                        LabelEntry(type = LabelType.MISTAKE, text = "比黃連更苦。"),
+                                        LabelEntry(type = LabelType.MISTAKE, text = "比黃連苦。"),
                                         LabelEntry(type = LabelType.MISTAKE, text = "比華秀隻狗更狼。")
                                 )
                         )

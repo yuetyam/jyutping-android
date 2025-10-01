@@ -51,6 +51,7 @@ import org.jyutping.jyutping.keyboard.InputMethodMode
 import org.jyutping.jyutping.keyboard.KeyboardCase
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.KeyboardInterface
+import org.jyutping.jyutping.keyboard.KeyboardLayout
 import org.jyutping.jyutping.keyboard.NumericLayout
 import org.jyutping.jyutping.keyboard.Pinyin
 import org.jyutping.jyutping.keyboard.PinyinSegmentor
@@ -111,7 +112,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 window?.window?.let {
                         WindowCompat.getInsetsController(it, it.decorView).isAppearanceLightNavigationBars = isNightMode.not()
 
-                        @Suppress("DEPRECATION") // Needs for Android 14 and below
+                        // Needs for Android 14 and below
+                        @Suppress("DEPRECATION")
                         it.navigationBarColor = if (isHighContrastPreferred.value) {
                                 if (isDarkMode.value) AltPresetColor.darkBackground.toArgb() else AltPresetColor.lightBackground.toArgb()
                         } else {
@@ -121,7 +123,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 isDarkMode.value = isNightMode
                 inputMethodMode.value = InputMethodMode.Cantonese
                 keyboardForm.value = KeyboardForm.Alphabetic
-                qwertyForm.value = QwertyForm.Jyutping
+                qwertyForm.value = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Jyutping
                 updateSpaceKeyForm()
                 updateReturnKeyForm(attribute)
                 inputClientMonitorJob = CoroutineScope(Dispatchers.Main).launch {
@@ -243,7 +245,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
-        val qwertyForm: MutableStateFlow<QwertyForm> by lazy { MutableStateFlow(QwertyForm.Jyutping) }
+        val qwertyForm: MutableStateFlow<QwertyForm> by lazy {
+                val form: QwertyForm = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Jyutping
+                MutableStateFlow(form)
+        }
         private fun updateQwertyForm(form: QwertyForm) {
                 if (qwertyForm.value != form) {
                         qwertyForm.value = form
@@ -329,6 +334,19 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 val value: Int = if (isOn) 101 else 102
                 sharedPreferences.edit {
                         putInt(UserSettingsKey.HapticFeedback, value)
+                }
+        }
+        val keyboardLayout: MutableStateFlow<KeyboardLayout> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.KeyboardLayout, KeyboardLayout.Qwerty.identifier)
+                val layout = KeyboardLayout.layoutOf(savedValue)
+                MutableStateFlow(layout)
+        }
+        fun updateKeyboardLayout(layout: KeyboardLayout) {
+                keyboardLayout.value = layout
+                val newForm: QwertyForm = if (layout.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Jyutping
+                updateQwertyForm(newForm)
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.KeyboardLayout, layout.identifier)
                 }
         }
         val useTenKeyNumberPad: MutableStateFlow<Boolean> by lazy {
@@ -559,7 +577,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         if (keyboardForm.value == KeyboardForm.CandidateBoard) {
                                                 transformTo(KeyboardForm.Alphabetic)
                                         }
-                                        updateQwertyForm(QwertyForm.Jyutping)
+                                        val newForm: QwertyForm = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Jyutping
+                                        updateQwertyForm(newForm)
                                 }
                                 'r' -> {
                                         if (value.length < 2) {
@@ -690,6 +709,17 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun handle(event: InputKeyEvent) {
                 val text: String = if (keyboardCase.value.isLowercased()) event.text else event.text.uppercase()
+                when (inputMethodMode.value) {
+                        InputMethodMode.Cantonese -> {
+                                bufferText += text
+                        }
+                        InputMethodMode.ABC -> {
+                                currentInputConnection.commitText(text, 1)
+                        }
+                }
+                adjustKeyboardCase()
+        }
+        fun process(text: String) {
                 when (inputMethodMode.value) {
                         InputMethodMode.Cantonese -> {
                                 bufferText += text
