@@ -28,6 +28,7 @@ object KeyboardDataPreparer {
                         "CREATE INDEX lexicontenkeycodeindex ON lexicontable(tenkeycode);",
                         "CREATE INDEX lexicontenkeyanchorsindex ON lexicontable(tenkeyanchors);",
                         "CREATE INDEX lexiconwordindex ON lexicontable(word);",
+                        "CREATE INDEX lexiconromanizationindex ON lexicontable(romanization);",
 
                         "CREATE INDEX structurepingindex ON structuretable(ping);",
                         "CREATE INDEX structuretenkeycodeindex ON structuretable(tenkeycode);",

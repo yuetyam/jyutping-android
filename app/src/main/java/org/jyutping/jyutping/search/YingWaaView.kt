@@ -28,8 +28,8 @@ fun YingWaaView(entries: List<YingWaaFanWan>) {
         Column {
                 Text(
                         text = "《英華分韻撮要》 衛三畏 1856 廣州",
-                        modifier = Modifier.padding(horizontal = 8.dp).alpha(0.75f),
-                        color = colorScheme.onBackground,
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        color = colorScheme.onTertiaryContainer,
                         fontSize = 13.sp
                 )
                 Column(

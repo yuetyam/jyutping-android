@@ -6,7 +6,10 @@ import kotlin.use
 
 object AppDataPreparer {
         fun prepare(url: String) {
-                createJyutpingTable(url)
+
+                // Use LexiconTable instead
+                // createJyutpingTable(url)
+
                 createCollocationTable(url)
                 createDefinitionTable(url)
                 createYingWaaTable(url)
@@ -17,8 +20,8 @@ object AppDataPreparer {
         }
         private fun createIndies(url: String) {
                 val commands: List<String> = listOf(
-                        "CREATE INDEX jyutpingwordindex ON jyutpingtable(word);",
-                        "CREATE INDEX jyutpingromanizationindex ON jyutpingtable(romanization);",
+                        // "CREATE INDEX jyutpingwordindex ON jyutpingtable(word);",
+                        // "CREATE INDEX jyutpingromanizationindex ON jyutpingtable(romanization);",
 
                         "CREATE INDEX collocationwordindex ON collocationtable(word);",
                         "CREATE INDEX collocationromanizationindex ON collocationtable(romanization);",

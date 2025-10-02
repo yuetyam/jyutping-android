@@ -27,8 +27,8 @@ fun ChoHokView(entries: List<ChoHokYuetYamCitYiu>) {
         Column {
                 Text(
                         text = "《初學粵音切要》 湛約翰 1855 香港",
-                        modifier = Modifier.padding(horizontal = 8.dp).alpha(0.75f),
-                        color = colorScheme.onBackground,
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        color = colorScheme.onTertiaryContainer,
                         fontSize = 13.sp
                 )
                 Column(

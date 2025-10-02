@@ -27,8 +27,8 @@ fun FanWanView(entries: List<FanWanCuetYiu>) {
         Column {
                 Text(
                         text = "《分韻撮要》 佚名 清初 廣州府",
-                        modifier = Modifier.padding(horizontal = 8.dp).alpha(0.75f),
-                        color = colorScheme.onBackground,
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        color = colorScheme.onTertiaryContainer,
                         fontSize = 13.sp
                 )
                 Column(

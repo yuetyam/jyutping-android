@@ -22,8 +22,8 @@ fun GwongWanView(entries: List<GwongWanCharacter>) {
         Column {
                 Text(
                         text = "《大宋重修廣韻》 陳彭年等 北宋",
-                        modifier = Modifier.padding(horizontal = 8.dp).alpha(0.75f),
-                        color = colorScheme.onBackground,
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        color = colorScheme.onTertiaryContainer,
                         fontSize = 13.sp
                 )
                 Column(
