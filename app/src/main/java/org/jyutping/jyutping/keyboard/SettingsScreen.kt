@@ -67,6 +67,7 @@ import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
+import java.util.Locale
 import kotlin.math.roundToInt
 
 @Composable
@@ -572,16 +573,32 @@ fun SettingsScreen(height: Dp) {
                         }
                         item {
                                 Column(
-                                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                                        modifier = Modifier
+                                                .background(color = backColor, shape = sectionShape)
+                                                .fillMaxWidth()
                                 ) {
-                                        Text(
-                                                text = stringResource(id = R.string.keyboard_settings_key_height_offset_title),
-                                                modifier = Modifier.padding(horizontal = 2.dp),
-                                                color = tintColor
-                                        )
+                                        Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 10.dp),
+                                                horizontalArrangement = Arrangement.spacedBy(3.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_key_height_offset_title),
+                                                        color = tintColor
+                                                )
+                                                Text(
+                                                        text = ": ",
+                                                        modifier = Modifier.alpha(0.66f),
+                                                        color = tintColor
+                                                )
+                                                Text(
+                                                        text = String.format(Locale.US, "%+d", keyHeightOffset),
+                                                        color = tintColor
+                                                )
+                                        }
+                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                         Box(
                                                 modifier = Modifier
-                                                        .background(color = backColor, shape = sectionShape)
                                                         .padding(start = 2.dp, top = 4.dp, end = 2.dp, bottom = 6.dp)
                                                         .fillMaxWidth()
                                         ) {
@@ -591,13 +608,9 @@ fun SettingsScreen(height: Dp) {
                                                                 .padding(top = 32.dp, start = 1.dp, end = 5.dp),
                                                         horizontalArrangement = Arrangement.SpaceBetween
                                                 ) {
-                                                        for (number in -9..9) {
+                                                        for (number in -7..7) {
                                                                 Text(
-                                                                        text = when {
-                                                                                (number < 0) -> "$number"
-                                                                                (number == 0) -> " 0"
-                                                                                else -> "+$number"
-                                                                        },
+                                                                        text = String.format(Locale.US, "%+d", number),
                                                                         color = tintColor,
                                                                         fontSize = MaterialTheme.typography.labelSmall.fontSize,
                                                                         fontFamily = FontFamily.Monospace
@@ -606,12 +619,16 @@ fun SettingsScreen(height: Dp) {
                                                 }
                                                 Slider(
                                                         value = keyHeightSliderPosition,
-                                                        onValueChange = { keyHeightSliderPosition = it },
+                                                        onValueChange = {
+                                                                keyHeightSliderPosition = it
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                        },
                                                         onValueChangeFinished = {
                                                                 context.updateKeyHeightOffset(keyHeightSliderPosition.roundToInt())
                                                         },
-                                                        steps = 17,
-                                                        valueRange = -9f..9f,
+                                                        steps = 13,
+                                                        valueRange = -7f..7f,
                                                         colors = SliderDefaults.colors(
                                                                 thumbColor = PresetColor.blue,
                                                                 activeTrackColor = PresetColor.blue,
