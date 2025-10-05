@@ -9,8 +9,8 @@
     <string name="home_button_enable_keyboard">Enable this keyboard</string>
     <string name="home_button_select_keyboard">Select this keyboard</string>
     <string name="guide_abbreviated_input_heading">Quick Input with Initials</string>
-    <string name="guide_abbreviated_input_row1">Type faster by entering only the first letters of each syllable. For example, typing “nh” gives you “你好”.</string>
-    <string name="guide_abbreviated_input_row2">Combine abbreviated and full input for even more flexibility. For example, “nhou” or “neih” also produces “你好”.</string>
+    <string name="guide_abbreviated_input_row1">Type faster by entering only syllable initials (e.g., “nh” → “你好”).</string>
+    <string name="guide_abbreviated_input_row2">Combine abbreviated and full input for flexibility (e.g., “nhou” / “neih” → “你好”).</string>
     <string name="guide_pinyin_reverse_lookup_heading">Lookup Jyutping with Mandarin Pinyin</string>
     <string name="guide_pinyin_reverse_lookup_body">Start with “r”, then enter Pinyin code. For example, “rlin” → “林”.</string>
     <string name="guide_cangjie_reverse_lookup_heading">Lookup Jyutping with Cangjie or Quick (Sucheng)</string>

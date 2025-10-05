@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.OpenInFull
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -157,6 +158,7 @@ fun SettingsScreen(height: Dp) {
                         }
                         Text(
                                 text = stringResource(id = R.string.keyboard_settings_navigation_hint),
+                                modifier = Modifier.alpha(0.8f),
                                 color = tintColor
                         )
                         IconButton(
@@ -164,7 +166,7 @@ fun SettingsScreen(height: Dp) {
                                 modifier = Modifier.alpha(0f)
                         ) {
                                 Icon(
-                                        imageVector = Icons.Outlined.ArrowUpward,
+                                        imageVector = Icons.Outlined.OpenInFull,
                                         contentDescription = null,
                                         tint = tintColor
                                 )
@@ -631,8 +633,8 @@ fun SettingsScreen(height: Dp) {
                                                         valueRange = -7f..7f,
                                                         colors = SliderDefaults.colors(
                                                                 thumbColor = PresetColor.blue,
-                                                                activeTrackColor = PresetColor.blue,
-                                                                inactiveTrackColor = PresetColor.green,
+                                                                activeTrackColor = PresetColor.blue.copy(alpha = 0.8f),
+                                                                inactiveTrackColor = PresetColor.green.copy(alpha = 0.75f),
                                                                 activeTickColor = Color.White,
                                                                 inactiveTickColor = Color.White
                                                         )

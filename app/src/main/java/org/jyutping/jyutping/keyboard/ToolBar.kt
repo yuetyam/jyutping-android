@@ -31,7 +31,7 @@ import org.jyutping.jyutping.feedback.SoundEffect
 @Composable
 fun ToolBar() {
         val inputMethodModeSwitchWidth = 70.dp
-        val buttonWidth = 50.dp
+        val buttonSize = 50.dp
         val iconSize = 24.dp
         val editingIconSize = 28.dp
         val interactionSource = remember { MutableInteractionSource() }
@@ -42,7 +42,8 @@ fun ToolBar() {
                 modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
         ) {
                 IconButton(
                         onClick = {
@@ -50,9 +51,7 @@ fun ToolBar() {
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                 context.transformTo(KeyboardForm.Settings)
                         },
-                        modifier = Modifier
-                                .width(buttonWidth)
-                                .fillMaxHeight()
+                        modifier = Modifier.size(buttonSize)
                 ) {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.button_settings),
@@ -67,9 +66,7 @@ fun ToolBar() {
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                 context.transformTo(KeyboardForm.EmojiBoard)
                         },
-                        modifier = Modifier
-                                .width(buttonWidth)
-                                .fillMaxHeight()
+                        modifier = Modifier.size(buttonSize)
                 ) {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.button_emoji),
@@ -97,9 +94,7 @@ fun ToolBar() {
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                 context.transformTo(KeyboardForm.EditingPanel)
                         },
-                        modifier = Modifier
-                                .width(buttonWidth)
-                                .fillMaxHeight()
+                        modifier = Modifier.size(buttonSize)
                 ) {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.button_editing),
@@ -114,9 +109,7 @@ fun ToolBar() {
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                 context.dismissKeyboard()
                         },
-                        modifier = Modifier
-                                .width(buttonWidth)
-                                .fillMaxHeight()
+                        modifier = Modifier.size(buttonSize)
                 ) {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.button_dismiss_keyboard),
