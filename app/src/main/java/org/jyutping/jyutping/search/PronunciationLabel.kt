@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +23,7 @@ fun PronunciationLabel(pronunciation: Pronunciation) {
         val ipaText: String? = if (romanization.contains(PresetString.SPACE)) null else Jyutping2IPA.IPAText(romanization)
         val homophoneText: String? = if (pronunciation.homophones.isEmpty()) null else pronunciation.homophones.joinToString(separator = PresetString.SPACE)
         val collocationText: String? = if (pronunciation.collocations.isEmpty()) null else pronunciation.collocations.take(5).joinToString(separator = PresetString.SPACE)
-        val ttsCollocationText: String? = if (pronunciation.collocations.isEmpty()) null else pronunciation.collocations.take(5).joinToString(separator = "; ")
+        val ttsCollocationText: String? = if (pronunciation.collocations.isEmpty()) null else pronunciation.collocations.take(5).joinToString(separator = "；")
         Column {
                 Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -82,6 +83,21 @@ fun PronunciationLabel(pronunciation: Pronunciation) {
                                 ttsCollocationText?.let { text ->
                                         Speaker(cantonese = text)
                                 }
+                        }
+                }
+                pronunciation.descriptions.map {
+                        Row(
+                                modifier = Modifier.padding(vertical = 2.dp)
+                        ) {
+                                Text(
+                                        text = "釋義",
+                                        color = colorScheme.onBackground
+                                )
+                                SeparatorMark()
+                                Text(
+                                        text = it,
+                                        color = colorScheme.onBackground
+                                )
                         }
                 }
         }

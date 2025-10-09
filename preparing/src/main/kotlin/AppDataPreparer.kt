@@ -11,6 +11,7 @@ object AppDataPreparer {
                 // createJyutpingTable(url)
 
                 createCollocationTable(url)
+                createDictionaryTable(url)
                 createDefinitionTable(url)
                 createYingWaaTable(url)
                 createChoHokTable(url)
@@ -25,6 +26,9 @@ object AppDataPreparer {
 
                         "CREATE INDEX collocationwordindex ON collocationtable(word);",
                         "CREATE INDEX collocationromanizationindex ON collocationtable(romanization);",
+
+                        "CREATE INDEX dictionarywordindex ON dictionarytable(word);",
+                        "CREATE INDEX dictionaryromanizationindex ON dictionarytable(romanization);",
 
                         "CREATE INDEX yingwaacodeindex ON yingwaatable(code);",
                         "CREATE INDEX yingwaaromanizationindex ON yingwaatable(romanization);",
@@ -95,6 +99,32 @@ object AppDataPreparer {
                 }
                 connection.close()
                 println("Inserted collocation entries successfully: $insertedColl")
+        }
+
+        private fun createDictionaryTable(url: String) {
+                val createTableCommand: String = "CREATE TABLE dictionarytable(word TEXT NOT NULL, romanization TEXT NOT NULL, description TEXT NOT NULL);"
+                val connection = DriverManager.getConnection(url)
+                connection.createStatement().use { statement ->
+                        statement.executeUpdate(createTableCommand)
+                }
+                println("Created dictionary table successfully.")
+                val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("wordshk.txt") ?: error("Can not load wordshk.txt")
+                val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
+                val insertEntryCommand: String = "INSERT INTO dictionarytable (word, romanization, description) VALUES (?, ?, ?);"
+                println("Inserting ${sourceLines.size} dictionary entries...")
+                val insertedColl = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
+                        val badLineFormat = "bad line format: $line"
+                        val parts = line.split(PresetString.TAB)
+                        if (parts.size != 3) error(badLineFormat)
+                        val word = parts[0]
+                        val romanization = parts[1]
+                        val description = parts[2]
+                        statement.setString(1, word)
+                        statement.setString(2, romanization)
+                        statement.setString(3, description)
+                }
+                connection.close()
+                println("Inserted dictionary entries successfully: $insertedColl")
         }
 
         private fun createDefinitionTable(url: String) {

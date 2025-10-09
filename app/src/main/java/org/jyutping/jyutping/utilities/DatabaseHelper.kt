@@ -45,7 +45,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                         val pronunciations = romanizations.map { romanization ->
                                                 val homophones = fetchHomophones(romanization).filter { it != text }
                                                 val collocations = fetchCollocations(word = text, romanization = romanization)
-                                                Pronunciation(romanization = romanization, homophones = homophones, collocations = collocations)
+                                                val descriptions = fetchDescriptions(word = text, romanization = romanization)
+                                                Pronunciation(romanization = romanization, homophones = homophones, collocations = collocations, descriptions = descriptions)
                                         }
                                         val unihanDefinition = unihanDefinitionMatch(text)
                                         return  CantoneseLexicon(text = text, pronunciations = pronunciations, unihanDefinition = unihanDefinition)
@@ -56,7 +57,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                         val pronunciations = altRomanizations.map { romanization ->
                                                 val homophones = fetchHomophones(romanization).filter { it != convertedText }
                                                 val collocations = fetchCollocations(word = convertedText, romanization = romanization)
-                                                Pronunciation(romanization = romanization, homophones = homophones, collocations = collocations)
+                                                val descriptions = fetchDescriptions(word = convertedText, romanization = romanization)
+                                                Pronunciation(romanization = romanization, homophones = homophones, collocations = collocations, descriptions = descriptions)
                                         }
                                         val unihanDefinition = unihanDefinitionMatch(convertedText)
                                         return CantoneseLexicon(text = convertedText, pronunciations = pronunciations, unihanDefinition = unihanDefinition)
@@ -66,13 +68,19 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                         else -> {
                                 val romanizations = fetchRomanizations(text)
                                 if (romanizations.isNotEmpty()) {
-                                        val pronunciations: List<Pronunciation> = romanizations.map { Pronunciation(it) }
+                                        val pronunciations: List<Pronunciation> = romanizations.map {
+                                                val descriptions = fetchDescriptions(word = text, romanization = it)
+                                                Pronunciation(romanization = it, descriptions = descriptions)
+                                        }
                                         return CantoneseLexicon(text = text, pronunciations = pronunciations)
                                 }
                                 val convertedText = text.convertedS2T()
                                 val altRomanizations = fetchRomanizations(convertedText)
                                 if (altRomanizations.isNotEmpty()) {
-                                        val pronunciations: List<Pronunciation> = altRomanizations.map { Pronunciation(it) }
+                                        val pronunciations: List<Pronunciation> = altRomanizations.map {
+                                                val descriptions = fetchDescriptions(word = convertedText, romanization = it)
+                                                Pronunciation(romanization = it, descriptions = descriptions)
+                                        }
                                         return CantoneseLexicon(text = convertedText, pronunciations = pronunciations)
                                 }
                                 val ideographicCount = text.codePoints().toArray().count { it.isIdeographicCodePoint }
@@ -108,7 +116,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                                 }
                                 if (fetches.isEmpty()) return CantoneseLexicon(text)
                                 val romanization = fetches.joinToString(separator = PresetString.SPACE)
-                                val pronunciation = Pronunciation(romanization)
+                                val descriptions = fetchDescriptions(word = newText, romanization = romanization)
+                                val pronunciation = Pronunciation(romanization = romanization, descriptions = descriptions)
                                 return CantoneseLexicon(text = newText, pronunciations = listOf(pronunciation))
                         }
                 }
@@ -157,6 +166,17 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                         cursor.close()
                         return emptyList()
                 }
+        }
+        private fun fetchDescriptions(word: String, romanization: String): List<String> {
+                val items: MutableList<String> = mutableListOf()
+                val command = "SELECT description FROM dictionarytable WHERE word = ? AND romanization = ?;"
+                val cursor = this.readableDatabase.rawQuery(command, arrayOf(word, romanization))
+                while (cursor.moveToNext()) {
+                        val item = cursor.getString(0)
+                        items.add(item)
+                }
+                cursor.close()
+                return items
         }
 
         fun searchYingWaaFanWan(text: String): List<YingWaaFanWan> {

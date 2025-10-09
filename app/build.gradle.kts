@@ -52,7 +52,7 @@ java {
         }
 }
 
-val composeVersion = "1.9.2"
+val composeVersion = "1.9.3"
 dependencies {
         implementation("androidx.activity:activity-compose:1.11.0")
         implementation("androidx.activity:activity-ktx:1.11.0")
