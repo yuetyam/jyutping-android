@@ -14,14 +14,12 @@ object UnihanDefinition {
 
                 val insertCommand: String = "INSERT INTO definitiontable (word, definition) VALUES (?, ?);"
                 val strokeData = readDefinitionData()
-                connection.prepareStatement(insertCommand).use { statement ->
-                        for (obj in strokeData) {
-                                statement.setString(1, obj.first)
-                                statement.setString(2, obj.second)
-                                statement.executeUpdate()
-                        }
-                        statement.close()
+                println("Inserting ${strokeData.size} definition rows (temp DB)...")
+                val inserted = batchInsert(connection, insertCommand, strokeData) { statement, obj ->
+                        statement.setString(1, obj.first)
+                        statement.setString(2, obj.second)
                 }
+                println("Inserted definition rows (temp DB): $inserted")
                 val createIndexCommand: String = "CREATE INDEX definitionwordindex ON definitiontable(word);"
                 connection.createStatement().execute(createIndexCommand)
 

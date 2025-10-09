@@ -28,14 +28,12 @@ data class Stroke(
 
                         val insertCommand: String = "INSERT INTO stroketable (word, stroke) VALUES (?, ?);"
                         val strokeData = readStrokeData()
-                        connection.prepareStatement(insertCommand).use { statement ->
-                                for (obj in strokeData) {
-                                        statement.setString(1, obj.first)
-                                        statement.setString(2, obj.second)
-                                        statement.executeUpdate()
-                                }
-                                statement.close()
+                        println("Inserting ${strokeData.size} stroke rows (temp DB)...")
+                        val inserted = batchInsert(connection, insertCommand, strokeData) { statement, obj ->
+                                statement.setString(1, obj.first)
+                                statement.setString(2, obj.second)
                         }
+                        println("Inserted stroke rows (temp DB): $inserted")
                         val createIndexCommand: String = "CREATE INDEX strokewordindex ON stroketable(word);"
                         connection.createStatement().execute(createIndexCommand)
 

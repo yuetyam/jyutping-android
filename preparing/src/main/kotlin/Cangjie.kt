@@ -31,14 +31,12 @@ data class Cangjie(
                                 connection.createStatement().execute(createTableCommand)
                                 val insertCommand: String = "INSERT INTO cangjie5table (word, cangjie) VALUES (?, ?);"
                                 val cangjie5Data = readCangjie5Data()
-                                connection.prepareStatement(insertCommand).use { statement ->
-                                        for (obj in cangjie5Data) {
+                                println("Inserting ${cangjie5Data.size} cangjie5 rows (temp DB)...")
+                                        val inserted = batchInsert(connection, insertCommand, cangjie5Data) { statement, obj ->
                                                 statement.setString(1, obj.first)
                                                 statement.setString(2, obj.second)
-                                                statement.executeUpdate()
                                         }
-                                        statement.close()
-                                }
+                                        println("Inserted cangjie5 rows (temp DB): $inserted")
                                 val createIndexCommand: String = "CREATE INDEX cangjie5wordindex ON cangjie5table(word);"
                                 connection.createStatement().execute(createIndexCommand)
                         }
@@ -47,14 +45,12 @@ data class Cangjie(
                                 connection.createStatement().execute(createTableCommand)
                                 val insertCommand: String = "INSERT INTO cangjie3table (word, cangjie) VALUES (?, ?);"
                                 val cangjie3Data = readCangjie3Data()
-                                connection.prepareStatement(insertCommand).use { statement ->
-                                        for (obj in cangjie3Data) {
-                                                statement.setString(1, obj.first)
-                                                statement.setString(2, obj.second)
-                                                statement.executeUpdate()
-                                        }
-                                        statement.close()
+                                println("Inserting ${cangjie3Data.size} cangjie3 rows (temp DB)...")
+                                val inserted3 = batchInsert(connection, insertCommand, cangjie3Data) { statement, obj ->
+                                        statement.setString(1, obj.first)
+                                        statement.setString(2, obj.second)
                                 }
+                                println("Inserted cangjie3 rows (temp DB): $inserted3")
                                 val createIndexCommand: String = "CREATE INDEX cangjie3wordindex ON cangjie3table(word);"
                                 connection.createStatement().execute(createIndexCommand)
                         }

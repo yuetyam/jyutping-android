@@ -83,19 +83,17 @@ object KeyboardDataPreparer {
                 println("Created lexicon table successfully.")
                 val entries = LexiconConverter.jyutping()
                 val insertEntryCommand: String = "INSERT INTO lexicontable (word, romanization, anchors, ping, tenkeyanchors, tenkeycode) VALUES (?, ?, ?, ?, ?, ?);"
-                connection.prepareStatement(insertEntryCommand).use { statement ->
-                        for (entry in entries) {
-                                statement.setString(1, entry.word)
-                                statement.setString(2, entry.romanization)
-                                statement.setLong(3, entry.anchors)
-                                statement.setLong(4, entry.ping)
-                                statement.setLong(5, entry.tenKeyAnchors)
-                                statement.setLong(6, entry.tenKeyCode)
-                                statement.executeUpdate()
-                        }
+                println("Inserting ${entries.size} lexicon entries...")
+                val inserted = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
+                        statement.setString(1, entry.word)
+                        statement.setString(2, entry.romanization)
+                        statement.setLong(3, entry.anchors)
+                        statement.setLong(4, entry.ping)
+                        statement.setLong(5, entry.tenKeyAnchors)
+                        statement.setLong(6, entry.tenKeyCode)
                 }
                 connection.close()
-                println("Inserted lexicon entries successfully.")
+                println("Inserted lexicon entries successfully: $inserted")
         }
 
         private fun createHant2HansTable(url: String) {
@@ -107,15 +105,13 @@ object KeyboardDataPreparer {
                 println("Created t2s table successfully.")
                 val entries = Hant2Hans.generate()
                 val insertEntryCommand: String = "INSERT INTO t2stable (traditional, simplified) VALUES (?, ?);"
-                connection.prepareStatement(insertEntryCommand).use { statement ->
-                        for (entry in entries) {
-                                statement.setInt(1, entry.first)
-                                statement.setInt(2, entry.second)
-                                statement.executeUpdate()
-                        }
+                println("Inserting ${entries.size} t2s entries...")
+                val insertedT2s = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
+                        statement.setInt(1, entry.first)
+                        statement.setInt(2, entry.second)
                 }
                 connection.close()
-                println("Inserted t2s entries successfully.")
+                println("Inserted t2s entries successfully: $insertedT2s")
         }
 
         private fun createStructureTable(url: String) {
@@ -127,17 +123,15 @@ object KeyboardDataPreparer {
                 println("Created structure table successfully.")
                 val entries = LexiconConverter.structure()
                 val insertEntryCommand: String = "INSERT INTO structuretable (word, romanization, ping, tenkeycode) VALUES (?, ?, ?, ?);"
-                connection.prepareStatement(insertEntryCommand).use { statement ->
-                        for (entry in entries) {
-                                statement.setString(1, entry.word)
-                                statement.setString(2, entry.romanization)
-                                statement.setLong(3, entry.ping)
-                                statement.setLong(4, entry.tenKeyCode)
-                                statement.executeUpdate()
-                        }
+                println("Inserting ${entries.size} structure entries...")
+                val inserted = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
+                        statement.setString(1, entry.word)
+                        statement.setString(2, entry.romanization)
+                        statement.setLong(3, entry.ping)
+                        statement.setLong(4, entry.tenKeyCode)
                 }
                 connection.close()
-                println("Inserted structure entries successfully.")
+                println("Inserted structure entries successfully: $inserted")
         }
 
         private fun createPinyinTable(url: String) {
@@ -149,19 +143,17 @@ object KeyboardDataPreparer {
                 println("Created pinyin table successfully.")
                 val entries = LexiconConverter.pinyin()
                 val insertEntryCommand: String = "INSERT INTO pinyintable (word, romanization, anchors, ping, tenkeyanchors, tenkeycode) VALUES (?, ?, ?, ?, ?, ?);"
-                connection.prepareStatement(insertEntryCommand).use { statement ->
-                        for (entry in entries) {
-                                statement.setString(1, entry.word)
-                                statement.setString(2, entry.romanization)
-                                statement.setLong(3, entry.anchors)
-                                statement.setLong(4, entry.ping)
-                                statement.setLong(5, entry.tenKeyAnchors)
-                                statement.setLong(6, entry.tenKeyCode)
-                                statement.executeUpdate()
-                        }
+                println("Inserting ${entries.size} pinyin entries...")
+                val insertedPinyin = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
+                        statement.setString(1, entry.word)
+                        statement.setString(2, entry.romanization)
+                        statement.setLong(3, entry.anchors)
+                        statement.setLong(4, entry.ping)
+                        statement.setLong(5, entry.tenKeyAnchors)
+                        statement.setLong(6, entry.tenKeyCode)
                 }
                 connection.close()
-                println("Inserted pinyin entries successfully.")
+                println("Inserted pinyin entries successfully: $insertedPinyin")
         }
 
         private fun createSyllablesTable(url: String) {
@@ -174,32 +166,30 @@ object KeyboardDataPreparer {
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("syllable.txt") ?: error("Can not load syllable.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO syllabletable (aliascode, origincode, tenkeyaliascode, tenkeyorigincode, alias, origin) VALUES (?, ?, ?, ?, ?, ?);"
-                connection.prepareStatement(insertEntryCommand).use { statement ->
-                        for (line in sourceLines) {
-                                val badLineFormat = "bad line format: $line"
-                                val parts = line.split(PresetString.TAB)
-                                if (parts.size != 2) error(badLineFormat)
-                                val alias = parts[0]
-                                val origin = parts[1]
-                                val aliasCode = alias.charCode
-                                val originCode = origin.charCode
-                                if (aliasCode == null || originCode == null) error(badLineFormat)
-                                if (aliasCode == 0L || originCode == 0L) error(badLineFormat)
-                                val tenKeyAliasCode = alias.tenKeyCharCode
-                                val tenKeyOriginCode = origin.tenKeyCharCode
-                                if (tenKeyAliasCode == null || tenKeyOriginCode == null) error(badLineFormat)
-                                if (tenKeyAliasCode == 0L || tenKeyOriginCode == 0L) error(badLineFormat)
-                                statement.setLong(1, aliasCode)
-                                statement.setLong(2, originCode)
-                                statement.setLong(3, tenKeyAliasCode)
-                                statement.setLong(4, tenKeyOriginCode)
-                                statement.setString(5, alias)
-                                statement.setString(6, origin)
-                                statement.executeUpdate()
-                        }
+                println("Inserting ${sourceLines.size} syllable entries...")
+                val insertedSyllable = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
+                        val badLineFormat = "bad line format: $line"
+                        val parts = line.split(PresetString.TAB)
+                        if (parts.size != 2) error(badLineFormat)
+                        val alias = parts[0]
+                        val origin = parts[1]
+                        val aliasCode = alias.charCode
+                        val originCode = origin.charCode
+                        if (aliasCode == null || originCode == null) error(badLineFormat)
+                        if (aliasCode == 0L || originCode == 0L) error(badLineFormat)
+                        val tenKeyAliasCode = alias.tenKeyCharCode
+                        val tenKeyOriginCode = origin.tenKeyCharCode
+                        if (tenKeyAliasCode == null || tenKeyOriginCode == null) error(badLineFormat)
+                        if (tenKeyAliasCode == 0L || tenKeyOriginCode == 0L) error(badLineFormat)
+                        statement.setLong(1, aliasCode)
+                        statement.setLong(2, originCode)
+                        statement.setLong(3, tenKeyAliasCode)
+                        statement.setLong(4, tenKeyOriginCode)
+                        statement.setString(5, alias)
+                        statement.setString(6, origin)
                 }
                 connection.close()
-                println("Inserted syllable entries successfully.")
+                println("Inserted syllable entries successfully: $insertedSyllable")
         }
 
         private fun createPinyinSyllablesTable(url: String) {
@@ -212,21 +202,19 @@ object KeyboardDataPreparer {
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("pinyin-syllable.txt") ?: error("Can not load pinyin-syllable.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO pinyinsyllabletable (code, tenkeycode, syllable) VALUES (?, ?, ?);"
-                connection.prepareStatement(insertEntryCommand).use { statement ->
-                        for (line in sourceLines) {
-                                val badLineFormat = "bad line format: $line"
-                                val code = line.charCode
-                                val tenKeyCode = line.tenKeyCharCode
-                                if (code == null || tenKeyCode == null) error(badLineFormat)
-                                if (code == 0L || tenKeyCode == 0L) error(badLineFormat)
-                                statement.setLong(1, code)
-                                statement.setLong(2, tenKeyCode)
-                                statement.setString(3, line)
-                                statement.executeUpdate()
-                        }
+                println("Inserting ${sourceLines.size} pinyin-syllable entries...")
+                val insertedPinyinSyll = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
+                        val badLineFormat = "bad line format: $line"
+                        val code = line.charCode
+                        val tenKeyCode = line.tenKeyCharCode
+                        if (code == null || tenKeyCode == null) error(badLineFormat)
+                        if (code == 0L || tenKeyCode == 0L) error(badLineFormat)
+                        statement.setLong(1, code)
+                        statement.setLong(2, tenKeyCode)
+                        statement.setString(3, line)
                 }
                 connection.close()
-                println("Inserted pinyin syllable entries successfully.")
+                println("Inserted pinyin syllable entries successfully: $insertedPinyinSyll")
         }
 
         private fun createTextMarkTable(url: String) {
@@ -237,19 +225,17 @@ object KeyboardDataPreparer {
                 }
                 println("Created text mark table successfully.")
                 val insertEntryCommand: String = "INSERT INTO marktable (input, mark, ping, code, tenkeycode) VALUES (?, ?, ?, ?, ?);"
-                connection.prepareStatement(insertEntryCommand).use { statement ->
-                        val items = TextMarkLexicon.generate()
-                        for (item in items) {
-                                statement.setString(1, item.input)
-                                statement.setString(2, item.mark)
-                                statement.setInt(3, item.pingCode)
-                                statement.setLong(4, item.charCode)
-                                statement.setLong(5, item.tenKeyCode)
-                                statement.executeUpdate()
-                        }
+                val items = TextMarkLexicon.generate()
+                println("Inserting ${items.size} text-mark entries...")
+                val insertedMarks = batchInsert(connection, insertEntryCommand, items) { statement, item ->
+                        statement.setString(1, item.input)
+                        statement.setString(2, item.mark)
+                        statement.setInt(3, item.pingCode)
+                        statement.setLong(4, item.charCode)
+                        statement.setLong(5, item.tenKeyCode)
                 }
                 connection.close()
-                println("Inserted text mark entries successfully.")
+                println("Inserted text mark entries successfully: $insertedMarks")
         }
 
         private fun createSymbolTable(url: String) {
@@ -262,31 +248,29 @@ object KeyboardDataPreparer {
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("symbol.txt") ?: error("Can not load symbol.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO symboltable (category, unicodeversion, codepoint, cantonese, romanization, ping, tenkeycode) VALUES (?, ?, ?, ?, ?, ?, ?);"
-                connection.prepareStatement(insertEntryCommand).use { statement ->
-                        for (line in sourceLines) {
-                                val badLineFormat = "bad line format: $line"
-                                val parts = line.split(PresetString.TAB)
-                                if (parts.size != 5) error(badLineFormat)
-                                val category = parts[0].toIntOrNull() ?: error(badLineFormat)
-                                val version = parts[1].toIntOrNull() ?: error(badLineFormat)
-                                val codePoint = parts[2]
-                                val cantonese = parts[3]
-                                val romanization = parts[4]
-                                val syllableText = romanization.filter { it.isLetter() }
-                                val pingCode = syllableText.hashCode()
-                                val tenKeyCode = syllableText.tenKeyCharCode ?: 0
-                                statement.setInt(1, category)
-                                statement.setInt(2, version)
-                                statement.setString(3, codePoint)
-                                statement.setString(4, cantonese)
-                                statement.setString(5, romanization)
-                                statement.setInt(6, pingCode)
-                                statement.setLong(7, tenKeyCode)
-                                statement.executeUpdate()
-                        }
+                println("Inserting ${sourceLines.size} symbol entries...")
+                val insertedSymbols = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
+                        val badLineFormat = "bad line format: $line"
+                        val parts = line.split(PresetString.TAB)
+                        if (parts.size != 5) error(badLineFormat)
+                        val category = parts[0].toIntOrNull() ?: error(badLineFormat)
+                        val version = parts[1].toIntOrNull() ?: error(badLineFormat)
+                        val codePoint = parts[2]
+                        val cantonese = parts[3]
+                        val romanization = parts[4]
+                        val syllableText = romanization.filter { it.isLetter() }
+                        val pingCode = syllableText.hashCode()
+                        val tenKeyCode = syllableText.tenKeyCharCode ?: 0
+                        statement.setInt(1, category)
+                        statement.setInt(2, version)
+                        statement.setString(3, codePoint)
+                        statement.setString(4, cantonese)
+                        statement.setString(5, romanization)
+                        statement.setInt(6, pingCode)
+                        statement.setLong(7, tenKeyCode)
                 }
                 connection.close()
-                println("Inserted syllable entries successfully.")
+                println("Inserted symbol entries successfully: $insertedSymbols")
         }
         private fun createEmojiSkinMapTable(url: String) {
                 val createTableCommand: String = "CREATE TABLE emojiskinmap(source TEXT NOT NULL, target TEXT NOT NULL);"
@@ -298,20 +282,18 @@ object KeyboardDataPreparer {
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("skin-tone-map.txt") ?: error("Can not load skin-tone-map.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO emojiskinmap (source, target) VALUES (?, ?);"
-                connection.prepareStatement(insertEntryCommand).use { statement ->
-                        for (line in sourceLines) {
-                                val badLineFormat = "bad line format: $line"
-                                val parts = line.split(PresetString.TAB)
-                                if (parts.size != 2) error(badLineFormat)
-                                val source = parts[0]
-                                val target = parts[1]
-                                statement.setString(1, source)
-                                statement.setString(2, target)
-                                statement.executeUpdate()
-                        }
+                println("Inserting ${sourceLines.size} emoji-skin-map entries...")
+                val insertedEmoji = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
+                        val badLineFormat = "bad line format: $line"
+                        val parts = line.split(PresetString.TAB)
+                        if (parts.size != 2) error(badLineFormat)
+                        val source = parts[0]
+                        val target = parts[1]
+                        statement.setString(1, source)
+                        statement.setString(2, target)
                 }
                 connection.close()
-                println("Inserted emoji-skin-map entries successfully.")
+                println("Inserted emoji-skin-map entries successfully: $insertedEmoji")
         }
 
         private fun createStrokeTable(url: String) {
@@ -323,18 +305,16 @@ object KeyboardDataPreparer {
                 println("Created stroke table successfully.")
                 val entries = Stroke.generate()
                 val insertEntryCommand: String = "INSERT INTO stroketable (word, stroke, complex, ping, code) VALUES (?, ?, ?, ?, ?);"
-                connection.prepareStatement(insertEntryCommand).use { statement ->
-                        for (entry in entries) {
-                                statement.setString(1, entry.word)
-                                statement.setString(2, entry.stroke)
-                                statement.setInt(3, entry.complex)
-                                statement.setInt(4, entry.ping)
-                                statement.setLong(5, entry.code)
-                                statement.executeUpdate()
-                        }
+                println("Inserting ${entries.size} stroke entries...")
+                val insertedStroke = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
+                        statement.setString(1, entry.word)
+                        statement.setString(2, entry.stroke)
+                        statement.setInt(3, entry.complex)
+                        statement.setInt(4, entry.ping)
+                        statement.setLong(5, entry.code)
                 }
                 connection.close()
-                println("Inserted stroke entries successfully.")
+                println("Inserted stroke entries successfully: $insertedStroke")
         }
 
         private fun createCangjieTable(url: String) {
@@ -346,20 +326,18 @@ object KeyboardDataPreparer {
                 println("Created cangjie table successfully.")
                 val entries = Cangjie.generate()
                 val insertEntryCommand: String = "INSERT INTO cangjietable (word, cangjie5, c5complex, c5code, cangjie3, c3complex, c3code) VALUES (?, ?, ?, ?, ?, ?, ?);"
-                connection.prepareStatement(insertEntryCommand).use { statement ->
-                        for (entry in entries) {
-                                statement.setString(1, entry.word)
-                                statement.setString(2, entry.cangjie5)
-                                statement.setInt(3, entry.c5complex)
-                                statement.setLong(4, entry.c5code)
-                                statement.setString(5, entry.cangjie3)
-                                statement.setInt(6, entry.c3complex)
-                                statement.setLong(7, entry.c3code)
-                                statement.executeUpdate()
-                        }
+                println("Inserting ${entries.size} cangjie entries...")
+                val insertedCangjie = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
+                        statement.setString(1, entry.word)
+                        statement.setString(2, entry.cangjie5)
+                        statement.setInt(3, entry.c5complex)
+                        statement.setLong(4, entry.c5code)
+                        statement.setString(5, entry.cangjie3)
+                        statement.setInt(6, entry.c3complex)
+                        statement.setLong(7, entry.c3code)
                 }
                 connection.close()
-                println("Inserted cangjie entries successfully.")
+                println("Inserted cangjie entries successfully: $insertedCangjie")
         }
 
         private fun createQuickTable(url: String) {
@@ -371,19 +349,17 @@ object KeyboardDataPreparer {
                 println("Created quick table successfully.")
                 val entries = Quick.generate()
                 val insertEntryCommand: String = "INSERT INTO quicktable (word, quick5, q5complex, q5code, quick3, q3complex, q3code) VALUES (?, ?, ?, ?, ?, ?, ?);"
-                connection.prepareStatement(insertEntryCommand).use { statement ->
-                        for (entry in entries) {
-                                statement.setString(1, entry.word)
-                                statement.setString(2, entry.quick5)
-                                statement.setInt(3, entry.q5complex)
-                                statement.setLong(4, entry.q5code)
-                                statement.setString(5, entry.quick3)
-                                statement.setInt(6, entry.q3complex)
-                                statement.setLong(7, entry.q3code)
-                                statement.executeUpdate()
-                        }
+                println("Inserting ${entries.size} quick entries...")
+                val insertedQuick = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
+                        statement.setString(1, entry.word)
+                        statement.setString(2, entry.quick5)
+                        statement.setInt(3, entry.q5complex)
+                        statement.setLong(4, entry.q5code)
+                        statement.setString(5, entry.quick3)
+                        statement.setInt(6, entry.q3complex)
+                        statement.setLong(7, entry.q3code)
                 }
                 connection.close()
-                println("Inserted quick entries successfully.")
+                println("Inserted quick entries successfully: $insertedQuick")
         }
 }
