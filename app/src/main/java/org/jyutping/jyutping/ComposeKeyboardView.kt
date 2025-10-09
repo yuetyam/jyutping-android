@@ -6,6 +6,7 @@ import android.os.Build
 import androidx.annotation.DeprecatedSinceApi
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.AbstractComposeView
@@ -15,6 +16,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import org.jyutping.jyutping.editingpanel.EditingPanel
 import org.jyutping.jyutping.emoji.EmojiBoard
 import org.jyutping.jyutping.keyboard.AlphabeticKeyboard
@@ -44,6 +46,14 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                 val ctx = context as JyutpingInputMethodService
                 val isHapticFeedbackOn by ctx.isHapticFeedbackOn.collectAsState()
                 LocalView.current.isHapticFeedbackEnabled = isHapticFeedbackOn
+                // Observe physical key preview and clear after short timeout
+                val lastPhysicalKey by ctx.lastPhysicalKey.collectAsState()
+                LaunchedEffect(lastPhysicalKey) {
+                        if (lastPhysicalKey != null) {
+                                delay(250L)
+                                ctx.lastPhysicalKey.value = null
+                        }
+                }
                 val keyboardForm by ctx.keyboardForm.collectAsState()
                 val qwertyForm by ctx.qwertyForm.collectAsState()
                 val inputMethodMode by ctx.inputMethodMode.collectAsState()

@@ -53,6 +53,7 @@ import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.KeyboardInterface
 import org.jyutping.jyutping.keyboard.KeyboardLayout
 import org.jyutping.jyutping.keyboard.NumericLayout
+import org.jyutping.jyutping.keyboard.PhysicalKeyMapper
 import org.jyutping.jyutping.keyboard.Pinyin
 import org.jyutping.jyutping.keyboard.PinyinSegmentor
 import org.jyutping.jyutping.keyboard.QwertyForm
@@ -175,6 +176,15 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         val isDarkMode: MutableStateFlow<Boolean> by lazy {
                 val isNightMode: Boolean = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
                 MutableStateFlow(isNightMode)
+        }
+
+        // Last physical key pressed (for UI preview)
+        val lastPhysicalKey: MutableStateFlow<InputKeyEvent?> by lazy { MutableStateFlow(null) }
+
+        private fun emitPhysicalKeyPreview(inputKey: InputKeyEvent) {
+                lastPhysicalKey.value = inputKey
+                // audio/haptic feedback
+                audioFeedback(SoundEffect.Click)
         }
 
         val spaceKeyForm: MutableStateFlow<SpaceKeyForm> by lazy { MutableStateFlow(SpaceKeyForm.Fallback) }
@@ -864,6 +874,65 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         currentInputConnection.commitText(text, 1)
                 }
+        }
+
+        // New: Physical keyboard support - central handler
+        override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+                // If we handled the event, consume it; otherwise let super handle (so system/app shortcuts work)
+                return if (handlePhysicalKeyEvent(event)) true else super.onKeyDown(keyCode, event)
+        }
+
+        override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
+                // For this IME, we do not need special up handling; let super handle default behavior
+                return super.onKeyUp(keyCode, event)
+        }
+
+        /**
+         * Handle a physical KeyEvent. Returns true when the IME consumed the event.
+         * Policy: do not intercept Ctrl/Meta combinations; leave them to the host app.
+         */
+        private fun handlePhysicalKeyEvent(event: KeyEvent): Boolean {
+                // Pass through when control/meta keys are pressed (shortcuts)
+                if (event.isCtrlPressed || event.isMetaPressed) return false
+
+                // Handle special non-printable keys first
+                when (event.keyCode) {
+                        KeyEvent.KEYCODE_DEL -> { backspace(); return true }
+                        KeyEvent.KEYCODE_FORWARD_DEL -> { forwardDelete(); return true }
+                        KeyEvent.KEYCODE_ENTER -> { performReturn(); return true }
+                        KeyEvent.KEYCODE_SPACE -> { space(); return true }
+                        KeyEvent.KEYCODE_DPAD_LEFT -> { moveBackward(); return true }
+                        KeyEvent.KEYCODE_DPAD_RIGHT -> { moveForward(); return true }
+                        KeyEvent.KEYCODE_DPAD_UP -> { moveUpward(); return true }
+                        KeyEvent.KEYCODE_DPAD_DOWN -> { moveDownward(); return true }
+                        KeyEvent.KEYCODE_MOVE_HOME -> { jump2head(); return true }
+                        KeyEvent.KEYCODE_MOVE_END -> { jump2tail(); return true }
+                }
+
+                // Map printable keys using PhysicalKeyMapper
+                val mapped: InputKeyEvent? = PhysicalKeyMapper.map(event.keyCode)
+                if (mapped != null) {
+                        // Respect Shift/Caps for ABC mode; Cantonese mode typically uses lowercased letters
+                        val useUpper = event.isShiftPressed || keyboardCase.value.isUppercased()
+                        val textToCommit = if (useUpper && inputMethodMode.value.isABC()) mapped.text.uppercase() else mapped.text
+
+                        when (inputMethodMode.value) {
+                                InputMethodMode.ABC -> {
+                                        currentInputConnection.commitText(textToCommit, 1)
+                                }
+                                InputMethodMode.Cantonese -> {
+                                        // Feed into existing IME handler to maintain buffering/candidate logic
+                                        handle(mapped)
+                                }
+                        }
+
+                        // Emit preview and feedback
+                        emitPhysicalKeyPreview(mapped)
+                        return true
+                }
+
+                // Unmapped: let the system handle it
+                return false
         }
 
         //region EditingPanel
