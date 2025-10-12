@@ -12,7 +12,7 @@ class TTSProvider(context: Context?) : TextToSpeech.OnInitListener {
 
         private var tts: TextToSpeech? = context?.let { TextToSpeech(it, this) }
 
-        private val cantonese = Locale.Builder()
+        private val preferredLocale = Locale.Builder()
                 .setLanguage("yue")
                 .setScript("Hant")
                 .setRegion("HK")
@@ -27,11 +27,12 @@ class TTSProvider(context: Context?) : TextToSpeech.OnInitListener {
 
         override fun onInit(status: Int) {
                 if (status == TextToSpeech.SUCCESS) {
-                        val result = tts?.isLanguageAvailable(cantonese)
+                        val result = tts?.isLanguageAvailable(preferredLocale)
                         when (result) {
                                 TextToSpeech.LANG_COUNTRY_VAR_AVAILABLE,
-                                TextToSpeech.LANG_COUNTRY_AVAILABLE -> {
-                                        tts?.language = cantonese
+                                TextToSpeech.LANG_COUNTRY_AVAILABLE,
+                                TextToSpeech.LANG_AVAILABLE -> {
+                                        tts?.language = preferredLocale
                                         tts?.setSpeechRate(0.85f)
                                         _isCantoneseSupported.value = true
                                 }
