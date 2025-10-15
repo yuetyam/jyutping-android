@@ -48,9 +48,21 @@ fun PhysicalKeyboardCandidateBar(height: Dp) {
         val state = rememberLazyListState()
         val candidates by context.candidates.collectAsState()
         val candidateState by context.candidateState.collectAsState()
+        val candidateOffset by context.candidateOffset.collectAsState()
+        
+        // Reset scroll position when candidate state changes (new candidates)
         LaunchedEffect(candidateState) {
                 state.animateScrollToItem(index = 0, scrollOffset = 0)
         }
+        
+        // Auto-scroll when candidate offset changes (Tab/Shift+Tab navigation)
+        LaunchedEffect(candidateOffset) {
+                if (candidateOffset < candidates.size) {
+                        // Scroll to show the first candidate of the current group
+                        state.animateScrollToItem(index = candidateOffset, scrollOffset = 0)
+                }
+        }
+        
         Box(
                 modifier = Modifier
                         .background(
@@ -64,10 +76,11 @@ fun PhysicalKeyboardCandidateBar(height: Dp) {
                         .padding(bottom = extraBottomPadding.paddingValue().dp)
                         .height(height)
                         .fillMaxWidth(),
-                contentAlignment = Alignment.TopEnd
+                contentAlignment = Alignment.CenterEnd
         ) {
                 Row(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
+                        verticalAlignment = Alignment.CenterVertically
                 ) {
                         // Horizontal scrolling candidate list (like CandidateScrollBar)
                         LazyRow(
@@ -79,6 +92,14 @@ fun PhysicalKeyboardCandidateBar(height: Dp) {
                                 verticalAlignment = Alignment.CenterVertically
                         ) {
                                 itemsIndexed(candidates) { index, candidate ->
+                                        // Show number labels 7-9 for the current group of 3 candidates
+                                        val numberLabel = when {
+                                                index == candidateOffset -> "7"
+                                                index == candidateOffset + 1 -> "8"
+                                                index == candidateOffset + 2 -> "9"
+                                                else -> null
+                                        }
+                                        
                                         CandidateView(
                                                 candidateState = candidateState,
                                                 candidate = candidate,
@@ -93,7 +114,8 @@ fun PhysicalKeyboardCandidateBar(height: Dp) {
                                                         context.audioFeedback(SoundEffect.Delete)
                                                         view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                                                         context.forgetCandidate(index = index)
-                                                }
+                                                },
+                                                numberLabel = numberLabel
                                         )
                                 }
                         }

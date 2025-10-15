@@ -76,9 +76,10 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                                 CandidateBoard(height = expandedHeight, isPhysicalKeyboard = true)
                         } else {
                                 // Collapsed mode: show horizontal scrolling candidates
+                                // Increased height to prevent number labels from overlapping with Jyutping romanization
                                 val collapsedHeight = when (commentStyle) {
-                                        CommentStyle.AboveCandidates, CommentStyle.BelowCandidates -> 50.dp
-                                        else -> 44.dp
+                                        CommentStyle.AboveCandidates, CommentStyle.BelowCandidates -> 56.dp
+                                        else -> 50.dp
                                 }
                                 PhysicalKeyboardCandidateBar(height = collapsedHeight)
                         }

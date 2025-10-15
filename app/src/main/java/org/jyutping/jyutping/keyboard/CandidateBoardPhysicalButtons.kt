@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -42,8 +43,9 @@ fun CandidateBoardPhysicalButtons(
         val context = LocalContext.current as JyutpingInputMethodService
         
         Row(
-                modifier = Modifier.padding(top = 4.dp, end = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                modifier = Modifier.padding(end = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
         ) {
                 // Expand/collapse button
                 val currentForm by context.keyboardForm.collectAsState()

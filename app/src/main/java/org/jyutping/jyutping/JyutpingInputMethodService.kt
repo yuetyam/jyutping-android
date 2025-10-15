@@ -219,6 +219,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         // Last physical key pressed (for UI preview)
         val lastPhysicalKey: MutableStateFlow<InputKeyEvent?> by lazy { MutableStateFlow(null) }
 
+        // Candidate offset for physical keyboard number selection (tracks which group of 3 to show 7-9)
+        val candidateOffset: MutableStateFlow<Int> by lazy { MutableStateFlow(0) }
+
         private fun emitPhysicalKeyPreview(inputKey: InputKeyEvent) {
                 lastPhysicalKey.value = inputKey
                 // audio/haptic feedback
@@ -610,6 +613,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         private var bufferText: String = PresetString.EMPTY
                 set(value) {
                         candidates.value = emptyList()
+                        candidateOffset.value = 0 // Reset offset when candidates change
                         field = value
                         when (value.firstOrNull()) {
                                 null -> {
@@ -941,6 +945,57 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 return true
                         }
                         return false // Let system handle for normal shift functionality
+                }
+
+                // Handle Tab key to cycle through candidate groups (for number selection 7-9)
+                if (event.keyCode == KeyEvent.KEYCODE_TAB) {
+                        val candidateCount = candidates.value.size
+                        if (candidateCount > 0) {
+                                if (event.isShiftPressed) {
+                                        // Shift+Tab: go back 3 candidates
+                                        val currentOffset = candidateOffset.value
+                                        if (currentOffset > 0) {
+                                                val newOffset = maxOf(0, currentOffset - 3)
+                                                candidateOffset.value = newOffset
+                                                audioFeedback(SoundEffect.Click)
+                                                return true
+                                        }
+                                        // At index 0, do nothing
+                                        return true
+                                } else {
+                                        // Tab: move to next group of 3
+                                        val newOffset = candidateOffset.value + 3
+                                        candidateOffset.value = if (newOffset >= candidateCount) 0 else newOffset
+                                        audioFeedback(SoundEffect.Click)
+                                        return true
+                                }
+                        }
+                        return false
+                }
+
+                // Handle number keys 7-9 to select candidates, as jyutping does use tone 7-9, only tone 1-6 are used
+                when (event.keyCode) {
+                        KeyEvent.KEYCODE_7 -> {
+                                val index = candidateOffset.value
+                                if (index < candidates.value.size) {
+                                        selectCandidate(index = index)
+                                        return true
+                                }
+                        }
+                        KeyEvent.KEYCODE_8 -> {
+                                val index = candidateOffset.value + 1
+                                if (index < candidates.value.size) {
+                                        selectCandidate(index = index)
+                                        return true
+                                }
+                        }
+                        KeyEvent.KEYCODE_9 -> {
+                                val index = candidateOffset.value + 2
+                                if (index < candidates.value.size) {
+                                        selectCandidate(index = index)
+                                        return true
+                                }
+                        }
                 }
 
                 // Handle special non-printable keys first
