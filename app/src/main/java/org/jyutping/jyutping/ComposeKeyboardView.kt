@@ -24,6 +24,7 @@ import org.jyutping.jyutping.keyboard.CandidateBoard
 import org.jyutping.jyutping.keyboard.CangjieKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseNumericKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseSymbolicKeyboard
+import org.jyutping.jyutping.keyboard.CommentStyle
 import org.jyutping.jyutping.keyboard.InputMethodMode
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.KeyboardInterface
@@ -46,6 +47,10 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                 val ctx = context as JyutpingInputMethodService
                 val isHapticFeedbackOn by ctx.isHapticFeedbackOn.collectAsState()
                 LocalView.current.isHapticFeedbackEnabled = isHapticFeedbackOn
+                
+                // Check if physical keyboard is active
+                val isPhysicalKeyboard by ctx.isPhysicalKeyboardActive.collectAsState()
+                
                 // Observe physical key preview and clear after short timeout
                 val lastPhysicalKey by ctx.lastPhysicalKey.collectAsState()
                 LaunchedEffect(lastPhysicalKey) {
@@ -54,6 +59,31 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                                 ctx.lastPhysicalKey.value = null
                         }
                 }
+                
+                // If physical keyboard is active, show candidates view (collapsed or expanded)
+                if (isPhysicalKeyboard) {
+                        val keyboardForm by ctx.keyboardForm.collectAsState()
+                        val commentStyle by ctx.commentStyle.collectAsState()
+                        
+                        // Check if we're in expanded mode
+                        val isExpanded = keyboardForm == KeyboardForm.CandidateBoard
+                        
+                        // Use different heights based on expanded state
+                        val physicalKeyboardHeight = if (isExpanded) {
+                                // Expanded mode: show full candidate board
+                                val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+                                screenHeight * 0.5f // 50% of screen height
+                        } else {
+                                // Collapsed mode: one row of candidates
+                                when (commentStyle) {
+                                        CommentStyle.AboveCandidates, CommentStyle.BelowCandidates -> 50.dp
+                                        else -> 44.dp
+                                }
+                        }
+                        CandidateBoard(height = physicalKeyboardHeight, isPhysicalKeyboard = true)
+                        return
+                }
+                
                 val keyboardForm by ctx.keyboardForm.collectAsState()
                 val qwertyForm by ctx.qwertyForm.collectAsState()
                 val inputMethodMode by ctx.inputMethodMode.collectAsState()

@@ -97,6 +97,21 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
                 PresetColor.attach(this)
         }
+        override fun onConfigurationChanged(newConfig: Configuration) {
+                super.onConfigurationChanged(newConfig)
+                
+                // Update view state based on hardware keyboard availability
+                if (hasHardwareKeyboard()) {
+                        if (!isPhysicalKeyboardActive.value) {
+                                showPhysicalKeyboardCandidates()
+                        }
+                } else {
+                        if (isPhysicalKeyboardActive.value) {
+                                showSoftKeyboard()
+                        }
+                }
+        }
+        
         override fun onCreateInputView(): View {
                 window?.window?.decorView?.let { decorView ->
                         decorView.setViewTreeLifecycleOwner(this)
@@ -109,6 +124,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
                 super.onStartInput(attribute, restarting)
                 inputClientMonitorJob?.cancel()
+                
+                // Update the flag for hardware keyboard state
+                isPhysicalKeyboardActive.value = hasHardwareKeyboard()
+                
                 val isNightMode: Boolean = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
                 window?.window?.let {
                         WindowCompat.getInsetsController(it, it.decorView).isAppearanceLightNavigationBars = isNightMode.not()
@@ -136,6 +155,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         override fun onFinishInputView(finishingInput: Boolean) {
                 inputClientMonitorJob?.cancel()
+                isPhysicalKeyboardActive.value = false
                 if (selectedCandidates.isNotEmpty()) {
                         selectedCandidates.clear()
                 }
@@ -170,6 +190,24 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         private val savedStateRegistryController = SavedStateRegistryController.create(this)
 
         override val savedStateRegistry: SavedStateRegistry get() = savedStateRegistryController.savedStateRegistry
+
+        // References to views
+        val isPhysicalKeyboardActive = MutableStateFlow(false)
+        
+        // Check if physical/hardware keyboard is available
+        private fun hasHardwareKeyboard(): Boolean {
+                val config = resources.configuration
+                return config.keyboard != Configuration.KEYBOARD_NOKEYS &&
+                       config.hardKeyboardHidden != Configuration.HARDKEYBOARDHIDDEN_YES
+        }
+
+        fun showPhysicalKeyboardCandidates() {
+                isPhysicalKeyboardActive.value = true
+        }
+        
+        fun showSoftKeyboard() {
+                isPhysicalKeyboardActive.value = false
+        }
 
         private val sharedPreferences by lazy { getSharedPreferences(UserSettingsKey.PreferencesFileName, MODE_PRIVATE) }
 
@@ -912,6 +950,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 // Map printable keys using PhysicalKeyMapper
                 val mapped: InputKeyEvent? = PhysicalKeyMapper.map(event.keyCode)
                 if (mapped != null) {
+                        // Show physical keyboard candidates view for physical typing
+                        if (!isPhysicalKeyboardActive.value) {
+                                showPhysicalKeyboardCandidates()
+                        }
                         // Respect Shift/Caps for ABC mode; Cantonese mode typically uses lowercased letters
                         val useUpper = event.isShiftPressed || keyboardCase.value.isUppercased()
                         val textToCommit = if (useUpper && inputMethodMode.value.isABC()) mapped.text.uppercase() else mapped.text
