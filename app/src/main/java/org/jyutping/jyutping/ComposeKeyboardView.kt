@@ -29,6 +29,7 @@ import org.jyutping.jyutping.keyboard.InputMethodMode
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.KeyboardInterface
 import org.jyutping.jyutping.keyboard.NumericKeyboard
+import org.jyutping.jyutping.keyboard.PhysicalKeyboardCandidateBar
 import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.SettingsScreen
 import org.jyutping.jyutping.keyboard.StrokeKeyboard
@@ -68,19 +69,19 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                         // Check if we're in expanded mode
                         val isExpanded = keyboardForm == KeyboardForm.CandidateBoard
                         
-                        // Use different heights based on expanded state
-                        val physicalKeyboardHeight = if (isExpanded) {
+                        if (isExpanded) {
                                 // Expanded mode: show full candidate board
                                 val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-                                screenHeight * 0.5f // 50% of screen height
+                                val expandedHeight = screenHeight * 0.5f // 50% of screen height
+                                CandidateBoard(height = expandedHeight, isPhysicalKeyboard = true)
                         } else {
-                                // Collapsed mode: one row of candidates
-                                when (commentStyle) {
+                                // Collapsed mode: show horizontal scrolling candidates
+                                val collapsedHeight = when (commentStyle) {
                                         CommentStyle.AboveCandidates, CommentStyle.BelowCandidates -> 50.dp
                                         else -> 44.dp
                                 }
+                                PhysicalKeyboardCandidateBar(height = collapsedHeight)
                         }
-                        CandidateBoard(height = physicalKeyboardHeight, isPhysicalKeyboard = true)
                         return
                 }
                 

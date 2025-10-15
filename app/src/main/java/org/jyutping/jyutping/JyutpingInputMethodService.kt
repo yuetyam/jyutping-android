@@ -933,6 +933,16 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 // Pass through when control/meta keys are pressed (shortcuts)
                 if (event.isCtrlPressed || event.isMetaPressed) return false
 
+                // Handle Shift key to toggle input mode (Jyutping <-> ABC)
+                // Only toggle on key down, not repeat
+                if (event.keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || event.keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) {
+                        if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
+                                toggleInputMethodMode()
+                                return true
+                        }
+                        return false // Let system handle for normal shift functionality
+                }
+
                 // Handle special non-printable keys first
                 when (event.keyCode) {
                         KeyEvent.KEYCODE_DEL -> { backspace(); return true }

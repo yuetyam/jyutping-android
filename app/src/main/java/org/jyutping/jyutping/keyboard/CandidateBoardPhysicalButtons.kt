@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,6 +24,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
@@ -88,6 +90,48 @@ fun CandidateBoardPhysicalButtons(
                                         .padding(bottom = 4.dp, start = 4.dp)
                                         .size(20.dp),
                                 tint = if (isDarkMode) Color.White else Color.Black
+                        )
+                }
+                
+                // Input mode switch button (Jyutping/ABC)
+                val inputMethodMode by context.inputMethodMode.collectAsState()
+                val characterStandard by context.characterStandard.collectAsState()
+                
+                IconButton(
+                        onClick = {
+                                context.audioFeedback(SoundEffect.Click)
+                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                context.toggleInputMethodMode()
+                        },
+                        modifier = Modifier
+                                .width(collapseWidth)
+                                .height(collapseHeight)
+                                .border(
+                                        width = 1.dp,
+                                        color = if (isDarkMode) {
+                                                if (isHighContrastPreferred) Color.White else Color.Transparent
+                                        } else {
+                                                if (isHighContrastPreferred) Color.Black else Color.Transparent
+                                        },
+                                        shape = CircleShape
+                                )
+                                .background(
+                                        color = if (isHighContrastPreferred) {
+                                                if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
+                                        } else {
+                                                if (isDarkMode) PresetColor.solidEmphaticDark else PresetColor.solidEmphaticLight
+                                        },
+                                        shape = CircleShape
+                                )
+                ) {
+                        Text(
+                                text = if (inputMethodMode.isCantonese()) {
+                                        if (characterStandard.isSimplified) "粤" else "粵"
+                                } else {
+                                        "A"
+                                },
+                                color = if (isDarkMode) Color.White else Color.Black,
+                                fontSize = 17.sp
                         )
                 }
                 

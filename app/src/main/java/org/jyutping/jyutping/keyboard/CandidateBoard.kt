@@ -157,9 +157,9 @@ fun CandidateBoard(height: Dp, isPhysicalKeyboard: Boolean = false) {
                                                         }
                                                 )
                                         }
-                                        // In physical keyboard mode, we have two buttons (expand + keyboard)
-                                        // so we need space for both
-                                        val buttonSpace = if (isPhysicalKeyboard) collapseWidth * 2 + 8.dp else collapseWidth
+                                        // In physical keyboard mode, we have three buttons (expand + mode switch + keyboard)
+                                        // so we need space for all three
+                                        val buttonSpace = if (isPhysicalKeyboard) collapseWidth * 3 + 8.dp else collapseWidth
                                         if (row.identifier == minRowIdentifier) {
                                                 Spacer(modifier = Modifier
                                                         .width(buttonSpace)
