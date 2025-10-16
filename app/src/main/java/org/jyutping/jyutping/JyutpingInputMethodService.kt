@@ -92,9 +92,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
          * button) in landscape. Returning false forces the IME to keep the input view
          * anchored (inline) instead of using the extract/fullscreen UI.
          */
-        override fun onEvaluateFullscreenMode(): Boolean {
-                return false
-        }
+        override fun onEvaluateFullscreenMode() = false
 
         override fun onCreate() {
                 super.onCreate()
