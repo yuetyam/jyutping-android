@@ -86,6 +86,16 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 return true
         }
 
+        /**
+         * Prevent the system from switching to the full-screen extract editor UI.
+         * Some devices/hosts cause the IME to enter a full-screen text box (with a submit
+         * button) in landscape. Returning false forces the IME to keep the input view
+         * anchored (inline) instead of using the extract/fullscreen UI.
+         */
+        override fun onEvaluateFullscreenMode(): Boolean {
+                return false
+        }
+
         override fun onCreate() {
                 super.onCreate()
                 savedStateRegistryController.performRestore(null)
