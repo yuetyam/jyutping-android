@@ -53,6 +53,7 @@ import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.KeyboardInterface
 import org.jyutping.jyutping.keyboard.KeyboardLayout
 import org.jyutping.jyutping.keyboard.NumericLayout
+import org.jyutping.jyutping.keyboard.PhysicalKeyMapper
 import org.jyutping.jyutping.keyboard.Pinyin
 import org.jyutping.jyutping.keyboard.PinyinSegmentor
 import org.jyutping.jyutping.keyboard.QwertyForm
@@ -96,6 +97,21 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
                 PresetColor.attach(this)
         }
+        override fun onConfigurationChanged(newConfig: Configuration) {
+                super.onConfigurationChanged(newConfig)
+                
+                // Update view state based on hardware keyboard availability
+                if (hasHardwareKeyboard()) {
+                        if (!isPhysicalKeyboardActive.value) {
+                                showPhysicalKeyboardCandidates()
+                        }
+                } else {
+                        if (isPhysicalKeyboardActive.value) {
+                                showSoftKeyboard()
+                        }
+                }
+        }
+        
         override fun onCreateInputView(): View {
                 window?.window?.decorView?.let { decorView ->
                         decorView.setViewTreeLifecycleOwner(this)
@@ -108,6 +124,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
                 super.onStartInput(attribute, restarting)
                 inputClientMonitorJob?.cancel()
+                
+                // Update the flag for hardware keyboard state
+                isPhysicalKeyboardActive.value = hasHardwareKeyboard()
+                
                 val isNightMode: Boolean = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
                 window?.window?.let {
                         WindowCompat.getInsetsController(it, it.decorView).isAppearanceLightNavigationBars = isNightMode.not()
@@ -135,6 +155,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         override fun onFinishInputView(finishingInput: Boolean) {
                 inputClientMonitorJob?.cancel()
+                isPhysicalKeyboardActive.value = false
                 if (selectedCandidates.isNotEmpty()) {
                         selectedCandidates.clear()
                 }
@@ -170,11 +191,41 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         override val savedStateRegistry: SavedStateRegistry get() = savedStateRegistryController.savedStateRegistry
 
+        // References to views
+        val isPhysicalKeyboardActive = MutableStateFlow(false)
+        
+        // Check if physical/hardware keyboard is available
+        private fun hasHardwareKeyboard(): Boolean {
+                val config = resources.configuration
+                return config.keyboard != Configuration.KEYBOARD_NOKEYS &&
+                       config.hardKeyboardHidden != Configuration.HARDKEYBOARDHIDDEN_YES
+        }
+
+        fun showPhysicalKeyboardCandidates() {
+                isPhysicalKeyboardActive.value = true
+        }
+        
+        fun showSoftKeyboard() {
+                isPhysicalKeyboardActive.value = false
+        }
+
         private val sharedPreferences by lazy { getSharedPreferences(UserSettingsKey.PreferencesFileName, MODE_PRIVATE) }
 
         val isDarkMode: MutableStateFlow<Boolean> by lazy {
                 val isNightMode: Boolean = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
                 MutableStateFlow(isNightMode)
+        }
+
+        // Last physical key pressed (for UI preview)
+        val lastPhysicalKey: MutableStateFlow<InputKeyEvent?> by lazy { MutableStateFlow(null) }
+
+        // Candidate offset for physical keyboard number selection (tracks which group of 3 to show 7-9)
+        val candidateOffset: MutableStateFlow<Int> by lazy { MutableStateFlow(0) }
+
+        private fun emitPhysicalKeyPreview(inputKey: InputKeyEvent) {
+                lastPhysicalKey.value = inputKey
+                // audio/haptic feedback
+                audioFeedback(SoundEffect.Click)
         }
 
         val spaceKeyForm: MutableStateFlow<SpaceKeyForm> by lazy { MutableStateFlow(SpaceKeyForm.Fallback) }
@@ -562,6 +613,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         private var bufferText: String = PresetString.EMPTY
                 set(value) {
                         candidates.value = emptyList()
+                        candidateOffset.value = 0 // Reset offset when candidates change
                         field = value
                         when (value.firstOrNull()) {
                                 null -> {
@@ -864,6 +916,130 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         currentInputConnection.commitText(text, 1)
                 }
+        }
+
+        // New: Physical keyboard support - central handler
+        override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+                // If we handled the event, consume it; otherwise let super handle (so system/app shortcuts work)
+                return if (handlePhysicalKeyEvent(event)) true else super.onKeyDown(keyCode, event)
+        }
+
+        override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
+                // For this IME, we do not need special up handling; let super handle default behavior
+                return super.onKeyUp(keyCode, event)
+        }
+
+        /**
+         * Handle a physical KeyEvent. Returns true when the IME consumed the event.
+         * Policy: do not intercept Ctrl/Meta combinations; leave them to the host app.
+         */
+        private fun handlePhysicalKeyEvent(event: KeyEvent): Boolean {
+                // Pass through when control/meta keys are pressed (shortcuts)
+                if (event.isCtrlPressed || event.isMetaPressed) return false
+
+                // Handle Shift key to toggle input mode (Jyutping <-> ABC)
+                // Only toggle on key down, not repeat
+                if (event.keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || event.keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) {
+                        if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
+                                toggleInputMethodMode()
+                                return true
+                        }
+                        return false // Let system handle for normal shift functionality
+                }
+
+                // Handle Tab key to cycle through candidate groups (for number selection 7-9)
+                if (event.keyCode == KeyEvent.KEYCODE_TAB) {
+                        val candidateCount = candidates.value.size
+                        if (candidateCount > 0) {
+                                if (event.isShiftPressed) {
+                                        // Shift+Tab: go back 3 candidates
+                                        val currentOffset = candidateOffset.value
+                                        if (currentOffset > 0) {
+                                                val newOffset = maxOf(0, currentOffset - 3)
+                                                candidateOffset.value = newOffset
+                                                audioFeedback(SoundEffect.Click)
+                                                return true
+                                        }
+                                        // At index 0, do nothing
+                                        return true
+                                } else {
+                                        // Tab: move to next group of 3
+                                        val newOffset = candidateOffset.value + 3
+                                        candidateOffset.value = if (newOffset >= candidateCount) 0 else newOffset
+                                        audioFeedback(SoundEffect.Click)
+                                        return true
+                                }
+                        }
+                        return false
+                }
+
+                // Handle number keys 7-9 to select candidates, as jyutping does use tone 7-9, only tone 1-6 are used
+                when (event.keyCode) {
+                        KeyEvent.KEYCODE_7 -> {
+                                val index = candidateOffset.value
+                                if (index < candidates.value.size) {
+                                        selectCandidate(index = index)
+                                        return true
+                                }
+                        }
+                        KeyEvent.KEYCODE_8 -> {
+                                val index = candidateOffset.value + 1
+                                if (index < candidates.value.size) {
+                                        selectCandidate(index = index)
+                                        return true
+                                }
+                        }
+                        KeyEvent.KEYCODE_9 -> {
+                                val index = candidateOffset.value + 2
+                                if (index < candidates.value.size) {
+                                        selectCandidate(index = index)
+                                        return true
+                                }
+                        }
+                }
+
+                // Handle special non-printable keys first
+                when (event.keyCode) {
+                        KeyEvent.KEYCODE_DEL -> { backspace(); return true }
+                        KeyEvent.KEYCODE_FORWARD_DEL -> { forwardDelete(); return true }
+                        KeyEvent.KEYCODE_ENTER -> { performReturn(); return true }
+                        KeyEvent.KEYCODE_SPACE -> { space(); return true }
+                        KeyEvent.KEYCODE_DPAD_LEFT -> { moveBackward(); return true }
+                        KeyEvent.KEYCODE_DPAD_RIGHT -> { moveForward(); return true }
+                        KeyEvent.KEYCODE_DPAD_UP -> { moveUpward(); return true }
+                        KeyEvent.KEYCODE_DPAD_DOWN -> { moveDownward(); return true }
+                        KeyEvent.KEYCODE_MOVE_HOME -> { jump2head(); return true }
+                        KeyEvent.KEYCODE_MOVE_END -> { jump2tail(); return true }
+                }
+
+                // Map printable keys using PhysicalKeyMapper
+                val mapped: InputKeyEvent? = PhysicalKeyMapper.map(event.keyCode)
+                if (mapped != null) {
+                        // Show physical keyboard candidates view for physical typing
+                        if (!isPhysicalKeyboardActive.value) {
+                                showPhysicalKeyboardCandidates()
+                        }
+                        // Respect Shift/Caps for ABC mode; Cantonese mode typically uses lowercased letters
+                        val useUpper = event.isShiftPressed || keyboardCase.value.isUppercased()
+                        val textToCommit = if (useUpper && inputMethodMode.value.isABC()) mapped.text.uppercase() else mapped.text
+
+                        when (inputMethodMode.value) {
+                                InputMethodMode.ABC -> {
+                                        currentInputConnection.commitText(textToCommit, 1)
+                                }
+                                InputMethodMode.Cantonese -> {
+                                        // Feed into existing IME handler to maintain buffering/candidate logic
+                                        handle(mapped)
+                                }
+                        }
+
+                        // Emit preview and feedback
+                        emitPhysicalKeyPreview(mapped)
+                        return true
+                }
+
+                // Unmapped: let the system handle it
+                return false
         }
 
         //region EditingPanel

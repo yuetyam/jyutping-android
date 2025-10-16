@@ -21,7 +21,15 @@ import org.jyutping.jyutping.presets.PresetString
 
 // For CandidateScrollBar
 @Composable
-fun CandidateView(candidateState: Int, candidate: Candidate, commentStyle: CommentStyle, isDarkMode: Boolean, selection: () -> Unit, deletion: () -> Unit) {
+fun CandidateView(
+        candidateState: Int,
+        candidate: Candidate,
+        commentStyle: CommentStyle,
+        isDarkMode: Boolean,
+        selection: () -> Unit,
+        deletion: () -> Unit,
+        numberLabel: String? = null
+) {
         val isCantonese: Boolean = candidate.type.isCantonese()
         val textColor: Color = if (isDarkMode) Color.White else Color.Black
         Box(
@@ -41,33 +49,57 @@ fun CandidateView(candidateState: Int, candidate: Candidate, commentStyle: Comme
                 contentAlignment = Alignment.Center
         ) {
                 Color.Transparent
-                Box(
-                        modifier = Modifier
-                                .alpha(if (commentStyle.isNone()) 0f else 1f)
-                                .fillMaxHeight(),
-                        contentAlignment = if (commentStyle.isBelow()) Alignment.BottomCenter else Alignment.TopCenter
-                ) {
-                        Color.Transparent
+                
+                // Number label in top-left corner (absolute positioning)
+                if (numberLabel != null) {
                         Text(
-                                text = if (isCantonese) candidate.romanization else PresetString.SPACE,
+                                text = numberLabel,
+                                color = textColor.copy(alpha = 0.6f),
+                                fontSize = 10.sp,
                                 modifier = Modifier
-                                        .padding(vertical = 2.dp)
-                                        .height(20.dp),
+                                        .align(Alignment.TopStart)
+                                        .padding(top = 2.dp)
+                        )
+                }
+                
+                // Main content: vertically centered Column with romanization above text
+                Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                ) {
+                        // Romanization (Jyutping) above the candidate text
+                        if (isCantonese && !commentStyle.isNone()) {
+                                if (commentStyle.isAbove()) {
+                                        Text(
+                                                text = candidate.romanization,
+                                                color = textColor,
+                                                fontSize = 12.sp,
+                                                overflow = TextOverflow.Ellipsis,
+                                                maxLines = 1
+                                        )
+                                }
+                        }
+                        
+                        // Candidate text
+                        Text(
+                                text = candidate.text,
                                 color = textColor,
-                                fontSize = 12.sp,
+                                fontSize = 20.sp,
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1
                         )
+                        
+                        // Romanization below (if needed)
+                        if (isCantonese && commentStyle.isBelow()) {
+                                Text(
+                                        text = candidate.romanization,
+                                        color = textColor,
+                                        fontSize = 12.sp,
+                                        overflow = TextOverflow.Ellipsis,
+                                        maxLines = 1
+                                )
+                        }
                 }
-                Text(
-                        text = candidate.text,
-                        modifier = Modifier
-                                .padding(bottom = if (commentStyle.isBelow()) 16.dp else 0.dp),
-                        color = textColor,
-                        fontSize = 20.sp,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
-                )
         }
 }
 

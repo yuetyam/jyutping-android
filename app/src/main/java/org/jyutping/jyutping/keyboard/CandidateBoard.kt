@@ -55,7 +55,7 @@ private fun Candidate.width(): Dp = when (this.type) {
 private class CandidateRow(val identifier: Int, val candidates: List<Candidate>, val width: Dp = candidates.map { it.width() }.fold(0.dp) { acc, w -> acc + w })
 
 @Composable
-fun CandidateBoard(height: Dp) {
+fun CandidateBoard(height: Dp, isPhysicalKeyboard: Boolean = false) {
         val collapseWidth: Dp = 44.dp
         val collapseHeight: Dp = 44.dp
         val view = LocalView.current
@@ -157,10 +157,13 @@ fun CandidateBoard(height: Dp) {
                                                         }
                                                 )
                                         }
+                                        // In physical keyboard mode, we have three buttons (expand + mode switch + keyboard)
+                                        // so we need space for all three
+                                        val buttonSpace = if (isPhysicalKeyboard) collapseWidth * 3 + 8.dp else collapseWidth
                                         if (row.identifier == minRowIdentifier) {
                                                 Spacer(modifier = Modifier
-                                                        .width(collapseWidth)
-                                                        .weight(collapseWidth / screenWidth))
+                                                        .width(buttonSpace)
+                                                        .weight(buttonSpace / screenWidth))
                                         }
                                 }
                                 HorizontalDivider(
@@ -173,41 +176,20 @@ fun CandidateBoard(height: Dp) {
                                 )
                         }
                 }
-                IconButton(
-                        onClick = {
-                                context.audioFeedback(SoundEffect.Back)
-                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                context.transformTo(KeyboardForm.Alphabetic)
-                        },
-                        modifier = Modifier
-                                .width(collapseWidth)
-                                .height(collapseHeight)
-                                .border(
-                                        width = 1.dp,
-                                        color = if (isDarkMode) {
-                                                if (isHighContrastPreferred) Color.White else Color.Transparent
-                                        } else {
-                                                if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                        },
-                                        shape = CircleShape
-                                )
-                                .background(
-                                        color = if (isHighContrastPreferred) {
-                                                if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
-                                        } else {
-                                                if (isDarkMode) PresetColor.solidEmphaticDark else PresetColor.solidEmphaticLight
-                                        },
-                                        shape = CircleShape
-                                )
-                                .padding(top = 4.dp, end = 4.dp)
-                ) {
-                        Icon(
-                                imageVector = ImageVector.vectorResource(id = R.drawable.chevron_up),
-                                contentDescription = null,
-                                modifier = Modifier
-                                        .padding(bottom = 4.dp, start = 4.dp)
-                                        .size(20.dp),
-                                tint = if (isDarkMode) Color.White else Color.Black
+                // Show appropriate buttons based on keyboard mode
+                if (isPhysicalKeyboard) {
+                        CandidateBoardPhysicalButtons(
+                                collapseWidth = collapseWidth,
+                                collapseHeight = collapseHeight,
+                                isDarkMode = isDarkMode,
+                                isHighContrastPreferred = isHighContrastPreferred
+                        )
+                } else {
+                        CandidateBoardVirtualButtons(
+                                collapseWidth = collapseWidth,
+                                collapseHeight = collapseHeight,
+                                isDarkMode = isDarkMode,
+                                isHighContrastPreferred = isHighContrastPreferred
                         )
                 }
         }

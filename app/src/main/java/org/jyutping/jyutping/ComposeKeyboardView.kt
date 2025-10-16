@@ -6,6 +6,7 @@ import android.os.Build
 import androidx.annotation.DeprecatedSinceApi
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.AbstractComposeView
@@ -15,6 +16,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import org.jyutping.jyutping.editingpanel.EditingPanel
 import org.jyutping.jyutping.emoji.EmojiBoard
 import org.jyutping.jyutping.keyboard.AlphabeticKeyboard
@@ -22,10 +24,12 @@ import org.jyutping.jyutping.keyboard.CandidateBoard
 import org.jyutping.jyutping.keyboard.CangjieKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseNumericKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseSymbolicKeyboard
+import org.jyutping.jyutping.keyboard.CommentStyle
 import org.jyutping.jyutping.keyboard.InputMethodMode
 import org.jyutping.jyutping.keyboard.KeyboardForm
 import org.jyutping.jyutping.keyboard.KeyboardInterface
 import org.jyutping.jyutping.keyboard.NumericKeyboard
+import org.jyutping.jyutping.keyboard.PhysicalKeyboardCandidateBar
 import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.SettingsScreen
 import org.jyutping.jyutping.keyboard.StrokeKeyboard
@@ -44,6 +48,44 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                 val ctx = context as JyutpingInputMethodService
                 val isHapticFeedbackOn by ctx.isHapticFeedbackOn.collectAsState()
                 LocalView.current.isHapticFeedbackEnabled = isHapticFeedbackOn
+                
+                // Check if physical keyboard is active
+                val isPhysicalKeyboard by ctx.isPhysicalKeyboardActive.collectAsState()
+                
+                // Observe physical key preview and clear after short timeout
+                val lastPhysicalKey by ctx.lastPhysicalKey.collectAsState()
+                LaunchedEffect(lastPhysicalKey) {
+                        if (lastPhysicalKey != null) {
+                                delay(250L)
+                                ctx.lastPhysicalKey.value = null
+                        }
+                }
+                
+                // If physical keyboard is active, show candidates view (collapsed or expanded)
+                if (isPhysicalKeyboard) {
+                        val keyboardForm by ctx.keyboardForm.collectAsState()
+                        val commentStyle by ctx.commentStyle.collectAsState()
+                        
+                        // Check if we're in expanded mode
+                        val isExpanded = keyboardForm == KeyboardForm.CandidateBoard
+                        
+                        if (isExpanded) {
+                                // Expanded mode: show full candidate board
+                                val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+                                val expandedHeight = screenHeight * 0.5f // 50% of screen height
+                                CandidateBoard(height = expandedHeight, isPhysicalKeyboard = true)
+                        } else {
+                                // Collapsed mode: show horizontal scrolling candidates
+                                // Increased height to prevent number labels from overlapping with Jyutping romanization
+                                val collapsedHeight = when (commentStyle) {
+                                        CommentStyle.AboveCandidates, CommentStyle.BelowCandidates -> 56.dp
+                                        else -> 50.dp
+                                }
+                                PhysicalKeyboardCandidateBar(height = collapsedHeight)
+                        }
+                        return
+                }
+                
                 val keyboardForm by ctx.keyboardForm.collectAsState()
                 val qwertyForm by ctx.qwertyForm.collectAsState()
                 val inputMethodMode by ctx.inputMethodMode.collectAsState()
