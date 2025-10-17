@@ -222,6 +222,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         // Candidate offset for physical keyboard number selection (tracks which group of 3 to show 7-9)
         val candidateOffset: MutableStateFlow<Int> by lazy { MutableStateFlow(0) }
 
+        // Track if a key was pressed while Shift was down (to distinguish Shift-only press from Shift+Key)
+        private var keyPressedDuringShift = false
+
         private fun emitPhysicalKeyPreview(inputKey: InputKeyEvent) {
                 lastPhysicalKey.value = inputKey
                 // audio/haptic feedback
@@ -925,7 +928,17 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
 
         override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
-                // For this IME, we do not need special up handling; let super handle default behavior
+                // Handle Shift key release for input mode toggle
+                if (keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) {
+                        // Only toggle input mode if no other key was pressed during Shift
+                        // (i.e., it was a standalone Shift press, not Shift+letter for capitalization)
+                        if (!keyPressedDuringShift) {
+                                toggleInputMethodMode()
+                        }
+                        // Reset the flag for next Shift press
+                        keyPressedDuringShift = false
+                        return true
+                }
                 return super.onKeyUp(keyCode, event)
         }
 
@@ -937,18 +950,19 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 // Pass through when control/meta keys are pressed (shortcuts)
                 if (event.isCtrlPressed || event.isMetaPressed) return false
 
-                // Handle Shift key to toggle input mode (Jyutping <-> ABC)
-                // Only toggle on key down, not repeat
+                // Track Shift key down (but don't toggle mode yet - wait for key up)
                 if (event.keyCode == KeyEvent.KEYCODE_SHIFT_LEFT || event.keyCode == KeyEvent.KEYCODE_SHIFT_RIGHT) {
                         if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
-                                toggleInputMethodMode()
+                                // Just mark that Shift is down, don't toggle yet
                                 return true
                         }
-                        return false // Let system handle for normal shift functionality
+                        return false // Let system handle
                 }
 
                 // Handle Tab key to cycle through candidate groups (for number selection 7-9)
                 if (event.keyCode == KeyEvent.KEYCODE_TAB) {
+                        if (event.isShiftPressed) keyPressedDuringShift = true
+                        
                         val candidateCount = candidates.value.size
                         if (candidateCount > 0) {
                                 if (event.isShiftPressed) {
@@ -976,6 +990,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 // Handle number keys 7-9 to select candidates, as jyutping does use tone 7-9, only tone 1-6 are used
                 when (event.keyCode) {
                         KeyEvent.KEYCODE_7 -> {
+                                if (event.isShiftPressed) keyPressedDuringShift = true
                                 val index = candidateOffset.value
                                 if (index < candidates.value.size) {
                                         selectCandidate(index = index)
@@ -983,6 +998,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                         }
                         KeyEvent.KEYCODE_8 -> {
+                                if (event.isShiftPressed) keyPressedDuringShift = true
                                 val index = candidateOffset.value + 1
                                 if (index < candidates.value.size) {
                                         selectCandidate(index = index)
@@ -990,6 +1006,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                         }
                         KeyEvent.KEYCODE_9 -> {
+                                if (event.isShiftPressed) keyPressedDuringShift = true
                                 val index = candidateOffset.value + 2
                                 if (index < candidates.value.size) {
                                         selectCandidate(index = index)
@@ -1000,27 +1017,117 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
                 // Handle special non-printable keys first
                 when (event.keyCode) {
-                        KeyEvent.KEYCODE_DEL -> { backspace(); return true }
-                        KeyEvent.KEYCODE_FORWARD_DEL -> { forwardDelete(); return true }
-                        KeyEvent.KEYCODE_ENTER -> { performReturn(); return true }
-                        KeyEvent.KEYCODE_SPACE -> { space(); return true }
-                        KeyEvent.KEYCODE_DPAD_LEFT -> { moveBackward(); return true }
-                        KeyEvent.KEYCODE_DPAD_RIGHT -> { moveForward(); return true }
-                        KeyEvent.KEYCODE_DPAD_UP -> { moveUpward(); return true }
-                        KeyEvent.KEYCODE_DPAD_DOWN -> { moveDownward(); return true }
-                        KeyEvent.KEYCODE_MOVE_HOME -> { jump2head(); return true }
-                        KeyEvent.KEYCODE_MOVE_END -> { jump2tail(); return true }
+                        KeyEvent.KEYCODE_DEL -> {
+                                if (event.isShiftPressed) keyPressedDuringShift = true
+                                backspace()
+                                return true
+                        }
+                        KeyEvent.KEYCODE_FORWARD_DEL -> {
+                                if (event.isShiftPressed) keyPressedDuringShift = true
+                                forwardDelete()
+                                return true
+                        }
+                        KeyEvent.KEYCODE_ENTER -> {
+                                if (event.isShiftPressed) keyPressedDuringShift = true
+                                performReturn()
+                                return true
+                        }
+                        KeyEvent.KEYCODE_SPACE -> {
+                                if (event.isShiftPressed) keyPressedDuringShift = true
+                                space()
+                                return true
+                        }
+                        KeyEvent.KEYCODE_DPAD_LEFT -> {
+                                if (event.isShiftPressed) keyPressedDuringShift = true
+                                moveBackward()
+                                return true
+                        }
+                        KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                                if (event.isShiftPressed) keyPressedDuringShift = true
+                                moveForward()
+                                return true
+                        }
+                        KeyEvent.KEYCODE_DPAD_UP -> {
+                                if (event.isShiftPressed) keyPressedDuringShift = true
+                                moveUpward()
+                                return true
+                        }
+                        KeyEvent.KEYCODE_DPAD_DOWN -> {
+                                if (event.isShiftPressed) keyPressedDuringShift = true
+                                moveDownward()
+                                return true
+                        }
+                        KeyEvent.KEYCODE_MOVE_HOME -> {
+                                if (event.isShiftPressed) keyPressedDuringShift = true
+                                jump2head()
+                                return true
+                        }
+                        KeyEvent.KEYCODE_MOVE_END -> {
+                                if (event.isShiftPressed) keyPressedDuringShift = true
+                                jump2tail()
+                                return true
+                        }
+                }
+
+                // Use KeyCharacterMap to get the actual character from the physical keyboard
+                // This respects the keyboard layout and modifier keys (Shift, Alt, etc.)
+                val unicodeChar = event.getUnicodeChar()
+                if (unicodeChar != 0 && !Character.isISOControl(unicodeChar)) {
+                        // Mark that a key was pressed while Shift is down
+                        if (event.isShiftPressed) {
+                                keyPressedDuringShift = true
+                        }
+                        
+                        // Show physical keyboard candidates view
+                        if (!isPhysicalKeyboardActive.value) {
+                                showPhysicalKeyboardCandidates()
+                        }
+                        
+                        val char = unicodeChar.toChar().toString()
+                        
+                        // In ABC mode, commit the character directly
+                        // In Cantonese mode, for letters a-z try to use the IME handler
+                        when (inputMethodMode.value) {
+                                InputMethodMode.ABC -> {
+                                        currentInputConnection.commitText(char, 1)
+                                }
+                                InputMethodMode.Cantonese -> {
+                                        // For lowercase letters, try using the mapped InputKeyEvent
+                                        val mapped = if (char.length == 1 && char[0] in 'a'..'z') {
+                                                PhysicalKeyMapper.map(event.keyCode)
+                                        } else null
+                                        
+                                        if (mapped != null) {
+                                                // Feed into existing IME handler for Cantonese input
+                                                handle(mapped)
+                                        } else {
+                                                // For symbols and other characters, commit directly
+                                                currentInputConnection.commitText(char, 1)
+                                        }
+                                }
+                        }
+                        
+                        // Emit feedback
+                        audioFeedback(SoundEffect.Click)
+                        return true
                 }
 
                 // Map printable keys using PhysicalKeyMapper
                 val mapped: InputKeyEvent? = PhysicalKeyMapper.map(event.keyCode)
                 if (mapped != null) {
+                        // Mark that a key was pressed while Shift is down (for Shift toggle detection)
+                        if (event.isShiftPressed) {
+                                keyPressedDuringShift = true
+                        }
+                        
                         // Show physical keyboard candidates view for physical typing
                         if (!isPhysicalKeyboardActive.value) {
                                 showPhysicalKeyboardCandidates()
                         }
-                        // Respect Shift/Caps for ABC mode; Cantonese mode typically uses lowercased letters
-                        val useUpper = event.isShiftPressed || keyboardCase.value.isUppercased()
+                        
+                        // Respect Shift/Caps Lock for ABC mode; Cantonese mode typically uses lowercased letters
+                        // Check both Shift key state and Caps Lock state
+                        val useUpper = (event.isShiftPressed || event.isCapsLockOn || keyboardCase.value.isUppercased())
                         val textToCommit = if (useUpper && inputMethodMode.value.isABC()) mapped.text.uppercase() else mapped.text
 
                         when (inputMethodMode.value) {
