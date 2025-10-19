@@ -41,7 +41,7 @@ fun CandidateBoardPhysicalButtons(
 ) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        
+
         Row(
                 modifier = Modifier.padding(end = 4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -50,7 +50,7 @@ fun CandidateBoardPhysicalButtons(
                 // Expand/collapse button
                 val currentForm by context.keyboardForm.collectAsState()
                 val isExpanded = currentForm == KeyboardForm.CandidateBoard
-                
+
                 IconButton(
                         onClick = {
                                 context.audioFeedback(SoundEffect.Back)
@@ -85,7 +85,7 @@ fun CandidateBoardPhysicalButtons(
                 ) {
                         Icon(
                                 imageVector = ImageVector.vectorResource(
-                                        id = if (isExpanded) R.drawable.chevron_up else R.drawable.chevron_down
+                                        id = if (isExpanded) R.drawable.button_collapse else R.drawable.button_expand
                                 ),
                                 contentDescription = if (isExpanded) "Collapse" else "Expand",
                                 modifier = Modifier
@@ -94,11 +94,11 @@ fun CandidateBoardPhysicalButtons(
                                 tint = if (isDarkMode) Color.White else Color.Black
                         )
                 }
-                
+
                 // Input mode switch button (Jyutping/ABC)
                 val inputMethodMode by context.inputMethodMode.collectAsState()
                 val characterStandard by context.characterStandard.collectAsState()
-                
+
                 IconButton(
                         onClick = {
                                 context.audioFeedback(SoundEffect.Click)
@@ -136,7 +136,7 @@ fun CandidateBoardPhysicalButtons(
                                 fontSize = 17.sp
                         )
                 }
-                
+
                 // Keyboard button
                 IconButton(
                         onClick = {
@@ -166,7 +166,7 @@ fun CandidateBoardPhysicalButtons(
                                 )
                 ) {
                         Icon(
-                                imageVector = ImageVector.vectorResource(id = R.drawable.button_dismiss_keyboard),
+                                imageVector = ImageVector.vectorResource(id = R.drawable.button_show_keyboard),
                                 contentDescription = "Show keyboard",
                                 modifier = Modifier
                                         .padding(bottom = 4.dp, start = 4.dp)
