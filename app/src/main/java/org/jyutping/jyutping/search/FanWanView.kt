@@ -26,7 +26,7 @@ import org.jyutping.jyutping.ui.common.SeparatorMark
 fun FanWanView(entries: List<FanWanCuetYiu>) {
         Column {
                 Text(
-                        text = "《分韻撮要》 佚名 清初 廣州府",
+                        text = "《分韻撮要》 佚名 廣州府 清初",
                         modifier = Modifier.padding(horizontal = 8.dp),
                         color = colorScheme.onTertiaryContainer,
                         fontSize = 13.sp

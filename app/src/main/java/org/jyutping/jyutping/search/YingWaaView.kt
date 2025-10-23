@@ -61,7 +61,7 @@ private fun YingWaaPronunciationView(entry: YingWaaFanWan) {
         val homophoneText = if (entry.homophones.isEmpty()) null else entry.homophones.joinToString(separator = PresetString.SPACE)
         Column {
                 Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                         Row {
                                 Text(
@@ -79,12 +79,6 @@ private fun YingWaaPronunciationView(entry: YingWaaFanWan) {
                                         text = it,
                                         color = colorScheme.onBackground,
                                         fontStyle = FontStyle.Italic
-                                )
-                        }
-                        entry.interpretation?.let {
-                                Text(
-                                        text = it,
-                                        color = colorScheme.onBackground
                                 )
                         }
                 }
@@ -115,6 +109,21 @@ private fun YingWaaPronunciationView(entry: YingWaaFanWan) {
                         Row {
                                 Text(
                                         text = "同音",
+                                        color = colorScheme.onBackground
+                                )
+                                SeparatorMark()
+                                Text(
+                                        text = it,
+                                        color = colorScheme.onBackground
+                                )
+                        }
+                }
+                entry.interpretation?.let {
+                        Row(
+                                modifier = Modifier.padding(top = 2.dp)
+                        ) {
+                                Text(
+                                        text = "釋義",
                                         color = colorScheme.onBackground
                                 )
                                 SeparatorMark()
