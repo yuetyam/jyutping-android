@@ -4,6 +4,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -49,56 +50,44 @@ fun CandidateView(
                 contentAlignment = Alignment.Center
         ) {
                 Color.Transparent
-                
-                // Number label in top-left corner (absolute positioning)
-                if (numberLabel != null) {
+                Box(
+                        modifier = Modifier
+                                .alpha(if (commentStyle.isNone()) 0f else 1f)
+                                .fillMaxHeight(),
+                        contentAlignment = if (commentStyle.isBelow()) Alignment.BottomCenter else Alignment.TopCenter
+                ) {
+                        Color.Transparent
                         Text(
-                                text = numberLabel,
-                                color = textColor.copy(alpha = 0.6f),
-                                fontSize = 10.sp,
+                                text = if (isCantonese) candidate.romanization else PresetString.SPACE,
                                 modifier = Modifier
-                                        .align(Alignment.TopStart)
-                                        .padding(top = 2.dp)
+                                        .padding(vertical = 2.dp)
+                                        .height(20.dp),
+                                color = textColor,
+                                fontSize = 12.sp,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1
                         )
                 }
-                
-                // Main content: vertically centered Column with romanization above text
-                Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                Row(
+                        horizontalArrangement = Arrangement.spacedBy(2.dp),
+                        verticalAlignment = Alignment.CenterVertically
                 ) {
-                        // Romanization (Jyutping) above the candidate text
-                        if (isCantonese && !commentStyle.isNone()) {
-                                if (commentStyle.isAbove()) {
-                                        Text(
-                                                text = candidate.romanization,
-                                                color = textColor,
-                                                fontSize = 12.sp,
-                                                overflow = TextOverflow.Ellipsis,
-                                                maxLines = 1
-                                        )
-                                }
+                        numberLabel?.let {
+                                Text(
+                                        text = it,
+                                        color = textColor.copy(alpha = 0.6f),
+                                        fontSize = 10.sp
+                                )
                         }
-                        
-                        // Candidate text
                         Text(
                                 text = candidate.text,
+                                modifier = Modifier
+                                        .padding(bottom = if (commentStyle.isBelow()) 16.dp else 0.dp),
                                 color = textColor,
                                 fontSize = 20.sp,
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1
                         )
-                        
-                        // Romanization below (if needed)
-                        if (isCantonese && commentStyle.isBelow()) {
-                                Text(
-                                        text = candidate.romanization,
-                                        color = textColor,
-                                        fontSize = 12.sp,
-                                        overflow = TextOverflow.Ellipsis,
-                                        maxLines = 1
-                                )
-                        }
                 }
         }
 }
