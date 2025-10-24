@@ -107,7 +107,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         override fun onConfigurationChanged(newConfig: Configuration) {
                 super.onConfigurationChanged(newConfig)
-                
+
                 // Update view state based on hardware keyboard availability
                 if (hasHardwareKeyboard()) {
                         if (!isPhysicalKeyboardActive.value) {
@@ -119,7 +119,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                 }
         }
-        
+
         override fun onCreateInputView(): View {
                 window?.window?.decorView?.let { decorView ->
                         decorView.setViewTreeLifecycleOwner(this)
@@ -132,10 +132,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
                 super.onStartInput(attribute, restarting)
                 inputClientMonitorJob?.cancel()
-                
+
                 // Update the flag for hardware keyboard state
                 isPhysicalKeyboardActive.value = hasHardwareKeyboard()
-                
+
                 val isNightMode: Boolean = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
                 window?.window?.let {
                         WindowCompat.getInsetsController(it, it.decorView).isAppearanceLightNavigationBars = isNightMode.not()
@@ -201,7 +201,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         // References to views
         val isPhysicalKeyboardActive = MutableStateFlow(false)
-        
+
         // Check if physical/hardware keyboard is available
         private fun hasHardwareKeyboard(): Boolean {
                 val config = resources.configuration
@@ -212,7 +212,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun showPhysicalKeyboardCandidates() {
                 isPhysicalKeyboardActive.value = true
         }
-        
+
         fun showSoftKeyboard() {
                 isPhysicalKeyboardActive.value = false
         }
@@ -644,6 +644,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         updateQwertyForm(newForm)
                                 }
                                 'r' -> {
+                                        updateQwertyForm(QwertyForm.Pinyin)
                                         if (value.length < 2) {
                                                 currentInputConnection.setComposingText(value, 1)
                                         } else {
@@ -772,24 +773,20 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun handle(event: InputKeyEvent) {
                 val text: String = if (keyboardCase.value.isLowercased()) event.text else event.text.uppercase()
-                when (inputMethodMode.value) {
-                        InputMethodMode.Cantonese -> {
-                                bufferText += text
-                        }
-                        InputMethodMode.ABC -> {
-                                currentInputConnection.commitText(text, 1)
-                        }
+                val shouldAppendText: Boolean = inputMethodMode.value.isCantonese() && keyboardForm.value.isBufferable
+                if (shouldAppendText) {
+                        bufferText += text
+                } else {
+                        currentInputConnection.commitText(text, 1)
                 }
                 adjustKeyboardCase()
         }
         fun process(text: String) {
-                when (inputMethodMode.value) {
-                        InputMethodMode.Cantonese -> {
-                                bufferText += text
-                        }
-                        InputMethodMode.ABC -> {
-                                currentInputConnection.commitText(text, 1)
-                        }
+                val shouldAppendText: Boolean = inputMethodMode.value.isCantonese() && keyboardForm.value.isBufferable
+                if (shouldAppendText) {
+                        bufferText += text
+                } else {
+                        currentInputConnection.commitText(text, 1)
                 }
                 adjustKeyboardCase()
         }
@@ -970,7 +967,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 // Handle Tab key to cycle through candidate groups (for number selection 7-9)
                 if (event.keyCode == KeyEvent.KEYCODE_TAB) {
                         if (event.isShiftPressed) keyPressedDuringShift = true
-                        
+
                         val candidateCount = candidates.value.size
                         if (candidateCount > 0) {
                                 if (event.isShiftPressed) {
@@ -1085,14 +1082,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         if (event.isShiftPressed) {
                                 keyPressedDuringShift = true
                         }
-                        
+
                         // Show physical keyboard candidates view
                         if (!isPhysicalKeyboardActive.value) {
                                 showPhysicalKeyboardCandidates()
                         }
-                        
+
                         val char = unicodeChar.toChar().toString()
-                        
+
                         // In ABC mode, commit the character directly
                         // In Cantonese mode, for letters a-z try to use the IME handler
                         when (inputMethodMode.value) {
@@ -1104,7 +1101,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val mapped = if (char.length == 1 && char[0] in 'a'..'z') {
                                                 PhysicalKeyMapper.map(event.keyCode)
                                         } else null
-                                        
+
                                         if (mapped != null) {
                                                 // Feed into existing IME handler for Cantonese input
                                                 handle(mapped)
@@ -1114,7 +1111,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         }
                                 }
                         }
-                        
+
                         // Emit feedback
                         audioFeedback(SoundEffect.Click)
                         return true
@@ -1127,12 +1124,12 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         if (event.isShiftPressed) {
                                 keyPressedDuringShift = true
                         }
-                        
+
                         // Show physical keyboard candidates view for physical typing
                         if (!isPhysicalKeyboardActive.value) {
                                 showPhysicalKeyboardCandidates()
                         }
-                        
+
                         // Respect Shift/Caps Lock for ABC mode; Cantonese mode typically uses lowercased letters
                         // Check both Shift key state and Caps Lock state
                         val useUpper = (event.isShiftPressed || event.isCapsLockOn || keyboardCase.value.isUppercased())

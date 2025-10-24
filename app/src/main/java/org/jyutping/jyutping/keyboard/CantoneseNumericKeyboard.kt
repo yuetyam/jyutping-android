@@ -18,9 +18,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.models.InputKeyEvent
+import org.jyutping.jyutping.models.KeyElement
+import org.jyutping.jyutping.models.KeyModel
+import org.jyutping.jyutping.models.KeySide
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
+import org.jyutping.jyutping.presets.PresetString
 
 @Composable
 fun CantoneseNumericKeyboard(keyHeight: Dp) {
@@ -54,16 +59,78 @@ fun CantoneseNumericKeyboard(keyHeight: Dp) {
                                 .height(keyHeight)
                                 .fillMaxWidth()
                 ) {
-                        SymbolKey(symbol = "1", modifier = Modifier.weight(1f), position = Alignment.Start)
-                        SymbolKey(symbol = "2", modifier = Modifier.weight(1f))
+                        EdgeEnhancedInputKey(
+                                side = KeySide.Left,
+                                event = InputKeyEvent.number1,
+                                keyModel = KeyModel(
+                                        primary = KeyElement("1"),
+                                        members = listOf(
+                                                KeyElement("1"),
+                                                KeyElement(text = "１", header = PresetString.FULL_WIDTH),
+                                                KeyElement("壹"),
+                                                KeyElement(text = "¹", header = "上標"),
+                                                KeyElement(text = "₁", header = "下標"),
+                                                KeyElement("①")
+                                        )
+                                ),
+                                modifier = Modifier.weight(1f)
+                        )
+                        EnhancedInputKey(
+                                side = KeySide.Left,
+                                event = InputKeyEvent.number2,
+                                keyModel = KeyModel(
+                                        primary = KeyElement("2"),
+                                        members = listOf(
+                                                KeyElement("2"),
+                                                KeyElement(text = "２", header = PresetString.FULL_WIDTH),
+                                                KeyElement("貳"),
+                                                KeyElement(text = "²", header = "上標"),
+                                                KeyElement(text = "₂", header = "下標"),
+                                                KeyElement("②")
+                                        )
+                                ),
+                                modifier = Modifier.weight(1f)
+                        )
                         SymbolKey(symbol = "3", modifier = Modifier.weight(1f))
                         SymbolKey(symbol = "4", modifier = Modifier.weight(1f))
                         SymbolKey(symbol = "5", modifier = Modifier.weight(1f))
                         SymbolKey(symbol = "6", modifier = Modifier.weight(1f))
                         SymbolKey(symbol = "7", modifier = Modifier.weight(1f))
                         SymbolKey(symbol = "8", modifier = Modifier.weight(1f))
-                        SymbolKey(symbol = "9", modifier = Modifier.weight(1f))
-                        SymbolKey(symbol = "0", modifier = Modifier.weight(1f), position = Alignment.End)
+                        EnhancedInputKey(
+                                side = KeySide.Right,
+                                event = InputKeyEvent.number9,
+                                keyModel = KeyModel(
+                                        primary = KeyElement("9"),
+                                        members = listOf(
+                                                KeyElement("9"),
+                                                KeyElement(text = "９", header = PresetString.FULL_WIDTH),
+                                                KeyElement("玖"),
+                                                KeyElement(text = "⁰", header = "上標"),
+                                                KeyElement(text = "₀", header = "下標"),
+                                                KeyElement("⑨")
+                                        )
+                                ),
+                                modifier = Modifier.weight(1f)
+                        )
+                        EdgeEnhancedInputKey(
+                                side = KeySide.Right,
+                                event = InputKeyEvent.number0,
+                                keyModel = KeyModel(
+                                        primary = KeyElement("0"),
+                                        members = listOf(
+                                                KeyElement("0"),
+                                                KeyElement(text = "０", header = PresetString.FULL_WIDTH),
+                                                KeyElement("零"),
+                                                KeyElement(text = "⁰", header = "上標"),
+                                                KeyElement(text = "₀", header = "下標"),
+                                                KeyElement("⓪"),
+                                                KeyElement("拾"),
+                                                KeyElement(text = "°", header = "度")
+                                        )
+                                ),
+                                modifier = Modifier.weight(1f)
+                        )
                 }
                 Row(
                         modifier = Modifier

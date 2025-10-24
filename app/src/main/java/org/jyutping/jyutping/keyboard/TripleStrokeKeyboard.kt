@@ -18,6 +18,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.models.InputKeyEvent
+import org.jyutping.jyutping.models.KeyElement
+import org.jyutping.jyutping.models.KeyModel
+import org.jyutping.jyutping.models.KeySide
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
@@ -60,12 +63,42 @@ fun TripleStrokeKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth()
                                 .height(keyHeight)
                 ) {
-                        DualLettersKey(letters = "aa", modifier = Modifier.weight(1f), position = Alignment.Start)
+                        EdgeEnhancedInputKey(
+                                keyModel = KeyModel(
+                                        primary = KeyElement(text = "aa"),
+                                        members = listOf(
+                                                KeyElement(text = "aa"),
+                                                KeyElement(text = "q")
+                                        )
+                                ),
+                                modifier = Modifier.weight(1f)
+                        )
                         LetterKey(event = InputKeyEvent.letterW, modifier = Modifier.weight(1f))
                         LetterKey(event = InputKeyEvent.letterE, modifier = Modifier.weight(1f))
-                        DualLettersKey(letters = "oe", modifier = Modifier.weight(1f))
+                        EnhancedInputKey(
+                                side = KeySide.Left,
+                                keyModel = KeyModel(
+                                        primary = KeyElement(text = "oe", footer = "eo"),
+                                        members = listOf(
+                                                KeyElement(text = "oe"),
+                                                KeyElement(text = "r"),
+                                                KeyElement(text = "eo")
+                                        )
+                                ),
+                                modifier = Modifier.weight(1f)
+                        )
                         LetterKey(event = InputKeyEvent.letterT, modifier = Modifier.weight(1f))
-                        DualLettersKey(letters = "yu", modifier = Modifier.weight(1f))
+                        EnhancedInputKey(
+                                side = KeySide.Left,
+                                keyModel = KeyModel(
+                                        primary = KeyElement(text = "yu"),
+                                        members = listOf(
+                                                KeyElement(text = "yu"),
+                                                KeyElement(text = "y")
+                                        )
+                                ),
+                                modifier = Modifier.weight(1f)
+                        )
                         LetterKey(event = InputKeyEvent.letterU, modifier = Modifier.weight(1f))
                         LetterKey(event = InputKeyEvent.letterI, modifier = Modifier.weight(1f))
                         LetterKey(event = InputKeyEvent.letterO, modifier = Modifier.weight(1f))
@@ -96,9 +129,30 @@ fun TripleStrokeKeyboard(keyHeight: Dp) {
                         ShiftKey(modifier = Modifier.weight(1.3f))
                         HiddenKey(event = HiddenKeyEvent.LetterZ, modifier = Modifier.weight(0.2f))
                         LetterKey(event = InputKeyEvent.letterZ, modifier = Modifier.weight(1f))
-                        DualLettersKey(letters = "gw", modifier = Modifier.weight(1f))
+                        EnhancedInputKey(
+                                side = KeySide.Left,
+                                keyModel = KeyModel(
+                                        primary = KeyElement(text = "gw", footer = "kw"),
+                                        members = listOf(
+                                                KeyElement(text = "gw"),
+                                                KeyElement(text = "x"),
+                                                KeyElement(text = "kw")
+                                        )
+                                ),
+                                modifier = Modifier.weight(1f)
+                        )
                         LetterKey(event = InputKeyEvent.letterC, modifier = Modifier.weight(1f))
-                        DualLettersKey(letters = "ng", modifier = Modifier.weight(1f))
+                        EnhancedInputKey(
+                                side = KeySide.Left,
+                                keyModel = KeyModel(
+                                        primary = KeyElement(text = "ng"),
+                                        members = listOf(
+                                                KeyElement(text = "ng"),
+                                                KeyElement(text = "v")
+                                        )
+                                ),
+                                modifier = Modifier.weight(1f)
+                        )
                         LetterKey(event = InputKeyEvent.letterB, modifier = Modifier.weight(1f))
                         LetterKey(event = InputKeyEvent.letterN, modifier = Modifier.weight(1f))
                         LetterKey(event = InputKeyEvent.letterM, modifier = Modifier.weight(1f))
