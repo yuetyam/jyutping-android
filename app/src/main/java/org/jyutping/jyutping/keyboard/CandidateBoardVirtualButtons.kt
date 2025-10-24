@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
+import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
@@ -34,7 +35,7 @@ fun CandidateBoardVirtualButtons(
 ) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        
+
         IconButton(
                 onClick = {
                         context.audioFeedback(SoundEffect.Back)

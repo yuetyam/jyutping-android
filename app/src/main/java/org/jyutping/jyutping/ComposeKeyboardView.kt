@@ -25,9 +25,9 @@ import org.jyutping.jyutping.keyboard.CangjieKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseNumericKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseSymbolicKeyboard
 import org.jyutping.jyutping.keyboard.CommentStyle
-import org.jyutping.jyutping.keyboard.InputMethodMode
-import org.jyutping.jyutping.keyboard.KeyboardForm
-import org.jyutping.jyutping.keyboard.KeyboardInterface
+import org.jyutping.jyutping.models.InputMethodMode
+import org.jyutping.jyutping.models.KeyboardForm
+import org.jyutping.jyutping.models.KeyboardInterface
 import org.jyutping.jyutping.keyboard.NumericKeyboard
 import org.jyutping.jyutping.keyboard.PhysicalKeyboardCandidateBar
 import org.jyutping.jyutping.keyboard.QwertyForm
@@ -146,7 +146,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                         else -> KeyboardInterface.PadPortrait
                 }
                 (context as JyutpingInputMethodService).updateKeyboardInterface(keyboardInterface)
-                if (keyboardInterface.isPhoneLandscape()) return 40.dp
+                if (keyboardInterface.isPhoneLandscape) return 40.dp
                 val keyHeight: Int = 53 + ((windowWidth - 300) / 20)
                 return (keyHeight + offset).dp
         }
@@ -168,7 +168,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                         else -> KeyboardInterface.PadPortrait
                 }
                 (context as JyutpingInputMethodService).updateKeyboardInterface(keyboardInterface)
-                if (keyboardInterface.isPhoneLandscape()) return 40.dp
+                if (keyboardInterface.isPhoneLandscape) return 40.dp
                 val keyHeight: Int = 53 + ((windowWidth - 300) / 20)
                 return (keyHeight + offset).dp
         }

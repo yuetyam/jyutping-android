@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.keyboard
+package org.jyutping.jyutping.models
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -9,12 +9,17 @@ enum class KeyboardInterface {
         PadPortrait,
         PadLandscape;
 
-        fun isCompact(): Boolean = when (this) {
-                PhonePortrait, PhoneLandscape -> true
-                else -> false
-        }
-        fun isPhonePortrait(): Boolean = (this == PhonePortrait)
-        fun isPhoneLandscape(): Boolean = (this == PhoneLandscape)
+        val isCompact: Boolean
+                get() = when (this) {
+                        PhonePortrait, PhoneLandscape -> true
+                        else -> false
+                }
+
+        val isPhonePortrait: Boolean
+                get() = (this == PhonePortrait)
+
+        val isPhoneLandscape: Boolean
+                get() = (this == PhoneLandscape)
 
         fun keyHorizontalPadding(): Dp = when (this) {
                 PhoneLandscape -> 6.dp

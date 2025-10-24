@@ -64,11 +64,11 @@ fun InputMethodModeSwitch() {
                                 modifier = Modifier
                                         .border(
                                                 width = 1.dp,
-                                                color = optionBorderColor(inputMethodMode.isCantonese(), isDarkMode, isHighContrastPreferred),
+                                                color = optionBorderColor(inputMethodMode.isCantonese, isDarkMode, isHighContrastPreferred),
                                                 shape = CircleShape
                                         )
                                         .background(
-                                                color = optionBackgroundColor(inputMethodMode.isCantonese(), isDarkMode, isHighContrastPreferred),
+                                                color = optionBackgroundColor(inputMethodMode.isCantonese, isDarkMode, isHighContrastPreferred),
                                                 shape = CircleShape
                                         )
                                         .width(partWidth)
@@ -78,18 +78,18 @@ fun InputMethodModeSwitch() {
                                 Text(
                                         text = if (characterStandard.isSimplified) "粤" else "粵",
                                         color = if (isDarkMode) Color.White else Color.Black,
-                                        fontSize = if (inputMethodMode.isCantonese()) largerFontSize else normalFontSize
+                                        fontSize = if (inputMethodMode.isCantonese) largerFontSize else normalFontSize
                                 )
                         }
                         Box(
                                 modifier = Modifier
                                         .border(
                                                 width = 1.dp,
-                                                color = optionBorderColor(inputMethodMode.isABC(), isDarkMode, isHighContrastPreferred),
+                                                color = optionBorderColor(inputMethodMode.isABC, isDarkMode, isHighContrastPreferred),
                                                 shape = CircleShape
                                         )
                                         .background(
-                                                color = optionBackgroundColor(inputMethodMode.isABC(), isDarkMode, isHighContrastPreferred),
+                                                color = optionBackgroundColor(inputMethodMode.isABC, isDarkMode, isHighContrastPreferred),
                                                 shape = CircleShape
                                         )
                                         .width(partWidth)
@@ -99,7 +99,7 @@ fun InputMethodModeSwitch() {
                                 Text(
                                         text = "A",
                                         color = if (isDarkMode) Color.White else Color.Black,
-                                        fontSize = if (inputMethodMode.isABC()) largerFontSize else normalFontSize
+                                        fontSize = if (inputMethodMode.isABC) largerFontSize else normalFontSize
                                 )
                         }
                 }

@@ -50,7 +50,7 @@ fun StrokeKey(event: InputKeyEvent, modifier: Modifier) {
         val keyboardCase by context.keyboardCase.collectAsState()
         val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
         val shouldPreviewKey by context.previewKeyText.collectAsState()
-        val displayKeyLetter: String = if (showLowercaseKeys && keyboardCase.isLowercased()) event.text else event.text.uppercase()
+        val displayKeyLetter: String = if (showLowercaseKeys && keyboardCase.isLowercased) event.text else event.text.uppercase()
         val keyStroke: String? = ShapeKeyMap.keyStroke(event.text)
         val density = LocalDensity.current
         var baseSize by remember { mutableStateOf(Size.Zero) }

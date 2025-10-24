@@ -47,11 +47,11 @@ import org.jyutping.jyutping.keyboard.CangjieVariant
 import org.jyutping.jyutping.keyboard.CommentStyle
 import org.jyutping.jyutping.keyboard.Engine
 import org.jyutping.jyutping.keyboard.ExtraBottomPadding
-import org.jyutping.jyutping.keyboard.InputMethodMode
-import org.jyutping.jyutping.keyboard.KeyboardCase
-import org.jyutping.jyutping.keyboard.KeyboardForm
-import org.jyutping.jyutping.keyboard.KeyboardInterface
-import org.jyutping.jyutping.keyboard.KeyboardLayout
+import org.jyutping.jyutping.models.InputMethodMode
+import org.jyutping.jyutping.models.KeyboardCase
+import org.jyutping.jyutping.models.KeyboardForm
+import org.jyutping.jyutping.models.KeyboardInterface
+import org.jyutping.jyutping.models.KeyboardLayout
 import org.jyutping.jyutping.keyboard.NumericLayout
 import org.jyutping.jyutping.keyboard.PhysicalKeyMapper
 import org.jyutping.jyutping.keyboard.Pinyin
@@ -242,7 +242,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         val spaceKeyForm: MutableStateFlow<SpaceKeyForm> by lazy { MutableStateFlow(SpaceKeyForm.Fallback) }
         private fun updateSpaceKeyForm() {
                 val newForm: SpaceKeyForm = when {
-                        inputMethodMode.value.isABC() -> SpaceKeyForm.English
+                        inputMethodMode.value.isABC -> SpaceKeyForm.English
                         keyboardForm.value == KeyboardForm.TenKeyNumeric -> SpaceKeyForm.Fallback
                         else -> {
                                 val isSimplified: Boolean = characterStandard.value.isSimplified
@@ -356,7 +356,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 updateKeyboardCase(newCase)
         }
         private fun adjustKeyboardCase() {
-                if (keyboardCase.value.isUppercased()) {
+                if (keyboardCase.value.isUppercased) {
                         updateKeyboardCase(KeyboardCase.Lowercased)
                 }
         }
@@ -772,8 +772,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 bufferText = PresetString.EMPTY
         }
         fun handle(event: InputKeyEvent) {
-                val text: String = if (keyboardCase.value.isLowercased()) event.text else event.text.uppercase()
-                val shouldAppendText: Boolean = inputMethodMode.value.isCantonese() && keyboardForm.value.isBufferable
+                val text: String = if (keyboardCase.value.isLowercased) event.text else event.text.uppercase()
+                val shouldAppendText: Boolean = inputMethodMode.value.isCantonese && keyboardForm.value.isBufferable
                 if (shouldAppendText) {
                         bufferText += text
                 } else {
@@ -782,7 +782,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 adjustKeyboardCase()
         }
         fun process(text: String) {
-                val shouldAppendText: Boolean = inputMethodMode.value.isCantonese() && keyboardForm.value.isBufferable
+                val shouldAppendText: Boolean = inputMethodMode.value.isCantonese && keyboardForm.value.isBufferable
                 if (shouldAppendText) {
                         bufferText += text
                 } else {
@@ -1076,7 +1076,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
                 // Use KeyCharacterMap to get the actual character from the physical keyboard
                 // This respects the keyboard layout and modifier keys (Shift, Alt, etc.)
-                val unicodeChar = event.getUnicodeChar()
+                val unicodeChar = event.unicodeChar
                 if (unicodeChar != 0 && !Character.isISOControl(unicodeChar)) {
                         // Mark that a key was pressed while Shift is down
                         if (event.isShiftPressed) {
@@ -1132,8 +1132,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
                         // Respect Shift/Caps Lock for ABC mode; Cantonese mode typically uses lowercased letters
                         // Check both Shift key state and Caps Lock state
-                        val useUpper = (event.isShiftPressed || event.isCapsLockOn || keyboardCase.value.isUppercased())
-                        val textToCommit = if (useUpper && inputMethodMode.value.isABC()) mapped.text.uppercase() else mapped.text
+                        val useUpper = (event.isShiftPressed || event.isCapsLockOn || keyboardCase.value.isUppercased)
+                        val textToCommit = if (useUpper && inputMethodMode.value.isABC) mapped.text.uppercase() else mapped.text
 
                         when (inputMethodMode.value) {
                                 InputMethodMode.ABC -> {

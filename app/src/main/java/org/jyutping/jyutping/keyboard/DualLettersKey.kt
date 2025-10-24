@@ -49,7 +49,7 @@ fun DualLettersKey(letters: String, modifier: Modifier, position: Alignment.Hori
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
         val keyboardCase by context.keyboardCase.collectAsState()
-        val displayText: String = if (showLowercaseKeys && keyboardCase.isLowercased()) letters else letters.uppercase()
+        val displayText: String = if (showLowercaseKeys && keyboardCase.isLowercased) letters else letters.uppercase()
         val shouldPreviewKey by context.previewKeyText.collectAsState()
         val density = LocalDensity.current
         var baseSize by remember { mutableStateOf(Size.Zero) }

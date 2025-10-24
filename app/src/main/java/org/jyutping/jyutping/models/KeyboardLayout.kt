@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.keyboard
+package org.jyutping.jyutping.models
 
 /** Cantonese Keyboard Layout */
 enum class KeyboardLayout(val identifier: Int) {
@@ -24,6 +24,6 @@ enum class KeyboardLayout(val identifier: Int) {
                 get() = (this == TenKey)
 
         companion object {
-                fun layoutOf(value: Int): KeyboardLayout = KeyboardLayout.entries.find { it.identifier == value } ?: Qwerty
+                fun layoutOf(value: Int): KeyboardLayout = entries.find { it.identifier == value } ?: Qwerty
         }
 }

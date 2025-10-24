@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.models.KeyboardForm
 
 @Composable
 fun BottomKeyRow(transform: KeyboardForm, height: Dp) {

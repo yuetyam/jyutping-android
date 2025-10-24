@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.keyboard
+package org.jyutping.jyutping.models
 
 enum class KeyboardForm {
         Alphabetic,

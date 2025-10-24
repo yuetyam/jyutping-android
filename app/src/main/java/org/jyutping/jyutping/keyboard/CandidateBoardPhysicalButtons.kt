@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
+import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
@@ -127,7 +128,7 @@ fun CandidateBoardPhysicalButtons(
                                 )
                 ) {
                         Text(
-                                text = if (inputMethodMode.isCantonese()) {
+                                text = if (inputMethodMode.isCantonese) {
                                         if (characterStandard.isSimplified) "粤" else "粵"
                                 } else {
                                         "A"

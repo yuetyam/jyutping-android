@@ -21,6 +21,7 @@ import org.jyutping.jyutping.models.InputKeyEvent
 import org.jyutping.jyutping.models.KeyElement
 import org.jyutping.jyutping.models.KeyModel
 import org.jyutping.jyutping.models.KeySide
+import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant

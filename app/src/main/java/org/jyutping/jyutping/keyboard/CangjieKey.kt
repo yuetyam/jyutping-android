@@ -51,7 +51,7 @@ fun CangjieKey(event: InputKeyEvent, modifier: Modifier, position: Alignment.Hor
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
         val keyboardCase by context.keyboardCase.collectAsState()
-        val displayKeyLetter: String = if (showLowercaseKeys && keyboardCase.isLowercased()) event.text else event.text.uppercase()
+        val displayKeyLetter: String = if (showLowercaseKeys && keyboardCase.isLowercased) event.text else event.text.uppercase()
         val keyRadical: String = ShapeKeyMap.cangjieCode(event.text) ?: event.text
         val shouldPreviewKey by context.previewKeyText.collectAsState()
         val density = LocalDensity.current
