@@ -35,10 +35,10 @@ import org.jyutping.jyutping.emoji.EmojiCategory
 import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.extensions.convertedT2S
 import org.jyutping.jyutping.extensions.formattedCodePointText
-import org.jyutping.jyutping.extensions.formattedForMark
 import org.jyutping.jyutping.extensions.generateSymbol
+import org.jyutping.jyutping.extensions.isNotLetter
 import org.jyutping.jyutping.extensions.isReverseLookupTrigger
-import org.jyutping.jyutping.extensions.isSeparatorOrTone
+import org.jyutping.jyutping.extensions.markFormatted
 import org.jyutping.jyutping.extensions.toneConverted
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.keyboard.Candidate
@@ -750,8 +750,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val asap: Boolean = userLexiconSuggestions.isNotEmpty()
                                         val suggestions = Engine.suggest(origin = value, text = processingText, segmentation = segmentation, db = db, needsSymbols = needsSymbols, asap = asap)
                                         val mark: String = userLexiconSuggestions.firstOrNull()?.mark
-                                                ?: if (processingText.any { it.isSeparatorOrTone() }) {
-                                                        processingText.formattedForMark()
+                                                ?: if (processingText.any { it.isNotLetter }) {
+                                                        processingText.markFormatted()
                                                 } else {
                                                         val firstCandidate = suggestions.firstOrNull()
                                                         if (firstCandidate != null && firstCandidate.inputCount == processingText.length) firstCandidate.mark else processingText
@@ -801,7 +801,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 val firstChar = bufferText.firstOrNull()
                 when {
                         (firstChar == null) -> {}
-                        firstChar.isReverseLookupTrigger() -> {
+                        firstChar.isReverseLookupTrigger -> {
                                 val leadingLength = item.inputCount + 1
                                 if (bufferText.length > leadingLength) {
                                         val tail = bufferText.drop(leadingLength)
@@ -813,7 +813,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         else -> {
                                 val inputLength: Int = item.input.replace(Regex("([456])"), "RR").length
                                 var tail = bufferText.drop(inputLength)
-                                while (tail.startsWith(PresetCharacter.SEPARATOR)) {
+                                while (tail.startsWith(PresetCharacter.APOSTROPHE)) {
                                         tail = tail.drop(1)
                                 }
                                 bufferText = tail
@@ -905,7 +905,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun leftKey() {
                 if (isBuffering.value) {
-                        bufferText += PresetString.SEPARATOR
+                        bufferText += PresetString.APOSTROPHE
                 } else {
                         val text: String = when (inputMethodMode.value) {
                                 InputMethodMode.Cantonese -> "，"
@@ -916,7 +916,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun rightKey() {
                 if (isBuffering.value) {
-                        bufferText += PresetString.SEPARATOR
+                        bufferText += PresetString.APOSTROPHE
                 } else {
                         val text: String = when (inputMethodMode.value) {
                                 InputMethodMode.Cantonese -> "。"

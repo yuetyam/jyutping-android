@@ -86,7 +86,7 @@ fun HomeScreen(navController: NavHostController) {
                 val ideographicCodePoints = text.codePoints().toArray().filter { it.isIdeographicCodePoint }.distinct()
                 if (ideographicCodePoints.isEmpty()) return listOf(CantoneseLexicon(text))
                 val primary = helper.searchCantoneseLexicon(text)
-                val shouldReturnEarly: Boolean = text.characterCount() < 2 || ideographicCodePoints.count() > 3
+                val shouldReturnEarly: Boolean = text.characterCount < 2 || ideographicCodePoints.count() > 3
                 if (shouldReturnEarly) return listOf(primary)
                 val subLexicons = ideographicCodePoints.map { helper.searchCantoneseLexicon(Character.toString(it)) }
                 return listOf(primary) + subLexicons

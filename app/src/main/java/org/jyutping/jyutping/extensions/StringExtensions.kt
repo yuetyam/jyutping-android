@@ -1,6 +1,7 @@
 package org.jyutping.jyutping.extensions
 
 import android.icu.text.Transliterator
+import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetString
 
 fun String.convertedS2T(): String = Transliterator.getInstance("Simplified-Traditional").transliterate(this)
@@ -19,12 +20,19 @@ fun String.toneConverted(): String = this
         .replace('q', '3')
 
 /**
- * Format text with separators and tones
+ * Inserts a space after any non-letter character
  * @return Formatted text for mark
- */
-fun String.formattedForMark(): String {
-        val blocks = this.map { if (it.isSeparatorOrTone()) "$it " else it.toString() }
-        return blocks.joinToString(separator = PresetString.EMPTY).trimEnd()
+*/
+fun String.markFormatted(): String {
+        var result: String = PresetString.EMPTY
+        for (index in indices) {
+                val character = this[index]
+                result += character
+                if (character.isBasicLatinLetter.negative && index < lastIndex) {
+                        result += PresetCharacter.SPACE
+                }
+        }
+        return result
 }
 
 /**
@@ -55,4 +63,5 @@ fun String.generateSymbol(): String {
  *
  * A non-BMP character would count as one.
  * */
-fun String.characterCount(): Int = this.codePoints().count().toInt()
+val String.characterCount: Int
+        get() = this.codePoints().count().toInt()

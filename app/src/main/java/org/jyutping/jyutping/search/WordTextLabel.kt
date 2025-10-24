@@ -36,7 +36,7 @@ fun WordTextLabel(word: String) {
                                 color = colorScheme.onBackground
                         )
                 }
-                if (word.characterCount() == 1) {
+                if (word.characterCount == 1) {
                         Text(
                                 text = word.codePointText(),
                                 modifier = Modifier.alpha(0.75f),

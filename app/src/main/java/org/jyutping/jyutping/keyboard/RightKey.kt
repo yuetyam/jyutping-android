@@ -170,7 +170,7 @@ private enum class RightKeyForm {
 private fun RightKeyForm.isBuffering(): Boolean = (this == RightKeyForm.Buffering)
 private fun RightKeyForm.keyText(): String = when (this) {
         RightKeyForm.Cantonese -> "。"
-        RightKeyForm.Buffering -> PresetString.SEPARATOR
+        RightKeyForm.Buffering -> PresetString.APOSTROPHE
         RightKeyForm.ABC -> "."
 }
 

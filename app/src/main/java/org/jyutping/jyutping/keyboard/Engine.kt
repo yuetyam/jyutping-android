@@ -1,7 +1,7 @@
 package org.jyutping.jyutping.keyboard
 
-import org.jyutping.jyutping.extensions.isSeparatorChar
 import org.jyutping.jyutping.extensions.anchorsCode
+import org.jyutping.jyutping.extensions.isApostrophe
 import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
@@ -31,7 +31,7 @@ object Engine {
                 }
         }
         private fun dispatch(text: String, segmentation: Segmentation, db: DatabaseHelper, needsSymbols: Boolean): List<Candidate> {
-                val hasSeparators: Boolean = text.contains(PresetCharacter.SEPARATOR)
+                val hasSeparators: Boolean = text.contains(PresetCharacter.APOSTROPHE)
                 val hasTones: Boolean = text.contains(Regex("[1-6]"))
                 return when {
                         hasSeparators && hasTones -> {
@@ -122,11 +122,11 @@ object Engine {
                 return qualified
         }
         private fun processWithSeparators(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Candidate> {
-                val separatorCount = text.count { it.isSeparatorChar() }
-                val textParts = text.split(PresetCharacter.SEPARATOR).filter { it.isNotEmpty() }
-                val isHeadingSeparator: Boolean = text.firstOrNull()?.isSeparatorChar() == true
-                val isTrailingSeparator: Boolean = text.lastOrNull()?.isSeparatorChar() == true
-                val rawText = text.filter { !(it.isSeparatorChar()) }
+                val separatorCount = text.count { it.isApostrophe }
+                val textParts = text.split(PresetCharacter.APOSTROPHE).filter { it.isNotEmpty() }
+                val isHeadingSeparator: Boolean = text.firstOrNull()?.isApostrophe ?: false
+                val isTrailingSeparator: Boolean = text.lastOrNull()?.isApostrophe ?: false
+                val rawText = text.filterNot { it.isApostrophe }
                 val candidates = query(text = rawText, segmentation = segmentation, db = db, needsSymbols = false)
                 val qualified: MutableList<Candidate> = mutableListOf()
                 for (item in candidates) {
@@ -149,13 +149,13 @@ object Engine {
                                         when (syllables.size) {
                                                 1 -> {
                                                         if (item.input != textParts.firstOrNull()) continue
-                                                        val combinedInput: String = item.input + PresetCharacter.SEPARATOR
+                                                        val combinedInput: String = item.input + PresetCharacter.APOSTROPHE
                                                         val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
                                                         qualified.add(newItem)
                                                 }
                                                 2 -> {
                                                         if (syllables.firstOrNull() != textParts.firstOrNull()) continue
-                                                        val combinedInput: String = item.input + PresetCharacter.SEPARATOR
+                                                        val combinedInput: String = item.input + PresetCharacter.APOSTROPHE
                                                         val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
                                                         qualified.add(newItem)
                                                 }
@@ -166,7 +166,7 @@ object Engine {
                                         when (syllables.size) {
                                                 1 -> {
                                                         if (item.input != textParts.firstOrNull()) continue
-                                                        val combinedInput: String = item.input + PresetCharacter.SEPARATOR
+                                                        val combinedInput: String = item.input + PresetCharacter.APOSTROPHE
                                                         val newItem = Candidate(text = item.text, romanization = item.romanization, input = combinedInput)
                                                         qualified.add(newItem)
                                                 }

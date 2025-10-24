@@ -37,7 +37,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
 
         fun searchCantoneseLexicon(text: String): CantoneseLexicon {
-                when (text.characterCount()) {
+                when (text.characterCount) {
                         0 -> return CantoneseLexicon(text)
                         1 -> {
                                 val romanizations = fetchRomanizations(text)

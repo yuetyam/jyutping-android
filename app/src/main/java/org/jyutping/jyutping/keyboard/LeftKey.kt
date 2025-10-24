@@ -170,7 +170,7 @@ private enum class LeftKeyForm {
 private fun LeftKeyForm.isBuffering(): Boolean = (this == LeftKeyForm.Buffering)
 private fun LeftKeyForm.keyText(): String = when (this) {
         LeftKeyForm.Cantonese -> "，"
-        LeftKeyForm.Buffering -> PresetString.SEPARATOR
+        LeftKeyForm.Buffering -> PresetString.APOSTROPHE
         LeftKeyForm.ABC -> ","
 }
 

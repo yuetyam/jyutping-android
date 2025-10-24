@@ -1,11 +1,12 @@
 package org.jyutping.jyutping.presets
 
 object PresetCharacter {
+        /** U+0020 */
         const val SPACE: Char = ' '
 
-        // TODO: Rename to apostrophe
-        const val SEPARATOR: Char = '\''
+        /** U+0027. Separator; Delimiter; Quote */
+        const val APOSTROPHE: Char = '\''
 
+        /** r, v, x, q */
         val reverseLookupTriggers: HashSet<Char> = hashSetOf('r', 'v', 'x', 'q')
-        val cantoneseTones: HashSet<Char> = hashSetOf('1', '2', '3', '4', '5', '6')
 }

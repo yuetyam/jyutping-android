@@ -2,11 +2,37 @@ package org.jyutping.jyutping.extensions
 
 import org.jyutping.jyutping.presets.PresetCharacter
 
-fun Char.isSeparatorChar(): Boolean = (this == PresetCharacter.SEPARATOR)
-fun Char.isCantoneseTone(): Boolean = PresetCharacter.cantoneseTones.contains(this)
-fun Char.isSeparatorOrTone(): Boolean = (this.isSeparatorChar() || this.isCantoneseTone())
+/** a-z */
+val Char.isLowercaseBasicLatinLetter: Boolean
+        get() = (this in 'a'..'z')
 
-fun Char.isReverseLookupTrigger(): Boolean = PresetCharacter.reverseLookupTriggers.contains(this)
+/** A-Z */
+val Char.isUppercaseBasicLatinLetter: Boolean
+        get() = (this in 'A'..'Z')
+
+/** a-z || A-Z */
+val Char.isBasicLatinLetter: Boolean
+        get() = (this in 'a'..'z') || (this in 'A'..'Z')
+
+/** 0-9 */
+val Char.isBasicDigit: Boolean
+        get() = (this in '0'..'9')
+
+/** 1-6 */
+val Char.isCantoneseToneDigit: Boolean
+        get() = (this in '1'..'6')
+
+/* Is not BasicLatinLetter */
+val Char.isNotLetter: Boolean
+        get() = this.isBasicLatinLetter.negative
+
+/** U+0027. Separator; Delimiter; Quote */
+val Char.isApostrophe: Boolean
+        get() = (this == PresetCharacter.APOSTROPHE)
+
+/** r, v, x, q */
+val Char.isReverseLookupTrigger: Boolean
+        get() = PresetCharacter.reverseLookupTriggers.contains(this)
 
 /** is CJKV character Unicode code point */
 val Int.isIdeographicCodePoint: Boolean
