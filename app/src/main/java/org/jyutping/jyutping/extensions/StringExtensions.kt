@@ -58,6 +58,13 @@ fun String.generateSymbol(): String {
         }
 }
 
+fun String.toCharText(): String {
+        val text = this
+        return buildString {
+                appendCodePoint(text.toInt(radix = 16))
+        }
+}
+
 /**
  * Count of characters.
  *

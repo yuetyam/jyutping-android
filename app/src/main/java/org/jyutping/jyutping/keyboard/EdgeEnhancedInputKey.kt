@@ -282,7 +282,7 @@ fun EdgeEnhancedInputKey(
                                                                                 color = if (index == selectedIndex) PresetColor.blue else Color.Transparent,
                                                                                 shape = keyShape
                                                                         )
-                                                                        .height((baseSize.height * 1F).dp)
+                                                                        .height(baseSize.height.dp)
                                                                         .fillMaxWidth(),
                                                                 contentAlignment = Alignment.Center
                                                         ) {
@@ -297,7 +297,7 @@ fun EdgeEnhancedInputKey(
                                                                                         Text(
                                                                                                 text = header,
                                                                                                 color = if (isDarkMode || index == selectedIndex) Color.White else Color.Black,
-                                                                                                fontSize = 10.sp
+                                                                                                fontSize = 9.sp
                                                                                         )
                                                                                 }
                                                                         }
@@ -311,7 +311,7 @@ fun EdgeEnhancedInputKey(
                                                                                         Text(
                                                                                                 text = footer,
                                                                                                 color = if (isDarkMode || index == selectedIndex) Color.White else Color.Black,
-                                                                                                fontSize = 10.sp
+                                                                                                fontSize = 9.sp
                                                                                         )
                                                                                 }
                                                                         }
