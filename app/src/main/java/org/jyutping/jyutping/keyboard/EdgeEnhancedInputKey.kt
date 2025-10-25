@@ -231,7 +231,7 @@ fun EdgeEnhancedInputKey(
                                                 text = keyModel.primary.text.textCased(displayTextCase),
                                                 modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
                                                 color = if (isDarkMode) Color.White else Color.Black,
-                                                fontSize = if (keyModel.primary.isTextSingular) 26.sp else 22.sp
+                                                fontSize = if (keyModel.primary.isTextSingular) 32.sp else 22.sp
                                         )
                                 }
                         }

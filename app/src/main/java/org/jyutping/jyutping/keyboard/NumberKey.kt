@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,22 +33,20 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
+import org.jyutping.jyutping.models.InputKeyEvent
+import org.jyutping.jyutping.models.KeySide
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.shapes.BubbleShape
-import org.jyutping.jyutping.shapes.LeftHalfBubbleShape
-import org.jyutping.jyutping.shapes.RightHalfBubbleShape
+import org.jyutping.jyutping.shapes.HalfBubbleShape
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
-fun DualLettersKey(letters: String, modifier: Modifier, position: Alignment.Horizontal = Alignment.CenterHorizontally) {
+fun NumberKey(event: InputKeyEvent, modifier: Modifier, position: Alignment.Horizontal = Alignment.CenterHorizontally) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val keyboardInterface by context.keyboardInterface.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
-        val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
-        val keyboardCase by context.keyboardCase.collectAsState()
-        val displayText: String = if (showLowercaseKeys && keyboardCase.isLowercased) letters else letters.uppercase()
         val shouldPreviewKey by context.previewKeyText.collectAsState()
         val density = LocalDensity.current
         var baseSize by remember { mutableStateOf(Size.Zero) }
@@ -67,7 +64,7 @@ fun DualLettersKey(letters: String, modifier: Modifier, position: Alignment.Hori
                                                 isPressing = false
                                         },
                                         onTap = {
-                                                context.process(displayText)
+                                                context.handle(event)
                                         }
                                 )
                         }
@@ -96,15 +93,15 @@ fun DualLettersKey(letters: String, modifier: Modifier, position: Alignment.Hori
                         contentAlignment = Alignment.Center
                 ) {
                         Text(
-                                text = displayText,
+                                text = event.text,
                                 color = if (isDarkMode) Color.White else Color.Black,
-                                fontSize = 18.sp
+                                fontSize = 24.sp
                         )
                 }
                 if (shouldPreviewKey && isPressing) {
                         val shape: Shape = when (position) {
-                                Alignment.Start -> RightHalfBubbleShape()
-                                Alignment.End -> LeftHalfBubbleShape()
+                                Alignment.Start -> HalfBubbleShape(side = KeySide.Left)
+                                Alignment.End -> HalfBubbleShape(side = KeySide.Right)
                                 else -> BubbleShape()
                         }
                         val offsetX: Int = when (position) {
@@ -139,10 +136,10 @@ fun DualLettersKey(letters: String, modifier: Modifier, position: Alignment.Hori
                                         contentAlignment = Alignment.Center
                                 ) {
                                         Text(
-                                                text = displayText,
+                                                text = event.text,
                                                 modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
                                                 color = if (isDarkMode) Color.White else Color.Black,
-                                                style = MaterialTheme.typography.headlineLarge
+                                                fontSize = 32.sp
                                         )
                                 }
                         }

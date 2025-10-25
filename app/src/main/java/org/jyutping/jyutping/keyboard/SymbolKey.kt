@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,10 +33,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
+import org.jyutping.jyutping.models.KeySide
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.shapes.BubbleShape
-import org.jyutping.jyutping.shapes.LeftHalfBubbleShape
-import org.jyutping.jyutping.shapes.RightHalfBubbleShape
+import org.jyutping.jyutping.shapes.HalfBubbleShape
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
@@ -100,8 +99,8 @@ fun SymbolKey(symbol: String, modifier: Modifier, position: Alignment.Horizontal
                 }
                 if (shouldPreviewKey && isPressing) {
                         val shape: Shape = when (position) {
-                                Alignment.Start -> RightHalfBubbleShape()
-                                Alignment.End -> LeftHalfBubbleShape()
+                                Alignment.Start -> HalfBubbleShape(side = KeySide.Left)
+                                Alignment.End -> HalfBubbleShape(side = KeySide.Right)
                                 else -> BubbleShape()
                         }
                         val offsetX: Int = when (position) {
@@ -139,7 +138,7 @@ fun SymbolKey(symbol: String, modifier: Modifier, position: Alignment.Horizontal
                                                 text = symbol,
                                                 modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
                                                 color = if (isDarkMode) Color.White else Color.Black,
-                                                style = MaterialTheme.typography.headlineLarge
+                                                fontSize = 32.sp
                                         )
                                 }
                         }
