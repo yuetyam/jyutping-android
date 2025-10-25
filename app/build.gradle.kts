@@ -12,8 +12,8 @@ android {
                 applicationId = "org.jyutping.jyutping"
                 minSdk = 29
                 targetSdk = 36
-                versionCode = 44
-                versionName = "0.44.0"
+                versionCode = 45
+                versionName = "0.45.0"
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 vectorDrawables.useSupportLibrary = true
         }
@@ -52,7 +52,7 @@ java {
         }
 }
 
-val composeVersion = "1.9.3"
+val composeVersion = "1.9.4"
 dependencies {
         implementation("androidx.activity:activity-compose:1.11.0")
         implementation("androidx.activity:activity-ktx:1.11.0")
