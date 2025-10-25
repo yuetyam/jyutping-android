@@ -49,12 +49,12 @@ fun PhysicalKeyboardCandidateBar(height: Dp) {
         val candidates by context.candidates.collectAsState()
         val candidateState by context.candidateState.collectAsState()
         val candidateOffset by context.candidateOffset.collectAsState()
-        
+
         // Reset scroll position when candidate state changes (new candidates)
         LaunchedEffect(candidateState) {
                 state.animateScrollToItem(index = 0, scrollOffset = 0)
         }
-        
+
         // Auto-scroll when candidate offset changes (Tab/Shift+Tab navigation)
         LaunchedEffect(candidateOffset) {
                 if (candidateOffset < candidates.size) {
@@ -62,7 +62,7 @@ fun PhysicalKeyboardCandidateBar(height: Dp) {
                         state.animateScrollToItem(index = candidateOffset, scrollOffset = 0)
                 }
         }
-        
+
         Box(
                 modifier = Modifier
                         .background(
@@ -99,7 +99,7 @@ fun PhysicalKeyboardCandidateBar(height: Dp) {
                                                 index == candidateOffset + 2 -> "9"
                                                 else -> null
                                         }
-                                        
+
                                         CandidateView(
                                                 candidateState = candidateState,
                                                 candidate = candidate,
@@ -137,11 +137,6 @@ fun PhysicalKeyboardCandidateBar(height: Dp) {
                         }
                 )
                 // Physical keyboard buttons (expand, mode switch, keyboard)
-                CandidateBoardPhysicalButtons(
-                        collapseWidth = 44.dp,
-                        collapseHeight = 44.dp,
-                        isDarkMode = isDarkMode,
-                        isHighContrastPreferred = isHighContrastPreferred
-                )
+                CandidateBoardPhysicalButtons()
         }
 }

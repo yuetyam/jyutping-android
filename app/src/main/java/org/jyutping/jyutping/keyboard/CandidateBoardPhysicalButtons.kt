@@ -1,17 +1,14 @@
 package org.jyutping.jyutping.keyboard
 
 import android.view.HapticFeedbackConstants
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -23,7 +20,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
@@ -32,74 +28,39 @@ import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
+import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
-fun CandidateBoardPhysicalButtons(
-        collapseWidth: Dp,
-        collapseHeight: Dp,
-        isDarkMode: Boolean,
-        isHighContrastPreferred: Boolean
-) {
+fun CandidateBoardPhysicalButtons() {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val isDarkMode by context.isDarkMode.collectAsState()
+        val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
 
+        // Expand/collapse button
+        val currentForm by context.keyboardForm.collectAsState()
+        val isExpanded = currentForm == KeyboardForm.CandidateBoard
+
+        // Input mode switch button (Jyutping/ABC)
+        val inputMethodMode by context.inputMethodMode.collectAsState()
+        val characterStandard by context.characterStandard.collectAsState()
         Row(
                 modifier = Modifier.padding(end = 4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
-                // Expand/collapse button
-                val currentForm by context.keyboardForm.collectAsState()
-                val isExpanded = currentForm == KeyboardForm.CandidateBoard
-
-                IconButton(
-                        onClick = {
-                                context.audioFeedback(SoundEffect.Back)
-                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                // Toggle between collapsed and expanded states
-                                if (isExpanded) {
-                                        context.transformTo(KeyboardForm.Alphabetic)
-                                } else {
-                                        context.transformTo(KeyboardForm.CandidateBoard)
-                                }
-                        },
-                        modifier = Modifier
-                                .width(collapseWidth)
-                                .height(collapseHeight)
-                                .border(
-                                        width = 1.dp,
-                                        color = if (isDarkMode) {
-                                                if (isHighContrastPreferred) Color.White else Color.Transparent
-                                        } else {
-                                                if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                        },
-                                        shape = CircleShape
-                                )
-                                .background(
-                                        color = if (isHighContrastPreferred) {
-                                                if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
-                                        } else {
-                                                if (isDarkMode) PresetColor.solidEmphaticDark else PresetColor.solidEmphaticLight
-                                        },
-                                        shape = CircleShape
-                                )
+                AdvancedIconButton(
+                        icon = ImageVector.vectorResource(id = if (isExpanded) R.drawable.button_collapse else R.drawable.button_expand)
                 ) {
-                        Icon(
-                                imageVector = ImageVector.vectorResource(
-                                        id = if (isExpanded) R.drawable.button_collapse else R.drawable.button_expand
-                                ),
-                                contentDescription = if (isExpanded) "Collapse" else "Expand",
-                                modifier = Modifier
-                                        .padding(bottom = 4.dp, start = 4.dp)
-                                        .size(20.dp),
-                                tint = if (isDarkMode) Color.White else Color.Black
-                        )
+                        context.audioFeedback(SoundEffect.Click)
+                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                        // Toggle between collapsed and expanded states
+                        if (isExpanded) {
+                                context.transformTo(KeyboardForm.Alphabetic)
+                        } else {
+                                context.transformTo(KeyboardForm.CandidateBoard)
+                        }
                 }
-
-                // Input mode switch button (Jyutping/ABC)
-                val inputMethodMode by context.inputMethodMode.collectAsState()
-                val characterStandard by context.characterStandard.collectAsState()
-
                 IconButton(
                         onClick = {
                                 context.audioFeedback(SoundEffect.Click)
@@ -107,25 +68,21 @@ fun CandidateBoardPhysicalButtons(
                                 context.toggleInputMethodMode()
                         },
                         modifier = Modifier
-                                .width(collapseWidth)
-                                .height(collapseHeight)
+                                .size(44.dp)
                                 .border(
                                         width = 1.dp,
-                                        color = if (isDarkMode) {
-                                                if (isHighContrastPreferred) Color.White else Color.Transparent
-                                        } else {
-                                                if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                        },
+                                        color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
                                         shape = CircleShape
-                                )
-                                .background(
-                                        color = if (isHighContrastPreferred) {
-                                                if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
-                                        } else {
-                                                if (isDarkMode) PresetColor.solidEmphaticDark else PresetColor.solidEmphaticLight
-                                        },
-                                        shape = CircleShape
-                                )
+                                ),
+                        colors = IconButtonDefaults.iconButtonColors(
+                                containerColor = if (isHighContrastPreferred) {
+                                        if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
+                                } else {
+                                        if (isDarkMode) PresetColor.solidEmphaticDark else PresetColor.solidEmphaticLight
+                                },
+                                contentColor = if (isDarkMode) Color.White else Color.Black
+                        ),
+                        shape = CircleShape
                 ) {
                         Text(
                                 text = if (inputMethodMode.isCantonese) {
@@ -134,46 +91,15 @@ fun CandidateBoardPhysicalButtons(
                                         "A"
                                 },
                                 color = if (isDarkMode) Color.White else Color.Black,
-                                fontSize = 17.sp
+                                fontSize = 18.sp
                         )
                 }
-
-                // Keyboard button
-                IconButton(
-                        onClick = {
-                                context.audioFeedback(SoundEffect.Back)
-                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                context.showSoftKeyboard()
-                        },
-                        modifier = Modifier
-                                .width(collapseWidth)
-                                .height(collapseHeight)
-                                .border(
-                                        width = 1.dp,
-                                        color = if (isDarkMode) {
-                                                if (isHighContrastPreferred) Color.White else Color.Transparent
-                                        } else {
-                                                if (isHighContrastPreferred) Color.Black else Color.Transparent
-                                        },
-                                        shape = CircleShape
-                                )
-                                .background(
-                                        color = if (isHighContrastPreferred) {
-                                                if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
-                                        } else {
-                                                if (isDarkMode) PresetColor.solidEmphaticDark else PresetColor.solidEmphaticLight
-                                        },
-                                        shape = CircleShape
-                                )
+                AdvancedIconButton(
+                        icon = ImageVector.vectorResource(id = R.drawable.button_show_keyboard)
                 ) {
-                        Icon(
-                                imageVector = ImageVector.vectorResource(id = R.drawable.button_show_keyboard),
-                                contentDescription = "Show keyboard",
-                                modifier = Modifier
-                                        .padding(bottom = 4.dp, start = 4.dp)
-                                        .size(20.dp),
-                                tint = if (isDarkMode) Color.White else Color.Black
-                        )
+                        context.audioFeedback(SoundEffect.Click)
+                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                        context.showSoftKeyboard()
                 }
         }
 }

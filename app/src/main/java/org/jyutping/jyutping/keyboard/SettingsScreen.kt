@@ -14,20 +14,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.OpenInFull
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonColors
@@ -52,9 +50,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -142,37 +142,32 @@ fun SettingsScreen(height: Dp) {
                         modifier = Modifier
                                 .height(44.dp)
                                 .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                 ) {
-                        IconButton(
-                                onClick = {
-                                        context.audioFeedback(SoundEffect.Back)
-                                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                        context.transformTo(KeyboardForm.Alphabetic)
-                                }
+                        Spacer(modifier = Modifier.width(4.dp))
+                        AdvancedIconButton(
+                                icon = ImageVector.vectorResource(id = R.drawable.chevron_up)
                         ) {
-                               Icon(
-                                       imageVector = Icons.Outlined.ArrowUpward,
-                                       contentDescription = null,
-                                       tint = tintColor
-                               )
+                                context.audioFeedback(SoundEffect.Back)
+                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                context.transformTo(KeyboardForm.Alphabetic)
                         }
+                        Spacer(modifier = Modifier.weight(1f))
                         Text(
                                 text = stringResource(id = R.string.keyboard_settings_navigation_hint),
                                 modifier = Modifier.alpha(0.8f),
                                 color = tintColor
                         )
-                        IconButton(
-                                onClick = { /* TODO: Expansion */ },
-                                modifier = Modifier.alpha(0f)
+                        Spacer(modifier = Modifier.weight(1f))
+                        AdvancedIconButton(
+                                modifier = Modifier.alpha(0f),
+                                icon = ImageVector.vectorResource(id = R.drawable.button_expand)
                         ) {
-                                Icon(
-                                        imageVector = Icons.Outlined.OpenInFull,
-                                        contentDescription = null,
-                                        tint = tintColor
-                                )
+                                context.audioFeedback(SoundEffect.Click)
+                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                         }
+                        Spacer(modifier = Modifier.width(4.dp))
                 }
                 LazyColumn(
                         modifier = Modifier.fillMaxSize(),

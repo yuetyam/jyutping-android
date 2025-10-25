@@ -3,7 +3,6 @@ package org.jyutping.jyutping.keyboard
 import android.os.Build
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -13,23 +12,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -41,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
+import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import splitties.systemservices.windowManager
@@ -178,19 +173,15 @@ fun CandidateBoard(height: Dp, isPhysicalKeyboard: Boolean = false) {
                 }
                 // Show appropriate buttons based on keyboard mode
                 if (isPhysicalKeyboard) {
-                        CandidateBoardPhysicalButtons(
-                                collapseWidth = collapseWidth,
-                                collapseHeight = collapseHeight,
-                                isDarkMode = isDarkMode,
-                                isHighContrastPreferred = isHighContrastPreferred
-                        )
+                        CandidateBoardPhysicalButtons()
                 } else {
-                        CandidateBoardVirtualButtons(
-                                collapseWidth = collapseWidth,
-                                collapseHeight = collapseHeight,
-                                isDarkMode = isDarkMode,
-                                isHighContrastPreferred = isHighContrastPreferred
-                        )
+                        AdvancedIconButton(
+                                icon = ImageVector.vectorResource(id = R.drawable.chevron_up)
+                        ) {
+                                context.audioFeedback(SoundEffect.Back)
+                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                context.transformTo(KeyboardForm.Alphabetic)
+                        }
                 }
         }
 }
