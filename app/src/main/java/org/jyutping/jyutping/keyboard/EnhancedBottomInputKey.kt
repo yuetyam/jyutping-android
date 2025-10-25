@@ -40,11 +40,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.models.InputKeyEvent
 import org.jyutping.jyutping.models.KeyModel
 import org.jyutping.jyutping.models.KeySide
-import org.jyutping.jyutping.models.TextCase
-import org.jyutping.jyutping.models.textCased
+import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.shapes.BubbleShape
@@ -54,9 +52,8 @@ import kotlin.math.max
 import kotlin.math.min
 
 @Composable
-fun EnhancedInputKey(
+fun EnhancedBottomInputKey(
         side: KeySide,
-        event: InputKeyEvent? = null,
         keyModel: KeyModel,
         modifier: Modifier
 ) {
@@ -65,9 +62,6 @@ fun EnhancedInputKey(
         val keyboardInterface by context.keyboardInterface.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
-        val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
-        val keyboardCase by context.keyboardCase.collectAsState()
-        val displayTextCase: TextCase = if (showLowercaseKeys && keyboardCase.isLowercased) TextCase.Lowercase else TextCase.Uppercase
         val shouldPreviewKey by context.previewKeyText.collectAsState()
         val density = LocalDensity.current
         var baseSize by remember { mutableStateOf(Size.Zero) }
@@ -92,12 +86,7 @@ fun EnhancedInputKey(
                                                 if (isSelected) {
                                                         isSelected = false
                                                 } else {
-                                                        if (event != null) {
-                                                                context.handle(event)
-                                                        } else {
-                                                                val text: String = keyModel.primary.text.textCased(keyboardCase.textCase)
-                                                                context.process(text)
-                                                        }
+                                                        context.input(keyModel.primary.text)
                                                 }
                                         }
                                 )
@@ -109,8 +98,7 @@ fun EnhancedInputKey(
                                         },
                                         onDragEnd = {
                                                 keyModel.members.getOrNull(selectedIndex)?.let { element ->
-                                                        val text: String = element.text.textCased(keyboardCase.textCase)
-                                                        context.process(text)
+                                                        context.input(element.text)
                                                 }
                                                 selectedIndex = 0
                                                 distance = 0F
@@ -162,7 +150,7 @@ fun EnhancedInputKey(
                                         shape = keyShape
                                 )
                                 .background(
-                                        color = ToolBox.inputKeyBackColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey, isTouching),
+                                        color = bottomKeyBackColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey, isTouching),
                                         shape = keyShape
                                 )
                                 .fillMaxSize(),
@@ -177,7 +165,7 @@ fun EnhancedInputKey(
                                         contentAlignment = Alignment.TopEnd
                                 ) {
                                         Text(
-                                                text = header.textCased(displayTextCase),
+                                                text = header,
                                                 color = if (isDarkMode) Color.White else Color.Black,
                                                 fontSize = 10.sp
                                         )
@@ -192,14 +180,14 @@ fun EnhancedInputKey(
                                         contentAlignment = Alignment.BottomEnd
                                 ) {
                                         Text(
-                                                text = footer.textCased(displayTextCase),
+                                                text = footer,
                                                 color = if (isDarkMode) Color.White else Color.Black,
                                                 fontSize = 10.sp
                                         )
                                 }
                         }
                         Text(
-                                text = keyModel.primary.text.textCased(displayTextCase),
+                                text = keyModel.primary.text,
                                 color = if (isDarkMode) Color.White else Color.Black,
                                 fontSize = if (keyModel.primary.isTextSingular) 24.sp else 18.sp
                         )
@@ -221,7 +209,7 @@ fun EnhancedInputKey(
                                                         shape = shape
                                                 )
                                                 .background(
-                                                        color = ToolBox.previewInputKeyBackColor(isDarkMode, isHighContrastPreferred),
+                                                        color = bottomKeyPreviewBackColor(isDarkMode, isHighContrastPreferred),
                                                         shape = shape
                                                 )
                                                 .width(width.dp)
@@ -229,7 +217,7 @@ fun EnhancedInputKey(
                                         contentAlignment = Alignment.Center
                                 ) {
                                         Text(
-                                                text = keyModel.primary.text.textCased(displayTextCase),
+                                                text = keyModel.primary.text,
                                                 modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
                                                 color = if (isDarkMode) Color.White else Color.Black,
                                                 fontSize = if (keyModel.primary.isTextSingular) 32.sp else 22.sp
@@ -258,7 +246,7 @@ fun EnhancedInputKey(
                                                         shape = shape
                                                 )
                                                 .background(
-                                                        color = ToolBox.previewInputKeyBackColor(isDarkMode, isHighContrastPreferred),
+                                                        color = bottomKeyPreviewBackColor(isDarkMode, isHighContrastPreferred),
                                                         shape = shape
                                                 )
                                                 .width(width.dp)
@@ -315,7 +303,7 @@ fun EnhancedInputKey(
                                                                                 }
                                                                         }
                                                                         Text(
-                                                                                text = element.text.textCased(displayTextCase),
+                                                                                text = element.text,
                                                                                 color = if (isDarkMode || index == selectedIndex) Color.White else Color.Black,
                                                                                 fontSize = if (element.isTextSingular) 24.sp else 20.sp
                                                                         )
@@ -327,4 +315,24 @@ fun EnhancedInputKey(
                         }
                 }
         }
+}
+
+private fun bottomKeyBackColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, shouldPreviewKey: Boolean, isPressing: Boolean): Color = if (isHighContrastPreferred) {
+        if (isDarkMode) {
+                if (shouldPreviewKey.not() && isPressing) AltPresetColor.shallowDark else AltPresetColor.emphaticDark
+        } else {
+                if (shouldPreviewKey.not() && isPressing) AltPresetColor.shallowLight else AltPresetColor.emphaticLight
+        }
+} else {
+        if (isDarkMode) {
+                if (shouldPreviewKey.not() && isPressing) PresetColor.shallowDark else PresetColor.emphaticDark
+        } else {
+                if (shouldPreviewKey.not() && isPressing) PresetColor.shallowLight else PresetColor.emphaticLight
+        }
+}
+
+private fun bottomKeyPreviewBackColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean): Color = if (isHighContrastPreferred) {
+        if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
+} else {
+        if (isDarkMode) PresetColor.solidEmphaticDark else PresetColor.solidEmphaticLight
 }

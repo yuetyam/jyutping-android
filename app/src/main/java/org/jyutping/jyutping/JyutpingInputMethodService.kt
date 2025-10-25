@@ -903,28 +903,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun dismissKeyboard() {
                 requestHideSelf(InputMethodManager.HIDE_NOT_ALWAYS)
         }
-        fun leftKey() {
-                if (isBuffering.value) {
-                        bufferText += PresetString.APOSTROPHE
-                } else {
-                        val text: String = when (inputMethodMode.value) {
-                                InputMethodMode.Cantonese -> "，"
-                                InputMethodMode.ABC -> ","
-                        }
-                        currentInputConnection.commitText(text, 1)
-                }
-        }
-        fun rightKey() {
-                if (isBuffering.value) {
-                        bufferText += PresetString.APOSTROPHE
-                } else {
-                        val text: String = when (inputMethodMode.value) {
-                                InputMethodMode.Cantonese -> "。"
-                                InputMethodMode.ABC -> "."
-                        }
-                        currentInputConnection.commitText(text, 1)
-                }
-        }
 
         // New: Physical keyboard support - central handler
         override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {

@@ -4,16 +4,12 @@ import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,7 +33,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.models.InputMethodMode
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
@@ -46,17 +41,12 @@ import org.jyutping.jyutping.shapes.BubbleShape
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
-fun LeftKey(modifier: Modifier) {
+fun SeparatorKey(modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val keyboardInterface by context.keyboardInterface.collectAsState()
-        val inputMethodMode by context.inputMethodMode.collectAsState()
-        val isBuffering by context.isBuffering.collectAsState()
-        val keyForm: LeftKeyForm = when (inputMethodMode) {
-                InputMethodMode.Cantonese -> if (isBuffering) LeftKeyForm.Buffering else LeftKeyForm.Cantonese
-                InputMethodMode.ABC -> LeftKeyForm.ABC
-        }
         val isDarkMode by context.isDarkMode.collectAsState()
+        val textColor: Color = if (isDarkMode) Color.White else Color.Black
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val shouldPreviewKey by context.previewKeyText.collectAsState()
         val density = LocalDensity.current
@@ -75,7 +65,7 @@ fun LeftKey(modifier: Modifier) {
                                                 isPressing = false
                                         },
                                         onTap = {
-                                                context.leftKey()
+                                                context.process(PresetString.APOSTROPHE)
                                         }
                                 )
                         }
@@ -97,43 +87,39 @@ fun LeftKey(modifier: Modifier) {
                                         shape = keyShape
                                 )
                                 .background(
-                                        color = keyBackColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey, isPressing),
+                                        color = separatorKeyBackColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey, isPressing),
                                         shape = keyShape
                                 )
                                 .fillMaxSize(),
                         contentAlignment = Alignment.Center
                 ) {
-                        if (keyForm.isBuffering()) {
-                                Column(
-                                        verticalArrangement = Arrangement.Bottom,
-                                        horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        Text(
-                                                text = "分隔",
-                                                modifier = Modifier
-                                                        .alpha(0.85f)
-                                                        .padding(bottom = 2.dp),
-                                                color = if (isDarkMode) Color.White else Color.Black,
-                                                fontSize = 10.sp
-                                        )
-                                }
+                        Box(
+                                modifier = Modifier
+                                        .alpha(0.75f)
+                                        .padding(bottom = 2.dp)
+                                        .fillMaxSize(),
+                                contentAlignment = Alignment.BottomCenter
+                        ) {
+                                Text(
+                                        text = "分隔",
+                                        color = textColor,
+                                        fontSize = 10.sp
+                                )
                         }
                         Text(
-                                text = keyForm.keyText(),
-                                color = if (isDarkMode) Color.White else Color.Black,
-                                fontSize = 20.sp
+                                text = PresetString.APOSTROPHE,
+                                color = textColor,
+                                fontSize = 24.sp
                         )
                 }
                 if (shouldPreviewKey && isPressing) {
                         val shape = BubbleShape()
-                        val offsetX: Int = 0
                         val offsetY: Int = (baseSize.height * 1.5F / 2F * density.density).toInt().unaryMinus()
                         val width: Float = baseSize.width / 3F * 5F
                         val height: Float = baseSize.height * 2.5F
                         Popup(
                                 alignment = Alignment.Center,
-                                offset = IntOffset(x = offsetX, y = offsetY)
+                                offset = IntOffset(x = 0, y = offsetY)
                         ) {
                                 Box(
                                         modifier = modifier
@@ -143,7 +129,7 @@ fun LeftKey(modifier: Modifier) {
                                                         shape = shape
                                                 )
                                                 .background(
-                                                        color = previewBackColor(isDarkMode, isHighContrastPreferred),
+                                                        color = separatorKeyPreviewBackColor(isDarkMode, isHighContrastPreferred),
                                                         shape = shape
                                                 )
                                                 .width(width.dp)
@@ -151,10 +137,10 @@ fun LeftKey(modifier: Modifier) {
                                         contentAlignment = Alignment.Center
                                 ) {
                                         Text(
-                                                text = keyForm.keyText(),
+                                                text = PresetString.APOSTROPHE,
                                                 modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
-                                                color = if (isDarkMode) Color.White else Color.Black,
-                                                style = MaterialTheme.typography.headlineLarge
+                                                color = textColor,
+                                                fontSize = 32.sp
                                         )
                                 }
                         }
@@ -162,19 +148,7 @@ fun LeftKey(modifier: Modifier) {
         }
 }
 
-private enum class LeftKeyForm {
-        Cantonese,
-        Buffering,
-        ABC
-}
-private fun LeftKeyForm.isBuffering(): Boolean = (this == LeftKeyForm.Buffering)
-private fun LeftKeyForm.keyText(): String = when (this) {
-        LeftKeyForm.Cantonese -> "，"
-        LeftKeyForm.Buffering -> PresetString.APOSTROPHE
-        LeftKeyForm.ABC -> ","
-}
-
-private fun keyBackColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, shouldPreviewKey: Boolean, isPressing: Boolean): Color = if (isHighContrastPreferred) {
+private fun separatorKeyBackColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, shouldPreviewKey: Boolean, isPressing: Boolean): Color = if (isHighContrastPreferred) {
         if (isDarkMode) {
                 if (shouldPreviewKey.not() && isPressing) AltPresetColor.shallowDark else AltPresetColor.emphaticDark
         } else {
@@ -188,7 +162,7 @@ private fun keyBackColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, 
         }
 }
 
-private fun previewBackColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean): Color = if (isHighContrastPreferred) {
+private fun separatorKeyPreviewBackColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean): Color = if (isHighContrastPreferred) {
         if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
 } else {
         if (isDarkMode) PresetColor.solidEmphaticDark else PresetColor.solidEmphaticLight

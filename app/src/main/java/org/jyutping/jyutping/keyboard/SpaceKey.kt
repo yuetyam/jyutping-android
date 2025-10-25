@@ -97,7 +97,7 @@ fun SpaceKey(modifier: Modifier) {
                                 shape = keyShape
                         )
                         .background(
-                                color = keyBackColor(isDarkMode, isHighContrastPreferred, (isPressing || isDragging)),
+                                color = spaceKeyBackColor(isDarkMode, isHighContrastPreferred, (isPressing || isDragging)),
                                 shape = keyShape
                         )
                         .fillMaxSize(),
@@ -111,7 +111,7 @@ fun SpaceKey(modifier: Modifier) {
         }
 }
 
-private fun keyBackColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean): Color = if (isHighContrastPreferred) {
+private fun spaceKeyBackColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean): Color = if (isHighContrastPreferred) {
         if (isDarkMode) {
                 if (isPressing) AltPresetColor.emphaticDark else AltPresetColor.shallowDark
         } else {

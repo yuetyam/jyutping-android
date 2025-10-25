@@ -108,14 +108,17 @@ fun EdgeEnhancedInputKey(
                                                 isLongPressing = true
                                         },
                                         onDragEnd = {
-                                                val element = keyModel.members.getOrNull(selectedIndex)
-                                                if (element != null) {
+                                                keyModel.members.getOrNull(selectedIndex)?.let { element ->
                                                         val text: String = element.text.textCased(keyboardCase.textCase)
                                                         context.process(text)
                                                 }
+                                                selectedIndex = 0
+                                                distance = 0F
                                                 isLongPressing = false
                                         },
                                         onDragCancel = {
+                                                selectedIndex = 0
+                                                distance = 0F
                                                 isLongPressing = false
                                         },
                                         onDrag = { change, dragAmount ->
