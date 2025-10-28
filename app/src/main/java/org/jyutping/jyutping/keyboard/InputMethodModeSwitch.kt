@@ -2,10 +2,9 @@ package org.jyutping.jyutping.keyboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -32,11 +31,11 @@ fun InputMethodModeSwitch() {
         val characterStandard by context.characterStandard.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
-        val partWidth: Dp = 34.dp
-        val shapeWidth: Dp = 68.dp
-        val shapeHeight: Dp = 25.dp
+        val height: Dp = 25.dp
+        val partialWidth: Dp = 36.dp
+        val totalWidth: Dp = 64.dp
         val largerFontSize = 17.sp
-        val normalFontSize = 13.sp
+        val miniFontSize = 14.sp
         Box(
                 modifier = Modifier
                         .border(
@@ -45,20 +44,16 @@ fun InputMethodModeSwitch() {
                                 shape = CircleShape
                         )
                         .background(
-                                color = if (isHighContrastPreferred) {
-                                        if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
-                                } else {
-                                        if (isDarkMode) PresetColor.emphaticDark else PresetColor.emphaticLight
-                                },
+                                color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, false),
                                 shape = CircleShape
                         )
-                        .width(shapeWidth)
-                        .height(shapeHeight),
+                        .width(totalWidth)
+                        .height(height),
                 contentAlignment = Alignment.Center
         ) {
-                Row(
-                        horizontalArrangement = Arrangement.spacedBy(0.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.CenterStart
                 ) {
                         Box(
                                 modifier = Modifier
@@ -71,16 +66,21 @@ fun InputMethodModeSwitch() {
                                                 color = optionBackgroundColor(inputMethodMode.isCantonese, isDarkMode, isHighContrastPreferred),
                                                 shape = CircleShape
                                         )
-                                        .width(partWidth)
+                                        .width(partialWidth)
                                         .fillMaxHeight(),
                                 contentAlignment = Alignment.Center
                         ) {
                                 Text(
                                         text = if (characterStandard.isSimplified) "粤" else "粵",
                                         color = if (isDarkMode) Color.White else Color.Black,
-                                        fontSize = if (inputMethodMode.isCantonese) largerFontSize else normalFontSize
+                                        fontSize = if (inputMethodMode.isCantonese) largerFontSize else miniFontSize
                                 )
                         }
+                }
+                Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.CenterEnd
+                ) {
                         Box(
                                 modifier = Modifier
                                         .border(
@@ -92,14 +92,14 @@ fun InputMethodModeSwitch() {
                                                 color = optionBackgroundColor(inputMethodMode.isABC, isDarkMode, isHighContrastPreferred),
                                                 shape = CircleShape
                                         )
-                                        .width(partWidth)
+                                        .width(partialWidth)
                                         .fillMaxHeight(),
                                 contentAlignment = Alignment.Center
                         ) {
                                 Text(
                                         text = "A",
                                         color = if (isDarkMode) Color.White else Color.Black,
-                                        fontSize = if (inputMethodMode.isABC) largerFontSize else normalFontSize
+                                        fontSize = if (inputMethodMode.isABC) largerFontSize else miniFontSize
                                 )
                         }
                 }

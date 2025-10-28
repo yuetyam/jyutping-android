@@ -20,6 +20,6 @@ enum class CharacterStandard(val identifier: Int) {
                 get() = (this == Simplified)
 
         companion object {
-                fun standardOf(value: Int): CharacterStandard = CharacterStandard.entries.find { it.identifier == value } ?: Traditional
+                fun standardOf(value: Int): CharacterStandard = entries.find { it.identifier == value } ?: Traditional
         }
 }

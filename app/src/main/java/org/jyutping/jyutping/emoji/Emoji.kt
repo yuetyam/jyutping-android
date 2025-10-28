@@ -16,7 +16,7 @@ enum class EmojiCategory(val code: Int) {
         Flags(8);
 
         companion object {
-                fun categoryOf(value: Int): EmojiCategory? = EmojiCategory.entries.find { it.code == value }
+                fun categoryOf(value: Int): EmojiCategory? = entries.find { it.code == value }
         }
 }
 
