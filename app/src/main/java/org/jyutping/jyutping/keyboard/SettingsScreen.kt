@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -312,6 +314,7 @@ fun SettingsScreen(height: Dp) {
                                                                 onCheckedChange = {
                                                                         context.updateAudioFeedback(it)
                                                                 },
+                                                                thumbContent = { SwitchThumbContent(isAudioFeedbackOn) },
                                                                 colors = switchColors
                                                         )
                                                 }
@@ -330,6 +333,7 @@ fun SettingsScreen(height: Dp) {
                                                                 onCheckedChange = {
                                                                         context.updateHapticFeedback(it)
                                                                 },
+                                                                thumbContent = { SwitchThumbContent(isHapticFeedbackOn) },
                                                                 colors = switchColors
                                                         )
                                                 }
@@ -444,6 +448,7 @@ fun SettingsScreen(height: Dp) {
                                                 onCheckedChange = {
                                                         context.updateUseTenKeyNumberPad(it)
                                                 },
+                                                thumbContent = { SwitchThumbContent(useTenKeyNumberPad) },
                                                 colors = switchColors
                                         )
                                 }
@@ -468,6 +473,7 @@ fun SettingsScreen(height: Dp) {
                                                         onCheckedChange = {
                                                                 context.updateShowLowercaseKeys(it)
                                                         },
+                                                        thumbContent = { SwitchThumbContent(showLowercaseKeys) },
                                                         colors = switchColors
                                                 )
                                         }
@@ -486,6 +492,7 @@ fun SettingsScreen(height: Dp) {
                                                         onCheckedChange = {
                                                                 context.updatePreviewKeyText(it)
                                                         },
+                                                        thumbContent = { SwitchThumbContent(previewKeyText) },
                                                         colors = switchColors
                                                 )
                                         }
@@ -504,6 +511,7 @@ fun SettingsScreen(height: Dp) {
                                                         onCheckedChange = {
                                                                 context.updateHighContrast(it)
                                                         },
+                                                        thumbContent = { SwitchThumbContent(isHighContrastPreferred) },
                                                         colors = switchColors
                                                 )
                                         }
@@ -529,6 +537,7 @@ fun SettingsScreen(height: Dp) {
                                                         onCheckedChange = {
                                                                 context.updateNeedsInputModeSwitchKey(it)
                                                         },
+                                                        thumbContent = { SwitchThumbContent(needsInputModeSwitchKey) },
                                                         colors = switchColors
                                                 )
                                         }
@@ -547,6 +556,7 @@ fun SettingsScreen(height: Dp) {
                                                         onCheckedChange = {
                                                                 context.updateNeedsLeftKey(it)
                                                         },
+                                                        thumbContent = { SwitchThumbContent(needsLeftKey) },
                                                         colors = switchColors
                                                 )
                                         }
@@ -565,6 +575,7 @@ fun SettingsScreen(height: Dp) {
                                                         onCheckedChange = {
                                                                 context.updateNeedsRightKey(it)
                                                         },
+                                                        thumbContent = { SwitchThumbContent(needsRightKey) },
                                                         colors = switchColors
                                                 )
                                         }
@@ -889,6 +900,7 @@ fun SettingsScreen(height: Dp) {
                                                 onCheckedChange = {
                                                         context.updateEmojiSuggestionsState(it)
                                                 },
+                                                thumbContent = { SwitchThumbContent(isEmojiSuggestionsOn) },
                                                 colors = switchColors
                                         )
                                 }
@@ -913,6 +925,7 @@ fun SettingsScreen(height: Dp) {
                                                         onCheckedChange = {
                                                                 context.updateInputMemoryState(it)
                                                         },
+                                                        thumbContent = { SwitchThumbContent(isInputMemoryOn) },
                                                         colors = switchColors
                                                 )
                                         }
@@ -1021,5 +1034,15 @@ private fun ResponsiveDivider(isDarkMode: Boolean, isHighContrastPreferred: Bool
                 } else {
                         if (isDarkMode) PresetColor.emphaticDark else PresetColor.emphaticLight
                 }
+        )
+}
+
+@Composable
+private fun SwitchThumbContent(isOn: Boolean) {
+        Icon(
+                imageVector = if (isOn) Icons.Outlined.Check else Icons.Outlined.Close,
+                contentDescription = null,
+                modifier = Modifier.size(SwitchDefaults.IconSize),
+                tint = if (isOn) PresetColor.green else Color.Gray
         )
 }
