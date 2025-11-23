@@ -12,8 +12,8 @@ android {
                 applicationId = "org.jyutping.jyutping"
                 minSdk = 29
                 targetSdk = 36
-                versionCode = 45
-                versionName = "0.45.0"
+                versionCode = 48
+                versionName = "0.48.0"
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 vectorDrawables.useSupportLibrary = true
         }
@@ -52,18 +52,18 @@ java {
         }
 }
 
-val composeVersion = "1.9.4"
+val composeVersion = "1.9.5"
 dependencies {
-        implementation("androidx.activity:activity-compose:1.11.0")
-        implementation("androidx.activity:activity-ktx:1.11.0")
+        implementation("androidx.activity:activity-compose:1.12.0")
+        implementation("androidx.activity:activity-ktx:1.12.0")
         implementation("androidx.compose.material:material-icons-extended:1.7.8")
         implementation("androidx.compose.material3:material3:1.4.0")
         implementation("androidx.compose.ui:ui:$composeVersion")
         implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
         implementation("androidx.core:core-ktx:1.17.0")
-        implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.4")
-        implementation("androidx.lifecycle:lifecycle-service:2.9.4")
-        implementation("androidx.navigation:navigation-compose:2.9.5")
+        implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
+        implementation("androidx.lifecycle:lifecycle-service:2.10.0")
+        implementation("androidx.navigation:navigation-compose:2.9.6")
         implementation("com.louiscad.splitties:splitties-systemservices:3.0.0")
         implementation("com.louiscad.splitties:splitties-views:3.0.0")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")

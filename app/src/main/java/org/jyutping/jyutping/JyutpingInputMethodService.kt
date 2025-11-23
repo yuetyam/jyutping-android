@@ -8,9 +8,11 @@ import android.media.AudioManager
 import android.os.Build
 import android.view.KeyEvent
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.ExtractedTextRequest
 import android.view.inputmethod.InputMethodManager
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.edit
 import androidx.core.view.WindowCompat
@@ -39,6 +41,7 @@ import org.jyutping.jyutping.extensions.generateSymbol
 import org.jyutping.jyutping.extensions.isNotLetter
 import org.jyutping.jyutping.extensions.isReverseLookupTrigger
 import org.jyutping.jyutping.extensions.markFormatted
+import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.extensions.toneConverted
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.keyboard.Candidate
@@ -94,16 +97,33 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
          */
         override fun onEvaluateFullscreenMode() = false
 
+        private var canBlurWindow: Boolean = false
+        private val blurBlackList: HashSet<String> by lazy { hashSetOf("zte", "nubia", "redmagic", "red magic") }
         override fun onCreate() {
                 super.onCreate()
                 savedStateRegistryController.performRestore(null)
                 DatabasePreparer.prepare(this)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        val density = resources.displayMetrics.density
-                        val blurPixel = (24 * density).roundToInt()
-                        window?.window?.setBackgroundBlurRadius(blurPixel)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        val manufacturer = Build.MANUFACTURER.lowercase()
+                        val brand = Build.BRAND.lowercase()
+                        val shouldDisableBlur: Boolean = blurBlackList.contains(manufacturer) || blurBlackList.contains(brand)
+                        canBlurWindow = if (shouldDisableBlur) { false } else {
+                                getSystemService(WindowManager::class.java)?.isCrossWindowBlurEnabled ?: false
+                        }
+                        PresetColor.attach(canBlur = canBlurWindow)
+                        if (canBlurWindow) {
+                                window?.window?.let { win ->
+                                        win.addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
+                                        win.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
+                                        val density = resources.displayMetrics.density
+                                        val blurPixel = (24 * density).roundToInt()
+                                        win.setBackgroundBlurRadius(blurPixel)
+                                }
+                        }
+                } else {
+                        canBlurWindow = false
+                        PresetColor.attach(canBlur = false)
                 }
-                PresetColor.attach(this)
         }
         override fun onConfigurationChanged(newConfig: Configuration) {
                 super.onConfigurationChanged(newConfig)
@@ -126,7 +146,18 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         decorView.setViewTreeViewModelStoreOwner(this)
                         decorView.setViewTreeSavedStateRegistryOwner(this)
                 }
-                PresetColor.attach(this)
+                if (canBlurWindow) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                val canNowBlur: Boolean = getSystemService(WindowManager::class.java)?.isCrossWindowBlurEnabled ?: false
+                                if (canNowBlur.negative) {
+                                        canBlurWindow = false
+                                        PresetColor.attach(canBlur = false)
+                                }
+                        } else {
+                                canBlurWindow = false
+                                PresetColor.attach(canBlur = false)
+                        }
+                }
                 return ComposeKeyboardView(this)
         }
         override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
@@ -137,16 +168,16 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 isPhysicalKeyboardActive.value = hasHardwareKeyboard()
 
                 val isNightMode: Boolean = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-                window?.window?.let {
-                        WindowCompat.getInsetsController(it, it.decorView).isAppearanceLightNavigationBars = isNightMode.not()
-
-                        // Needs for Android 14 and below
-                        @Suppress("DEPRECATION")
-                        it.navigationBarColor = if (isHighContrastPreferred.value) {
-                                if (isDarkMode.value) AltPresetColor.darkBackground.toArgb() else AltPresetColor.lightBackground.toArgb()
+                window?.window?.let { win ->
+                        WindowCompat.getInsetsController(win, win.decorView).isAppearanceLightNavigationBars = isNightMode.negative
+                        val bgColor: Color = if (isHighContrastPreferred.value) {
+                                if (isNightMode) AltPresetColor.darkBackground else AltPresetColor.lightBackground
                         } else {
-                                if (isDarkMode.value) PresetColor.darkBackground.toArgb() else PresetColor.lightBackground.toArgb()
+                                if (isNightMode) PresetColor.darkBackground else PresetColor.lightBackground
                         }
+                        val barColor: Color = if (canBlurWindow) bgColor else bgColor.copy(alpha = 1f)
+                        @Suppress("DEPRECATION")
+                        win.navigationBarColor = barColor.toArgb()
                 }
                 isDarkMode.value = isNightMode
                 inputMethodMode.value = InputMethodMode.Cantonese

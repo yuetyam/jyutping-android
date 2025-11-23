@@ -1,30 +1,22 @@
 package org.jyutping.jyutping.presets
 
-import android.content.Context
-import android.os.Build
-import android.view.WindowManager
 import androidx.compose.ui.graphics.Color
 
 object PresetColor {
 
-        fun attach(context: Context) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        val canBlur: Boolean = context.getSystemService(WindowManager::class.java)?.isCrossWindowBlurEnabled ?: false
-                        lightBackground = if (canBlur) semiLight else fullLight
-                        darkBackground = if (canBlur) semiDark else fullDark
-                }
+        fun attach(canBlur: Boolean) {
+                lightBackground = if (canBlur) semiLight else fullLight
+                darkBackground = if (canBlur) semiDark else fullDark
         }
-
-        val supportsBlur: Boolean = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
 
         private val semiLight = Color(0xCCD0D4D8)
         private val fullLight = Color(0xFFD0D4D8)
-        var lightBackground: Color = if (supportsBlur) semiLight else fullLight
+        var lightBackground: Color = fullLight
                 private set
 
         private val semiDark = Color(0xCC222222)
         private val fullDark = Color(0xFF222222)
-        var darkBackground: Color = if (supportsBlur) semiDark else fullDark
+        var darkBackground: Color = fullDark
                 private set
 
         val shallowLight      : Color = Color.White.copy(0.95f)

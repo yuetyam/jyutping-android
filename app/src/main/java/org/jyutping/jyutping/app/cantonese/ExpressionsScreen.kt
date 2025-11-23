@@ -49,7 +49,7 @@ fun ExpressionsScreen() {
                                 labels = listOf(
                                         LabelEntry(type = LabelType.CHECKED, text = "單數：你"),
                                         LabelEntry(type = LabelType.CHECKED, text = "複數：你哋"),
-                                        LabelEntry(type = LabelType.WARNING, text = "「您」係北京方言用字，好少見於其他漢語。如果要用敬詞，粵語一般用「閣下」。"),
+                                        LabelEntry(type = LabelType.WARNING, text = "如果要用敬詞，粵語一般用「閣下」。「您」係北京方言用字，好少見於其他漢語。"),
                                         LabelEntry(type = LabelType.WARNING, text = "冇必要畫蛇添足用「妳」。")
                                 )
                         )
