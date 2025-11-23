@@ -68,7 +68,8 @@
     <string name="keyboard_settings_keyboard_layout_header">鍵盤排列佈局</string>
     <string name="keyboard_settings_keyboard_layout_qwerty">26 鍵全鍵盤</string>
     <string name="keyboard_settings_keyboard_layout_triple_stroke">26 鍵三拼</string>
-    <string name="keyboard_settings_keyboard_layout_ten_key">九宮格</string>
+    <string name="keyboard_settings_keyboard_layout_nine_key">9 鍵（九宮格）</string>
+    <string name="keyboard_settings_keyboard_layout_fourteen_key">14 鍵</string>
     <string name="keyboard_settings_numeric_layout_switch_title">使用九宮格數字鍵盤</string>
     <string name="keyboard_settings_show_lowercase_keys_switch_title">鍵文字母小寫顯示</string>
     <string name="keyboard_settings_key_text_preview_switch_title">鍵文氣泡預覽</string>

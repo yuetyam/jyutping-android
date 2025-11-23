@@ -68,8 +68,9 @@
     <string name="keyboard_settings_keyboard_layout_header">Keyboard Layout</string>
     <string name="keyboard_settings_keyboard_layout_qwerty">QWERTY (26鍵全鍵盤)</string>
     <string name="keyboard_settings_keyboard_layout_triple_stroke">Triple-Stroke (26鍵三拼)</string>
-    <string name="keyboard_settings_keyboard_layout_ten_key">10 Key (九宮格)</string>
-    <string name="keyboard_settings_numeric_layout_switch_title">Use 10 Key Number Pad</string>
+    <string name="keyboard_settings_keyboard_layout_nine_key">9 Key (九宮格)</string>
+    <string name="keyboard_settings_keyboard_layout_fourteen_key">14 Key</string>
+    <string name="keyboard_settings_numeric_layout_switch_title">Use 9 Key Number Pad</string>
     <string name="keyboard_settings_show_lowercase_keys_switch_title">Show Lowercase Keys</string>
     <string name="keyboard_settings_key_text_preview_switch_title">Key Text Preview</string>
     <string name="keyboard_settings_high_contrast_switch_title">High Contrast Colour Schemes</string>

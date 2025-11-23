@@ -2,26 +2,33 @@ package org.jyutping.jyutping.models
 
 /** Cantonese Keyboard Layout */
 enum class KeyboardLayout(val identifier: Int) {
-        /** 26鍵全鍵盤 */
+        /** 26 鍵全鍵盤 */
         Qwerty(1),
 
-        /** 26鍵三拼 */
+        /** 26 鍵三拼 */
         TripleStroke(2),
 
-        /** 九宮格 */
-        TenKey(3);
+        /** 九宮格（9 鍵） */
+        NineKey(3),
 
-        /** 26鍵全鍵盤 */
+        /** 14 鍵 */
+        FourteenKey(4);
+
+        /** 26 鍵全鍵盤 */
         val isQwerty: Boolean
                 get() = (this == Qwerty)
 
-        /** 26鍵三拼 */
+        /** 26 鍵三拼 */
         val isTripleStroke: Boolean
                 get() = (this == TripleStroke)
 
-        /** 九宮格 */
-        val isTenKey: Boolean
-                get() = (this == TenKey)
+        /** 九宮格（9 鍵） */
+        val isNineKey: Boolean
+                get() = (this == NineKey)
+
+        /** 14 鍵 */
+        val isFourteenKey: Boolean
+                get() = (this == FourteenKey)
 
         companion object {
                 fun layoutOf(value: Int): KeyboardLayout = entries.find { it.identifier == value } ?: Qwerty
