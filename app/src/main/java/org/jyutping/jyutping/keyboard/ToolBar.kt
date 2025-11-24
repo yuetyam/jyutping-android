@@ -31,8 +31,8 @@ import org.jyutping.jyutping.models.KeyboardForm
 
 @Composable
 fun ToolBar() {
-        val inputMethodModeSwitchWidth = 68.dp
-        val buttonSize = 50.dp
+        val inputMethodModeSwitchWidth = 64.dp
+        val buttonSize = 48.dp
         val iconSize = 24.dp
         val editingIconSize = 28.dp
         val interactionSource = remember { MutableInteractionSource() }

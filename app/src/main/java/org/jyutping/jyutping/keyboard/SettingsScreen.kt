@@ -401,7 +401,7 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                 }
 
-                                                // TODO: 9 key and 14 key layouts
+                                                // TODO: 9 key, 14 key, and 18 key layouts
                                                 if (BuildConfig.DEBUG) {
                                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                                         Button(
@@ -446,6 +446,29 @@ fun SettingsScreen(height: Dp) {
                                                                         imageVector = Icons.Outlined.Check,
                                                                         contentDescription = null,
                                                                         modifier = Modifier.alpha(if (keyboardLayout.isFourteenKey) 1f else 0f),
+                                                                        tint = PresetColor.blue
+                                                                )
+                                                        }
+                                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                                        Button(
+                                                                onClick = {
+                                                                        context.audioFeedback(SoundEffect.Click)
+                                                                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                        context.updateKeyboardLayout(KeyboardLayout.EighteenKey)
+                                                                },
+                                                                shape = CircleShape,
+                                                                colors = buttonColors,
+                                                                contentPadding = PaddingValues(horizontal = 8.dp)
+                                                        ) {
+                                                                Text(
+                                                                        text = stringResource(id = R.string.keyboard_settings_keyboard_layout_eighteen_key),
+                                                                        fontWeight = FontWeight.Normal
+                                                                )
+                                                                Spacer(modifier = Modifier.weight(1f))
+                                                                Icon(
+                                                                        imageVector = Icons.Outlined.Check,
+                                                                        contentDescription = null,
+                                                                        modifier = Modifier.alpha(if (keyboardLayout.isEighteenKey) 1f else 0f),
                                                                         tint = PresetColor.blue
                                                                 )
                                                         }

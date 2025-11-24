@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
@@ -33,7 +34,7 @@ fun InputMethodModeSwitch() {
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val height: Dp = 25.dp
         val partialWidth: Dp = 36.dp
-        val totalWidth: Dp = 64.dp
+        val totalWidth: Dp = 60.dp
         val largerFontSize = 17.sp
         val miniFontSize = 14.sp
         Box(
@@ -72,6 +73,7 @@ fun InputMethodModeSwitch() {
                         ) {
                                 Text(
                                         text = if (characterStandard.isSimplified) "粤" else "粵",
+                                        modifier = Modifier.padding(end = if (inputMethodMode.isCantonese) 0.dp else 6.dp),
                                         color = if (isDarkMode) Color.White else Color.Black,
                                         fontSize = if (inputMethodMode.isCantonese) largerFontSize else miniFontSize
                                 )
@@ -98,6 +100,7 @@ fun InputMethodModeSwitch() {
                         ) {
                                 Text(
                                         text = "A",
+                                        modifier = Modifier.padding(start = if (inputMethodMode.isABC) 0.dp else 6.dp),
                                         color = if (isDarkMode) Color.White else Color.Black,
                                         fontSize = if (inputMethodMode.isABC) largerFontSize else miniFontSize
                                 )
