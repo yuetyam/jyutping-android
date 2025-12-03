@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.speech.TTSProvider
 import org.jyutping.jyutping.ui.theme.JyutpingTheme
 import org.jyutping.jyutping.utilities.DatabasePreparer
@@ -83,8 +84,9 @@ class MainActivity : ComponentActivity() {
         override fun onResume() {
                 super.onResume()
                 val isTTSReady: Boolean = ttsProvider?.isReady?.value ?: false
-                if (isTTSReady.not()) {
-                        ttsProvider = TTSProvider(this)
+                if (isTTSReady.negative) {
+                        ttsProvider = TTSProvider(this.applicationContext)
+                        ttsProvider?.initialize()
                 }
         }
 
