@@ -8,7 +8,7 @@ data class Stroke(
         val word : String,
         val stroke: String,
         val complex: Int,
-        val ping: Int,
+        val spell: Int,
         val code: Long
 ) {
         override fun equals(other: Any?): Boolean {
@@ -23,10 +23,10 @@ data class Stroke(
         companion object {
                 fun generate(): List<Stroke> {
                         val connection: Connection = DriverManager.getConnection("jdbc:sqlite::memory:")
-                        val  createTableCommand: String = "CREATE TABLE stroketable(word TEXT NOT NULL, stroke TEXT NOT NULL);"
+                        val  createTableCommand: String = "CREATE TABLE stroke_table(word TEXT NOT NULL, stroke TEXT NOT NULL);"
                         connection.createStatement().execute(createTableCommand)
 
-                        val insertCommand: String = "INSERT INTO stroketable (word, stroke) VALUES (?, ?);"
+                        val insertCommand: String = "INSERT INTO stroke_table (word, stroke) VALUES (?, ?);"
                         val strokeData = readStrokeData()
                         println("Inserting ${strokeData.size} stroke rows (temp DB)...")
                         val inserted = batchInsert(connection, insertCommand, strokeData) { statement, obj ->
@@ -34,14 +34,14 @@ data class Stroke(
                                 statement.setString(2, obj.second)
                         }
                         println("Inserted stroke rows (temp DB): $inserted")
-                        val createIndexCommand: String = "CREATE INDEX strokewordindex ON stroketable(word);"
+                        val createIndexCommand: String = "CREATE INDEX ix_stroke_word ON stroke_table(word);"
                         connection.createStatement().execute(createIndexCommand)
 
                         val characters = fetchCharacters()
                         val strokeObjects: MutableList<Stroke> = mutableListOf()
                         connection.createStatement().use { statement ->
                                 for (character in characters) {
-                                        val queryCommand: String = "SELECT stroke FROM stroketable WHERE word = '${character}';"
+                                        val queryCommand: String = "SELECT stroke FROM stroke_table WHERE word = '${character}';"
                                         val rs = statement.executeQuery(queryCommand)
                                         while (rs.next()) {
                                                 val strokeText = rs.getString(1)
@@ -84,7 +84,7 @@ data class Stroke(
                         if (codes.count() != complex) error("bad stroke format: $word = $strokeText")
                         val strokeCodeText = codes.joinToString(separator = PresetString.EMPTY) { it.toString() }
                         val code: Long = codes.decimalCombined()
-                        return Stroke(word = word, stroke = strokeCodeText, complex = complex, ping = strokeText.hashCode(), code = code)
+                        return Stroke(word = word, stroke = strokeCodeText, complex = complex, spell = strokeText.hashCode(), code = code)
                 }
                 private val codeMap: HashMap<Char, Int> = hashMapOf(
                         'w' to 1,

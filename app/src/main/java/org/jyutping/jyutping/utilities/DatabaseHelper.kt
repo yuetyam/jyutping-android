@@ -135,7 +135,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         private fun fetchRomanizations(word: String): List<String> {
                 val romanizations: MutableList<String> = mutableListOf()
-                val command = "SELECT romanization FROM lexicontable WHERE word = ?;"
+                val command = "SELECT romanization FROM core_lexicon WHERE word = ?;"
                 val cursor = this.readableDatabase.rawQuery(command, arrayOf(word))
                 while (cursor.moveToNext()) {
                         val romanization = cursor.getString(0)
@@ -146,7 +146,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         private fun fetchHomophones(romanization: String): List<String> {
                 val words: MutableList<String> = mutableListOf()
-                val command = "SELECT word FROM lexicontable WHERE romanization = ? LIMIT 11;"
+                val command = "SELECT word FROM core_lexicon WHERE romanization = ? LIMIT 11;"
                 val cursor = this.readableDatabase.rawQuery(command, arrayOf(romanization))
                 while (cursor.moveToNext()) {
                         val word = cursor.getString(0)
@@ -156,7 +156,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return words
         }
         private fun fetchCollocations(word: String, romanization: String): List<String> {
-                val command = "SELECT collocation FROM collocationtable WHERE word = ? AND romanization = ? LIMIT 1;"
+                val command = "SELECT collocation FROM collocation_table WHERE word = ? AND romanization = ? LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(command, arrayOf(word, romanization))
                 if (cursor.moveToFirst()) {
                         val text = cursor.getString(0)
@@ -169,7 +169,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         private fun fetchDescriptions(word: String, romanization: String): List<String> {
                 val items: MutableList<String> = mutableListOf()
-                val command = "SELECT description FROM dictionarytable WHERE word = ? AND romanization = ?;"
+                val command = "SELECT description FROM dictionary_table WHERE word = ? AND romanization = ?;"
                 val cursor = this.readableDatabase.rawQuery(command, arrayOf(word, romanization))
                 while (cursor.moveToNext()) {
                         val item = cursor.getString(0)
@@ -188,7 +188,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         private fun yingWaaFanWanMatch(text: String): List<YingWaaFanWan> {
                 val entries: MutableList<YingWaaFanWan> = mutableListOf()
                 val code = text.codePointAt(0)
-                val command = "SELECT * FROM yingwaatable WHERE code = $code;"
+                val command = "SELECT * FROM yingwaa_table WHERE code = $code;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         // val code = cursor.getInt(0)
@@ -213,7 +213,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         private fun fetchYingWaaHomophones(romanization: String): List<String> {
                 val homophones: MutableList<String> = mutableListOf()
-                val command = "SELECT word FROM yingwaatable WHERE romanization = ? LIMIT 11;"
+                val command = "SELECT word FROM yingwaa_table WHERE romanization = ? LIMIT 11;"
                 val cursor = this.readableDatabase.rawQuery(command, arrayOf(romanization))
                 while (cursor.moveToNext()) {
                         val word = cursor.getString(0)
@@ -232,7 +232,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         private fun choHokYuetYamCitYiuMatch(text: String): List<ChoHokYuetYamCitYiu> {
                 val entries: MutableList<ChoHokYuetYamCitYiu> = mutableListOf()
                 val code = text.codePointAt(0)
-                val command = "SELECT * FROM chohoktable WHERE code = $code;"
+                val command = "SELECT * FROM chohok_table WHERE code = $code;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         // val code = cursor.getInt(0)
@@ -262,7 +262,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         private fun fetchChoHokHomophones(romanization: String): List<String> {
                 val homophones: MutableList<String> = mutableListOf()
-                val command = "SELECT word FROM chohoktable WHERE romanization = ? LIMIT 11;"
+                val command = "SELECT word FROM chohok_table WHERE romanization = ? LIMIT 11;"
                 val cursor = this.readableDatabase.rawQuery(command, arrayOf(romanization))
                 while (cursor.moveToNext()) {
                         val word = cursor.getString(0)
@@ -281,7 +281,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         private fun fanWanCuetYiuMatch(text: String): List<FanWanCuetYiu> {
                 val entries: MutableList<FanWanCuetYiu> = mutableListOf()
                 val code = text.codePointAt(0)
-                val command = "SELECT * FROM fanwantable WHERE code = $code;"
+                val command = "SELECT * FROM fanwan_table WHERE code = $code;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         // val code = cursor.getInt(0)
@@ -314,7 +314,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         private fun fetchFanWanHomophones(romanization: String): List<String> {
                 val homophones: MutableList<String> = mutableListOf()
-                val command = "SELECT word FROM fanwantable WHERE romanization = ? LIMIT 11;"
+                val command = "SELECT word FROM fanwan_table WHERE romanization = ? LIMIT 11;"
                 val cursor = this.readableDatabase.rawQuery(command, arrayOf(romanization))
                 while (cursor.moveToNext()) {
                         val word = cursor.getString(0)
@@ -333,7 +333,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         private fun gwongWanMatch(text: String): List<GwongWanCharacter> {
                 val entries: MutableList<GwongWanCharacter> = mutableListOf()
                 val code = text.codePointAt(0)
-                val command = "SELECT * FROM gwongwantable WHERE code = $code;"
+                val command = "SELECT * FROM gwongwan_table WHERE code = $code;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         // val code = cursor.getInt(0)
@@ -372,7 +372,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         private fun unihanDefinitionMatch(text: String): String? {
                 if (text.isEmpty()) return null
                 val code = text.codePointAt(0)
-                val command = "SELECT definition FROM definitiontable WHERE code = $code LIMIT 1;"
+                val command = "SELECT definition FROM definition_table WHERE code = $code LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 if (cursor.moveToFirst()) {
                         val definition = cursor.getString(0)
@@ -386,7 +386,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
 
         fun t2s(char: Char): String {
                 val code = char.code
-                val query = "SELECT simplified FROM t2stable WHERE traditional = $code LIMIT 1;"
+                val query = "SELECT right FROM variant_sim WHERE left = $code LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(query, null)
                 if (cursor.moveToFirst()) {
                         val simplifiedCode = cursor.getInt(0)
@@ -400,7 +400,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun canProcess(text: String): Boolean {
                 val value: Int = text.firstOrNull()?.intercode() ?: return false
                 val code: Int = if (value == 44) 29 else value // Replace 'y' with 'j'
-                val command = "SELECT rowid FROM lexicontable WHERE anchors = $code LIMIT 1;"
+                val command = "SELECT rowid FROM core_lexicon WHERE anchors = $code LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 if (cursor.moveToFirst()) {
                         cursor.close()
@@ -413,7 +413,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 val code = text.anchorsCode() ?: return emptyList()
                 val limitValue: Int = limit ?: 50
                 val candidates: MutableList<Candidate> = mutableListOf()
-                val command = "SELECT rowid, word, romanization FROM lexicontable WHERE anchors = $code LIMIT ${limitValue};"
+                val command = "SELECT rowid, word, romanization FROM core_lexicon WHERE anchors = $code LIMIT ${limitValue};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val order = cursor.getInt(0)
@@ -430,7 +430,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 val code: Int = text.hashCode()
                 val limitValue: Int = limit ?: -1
                 val candidates: MutableList<Candidate> = mutableListOf()
-                val command = "SELECT rowid, word, romanization FROM lexicontable WHERE ping = $code LIMIT ${limitValue};"
+                val command = "SELECT rowid, word, romanization FROM core_lexicon WHERE spell = $code LIMIT ${limitValue};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val order = cursor.getInt(0)
@@ -443,10 +443,10 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 cursor.close()
                 return candidates
         }
-        fun strictMatch(shortcut: Long, ping: Int, input: String, mark: String? = null, limit: Int? = null): List<Candidate> {
+        fun strictMatch(shortcut: Long, spell: Int, input: String, mark: String? = null, limit: Int? = null): List<Candidate> {
                 val candidates: MutableList<Candidate> = mutableListOf()
                 val limitValue: Int = limit ?: -1
-                val command = "SELECT rowid, word, romanization FROM lexicontable WHERE ping = $ping AND anchors = $shortcut LIMIT ${limitValue};"
+                val command = "SELECT rowid, word, romanization FROM core_lexicon WHERE spell = $spell AND anchors = $shortcut LIMIT ${limitValue};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val order = cursor.getInt(0)
@@ -462,7 +462,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun syllableMatch(text: String): SegmentToken? {
                 val code = text.charcode() ?: return null
                 var token: SegmentToken? = null
-                val command = "SELECT alias, origin FROM syllabletable WHERE aliascode = $code LIMIT 1;"
+                val command = "SELECT alias, origin FROM syllable_table WHERE alias_code = $code LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 if (cursor.moveToFirst()) {
                         val alias = cursor.getString(0)
@@ -475,7 +475,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun characterReverseLookup(text: String): List<String> {
                 if (text.length != 1) return emptyList()
                 val romanizations: MutableList<String> = mutableListOf()
-                val command = "SELECT romanization FROM lexicontable WHERE anchors < 50 AND word = ?;"
+                val command = "SELECT romanization FROM core_lexicon WHERE anchors < 50 AND word = ?;"
                 val cursor = this.readableDatabase.rawQuery(command, arrayOf(text))
                 while (cursor.moveToNext()) {
                         val romanization = cursor.getString(0)
@@ -487,7 +487,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun reverseLookup(text: String): List<String> {
                 if (text.isBlank()) return emptyList()
                 val romanizations: MutableList<String> = mutableListOf()
-                val command = "SELECT romanization FROM lexicontable WHERE word = ?;"
+                val command = "SELECT romanization FROM core_lexicon WHERE word = ?;"
                 val cursor = this.readableDatabase.rawQuery(command, arrayOf(text))
                 while (cursor.moveToNext()) {
                         val romanization = cursor.getString(0)
@@ -500,7 +500,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 if (text.isBlank()) return emptyList()
                 val candidates: MutableList<Candidate> = mutableListOf()
                 val code = text.hashCode()
-                val command = "SELECT word, romanization FROM structuretable WHERE ping = ${code};"
+                val command = "SELECT word, romanization FROM structure_table WHERE spell = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val word = cursor.getString(0)
@@ -513,7 +513,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         fun pinyinSyllableMatch(text: String): String? {
                 val code = text.charcode() ?: return null
-                val command = "SELECT syllable FROM pinyinsyllabletable WHERE code = $code LIMIT 1;"
+                val command = "SELECT syllable FROM pinyin_syllable_table WHERE code = $code LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 if (cursor.moveToFirst()) {
                         val syllable = cursor.getString(0)
@@ -528,7 +528,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 val code = text.charcode() ?: return emptyList()
                 val items: MutableList<PinyinLexicon> = mutableListOf()
                 val limitValue: Int = limit ?: 50
-                val command = "SELECT rowid, word, romanization FROM pinyintable WHERE anchors = $code LIMIT ${limitValue};"
+                val command = "SELECT rowid, word, romanization FROM pinyin_lexicon WHERE anchors = $code LIMIT ${limitValue};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
@@ -543,7 +543,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun pinyinMatch(text: String): List<PinyinLexicon> {
                 val items: MutableList<PinyinLexicon> = mutableListOf()
                 val code: Int = text.hashCode()
-                val command = "SELECT rowid, word, romanization FROM pinyintable WHERE ping = ${code};"
+                val command = "SELECT rowid, word, romanization FROM pinyin_lexicon WHERE spell = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
@@ -558,7 +558,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun cangjieMatch(version: Int, text: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
                 val code = text.charcode() ?: return emptyList()
-                val command = "SELECT rowid, word FROM cangjietable WHERE c${version}code = ${code};"
+                val command = "SELECT rowid, word FROM cangjie_table WHERE c${version}code = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
@@ -571,7 +571,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         fun cangjieGlob(version: Int, text: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
-                val command = "SELECT rowid, word, c${version}complex FROM cangjietable WHERE cangjie${version} GLOB '${text}*' ORDER BY c${version}complex ASC LIMIT 100;"
+                val command = "SELECT rowid, word, c${version}complex FROM cangjie_table WHERE cangjie${version} GLOB '${text}*' ORDER BY c${version}complex ASC LIMIT 100;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
@@ -586,7 +586,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun quickMatch(version: Int, text: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
                 val code = text.charcode() ?: return emptyList()
-                val command = "SELECT rowid, word FROM quicktable WHERE q${version}code = ${code};"
+                val command = "SELECT rowid, word FROM quick_table WHERE q${version}code = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
@@ -599,7 +599,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         fun quickGlob(version: Int, text: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
-                val command = "SELECT rowid, word, q${version}complex FROM quicktable WHERE quick${version} GLOB '${text}*' ORDER BY q${version}complex ASC LIMIT 100;"
+                val command = "SELECT rowid, word, q${version}complex FROM quick_table WHERE quick${version} GLOB '${text}*' ORDER BY q${version}complex ASC LIMIT 100;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
@@ -614,7 +614,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun strokeMatch(text: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
                 val code = text.hashCode()
-                val command = "SELECT rowid, word FROM stroketable WHERE ping = ${code};"
+                val command = "SELECT rowid, word FROM stroke_table WHERE spell = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
@@ -627,7 +627,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         fun strokeWildcardMatch(text: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
-                val command = "SELECT rowid, word, complex FROM stroketable WHERE stroke LIKE '${text}' LIMIT 100;"
+                val command = "SELECT rowid, word, complex FROM stroke_table WHERE stroke LIKE '${text}' LIMIT 100;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
@@ -641,7 +641,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         fun strokeGlob(text: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
-                val command = "SELECT rowid, word, complex FROM stroketable WHERE stroke GLOB '${text}*' ORDER BY complex ASC LIMIT 100;"
+                val command = "SELECT rowid, word, complex FROM stroke_table WHERE stroke GLOB '${text}*' ORDER BY complex ASC LIMIT 100;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
@@ -655,7 +655,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         fun symbolMatch(text: String, input: String): List<Candidate> {
                 val code = text.hashCode()
-                val command = "SELECT category, unicodeversion, codepoint, cantonese, romanization FROM symboltable WHERE ping = ${code};"
+                val command = "SELECT category, unicode_version, code_point, cantonese, romanization FROM symbol_table WHERE spell = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 val emojis: MutableList<Emoji> = mutableListOf()
                 while (cursor.moveToNext()) {
@@ -679,7 +679,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
         }
         private fun mapSkinTone(source: String): String? {
-                val command = "SELECT target FROM emojiskinmap WHERE source = ?;"
+                val command = "SELECT target FROM emoji_skin_map WHERE source = ?;"
                 val cursor = this.readableDatabase.rawQuery(command, arrayOf(source))
                 if (cursor.moveToFirst()) {
                         val target = cursor.getString(0)
@@ -691,7 +691,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
         }
         fun fetchDefaultFrequentEmojis(): List<Emoji> {
-                val command = "SELECT rowid, unicodeversion, codepoint, cantonese, romanization FROM symboltable WHERE category = 0"
+                val command = "SELECT rowid, unicode_version, code_point, cantonese, romanization FROM symbol_table WHERE category = 0"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 val emojis: MutableList<Emoji> = mutableListOf()
                 while (cursor.moveToNext()) {
@@ -709,7 +709,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return emojis
         }
         fun fetchEmojiSequence(): List<Emoji> {
-                val command = "SELECT rowid, category, unicodeversion, codepoint, cantonese, romanization FROM symboltable WHERE category > 0 AND category < 9"
+                val command = "SELECT rowid, category, unicode_version, code_point, cantonese, romanization FROM symbol_table WHERE category > 0 AND category < 9"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 val emojis: MutableList<Emoji> = mutableListOf()
                 while (cursor.moveToNext()) {
@@ -731,7 +731,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
 
         fun fetchTextMarks(input: String): List<Candidate> {
                 val code = input.hashCode()
-                val command = "SELECT mark FROM marktable WHERE ping = ${code};"
+                val command = "SELECT mark FROM mark_table WHERE spell = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 val textMarks: MutableList<String> = mutableListOf()
                 while (cursor.moveToNext()) {

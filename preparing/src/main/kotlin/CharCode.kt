@@ -8,10 +8,10 @@ val String.charCode: Long?
                 return codes.radix100Combined()
         }
 
-val String.tenKeyCharCode: Long?
+val String.nineKeyCharCode: Long?
         get() {
                 if (this.length >= 19) return null
-                val codes = this.mapNotNull { it.tenKenInterCode }
+                val codes = this.mapNotNull { it.nineKenInterCode }
                 if (codes.size != this.length) return null
                 return codes.decimalCombined()
         }
@@ -28,8 +28,8 @@ fun Iterable<Int>.decimalCombined(): Long {
 val Char.interCode: Int?
         get() = CharCode.letterCodeMap[this]
 
-val Char.tenKenInterCode: Int?
-        get() = CharCode.tenKeyCodeMap[this]
+val Char.nineKenInterCode: Int?
+        get() = CharCode.nineKeyCodeMap[this]
 
 private object CharCode {
         val letterCodeMap: HashMap<Char, Int> = hashMapOf(
@@ -60,7 +60,7 @@ private object CharCode {
                 'y' to 44,
                 'z' to 45,
         )
-        val tenKeyCodeMap: HashMap<Char, Int> = hashMapOf(
+        val nineKeyCodeMap: HashMap<Char, Int> = hashMapOf(
                 'a' to 2,
                 'b' to 2,
                 'c' to 2,

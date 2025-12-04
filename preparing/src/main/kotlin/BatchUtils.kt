@@ -3,6 +3,9 @@ package org.jyutping.preparing
 import java.sql.Connection
 import java.sql.PreparedStatement
 
+// Shared DB batch size to avoid overwhelming weak machines
+const val BATCH_SIZE: Int = 1000
+
 /**
  * Execute batched inserts with a shared BATCH_SIZE and transactional semantics.
  * Returns the number of rows inserted.

@@ -5,9 +5,9 @@ import java.io.InputStream
 data class TextMarkLexicon(
         val input: String,
         val mark: String,
-        val pingCode: Int,
+        val spellCode: Int,
         val charCode: Long,
-        val tenKeyCode: Long
+        val nineKeyCode: Long
 ) {
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true
@@ -28,10 +28,10 @@ data class TextMarkLexicon(
                         if (parts.count() != 2) error("bad line format: $text")
                         val input = parts[0]
                         val mark = parts[1]
-                        val pingCode = input.hashCode()
+                        val spellCode = input.hashCode()
                         val charCode = input.charCode ?: 0
-                        val tenKeyCode = input.tenKeyCharCode ?: 0
-                        return TextMarkLexicon(input = input, mark = mark, pingCode = pingCode, charCode = charCode, tenKeyCode = tenKeyCode)
+                        val nineKeyCode = input.nineKeyCharCode ?: 0
+                        return TextMarkLexicon(input = input, mark = mark, spellCode = spellCode, charCode = charCode, nineKeyCode = nineKeyCode)
                 }
         }
 }

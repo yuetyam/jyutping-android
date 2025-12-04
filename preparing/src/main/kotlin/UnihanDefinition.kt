@@ -3,16 +3,15 @@ package org.jyutping.preparing
 import java.io.InputStream
 import java.sql.Connection
 import java.sql.DriverManager
-import kotlin.streams.toList
 import kotlin.use
 
 object UnihanDefinition {
         fun generate(): List<Pair<Int, String>> {
                 val connection: Connection = DriverManager.getConnection("jdbc:sqlite::memory:")
-                val  createTableCommand: String = "CREATE TABLE definitiontable(word TEXT NOT NULL, definition TEXT NOT NULL);"
+                val  createTableCommand: String = "CREATE TABLE definition_table(word TEXT NOT NULL, definition TEXT NOT NULL);"
                 connection.createStatement().execute(createTableCommand)
 
-                val insertCommand: String = "INSERT INTO definitiontable (word, definition) VALUES (?, ?);"
+                val insertCommand: String = "INSERT INTO definition_table (word, definition) VALUES (?, ?);"
                 val strokeData = readDefinitionData()
                 println("Inserting ${strokeData.size} definition rows (temp DB)...")
                 val inserted = batchInsert(connection, insertCommand, strokeData) { statement, obj ->
@@ -20,14 +19,14 @@ object UnihanDefinition {
                         statement.setString(2, obj.second)
                 }
                 println("Inserted definition rows (temp DB): $inserted")
-                val createIndexCommand: String = "CREATE INDEX definitionwordindex ON definitiontable(word);"
+                val createIndexCommand: String = "CREATE INDEX ix_definition_word ON definition_table(word);"
                 connection.createStatement().execute(createIndexCommand)
 
                 val characters = fetchCharacters()
                 val pairs: MutableList<Pair<Int, String>> = mutableListOf()
                 connection.createStatement().use { statement ->
                         for (character in characters) {
-                                val queryCommand: String = "SELECT definition FROM definitiontable WHERE word = '${character}' LIMIT 1;"
+                                val queryCommand: String = "SELECT definition FROM definition_table WHERE word = '${character}' LIMIT 1;"
                                 val rs = statement.executeQuery(queryCommand)
                                 while (rs.next()) {
                                         val definition = rs.getString(1)

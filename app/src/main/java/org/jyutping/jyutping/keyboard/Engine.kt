@@ -327,7 +327,7 @@ object Engine {
                                         val pingCode = slice.joinToString(separator = PresetString.EMPTY) { it.origin }.hashCode()
                                         val input = slice.joinToString(separator = PresetString.EMPTY) { it.text }
                                         val mark = slice.joinToString(separator = PresetString.SPACE) { it.text }
-                                        val matched = db.strictMatch(shortcut = shortcutCode, ping = pingCode, input = input, mark = mark, limit = limit)
+                                        val matched = db.strictMatch(shortcut = shortcutCode, spell = pingCode, input = input, mark = mark, limit = limit)
                                         matches.add(matched)
                                 }
                         }
@@ -340,7 +340,7 @@ object Engine {
                                 val pingCode = scheme.joinToString(separator = PresetString.EMPTY) { it.origin }.hashCode()
                                 val input = scheme.joinToString(separator = PresetString.EMPTY) { it.text }
                                 val mark = scheme.joinToString(separator = PresetString.SPACE) { it.text }
-                                val matched = db.strictMatch(shortcut = shortcutCode, ping = pingCode, input = input, mark = mark, limit = limit)
+                                val matched = db.strictMatch(shortcut = shortcutCode, spell = pingCode, input = input, mark = mark, limit = limit)
                                 matches.add(matched)
                         }
                         return matches.flatten()

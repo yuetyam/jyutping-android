@@ -4,9 +4,9 @@ data class LexiconEntry(
         val word: String,
         val romanization: String,
         val anchors: Long,
-        val ping: Long,
-        val tenKeyAnchors: Long,
-        val tenKeyCode: Long,
+        val spell: Long,
+        val nineKeyAnchors: Long,
+        val nineKeyCode: Long,
 ) {
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true

@@ -7,7 +7,7 @@ import kotlin.use
 object AppDataPreparer {
         fun prepare(url: String) {
 
-                // Use LexiconTable instead
+                // Use core_lexicon table instead
                 // createJyutpingTable(url)
 
                 createCollocationTable(url)
@@ -17,29 +17,29 @@ object AppDataPreparer {
                 createChoHokTable(url)
                 createFanWanTable(url)
                 createGwongWanTable(url)
-                createIndies(url)
+                createIndexes(url)
         }
-        private fun createIndies(url: String) {
+        private fun createIndexes(url: String) {
                 val commands: List<String> = listOf(
-                        // "CREATE INDEX jyutpingwordindex ON jyutpingtable(word);",
-                        // "CREATE INDEX jyutpingromanizationindex ON jyutpingtable(romanization);",
+                        // "CREATE INDEX ix_jyutping_word ON jyutping_table(word);",
+                        // "CREATE INDEX ix_jyutping_romanization ON jyutping_table(romanization);",
 
-                        "CREATE INDEX collocationwordindex ON collocationtable(word);",
-                        "CREATE INDEX collocationromanizationindex ON collocationtable(romanization);",
+                        "CREATE INDEX ix_collocation_word ON collocation_table(word);",
+                        "CREATE INDEX ix_collocation_romanization ON collocation_table(romanization);",
 
-                        "CREATE INDEX dictionarywordindex ON dictionarytable(word);",
-                        "CREATE INDEX dictionaryromanizationindex ON dictionarytable(romanization);",
+                        "CREATE INDEX ix_dictionary_word ON dictionary_table(word);",
+                        "CREATE INDEX ix_dictionary_romanization ON dictionary_table(romanization);",
 
-                        "CREATE INDEX yingwaacodeindex ON yingwaatable(code);",
-                        "CREATE INDEX yingwaaromanizationindex ON yingwaatable(romanization);",
+                        "CREATE INDEX ix_yingwaa_code ON yingwaa_table(code);",
+                        "CREATE INDEX ix_yingwaa_romanization ON yingwaa_table(romanization);",
 
-                        "CREATE INDEX chohokcodeindex ON chohoktable(code);",
-                        "CREATE INDEX chohokromanizationindex ON chohoktable(romanization);",
+                        "CREATE INDEX ix_chohok_code ON chohok_table(code);",
+                        "CREATE INDEX ix_chohok_romanization ON chohok_table(romanization);",
 
-                        "CREATE INDEX fanwancodeindex ON fanwantable(code);",
-                        "CREATE INDEX fanwanromanizationindex ON fanwantable(romanization);",
+                        "CREATE INDEX ix_fanwan_code ON fanwan_table(code);",
+                        "CREATE INDEX ix_fanwan_romanization ON fanwan_table(romanization);",
 
-                        "CREATE INDEX gwongwancodeindex ON gwongwantable(code);",
+                        "CREATE INDEX ix_gwongwan_code ON gwongwan_table(code);",
                 )
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
@@ -48,11 +48,11 @@ object AppDataPreparer {
                         }
                 }
                 connection.close()
-                println("Successfully created app data indies.")
+                println("Successfully created app data indexes.")
         }
 
         private fun createJyutpingTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE jyutpingtable(word TEXT NOT NULL, romanization TEXT NOT NULL);"
+                val createTableCommand: String = "CREATE TABLE jyutping_table(word TEXT NOT NULL, romanization TEXT NOT NULL);"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
@@ -60,7 +60,7 @@ object AppDataPreparer {
                 println("Created jyutping table successfully.")
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("jyutping.txt") ?: error("Can not load jyutping.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val insertEntryCommand: String = "INSERT INTO jyutpingtable (word, romanization) VALUES (?, ?);"
+                val insertEntryCommand: String = "INSERT INTO jyutping_table (word, romanization) VALUES (?, ?);"
                 println("Inserting ${sourceLines.size} jyutping entries...")
                 val inserted = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
@@ -76,7 +76,7 @@ object AppDataPreparer {
         }
 
         private fun createCollocationTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE collocationtable(word TEXT NOT NULL, romanization TEXT NOT NULL, collocation TEXT NOT NULL);"
+                val createTableCommand: String = "CREATE TABLE collocation_table(word TEXT NOT NULL, romanization TEXT NOT NULL, collocation TEXT NOT NULL);"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
@@ -84,7 +84,7 @@ object AppDataPreparer {
                 println("Created collocation table successfully.")
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("collocation.txt") ?: error("Can not load collocation.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val insertEntryCommand: String = "INSERT INTO collocationtable (word, romanization, collocation) VALUES (?, ?, ?);"
+                val insertEntryCommand: String = "INSERT INTO collocation_table (word, romanization, collocation) VALUES (?, ?, ?);"
                 println("Inserting ${sourceLines.size} collocation entries...")
                 val insertedColl = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
@@ -102,7 +102,7 @@ object AppDataPreparer {
         }
 
         private fun createDictionaryTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE dictionarytable(word TEXT NOT NULL, romanization TEXT NOT NULL, description TEXT NOT NULL);"
+                val createTableCommand: String = "CREATE TABLE dictionary_table(word TEXT NOT NULL, romanization TEXT NOT NULL, description TEXT NOT NULL);"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
@@ -110,7 +110,7 @@ object AppDataPreparer {
                 println("Created dictionary table successfully.")
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("wordshk.txt") ?: error("Can not load wordshk.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val insertEntryCommand: String = "INSERT INTO dictionarytable (word, romanization, description) VALUES (?, ?, ?);"
+                val insertEntryCommand: String = "INSERT INTO dictionary_table (word, romanization, description) VALUES (?, ?, ?);"
                 println("Inserting ${sourceLines.size} dictionary entries...")
                 val insertedColl = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
@@ -128,14 +128,14 @@ object AppDataPreparer {
         }
 
         private fun createDefinitionTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE definitiontable(code INTEGER NOT NULL PRIMARY KEY, definition TEXT NOT NULL);"
+                val createTableCommand: String = "CREATE TABLE definition_table(code INTEGER NOT NULL PRIMARY KEY, definition TEXT NOT NULL);"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
                 }
                 println("Created definition table successfully.")
                 val entries = UnihanDefinition.generate()
-                val insertEntryCommand: String = "INSERT INTO definitiontable (code, definition) VALUES (?, ?);"
+                val insertEntryCommand: String = "INSERT INTO definition_table (code, definition) VALUES (?, ?);"
                 println("Inserting ${entries.size} definition entries...")
                 val insertedDef = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
                         statement.setInt(1, entry.first)
@@ -146,7 +146,7 @@ object AppDataPreparer {
         }
 
         private fun createYingWaaTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE yingwaatable(code INTEGER NOT NULL, word TEXT NOT NULL, romanization TEXT NOT NULL, pronunciation TEXT NOT NULL, pronunciationmark TEXT NOT NULL, interpretation TEXT NOT NULL);"
+                val createTableCommand: String = "CREATE TABLE yingwaa_table(code INTEGER NOT NULL, word TEXT NOT NULL, romanization TEXT NOT NULL, pronunciation TEXT NOT NULL, pronunciationmark TEXT NOT NULL, interpretation TEXT NOT NULL);"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
@@ -154,7 +154,7 @@ object AppDataPreparer {
                 println("Created yingwaa table successfully.")
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("yingwaa.txt") ?: error("Can not load yingwaa.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val insertEntryCommand: String = "INSERT INTO yingwaatable (code, word, romanization, pronunciation, pronunciationmark, interpretation) VALUES (?, ?, ?, ?, ?, ?);"
+                val insertEntryCommand: String = "INSERT INTO yingwaa_table (code, word, romanization, pronunciation, pronunciationmark, interpretation) VALUES (?, ?, ?, ?, ?, ?);"
                 println("Inserting ${sourceLines.size} yingwaa entries...")
                 val insertedYw = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
@@ -178,7 +178,7 @@ object AppDataPreparer {
         }
 
         private fun createChoHokTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE chohoktable(code INTEGER NOT NULL, word TEXT NOT NULL, romanization TEXT NOT NULL, initial TEXT NOT NULL, final TEXT NOT NULL, tone TEXT NOT NULL, faancit TEXT NOT NULL);"
+                val createTableCommand: String = "CREATE TABLE chohok_table(code INTEGER NOT NULL, word TEXT NOT NULL, romanization TEXT NOT NULL, initial TEXT NOT NULL, final TEXT NOT NULL, tone TEXT NOT NULL, faancit TEXT NOT NULL);"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
@@ -186,7 +186,7 @@ object AppDataPreparer {
                 println("Created chohok table successfully.")
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("chohok.txt") ?: error("Can not load chohok.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val insertEntryCommand: String = "INSERT INTO chohoktable (code, word, romanization, initial, final, tone, faancit) VALUES (?, ?, ?, ?, ?, ?, ?);"
+                val insertEntryCommand: String = "INSERT INTO chohok_table (code, word, romanization, initial, final, tone, faancit) VALUES (?, ?, ?, ?, ?, ?, ?);"
                 println("Inserting ${sourceLines.size} chohok entries...")
                 val insertedCh = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
@@ -212,7 +212,7 @@ object AppDataPreparer {
         }
 
         private fun createFanWanTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE fanwantable(code INTEGER NOT NULL, word TEXT NOT NULL, romanization TEXT NOT NULL, initial TEXT NOT NULL, final TEXT NOT NULL, yamyeung TEXT NOT NULL, tone TEXT NOT NULL, rhyme TEXT NOT NULL, interpretation TEXT NOT NULL);"
+                val createTableCommand: String = "CREATE TABLE fanwan_table(code INTEGER NOT NULL, word TEXT NOT NULL, romanization TEXT NOT NULL, initial TEXT NOT NULL, final TEXT NOT NULL, yamyeung TEXT NOT NULL, tone TEXT NOT NULL, rhyme TEXT NOT NULL, interpretation TEXT NOT NULL);"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
@@ -220,7 +220,7 @@ object AppDataPreparer {
                 println("Created fanwan table successfully.")
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("fanwan.txt") ?: error("Can not load fanwan.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val insertEntryCommand: String = "INSERT INTO fanwantable (code, word, romanization, initial, final, yamyeung, tone, rhyme, interpretation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
+                val insertEntryCommand: String = "INSERT INTO fanwan_table (code, word, romanization, initial, final, yamyeung, tone, rhyme, interpretation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
                 println("Inserting ${sourceLines.size} fanwan entries...")
                 val insertedFan = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
@@ -250,7 +250,7 @@ object AppDataPreparer {
         }
 
         private fun createGwongWanTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE gwongwantable(code INTEGER NOT NULL, word TEXT NOT NULL, rhyme TEXT NOT NULL, subrhyme TEXT NOT NULL, subrhymeserial INTEGER NOT NULL, subrhymenumber INTEGER NOT NULL, upper TEXT NOT NULL, lower TEXT NOT NULL, initial TEXT NOT NULL, rounding TEXT NOT NULL, division TEXT NOT NULL, rhymeclass TEXT NOT NULL, repeating TEXT NOT NULL, tone TEXT NOT NULL, interpretation TEXT NOT NULL);"
+                val createTableCommand: String = "CREATE TABLE gwongwan_table(code INTEGER NOT NULL, word TEXT NOT NULL, rhyme TEXT NOT NULL, subrhyme TEXT NOT NULL, subrhymeserial INTEGER NOT NULL, subrhymenumber INTEGER NOT NULL, upper TEXT NOT NULL, lower TEXT NOT NULL, initial TEXT NOT NULL, rounding TEXT NOT NULL, division TEXT NOT NULL, rhymeclass TEXT NOT NULL, repeating TEXT NOT NULL, tone TEXT NOT NULL, interpretation TEXT NOT NULL);"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
@@ -258,7 +258,7 @@ object AppDataPreparer {
                 println("Created gwongwan table successfully.")
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("gwongwan.txt") ?: error("Can not load gwongwan.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val insertEntryCommand: String = "INSERT INTO gwongwantable (code, word, rhyme, subrhyme, subrhymeserial, subrhymenumber, upper, lower, initial, rounding, division, rhymeclass, repeating, tone, interpretation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?);"
+                val insertEntryCommand: String = "INSERT INTO gwongwan_table (code, word, rhyme, subrhyme, subrhymeserial, subrhymenumber, upper, lower, initial, rounding, division, rhymeclass, repeating, tone, interpretation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?);"
                 println("Inserting ${sourceLines.size} gwongwan entries...")
                 val insertedGw = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
