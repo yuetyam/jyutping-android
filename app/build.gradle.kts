@@ -12,8 +12,8 @@ android {
                 applicationId = "org.jyutping.jyutping"
                 minSdk = 29
                 targetSdk = 36
-                versionCode = 48
-                versionName = "0.48.0"
+                versionCode = 49
+                versionName = "0.49.0"
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 vectorDrawables.useSupportLibrary = true
         }
@@ -52,10 +52,10 @@ java {
         }
 }
 
-val composeVersion = "1.9.5"
+val composeVersion = "1.10.0"
 dependencies {
-        implementation("androidx.activity:activity-compose:1.12.0")
-        implementation("androidx.activity:activity-ktx:1.12.0")
+        implementation("androidx.activity:activity-compose:1.12.1")
+        implementation("androidx.activity:activity-ktx:1.12.1")
         implementation("androidx.compose.material:material-icons-extended:1.7.8")
         implementation("androidx.compose.material3:material3:1.4.0")
         implementation("androidx.compose.ui:ui:$composeVersion")
