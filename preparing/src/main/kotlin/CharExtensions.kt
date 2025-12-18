@@ -32,7 +32,12 @@ val Char.isApostrophe: Boolean
 val Char.isReverseLookupTrigger: Boolean
         get() = PresetCharacter.reverseLookupTriggers.contains(this)
 
-/** is CJKV character Unicode code point */
+
+/** ideographic or supplemental CJKV code point */
+val Int.isGenericCJKVCodePoint: Boolean
+        get() = (this.isIdeographicCodePoint || this.isSupplementalCJKVCodePoint)
+
+/** CJKV character Unicode code point */
 val Int.isIdeographicCodePoint: Boolean
         get() = when (this) {
                 0x3007 -> true
@@ -50,8 +55,20 @@ val Int.isIdeographicCodePoint: Boolean
                 else -> false
         }
 
+/** CJKV supplemental code point */
+val Int.isSupplementalCJKVCodePoint: Boolean
+        get() = when (this) {
+                in 0x2E80..0x2E99 -> true
+                in 0x2E9B..0x2EF3 -> true
+                in 0x2F00..0x2FD5 -> true
+                in 0xF900..0xFA6D -> true
+                in 0xFA70..0xFAD9 -> true
+                in 0x2F800..0x2FA1D -> true
+                else -> false
+        }
+
 /*
-U+3007: 〇
+U+3007: Character Zero
 U+4E00-U+9FFF: CJK Unified Ideographs
 U+3400-U+4DBF: CJK Unified Ideographs Extension A
 U+20000-U+2A6DF: CJK Unified Ideographs Extension B
@@ -64,3 +81,13 @@ U+31350-U+323AF: CJK Unified Ideographs Extension H
 U+2EBF0-U+2EE5F: CJK Unified Ideographs Extension I
 U+323B0-U+33479: CJK Unified Ideographs Extension J
 */
+
+/*
+U+2E80-U+2E99: CJK Radicals Supplement
+U+2E9B-U+2EF3: CJK Radicals Supplement
+U+2F00-U+2FD5: Kangxi Radicals
+U+F900-U+FA6D: CJK Compatibility Ideographs
+U+FA70-U+FAD9: CJK Compatibility Ideographs
+U+2F800-U+2FA1D: CJK Compatibility Ideographs Supplement
+*/
+

@@ -31,10 +31,10 @@ object CharacterVariant {
                         1 -> {
                                 val leftCharCodePoint = leftText.codePointAt(0)
                                 val rightCharCodePoint = rightText.codePointAt(0)
-                                if (leftCharCodePoint.isIdeographicCodePoint.negative) {
+                                if (leftCharCodePoint.isGenericCJKVCodePoint.negative) {
                                         return emptyList()
                                 }
-                                if (rightCharCodePoint.isIdeographicCodePoint.negative) {
+                                if (rightCharCodePoint.isGenericCJKVCodePoint.negative) {
                                         return emptyList()
                                 }
                                 if (leftCharCodePoint == rightCharCodePoint) {
@@ -44,13 +44,13 @@ object CharacterVariant {
                         }
                         else -> {
                                 val leftCharCodePoint = leftText.codePointAt(0)
-                                if (leftCharCodePoint.isIdeographicCodePoint.negative) {
+                                if (leftCharCodePoint.isGenericCJKVCodePoint.negative) {
                                         return emptyList()
                                 }
                                 val rightComponents = rightText.split(" ").map { it.trim() }
                                 return rightComponents.mapNotNull { text ->
                                         val codePoint = text.codePointAt(0)
-                                        if (codePoint.isIdeographicCodePoint) {
+                                        if (codePoint.isGenericCJKVCodePoint) {
                                                 VariantMap(left = leftCharCodePoint, right = codePoint)
                                         } else {
                                                 null
