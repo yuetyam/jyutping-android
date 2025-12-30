@@ -1,7 +1,5 @@
 package org.jyutping.jyutping.models
 
-import org.jyutping.jyutping.extensions.virtualInputCode
-
 typealias VirtualInputKey = InputKeyEvent
 
 /**
@@ -142,7 +140,7 @@ data class InputKeyEvent(
                         return alphabetSet.firstOrNull { it.code == code } ?: digitSet.firstOrNull { it.code == code }
                 }
                 fun matchVirtualInputKey(char: Char): InputKeyEvent? {
-                        val code = char.virtualInputCode ?: return null
+                        val code = char.interCode ?: return null
                         return alphabetSet.firstOrNull { it.code == code } ?: digitSet.firstOrNull { it.code == code }
                 }
         }

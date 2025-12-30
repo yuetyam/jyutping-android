@@ -1,6 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
-import org.jyutping.jyutping.extensions.anchorsCode
+import org.jyutping.jyutping.models.anchorsCode
 import org.jyutping.jyutping.extensions.isApostrophe
 import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetString

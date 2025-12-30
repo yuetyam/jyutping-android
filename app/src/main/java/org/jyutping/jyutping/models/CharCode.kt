@@ -1,14 +1,14 @@
-package org.jyutping.jyutping.extensions
+package org.jyutping.jyutping.models
 
-fun String.charcode(): Long? {
+fun String.charCode(): Long? {
         if (this.length >= 10) return null
-        val codes = this.mapNotNull { it.intercode() }
+        val codes = this.mapNotNull { it.interCode }
         if (codes.size != this.length) return null
         return codes.radix100Combined()
 }
 fun String.anchorsCode(): Long? {
         if (this.length >= 10) return null
-        val codes = this.mapNotNull { it.intercode() }
+        val codes = this.mapNotNull { it.interCode }
         if (codes.size != this.length) return null
         val code = codes
                 .map { if (it == 44) 29 else it } // Replace 'y' with 'j'
@@ -17,7 +17,7 @@ fun String.anchorsCode(): Long? {
 }
 fun Iterable<Char>.anchorsCode(): Long? {
         if (this.count() >= 10) return null
-        val codes = this.mapNotNull { it.intercode() }
+        val codes = this.mapNotNull { it.interCode }
         if (codes.size != this.count()) return null
         val code = codes
                 .map { if (it == 44) 29 else it } // Replace 'y' with 'j'
@@ -29,9 +29,7 @@ fun Iterable<Int>.radix100Combined(): Long {
         return this.fold(0) { acc, i -> acc * 100 + i }
 }
 
-fun Char.intercode(): Int? = CharCode.letterCodeMap[this]
-
-val Char.virtualInputCode: Int?
+val Char.interCode: Int?
         get() = CharCode.letterCodeMap[this] ?: CharCode.numberCodeMap[this]
 
 private object CharCode {

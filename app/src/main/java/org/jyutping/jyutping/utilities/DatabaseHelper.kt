@@ -5,17 +5,17 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import org.jyutping.jyutping.emoji.Emoji
 import org.jyutping.jyutping.emoji.EmojiCategory
-import org.jyutping.jyutping.extensions.charcode
+import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.extensions.generateSymbol
-import org.jyutping.jyutping.extensions.intercode
-import org.jyutping.jyutping.extensions.anchorsCode
-import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.isIdeographicCodePoint
 import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.CandidateType
 import org.jyutping.jyutping.keyboard.SegmentToken
 import org.jyutping.jyutping.keyboard.ShapeLexicon
+import org.jyutping.jyutping.models.anchorsCode
+import org.jyutping.jyutping.models.charCode
+import org.jyutping.jyutping.models.interCode
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.search.CantoneseLexicon
 import org.jyutping.jyutping.search.ChoHokYuetYamCitYiu
@@ -398,7 +398,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
 
         fun canProcess(text: String): Boolean {
-                val value: Int = text.firstOrNull()?.intercode() ?: return false
+                val value: Int = text.firstOrNull()?.interCode ?: return false
                 val code: Int = if (value == 44) 29 else value // Replace 'y' with 'j'
                 val command = "SELECT rowid FROM core_lexicon WHERE anchors = $code LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
@@ -460,7 +460,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return candidates
         }
         fun syllableMatch(text: String): SegmentToken? {
-                val code = text.charcode() ?: return null
+                val code = text.charCode() ?: return null
                 var token: SegmentToken? = null
                 val command = "SELECT alias, origin FROM syllable_table WHERE alias_code = $code LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
@@ -512,7 +512,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return candidates
         }
         fun pinyinSyllableMatch(text: String): String? {
-                val code = text.charcode() ?: return null
+                val code = text.charCode() ?: return null
                 val command = "SELECT syllable FROM pinyin_syllable_table WHERE code = $code LIMIT 1;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 if (cursor.moveToFirst()) {
@@ -525,7 +525,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
         }
         fun pinyinShortcut(text: String, limit: Int? = null): List<PinyinLexicon> {
-                val code = text.charcode() ?: return emptyList()
+                val code = text.charCode() ?: return emptyList()
                 val items: MutableList<PinyinLexicon> = mutableListOf()
                 val limitValue: Int = limit ?: 50
                 val command = "SELECT rowid, word, romanization FROM pinyin_lexicon WHERE anchors = $code LIMIT ${limitValue};"
@@ -557,7 +557,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         fun cangjieMatch(version: Int, text: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
-                val code = text.charcode() ?: return emptyList()
+                val code = text.charCode() ?: return emptyList()
                 val command = "SELECT rowid, word FROM cangjie_table WHERE c${version}code = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
@@ -585,7 +585,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         }
         fun quickMatch(version: Int, text: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
-                val code = text.charcode() ?: return emptyList()
+                val code = text.charCode() ?: return emptyList()
                 val command = "SELECT rowid, word FROM quick_table WHERE q${version}code = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
