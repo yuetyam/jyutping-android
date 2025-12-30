@@ -4,10 +4,13 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import org.jyutping.jyutping.UserSettingsKey
+import org.jyutping.jyutping.extensions.isCantoneseToneDigit
 import org.jyutping.jyutping.keyboard.Candidate
-import org.jyutping.jyutping.keyboard.Segmentation
-import org.jyutping.jyutping.keyboard.length
-import org.jyutping.jyutping.presets.PresetString
+import org.jyutping.jyutping.models.NewSegmentation
+import org.jyutping.jyutping.models.length
+import org.jyutping.jyutping.models.mark
+import org.jyutping.jyutping.models.originText
+import org.jyutping.jyutping.models.syllableText
 
 class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettingsKey.UserLexiconDatabaseFileName, null, 3) {
 
@@ -70,23 +73,21 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                 this.writableDatabase.execSQL(command)
         }
 
-        fun suggest(text: String, segmentation: Segmentation): List<Candidate> {
+        fun suggest(text: String, segmentation: NewSegmentation): List<Candidate> {
                 val matches = query(text = text, input = text, isShortcut = false)
                 val shortcuts = query(text = text, input = text, mark = text, isShortcut = true)
                 val textLength = text.length
-                val schemes = segmentation.filter { it.length() == textLength }
+                val schemes = segmentation.filter { it.length == textLength }
                 if (schemes.isEmpty()) return matches + shortcuts
-                val searches: MutableList<List<Candidate>> = mutableListOf()
-                for (scheme in schemes) {
-                        val pingText = scheme.joinToString(separator = PresetString.EMPTY) { it.origin }
-                        val matched = query(text = pingText, input = text, isShortcut = false)
-                        if (matched.isEmpty()) continue
-                        val text2mark = scheme.joinToString(separator = PresetString.SPACE) { it.text }
-                        val syllables = scheme.joinToString(separator = PresetString.SPACE) { it.origin }
-                        val transformed = matched.filter { it.mark == syllables }.map { Candidate(text = it.text, romanization = it.romanization, input = it.input, mark = text2mark) }
-                        searches.add(transformed)
+                val searches = schemes.flatMap { scheme ->
+                        val matched = query(text = scheme.originText, input = text, isShortcut = false)
+                        if (matched.isEmpty()) return@flatMap emptyList()
+                        val mark = scheme.mark
+                        val syllableText = scheme.syllableText
+                        val transformed = matched.mapNotNull { if (it.mark == syllableText) Candidate(text = it.text, romanization = it.romanization, input = text, mark = mark) else null }
+                        return@flatMap transformed
                 }
-                return matches + shortcuts + searches.flatten()
+                return matches + shortcuts + searches
         }
         private fun query(text: String, input: String, mark: String? = null, isShortcut: Boolean): List<Candidate> {
                 val candidates: MutableList<Candidate> = mutableListOf()
@@ -97,7 +98,7 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                 while (cursor.moveToNext()) {
                         val word = cursor.getString(0)
                         val romanization = cursor.getString(1)
-                        val markText: String = mark ?: romanization.filterNot { it.isDigit() }
+                        val markText: String = mark ?: romanization.filterNot { it.isCantoneseToneDigit }
                         val instance = Candidate(text = word, romanization = romanization, input = input, mark = markText)
                         candidates.add(instance)
                 }

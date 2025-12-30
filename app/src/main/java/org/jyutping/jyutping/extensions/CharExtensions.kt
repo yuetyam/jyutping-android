@@ -22,9 +22,13 @@ val Char.isBasicDigit: Boolean
 val Char.isCantoneseToneDigit: Boolean
         get() = (this in '1'..'6')
 
-/* Is not BasicLatinLetter */
+/** Is not BasicLatinLetter */
 val Char.isNotLetter: Boolean
         get() = this.isBasicLatinLetter.negative
+
+/** U+0020 */
+val Char.isSpace: Boolean
+        get() = (this == PresetCharacter.SPACE)
 
 /** U+0027. Separator; Delimiter; Quote */
 val Char.isApostrophe: Boolean

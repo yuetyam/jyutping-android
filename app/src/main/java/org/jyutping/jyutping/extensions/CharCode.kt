@@ -31,8 +31,11 @@ fun Iterable<Int>.radix100Combined(): Long {
 
 fun Char.intercode(): Int? = CharCode.letterCodeMap[this]
 
+val Char.virtualInputCode: Int?
+        get() = CharCode.letterCodeMap[this] ?: CharCode.numberCodeMap[this]
+
 private object CharCode {
-        val letterCodeMap: HashMap<Char, Int> = hashMapOf(
+        val letterCodeMap: Map<Char, Int> = mapOf(
                 'a' to 20,
                 'b' to 21,
                 'c' to 22,
@@ -58,6 +61,18 @@ private object CharCode {
                 'w' to 42,
                 'x' to 43,
                 'y' to 44,
-                'z' to 45,
+                'z' to 45
+        )
+        val numberCodeMap: Map<Char, Int> = mapOf(
+                '0' to 10,
+                '1' to 11,
+                '2' to 12,
+                '3' to 13,
+                '4' to 14,
+                '5' to 15,
+                '6' to 16,
+                '7' to 17,
+                '8' to 18,
+                '9' to 19
         )
 }

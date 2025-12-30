@@ -28,7 +28,7 @@ fun String.markFormatted(): String {
         for (index in indices) {
                 val character = this[index]
                 result += character
-                if (character.isBasicLatinLetter.negative && index < lastIndex) {
+                if (character.isLowercaseBasicLatinLetter.negative && index < lastIndex) {
                         result += PresetCharacter.SPACE
                 }
         }

@@ -38,8 +38,6 @@ import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.extensions.convertedT2S
 import org.jyutping.jyutping.extensions.formattedCodePointText
 import org.jyutping.jyutping.extensions.generateSymbol
-import org.jyutping.jyutping.extensions.isNotLetter
-import org.jyutping.jyutping.extensions.isReverseLookupTrigger
 import org.jyutping.jyutping.extensions.markFormatted
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.extensions.toneConverted
@@ -48,7 +46,6 @@ import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.Cangjie
 import org.jyutping.jyutping.keyboard.CangjieVariant
 import org.jyutping.jyutping.keyboard.CommentStyle
-import org.jyutping.jyutping.keyboard.Engine
 import org.jyutping.jyutping.keyboard.ExtraBottomPadding
 import org.jyutping.jyutping.models.InputMethodMode
 import org.jyutping.jyutping.models.KeyboardCase
@@ -67,9 +64,14 @@ import org.jyutping.jyutping.keyboard.Stroke
 import org.jyutping.jyutping.keyboard.Structure
 import org.jyutping.jyutping.keyboard.length
 import org.jyutping.jyutping.keyboard.transformed
+import org.jyutping.jyutping.models.BasicInputEvent
+import org.jyutping.jyutping.models.Converter
 import org.jyutping.jyutping.models.InputKeyEvent
+import org.jyutping.jyutping.models.Researcher
+import org.jyutping.jyutping.models.Segmenter
+import org.jyutping.jyutping.models.VirtualInputKey
+import org.jyutping.jyutping.models.searchSymbols
 import org.jyutping.jyutping.presets.AltPresetColor
-import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.presets.PresetString
@@ -78,6 +80,7 @@ import org.jyutping.jyutping.utilities.DatabasePreparer
 import org.jyutping.jyutping.utilities.ShapeKeyMap
 import org.jyutping.jyutping.utilities.UserLexiconHelper
 import kotlin.math.roundToInt
+import kotlin.properties.Delegates
 
 class JyutpingInputMethodService: LifecycleInputMethodService(),
         ViewModelStoreOwner,
@@ -199,8 +202,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         selectedCandidates.clear()
                 }
                 if (isBuffering.value) {
-                        currentInputConnection.commitText(bufferText, 1)
-                        bufferText = PresetString.EMPTY
+                        val text = joinedBufferTexts()
+                        currentInputConnection.commitText(text, 1)
+                        clearBuffer()
                 }
                 if (candidates.value.isNotEmpty()) {
                         candidates.value = emptyList()
@@ -353,8 +357,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 if (isBuffering.value) {
                         val shouldKeepBuffer: Boolean = (destination == KeyboardForm.Alphabetic) || (destination == KeyboardForm.CandidateBoard)
                         if (shouldKeepBuffer.not()) {
-                                currentInputConnection.commitText(bufferText, 1)
-                                bufferText = PresetString.EMPTY
+                                val text = joinedBufferTexts()
+                                currentInputConnection.commitText(text, 1)
+                                clearBuffer()
                         }
                 }
                 if (destination == KeyboardForm.EditingPanel) {
@@ -652,170 +657,185 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         val candidateState: MutableStateFlow<Int> by lazy { MutableStateFlow(1) }
         val candidates: MutableStateFlow<List<Candidate>> by lazy { MutableStateFlow(listOf()) }
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.DATABASE_NAME) }
-        private var bufferText: String = PresetString.EMPTY
-                set(value) {
-                        candidates.value = emptyList()
-                        candidateOffset.value = 0 // Reset offset when candidates change
-                        field = value
-                        when (value.firstOrNull()) {
-                                null -> {
-                                        currentInputConnection.setComposingText(PresetString.EMPTY, 1)
-                                        currentInputConnection.finishComposingText()
-                                        if (isBuffering.value) {
-                                                if (isInputMemoryOn.value && selectedCandidates.isNotEmpty()) {
-                                                        userDB.process(selectedCandidates)
-                                                }
-                                                selectedCandidates.clear()
-                                                isBuffering.value = false
+
+        private var bufferEvents: List<BasicInputEvent> by Delegates.observable(emptyList()) { _, _, newValue ->
+                candidates.value = emptyList()
+                candidateOffset.value = 0
+                when (newValue.firstOrNull()?.key) {
+                        null -> {
+                                currentInputConnection.setComposingText(PresetString.EMPTY, 1)
+                                currentInputConnection.finishComposingText()
+                                if (isBuffering.value) {
+                                        if (isInputMemoryOn.value && selectedCandidates.isNotEmpty()) {
+                                                userDB.process(selectedCandidates)
                                         }
-                                        if (keyboardForm.value == KeyboardForm.CandidateBoard) {
-                                                transformTo(KeyboardForm.Alphabetic)
-                                        }
-                                        val newForm: QwertyForm = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Jyutping
-                                        updateQwertyForm(newForm)
+                                        selectedCandidates.clear()
+                                        isBuffering.value = false
                                 }
-                                'r' -> {
-                                        updateQwertyForm(QwertyForm.Pinyin)
-                                        if (value.length < 2) {
-                                                currentInputConnection.setComposingText(value, 1)
-                                        } else {
-                                                val text = value.drop(1)
-                                                val segmentation = PinyinSegmentor.segment(text, db)
-                                                val suggestions = Pinyin.reverseLookup(text, segmentation, db)
-                                                val tailMark: String = run {
-                                                        val firstCandidate = suggestions.firstOrNull()
-                                                        if (firstCandidate != null && firstCandidate.inputCount == text.length) {
-                                                                firstCandidate.mark
-                                                        } else {
-                                                                val bestScheme = segmentation.firstOrNull()
-                                                                val leadingLength: Int = bestScheme?.map { it.length }?.fold(0) { acc, i -> acc + i } ?: 0
-                                                                val leadingText: String = bestScheme?.joinToString(separator = PresetString.SPACE) ?: PresetString.EMPTY
-                                                                when (leadingLength) {
-                                                                        0 -> text
-                                                                        text.length -> leadingText
-                                                                        else -> (leadingText + PresetString.SPACE + text.drop(leadingLength))
-                                                                }
-                                                        }
-                                                }
-                                                val mark = "r $tailMark"
-                                                currentInputConnection.setComposingText(mark, 1)
-                                                candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
-                                        }
-                                        if (isBuffering.value.not()) {
-                                                isBuffering.value = true
-                                        }
+                                if (keyboardForm.value == KeyboardForm.CandidateBoard) {
+                                        transformTo(KeyboardForm.Alphabetic)
                                 }
-                                'v' -> {
-                                        updateQwertyForm(QwertyForm.Cangjie)
-                                        if (value.length < 2) {
-                                                currentInputConnection.setComposingText(value, 1)
-                                        } else {
-                                                val text = value.drop(1)
-                                                val converted = text.mapNotNull { ShapeKeyMap.cangjieCode(it.toString()) }
-                                                val isValidSequence: Boolean = converted.isNotEmpty() && (converted.size == text.count())
-                                                if (isValidSequence) {
-                                                        val mark = converted.joinToString(separator = PresetString.EMPTY)
-                                                        currentInputConnection.setComposingText(mark, 1)
-                                                        val suggestions = Cangjie.reverseLookup(text, cangjieVariant.value, db)
-                                                        candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
+                                val newForm: QwertyForm = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Jyutping
+                                updateQwertyForm(newForm)
+                        }
+                        VirtualInputKey.letterR -> {
+                                updateQwertyForm(QwertyForm.Pinyin)
+                                val inputText = joinedBufferTexts()
+                                if (inputText.length < 2) {
+                                        currentInputConnection.setComposingText(inputText, 1)
+                                } else {
+                                        val text = inputText.drop(1)
+                                        val segmentation = PinyinSegmentor.segment(text, db)
+                                        val suggestions = Pinyin.reverseLookup(text, segmentation, db)
+                                        val tailMark: String = run {
+                                                val firstCandidate = suggestions.firstOrNull()
+                                                if (firstCandidate != null && firstCandidate.inputCount == text.length) {
+                                                        firstCandidate.mark
                                                 } else {
-                                                        currentInputConnection.setComposingText(bufferText, 1)
-                                                }
-                                        }
-                                        if (isBuffering.value.not()) {
-                                                isBuffering.value = true
-                                        }
-                                }
-                                'x' -> {
-                                        updateQwertyForm(QwertyForm.Stroke)
-                                        if (value.length < 2) {
-                                                currentInputConnection.setComposingText(value, 1)
-                                        } else {
-                                                val text = value.drop(1)
-                                                val transformed = ShapeKeyMap.strokeTransform(text)
-                                                val converted = transformed.mapNotNull { ShapeKeyMap.strokeCode(it) }
-                                                val isValidSequence: Boolean = converted.isNotEmpty() && (converted.size == text.length)
-                                                if (isValidSequence) {
-                                                        val mark = converted.joinToString(separator = PresetString.EMPTY)
-                                                        currentInputConnection.setComposingText(mark, 1)
-                                                        val suggestions = Stroke.reverseLookup(transformed, db)
-                                                        candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
-                                                } else {
-                                                        currentInputConnection.setComposingText(bufferText, 1)
-                                                }
-                                        }
-                                        if (isBuffering.value.not()) {
-                                                isBuffering.value = true
-                                        }
-                                }
-                                'q' -> {
-                                        if (value.length < 2) {
-                                                currentInputConnection.setComposingText(value, 1)
-                                        } else {
-                                                val text = value.drop(1)
-                                                val segmentation = Segmentor.segment(text, db)
-                                                val tailMark: String = run {
                                                         val bestScheme = segmentation.firstOrNull()
-                                                        val leadingLength: Int = bestScheme?.length() ?: 0
-                                                        val leadingText: String = bestScheme?.joinToString(separator = PresetString.SPACE) { it.text } ?: PresetString.EMPTY
+                                                        val leadingLength: Int = bestScheme?.map { it.length }?.fold(0) { acc, i -> acc + i } ?: 0
+                                                        val leadingText: String = bestScheme?.joinToString(separator = PresetString.SPACE) ?: PresetString.EMPTY
                                                         when (leadingLength) {
                                                                 0 -> text
                                                                 text.length -> leadingText
                                                                 else -> (leadingText + PresetString.SPACE + text.drop(leadingLength))
                                                         }
                                                 }
-                                                val mark = "q $tailMark"
-                                                currentInputConnection.setComposingText(mark, 1)
-                                                val suggestions = Structure.reverseLookup(text, segmentation, db)
-                                                candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
                                         }
-                                        if (isBuffering.value.not()) {
-                                                isBuffering.value = true
-                                        }
-                                }
-                                else -> {
-                                        val processingText: String = value.toneConverted()
-                                        val segmentation = Segmentor.segment(processingText, db)
-                                        val userLexiconSuggestions: List<Candidate> = if (isInputMemoryOn.value) userDB.suggest(text = processingText, segmentation = segmentation) else emptyList()
-                                        val needsSymbols: Boolean = isEmojiSuggestionsOn.value && selectedCandidates.isEmpty()
-                                        val asap: Boolean = userLexiconSuggestions.isNotEmpty()
-                                        val suggestions = Engine.suggest(origin = value, text = processingText, segmentation = segmentation, db = db, needsSymbols = needsSymbols, asap = asap)
-                                        val mark: String = userLexiconSuggestions.firstOrNull()?.mark
-                                                ?: if (processingText.any { it.isNotLetter }) {
-                                                        processingText.markFormatted()
-                                                } else {
-                                                        val firstCandidate = suggestions.firstOrNull()
-                                                        if (firstCandidate != null && firstCandidate.inputCount == processingText.length) firstCandidate.mark else processingText
-                                                }
+                                        val mark = "r $tailMark"
                                         currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = (userLexiconSuggestions + suggestions).map { it.transformed(characterStandard.value, db) }.distinct()
-                                        if (isBuffering.value.not()) {
-                                                isBuffering.value = true
-                                        }
+                                        candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
+                                }
+                                if (isBuffering.value.not()) {
+                                        isBuffering.value = true
                                 }
                         }
-                        candidateState.value += 1
-                        updateSpaceKeyForm()
-                        updateReturnKeyForm()
+                        VirtualInputKey.letterV -> {
+                                updateQwertyForm(QwertyForm.Cangjie)
+                                val inputText = joinedBufferTexts()
+                                if (inputText.length < 2) {
+                                        currentInputConnection.setComposingText(inputText, 1)
+                                } else {
+                                        val text = inputText.drop(1)
+                                        val converted = text.mapNotNull { ShapeKeyMap.cangjieCode(it.toString()) }
+                                        val isValidSequence: Boolean = converted.isNotEmpty() && (converted.size == text.count())
+                                        if (isValidSequence) {
+                                                val mark = converted.joinToString(separator = PresetString.EMPTY)
+                                                currentInputConnection.setComposingText(mark, 1)
+                                                val suggestions = Cangjie.reverseLookup(text, cangjieVariant.value, db)
+                                                candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
+                                        } else {
+                                                currentInputConnection.setComposingText(inputText, 1)
+                                        }
+                                }
+                                if (isBuffering.value.not()) {
+                                        isBuffering.value = true
+                                }
+                        }
+                        VirtualInputKey.letterX -> {
+                                updateQwertyForm(QwertyForm.Stroke)
+                                val inputText = joinedBufferTexts()
+                                if (inputText.length < 2) {
+                                        currentInputConnection.setComposingText(inputText, 1)
+                                } else {
+                                        val text = inputText.drop(1)
+                                        val transformed = ShapeKeyMap.strokeTransform(text)
+                                        val converted = transformed.mapNotNull { ShapeKeyMap.strokeCode(it) }
+                                        val isValidSequence: Boolean = converted.isNotEmpty() && (converted.size == text.length)
+                                        if (isValidSequence) {
+                                                val mark = converted.joinToString(separator = PresetString.EMPTY)
+                                                currentInputConnection.setComposingText(mark, 1)
+                                                val suggestions = Stroke.reverseLookup(transformed, db)
+                                                candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
+                                        } else {
+                                                currentInputConnection.setComposingText(inputText, 1)
+                                        }
+                                }
+                                if (isBuffering.value.not()) {
+                                        isBuffering.value = true
+                                }
+                        }
+                        VirtualInputKey.letterQ -> {
+                                val inputText = joinedBufferTexts()
+                                if (inputText.length < 2) {
+                                        currentInputConnection.setComposingText(inputText, 1)
+                                } else {
+                                        val text = inputText.drop(1)
+                                        val segmentation = Segmentor.segment(text, db)
+                                        val tailMark: String = run {
+                                                val bestScheme = segmentation.firstOrNull()
+                                                val leadingLength: Int = bestScheme?.length() ?: 0
+                                                val leadingText: String = bestScheme?.joinToString(separator = PresetString.SPACE) { it.text } ?: PresetString.EMPTY
+                                                when (leadingLength) {
+                                                        0 -> text
+                                                        text.length -> leadingText
+                                                        else -> (leadingText + PresetString.SPACE + text.drop(leadingLength))
+                                                }
+                                        }
+                                        val mark = "q $tailMark"
+                                        currentInputConnection.setComposingText(mark, 1)
+                                        val suggestions = Structure.reverseLookup(text, segmentation, db)
+                                        candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
+                                }
+                                if (isBuffering.value.not()) {
+                                        isBuffering.value = true
+                                }
+                        }
+                        else -> {
+                                val keys = newValue.map { it.key }
+                                val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
+                                val segmentation = Segmenter.segment(keys, db)
+                                val memory = if (isInputMemoryOn.value) userDB.suggest(text = text, segmentation = segmentation) else emptyList()
+                                val symbols = if (isEmojiSuggestionsOn.value) db.searchSymbols(text = text, segmentation = segmentation) else emptyList()
+                                val queried = Researcher.suggest(keys = keys, segmentation = segmentation, db = db)
+                                val suggestions = Converter.dispatch(memory = memory, symbols = symbols, queried = queried, standard = characterStandard.value, db = db)
+                                val mark: String = run {
+                                        val hasOtherMarks = keys.any { it.isSyllableLetter.negative }
+                                        if (hasOtherMarks) {
+                                                text.toneConverted().markFormatted()
+                                        } else {
+                                                val firstCandidate = suggestions.firstOrNull()
+                                                if (firstCandidate?.inputCount == text.length) {
+                                                        firstCandidate.mark
+                                                } else {
+                                                        text.toneConverted().markFormatted()
+                                                }
+                                        }
+                                }
+                                currentInputConnection.setComposingText(mark, 1)
+                                candidates.value = suggestions
+                                if (isBuffering.value.not()) {
+                                        isBuffering.value = true
+                                }
+                        }
                 }
+                candidateState.value += 1
+                updateSpaceKeyForm()
+                updateReturnKeyForm()
+        }
+
         val isBuffering: MutableStateFlow<Boolean> by lazy { MutableStateFlow(false) }
         fun clearBuffer() {
-                bufferText = PresetString.EMPTY
+                bufferEvents = emptyList()
         }
-        fun handle(event: InputKeyEvent) {
-                val text: String = if (keyboardCase.value.isLowercased) event.text else event.text.uppercase()
-                val shouldAppendText: Boolean = inputMethodMode.value.isCantonese && keyboardForm.value.isBufferable
-                if (shouldAppendText) {
-                        bufferText += text
+        private fun joinedBufferTexts(): String = bufferEvents.joinToString(separator = PresetString.EMPTY) { if (it.case.isLowercased) it.key.text else it.key.text.uppercase() }
+        fun handle(key: VirtualInputKey) {
+                val shouldAppendEvent: Boolean = inputMethodMode.value.isCantonese && keyboardForm.value.isBufferable
+                if (shouldAppendEvent) {
+                        val newEvent = BasicInputEvent(key = key, case = keyboardCase.value)
+                        bufferEvents = bufferEvents + newEvent
                 } else {
+                        val text: String = if (keyboardCase.value.isLowercased) key.text else key.text.uppercase()
                         currentInputConnection.commitText(text, 1)
                 }
                 adjustKeyboardCase()
         }
         fun process(text: String) {
-                val shouldAppendText: Boolean = inputMethodMode.value.isCantonese && keyboardForm.value.isBufferable
-                if (shouldAppendText) {
-                        bufferText += text
+                val shouldAppendEvents: Boolean = inputMethodMode.value.isCantonese && keyboardForm.value.isBufferable
+                if (shouldAppendEvents) {
+                        val case = keyboardCase.value
+                        val newEvents = text.mapNotNull { VirtualInputKey.matchVirtualInputKey(it) }.map { BasicInputEvent(key = it, case = case) }
+                        bufferEvents = bufferEvents + newEvents
                 } else {
                         currentInputConnection.commitText(text, 1)
                 }
@@ -828,32 +848,38 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun selectCandidate(candidate: Candidate? = null, index: Int = 0) {
                 val item: Candidate = candidate ?: candidates.value.getOrNull(index) ?: return
                 currentInputConnection.commitText(item.text, 1)
-                selectedCandidates.add(item)
-                val firstChar = bufferText.firstOrNull()
-                when {
-                        (firstChar == null) -> {}
-                        firstChar.isReverseLookupTrigger -> {
-                                val leadingLength = item.inputCount + 1
-                                if (bufferText.length > leadingLength) {
-                                        val tail = bufferText.drop(leadingLength)
-                                        bufferText = "${firstChar}${tail}"
-                                } else {
-                                        bufferText = PresetString.EMPTY
-                                }
+                val firstKey = bufferEvents.firstOrNull()?.key ?: return
+                if (firstKey.isReverseLookupTrigger) {
+                        selectedCandidates.clear()
+                        var tail = bufferEvents.drop(item.inputCount + 1)
+                        while (tail.firstOrNull()?.key?.isApostrophe ?: false) {
+                                tail = tail.drop(1)
                         }
-                        else -> {
-                                val inputLength: Int = item.input.replace(Regex("([456])"), "RR").length
-                                var tail = bufferText.drop(inputLength)
-                                while (tail.startsWith(PresetCharacter.APOSTROPHE)) {
-                                        tail = tail.drop(1)
-                                }
-                                bufferText = tail
+                        val tailLength = tail.size
+                        if (tailLength < 1) {
+                                clearBuffer()
+                        } else {
+                                bufferEvents = bufferEvents.take(1) + bufferEvents.takeLast(tailLength)
+                        }
+                } else {
+                        if (item.type.isCantonese()) {
+                                selectedCandidates.add(item)
+                        }
+                        var tail = bufferEvents.drop(item.inputCount)
+                        while (tail.firstOrNull()?.key?.isApostrophe ?: false) {
+                                tail = tail.drop(1)
+                        }
+                        val tailLength = tail.size
+                        if (tailLength < 1) {
+                                clearBuffer()
+                        } else {
+                                bufferEvents = bufferEvents.takeLast(tailLength)
                         }
                 }
         }
         fun backspace() {
                 if (isBuffering.value) {
-                        bufferText = bufferText.dropLast(1)
+                        bufferEvents = bufferEvents.dropLast(1)
                         return
                 }
                 val noSelectedText: Boolean = currentInputConnection.getSelectedText(0).isNullOrEmpty()
@@ -885,8 +911,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun performReturn() {
                 if (isBuffering.value) {
-                        currentInputConnection.commitText(bufferText, 1)
-                        bufferText = PresetString.EMPTY
+                        val text = joinedBufferTexts()
+                        currentInputConnection.commitText(text, 1)
+                        clearBuffer()
                         return
                 }
                 val imeOptions = currentInputEditorInfo.imeOptions
@@ -924,8 +951,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         if (candidates.value.isNotEmpty()) {
                                 candidates.value.firstOrNull()?.let { selectCandidate(it) }
                         } else {
-                                currentInputConnection.commitText(bufferText, 1)
-                                bufferText = PresetString.EMPTY
+                                val text = joinedBufferTexts()
+                                currentInputConnection.commitText(text, 1)
+                                clearBuffer()
                         }
                 } else {
                         currentInputConnection.commitText(PresetString.SPACE, 1)

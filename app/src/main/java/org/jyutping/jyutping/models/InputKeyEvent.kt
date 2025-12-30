@@ -1,17 +1,19 @@
 package org.jyutping.jyutping.models
 
+import org.jyutping.jyutping.extensions.virtualInputCode
+
+typealias VirtualInputKey = InputKeyEvent
+
 /**
- * Input key; Input method processing event
+ * Basic input key event
  * @property text Key text
  * @property code Unique identifier code
  * @property keyCode Android KeyEvent code value
- * @property id Same value as the `code`
  */
 data class InputKeyEvent(
         val text: String,
         val code: Int,
-        val keyCode: Int,
-        val id: Int = code
+        val keyCode: Int
 ) : Comparable<InputKeyEvent> {
 
         override fun equals(other: Any?): Boolean {
@@ -135,5 +137,33 @@ data class InputKeyEvent(
                         letterO, letterP, letterQ, letterR, letterS, letterT, letterU,
                         letterV, letterW, letterX, letterY, letterZ
                 )
+
+                fun matchVirtualInputKey(code: Int): InputKeyEvent? {
+                        return alphabetSet.firstOrNull { it.code == code } ?: digitSet.firstOrNull { it.code == code }
+                }
+                fun matchVirtualInputKey(char: Char): InputKeyEvent? {
+                        val code = char.virtualInputCode ?: return null
+                        return alphabetSet.firstOrNull { it.code == code } ?: digitSet.firstOrNull { it.code == code }
+                }
         }
+}
+
+val Long.matchedVirtualInputKeys: List<InputKeyEvent>
+        get() {
+                var number = this
+                val codes = mutableListOf<Long>()
+                while (number > 0) {
+                        codes.add(number % 100L)
+                        number /= 100L
+                }
+                return codes.reversed().mapNotNull { VirtualInputKey.matchVirtualInputKey(code = it.toInt()) }
+        }
+
+fun List<VirtualInputKey>.combinedCode(): Long {
+        if (this.size > 9) return 0L
+        return this.fold(0L) { acc, event -> acc * 100L + event.code.toLong() }
+}
+
+fun List<VirtualInputKey>.anchorsCode(): Long {
+        return this.map { if (it == InputKeyEvent.letterY) VirtualInputKey.letterJ else it }.combinedCode()
 }

@@ -17,7 +17,7 @@ object CharacterVariant {
         fun process(sourceFileName: String): List<VariantMap> {
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream(sourceFileName) ?: error("Can not load $sourceFileName")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() && line.startsWith("#").not() } }.distinct()
-                return sourceLines.flatMap { convert(it) }.distinct().sorted()
+                return sourceLines.flatMap { convert(it) }.distinct().sortedBy { it.left }
         }
         private fun convert(line: String): List<VariantMap> {
                 val errorMessage = "bad line format: $line"
