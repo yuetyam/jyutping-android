@@ -58,11 +58,9 @@ import org.jyutping.jyutping.keyboard.Pinyin
 import org.jyutping.jyutping.keyboard.PinyinSegmentor
 import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.ReturnKeyForm
-import org.jyutping.jyutping.keyboard.Segmentor
 import org.jyutping.jyutping.keyboard.SpaceKeyForm
 import org.jyutping.jyutping.keyboard.Stroke
-import org.jyutping.jyutping.keyboard.Structure
-import org.jyutping.jyutping.keyboard.length
+import org.jyutping.jyutping.models.Structure
 import org.jyutping.jyutping.keyboard.transformed
 import org.jyutping.jyutping.models.BasicInputEvent
 import org.jyutping.jyutping.models.Converter
@@ -70,6 +68,8 @@ import org.jyutping.jyutping.models.InputKeyEvent
 import org.jyutping.jyutping.models.Researcher
 import org.jyutping.jyutping.models.Segmenter
 import org.jyutping.jyutping.models.VirtualInputKey
+import org.jyutping.jyutping.models.length
+import org.jyutping.jyutping.models.mark
 import org.jyutping.jyutping.models.searchSymbols
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
@@ -760,24 +760,25 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 if (inputText.length < 2) {
                                         currentInputConnection.setComposingText(inputText, 1)
                                 } else {
+                                        val keys = bufferEvents.drop(1).map { it.key }
+                                        val segmentation = Segmenter.segment(keys, db)
                                         val text = inputText.drop(1)
-                                        val segmentation = Segmentor.segment(text, db)
                                         val tailMark: String = run {
                                                 val bestScheme = segmentation.firstOrNull()
-                                                val leadingLength: Int = bestScheme?.length() ?: 0
-                                                val leadingText: String = bestScheme?.joinToString(separator = PresetString.SPACE) { it.text } ?: PresetString.EMPTY
+                                                val leadingLength: Int = bestScheme?.length ?: 0
+                                                val leadingMark: String = bestScheme?.mark ?: PresetString.EMPTY
                                                 when (leadingLength) {
                                                         0 -> text
-                                                        text.length -> leadingText
-                                                        else -> (leadingText + PresetString.SPACE + text.drop(leadingLength))
+                                                        text.length -> leadingMark
+                                                        else -> (leadingMark + PresetString.SPACE + text.drop(leadingLength))
                                                 }
                                         }
-                                        val mark = "q $tailMark"
+                                        val mark: String = inputText.take(1) + PresetString.SPACE + tailMark
                                         currentInputConnection.setComposingText(mark, 1)
                                         val suggestions = Structure.reverseLookup(text, segmentation, db)
                                         candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
                                 }
-                                if (isBuffering.value.not()) {
+                                if (isBuffering.value.negative) {
                                         isBuffering.value = true
                                 }
                         }

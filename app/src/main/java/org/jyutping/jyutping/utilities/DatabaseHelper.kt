@@ -473,7 +473,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return token
         }
         fun characterReverseLookup(text: String): List<String> {
-                if (text.length != 1) return emptyList()
+                if (text.characterCount != 1) return emptyList()
                 val romanizations: MutableList<String> = mutableListOf()
                 val command = "SELECT romanization FROM core_lexicon WHERE anchors < 50 AND word = ?;"
                 val cursor = this.readableDatabase.rawQuery(command, arrayOf(text))
@@ -495,21 +495,6 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
                 cursor.close()
                 return romanizations
-        }
-        fun structureMatch(text: String): List<Candidate> {
-                if (text.isBlank()) return emptyList()
-                val candidates: MutableList<Candidate> = mutableListOf()
-                val code = text.hashCode()
-                val command = "SELECT word, romanization FROM structure_table WHERE spell = ${code};"
-                val cursor = this.readableDatabase.rawQuery(command, null)
-                while (cursor.moveToNext()) {
-                        val word = cursor.getString(0)
-                        val romanization = cursor.getString(1)
-                        val instance = Candidate(text = word, romanization = romanization, input = text)
-                        candidates.add(instance)
-                }
-                cursor.close()
-                return candidates
         }
         fun pinyinSyllableMatch(text: String): String? {
                 val code = text.charCode() ?: return null
