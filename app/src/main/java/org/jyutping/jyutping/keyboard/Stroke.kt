@@ -18,15 +18,14 @@ object Stroke {
                 val matched = if (isWildcardSearch) db.strokeWildcardMatch(inputText) else db.strokeMatch(inputText)
                 return (matched + db.strokeGlob(inputText))
                         .distinct()
-                        .map { lexicon ->
+                        .flatMap { lexicon ->
                                 db.reverseLookup(lexicon.text)
                                         .map { romanization ->
                                                 Candidate(text = lexicon.text, romanization = romanization, input = lexicon.input, order = lexicon.order)
                                         }
                         }
-                        .flatten()
         }
-        private val codeMap: HashMap<Char, Char> = hashMapOf(
+        private val codeMap: Map<Char, Char> = mapOf(
                 'w' to '1',
                 's' to '2',
                 'a' to '3',

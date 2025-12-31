@@ -3,9 +3,9 @@ package org.jyutping.jyutping.models
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import kotlin.math.min
 
-typealias NewSegmentation = List<Scheme>
+typealias Segmentation = List<Scheme>
 
-fun NewSegmentation.descended(): NewSegmentation = this.sortedWith(compareBy({it.length.unaryMinus()}, {it.size}))
+fun Segmentation.descended(): Segmentation = this.sortedWith(compareBy({it.length.unaryMinus()}, {it.size}))
 
 object Segmenter {
         private fun splitLeading(events: List<InputKeyEvent>, db: DatabaseHelper): List<Syllable> {
@@ -13,7 +13,7 @@ object Segmenter {
                 if (maxLength < 1) return emptyList()
                 return (maxLength downTo 1).mapNotNull { db.syllableMatch(events.take(it).combinedCode()) }
         }
-        private fun split(events: List<InputKeyEvent>, db: DatabaseHelper): NewSegmentation {
+        private fun split(events: List<InputKeyEvent>, db: DatabaseHelper): Segmentation {
                 val headSyllables = splitLeading(events, db)
                 if (headSyllables.isEmpty()) return emptyList()
                 val eventCount = events.size
@@ -39,7 +39,7 @@ object Segmenter {
                 }
                 return segmentation.filter { it.isValid() }.descended()
         }
-        fun segment(events: List<InputKeyEvent>, db: DatabaseHelper): NewSegmentation {
+        fun segment(events: List<InputKeyEvent>, db: DatabaseHelper): Segmentation {
                 return when (events.size) {
                         0 -> emptyList()
                         1 -> when (events.first()) {
@@ -76,24 +76,24 @@ object Segmenter {
         }
 
         private const val MAX_CACHE_COUNT: Int = 500
-        private val cachedSegmentations: HashMap<Long, NewSegmentation> = hashMapOf()
-        private fun cache(key: Long, segmentation: NewSegmentation) {
+        private val cachedSegmentations: HashMap<Long, Segmentation> = hashMapOf()
+        private fun cache(key: Long, segmentation: Segmentation) {
                 if (cachedSegmentations.size > MAX_CACHE_COUNT) {
                         cachedSegmentations.clear()
                 }
                 cachedSegmentations[key] = segmentation
         }
 
-        private val letterA: NewSegmentation = listOf(listOf(Syllable(aliasCode = 20, originCode = 2020)))
-        private val letterO: NewSegmentation = listOf(listOf(Syllable(aliasCode = 34, originCode = 34)))
-        private val letterM: NewSegmentation = listOf(listOf(Syllable(aliasCode = 32, originCode = 32)))
-        private val mama: NewSegmentation = listOf(
+        private val letterA: Segmentation = listOf(listOf(Syllable(aliasCode = 20, originCode = 2020)))
+        private val letterO: Segmentation = listOf(listOf(Syllable(aliasCode = 34, originCode = 34)))
+        private val letterM: Segmentation = listOf(listOf(Syllable(aliasCode = 32, originCode = 32)))
+        private val mama: Segmentation = listOf(
                 listOf(
                         Syllable(aliasCode = 3220, originCode = 322020),
                         Syllable(aliasCode = 3220, originCode = 322020)
                 )
         )
-        private val mami: NewSegmentation = listOf(
+        private val mami: Segmentation = listOf(
                 listOf(
                         Syllable(aliasCode = 3220, originCode = 322020),
                         Syllable(aliasCode = 3228, originCode = 3228)

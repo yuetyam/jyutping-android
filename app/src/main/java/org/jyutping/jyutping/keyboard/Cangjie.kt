@@ -20,21 +20,19 @@ object Cangjie {
 
         private fun cangjieReverseLookup(version: Int, text: String, db: DatabaseHelper): List<Candidate> = (db.cangjieMatch(version, text) + db.cangjieGlob(version, text))
                 .distinct()
-                .map { lexicon ->
-                        db.characterReverseLookup(lexicon.text)
-                                .map { romanization ->
-                                        Candidate(text = lexicon.text, romanization = romanization, input = lexicon.input, order = lexicon.order)
-                                }
-                }
-                .flatten()
-
-        private fun quickReverseLookup(version: Int, text: String, db: DatabaseHelper): List<Candidate> = (db.quickMatch(version, text) + db.quickGlob(version, text))
-                .distinct()
-                .map { lexicon ->
+                .flatMap { lexicon ->
                         db.reverseLookup(lexicon.text)
                                 .map { romanization ->
                                         Candidate(text = lexicon.text, romanization = romanization, input = lexicon.input, order = lexicon.order)
                                 }
                 }
-                .flatten()
+
+        private fun quickReverseLookup(version: Int, text: String, db: DatabaseHelper): List<Candidate> = (db.quickMatch(version, text) + db.quickGlob(version, text))
+                .distinct()
+                .flatMap { lexicon ->
+                        db.reverseLookup(lexicon.text)
+                                .map { romanization ->
+                                        Candidate(text = lexicon.text, romanization = romanization, input = lexicon.input, order = lexicon.order)
+                                }
+                }
 }

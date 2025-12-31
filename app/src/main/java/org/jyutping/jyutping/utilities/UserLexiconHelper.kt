@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import org.jyutping.jyutping.UserSettingsKey
 import org.jyutping.jyutping.extensions.isCantoneseToneDigit
 import org.jyutping.jyutping.keyboard.Candidate
-import org.jyutping.jyutping.models.NewSegmentation
+import org.jyutping.jyutping.models.Segmentation
 import org.jyutping.jyutping.models.length
 import org.jyutping.jyutping.models.mark
 import org.jyutping.jyutping.models.originText
@@ -73,7 +73,7 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                 this.writableDatabase.execSQL(command)
         }
 
-        fun suggest(text: String, segmentation: NewSegmentation): List<Candidate> {
+        fun suggest(text: String, segmentation: Segmentation): List<Candidate> {
                 val matches = query(text = text, input = text, isShortcut = false)
                 val shortcuts = query(text = text, input = text, mark = text, isShortcut = true)
                 val textLength = text.length

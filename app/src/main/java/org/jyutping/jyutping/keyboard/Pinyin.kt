@@ -10,7 +10,7 @@ object Pinyin {
                 val canSegment: Boolean = schemes.firstOrNull().isNullOrEmpty().not()
                 if (canSegment) {
                         return process(text, schemes, db)
-                                .map { lexicon ->
+                                .flatMap { lexicon ->
                                         lookupRomanization(lexicon.text, db)
                                                 .map {
                                                         Candidate(
@@ -22,10 +22,9 @@ object Pinyin {
                                                         )
                                                 }
                                 }
-                                .flatten()
                 } else {
                         return processVerbatim(text, db)
-                                .map { lexicon ->
+                                .flatMap { lexicon ->
                                         db.reverseLookup(lexicon.text)
                                                 .map {
                                                         Candidate(
@@ -37,7 +36,6 @@ object Pinyin {
                                                         )
                                                 }
                                 }
-                                .flatten()
                 }
         }
 

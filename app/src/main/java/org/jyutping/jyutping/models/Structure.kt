@@ -3,20 +3,19 @@ package org.jyutping.jyutping.models
 import org.jyutping.jyutping.utilities.DatabaseHelper
 
 object Structure {
-        fun reverseLookup(text: String, segmentation: NewSegmentation, db: DatabaseHelper): List<Lexicon> {
+        fun reverseLookup(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Lexicon> {
                 return search(text = text, segmentation = segmentation, db = db)
                         .flatMap { item ->
-                                db.characterReverseLookup(text = item.text)
+                                db.reverseLookup(text = item.text)
                                         .map { romanization -> Lexicon(text = item.text, romanization = romanization, input = text) }
                         }
-                        .distinct()
         }
-        private fun search(text: String, segmentation: NewSegmentation, db: DatabaseHelper): List<Lexicon> {
+        private fun search(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Lexicon> {
                 val matched = db.structureMatch(text = text)
                 val textLength = text.length
                 val schemes = segmentation.filter { it.length == textLength }
                 val queried = schemes.flatMap { db.structureMatch(text = it.originText) }
-                return matched + queried
+                return (matched + queried).distinct()
         }
 }
 

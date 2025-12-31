@@ -11,11 +11,8 @@ import org.jyutping.jyutping.extensions.generateSymbol
 import org.jyutping.jyutping.extensions.isIdeographicCodePoint
 import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.CandidateType
-import org.jyutping.jyutping.keyboard.SegmentToken
 import org.jyutping.jyutping.keyboard.ShapeLexicon
-import org.jyutping.jyutping.models.anchorsCode
 import org.jyutping.jyutping.models.charCode
-import org.jyutping.jyutping.models.interCode
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.search.CantoneseLexicon
 import org.jyutping.jyutping.search.ChoHokYuetYamCitYiu
@@ -395,94 +392,6 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 } else {
                         return char.toString()
                 }
-        }
-
-        fun canProcess(text: String): Boolean {
-                val value: Int = text.firstOrNull()?.interCode ?: return false
-                val code: Int = if (value == 44) 29 else value // Replace 'y' with 'j'
-                val command = "SELECT rowid FROM core_lexicon WHERE anchors = $code LIMIT 1;"
-                val cursor = this.readableDatabase.rawQuery(command, null)
-                if (cursor.moveToFirst()) {
-                        cursor.close()
-                        return true
-                } else {
-                        return false
-                }
-        }
-        fun shortcutMatch(text: String, limit: Int? = null): List<Candidate> {
-                val code = text.anchorsCode() ?: return emptyList()
-                val limitValue: Int = limit ?: 50
-                val candidates: MutableList<Candidate> = mutableListOf()
-                val command = "SELECT rowid, word, romanization FROM core_lexicon WHERE anchors = $code LIMIT ${limitValue};"
-                val cursor = this.readableDatabase.rawQuery(command, null)
-                while (cursor.moveToNext()) {
-                        val order = cursor.getInt(0)
-                        val word = cursor.getString(1)
-                        val romanization = cursor.getString(2)
-                        val candidate = Candidate(text = word, romanization = romanization, input = text, order = order)
-                        candidates.add(candidate)
-                }
-                cursor.close()
-                return candidates
-        }
-        fun pingMatch(text: String, input: String, mark: String? = null, limit: Int? = null): List<Candidate> {
-                if (text.isBlank()) return emptyList()
-                val code: Int = text.hashCode()
-                val limitValue: Int = limit ?: -1
-                val candidates: MutableList<Candidate> = mutableListOf()
-                val command = "SELECT rowid, word, romanization FROM core_lexicon WHERE spell = $code LIMIT ${limitValue};"
-                val cursor = this.readableDatabase.rawQuery(command, null)
-                while (cursor.moveToNext()) {
-                        val order = cursor.getInt(0)
-                        val word = cursor.getString(1)
-                        val romanization = cursor.getString(2)
-                        val markText = mark ?: romanization.filterNot { it.isDigit() }
-                        val candidate = Candidate(text = word, romanization = romanization, input = input, mark = markText, order = order)
-                        candidates.add(candidate)
-                }
-                cursor.close()
-                return candidates
-        }
-        fun strictMatch(shortcut: Long, spell: Int, input: String, mark: String? = null, limit: Int? = null): List<Candidate> {
-                val candidates: MutableList<Candidate> = mutableListOf()
-                val limitValue: Int = limit ?: -1
-                val command = "SELECT rowid, word, romanization FROM core_lexicon WHERE spell = $spell AND anchors = $shortcut LIMIT ${limitValue};"
-                val cursor = this.readableDatabase.rawQuery(command, null)
-                while (cursor.moveToNext()) {
-                        val order = cursor.getInt(0)
-                        val word = cursor.getString(1)
-                        val romanization = cursor.getString(2)
-                        val markText = mark ?: romanization.filterNot { it.isDigit() }
-                        val candidate = Candidate(text = word, romanization = romanization, input = input, mark = markText, order = order)
-                        candidates.add(candidate)
-                }
-                cursor.close()
-                return candidates
-        }
-        fun syllableMatch(text: String): SegmentToken? {
-                val code = text.charCode() ?: return null
-                var token: SegmentToken? = null
-                val command = "SELECT alias, origin FROM syllable_table WHERE alias_code = $code LIMIT 1;"
-                val cursor = this.readableDatabase.rawQuery(command, null)
-                if (cursor.moveToFirst()) {
-                        val alias = cursor.getString(0)
-                        val origin = cursor.getString(1)
-                        token = SegmentToken(text = alias, origin = origin)
-                }
-                cursor.close()
-                return token
-        }
-        fun characterReverseLookup(text: String): List<String> {
-                if (text.characterCount != 1) return emptyList()
-                val romanizations: MutableList<String> = mutableListOf()
-                val command = "SELECT romanization FROM core_lexicon WHERE anchors < 50 AND word = ?;"
-                val cursor = this.readableDatabase.rawQuery(command, arrayOf(text))
-                while (cursor.moveToNext()) {
-                        val romanization = cursor.getString(0)
-                        romanizations.add(romanization)
-                }
-                cursor.close()
-                return romanizations
         }
         fun reverseLookup(text: String): List<String> {
                 if (text.isBlank()) return emptyList()

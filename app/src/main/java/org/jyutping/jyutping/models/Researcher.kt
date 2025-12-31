@@ -11,7 +11,7 @@ import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 
 object Researcher {
-        fun suggest(keys: List<VirtualInputKey>, segmentation: NewSegmentation, db: DatabaseHelper): List<Lexicon> {
+        fun suggest(keys: List<VirtualInputKey>, segmentation: Segmentation, db: DatabaseHelper): List<Lexicon> {
                 when (keys.size) {
                         0 -> return emptyList()
                         1 -> when (keys.first()) {
@@ -32,9 +32,9 @@ object Researcher {
                 }
         }
 }
-private fun Researcher.dispatch(keys: List<VirtualInputKey>, segmentation: NewSegmentation, db: DatabaseHelper): List<Lexicon> {
+private fun Researcher.dispatch(keys: List<VirtualInputKey>, segmentation: Segmentation, db: DatabaseHelper): List<Lexicon> {
         val syllableKeys = keys.filter { it.isSyllableLetter }
-        val firstSyllableLength = segmentation.firstOrNull()?.firstOrNull()?.alias?.size ?: 0
+        val firstSyllableLength: Int = segmentation.firstOrNull()?.firstOrNull()?.alias?.size ?: 0
         val lexicons: List<Lexicon> = when {
                 (firstSyllableLength == 0) -> {
                         val text = syllableKeys.joinToString(separator = PresetString.EMPTY) { it.text }
@@ -231,7 +231,7 @@ private fun Researcher.oldProcessWithSeparators(text: String, lexicons: List<Lex
                 }
 }
 
-private fun Researcher.search(keys: List<VirtualInputKey>, segmentation: NewSegmentation, limit: Int? = null, db: DatabaseHelper): List<Lexicon> {
+private fun Researcher.search(keys: List<VirtualInputKey>, segmentation: Segmentation, limit: Int? = null, db: DatabaseHelper): List<Lexicon> {
         val inputLength = keys.size
         val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
         val spellMatched = db.spellMatch(text = text, input = text, limit = limit)
@@ -320,7 +320,7 @@ private fun Researcher.search(keys: List<VirtualInputKey>, segmentation: NewSegm
         return concatenated + fetched
 }
 
-private fun Researcher.query(inputLength: Int, segmentation: NewSegmentation, limit: Int? = null, db: DatabaseHelper): List<Lexicon> {
+private fun Researcher.query(inputLength: Int, segmentation: Segmentation, limit: Int? = null, db: DatabaseHelper): List<Lexicon> {
         val idealSchemes = segmentation.filter { it.length == inputLength }
         if (idealSchemes.isEmpty()) {
                 return segmentation.flatMap { performQuery(scheme = it, limit = limit, db = db) }
@@ -355,7 +355,7 @@ private fun Researcher.processSlices(keys: List<VirtualInputKey>, text: String, 
                         .map { modify(item = it, keys = keys, text = text, inputLength = inputLength, db = db) }
                         .sorted()
                         .take(72)
-                return spellMatched + anchorsMatched
+                return@flatMap spellMatched + anchorsMatched
         }
         return entries.distinct().sorted()
 }
@@ -430,7 +430,7 @@ private fun DatabaseHelper.strictMatch(anchors: Long, spell: Int, input: String,
         return instances
 }
 
-fun DatabaseHelper.searchSymbols(text: String, segmentation: NewSegmentation): List<Lexicon> {
+fun DatabaseHelper.searchSymbols(text: String, segmentation: Segmentation): List<Lexicon> {
         val fullMatched = symbolMatch(text = text, input = text)
         val textLength = text.length
         val schemes = segmentation.filter { it.length == textLength }

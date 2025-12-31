@@ -28,15 +28,15 @@ data class InputKeyEvent(
 
         /** Digits 0-9 */
         val isNumber: Boolean
-                get() = this in InputKeyEvent.digitSet
+                get() = (this in digitSet)
 
         /** Cantonese tone digits 1-6 */
         val isToneNumber: Boolean
-                get() = this in InputKeyEvent.toneSet
+                get() = (this in toneSet)
 
         /** Letters a-z */
         val isLetter: Boolean
-                get() = this in InputKeyEvent.alphabetSet
+                get() = (this in alphabetSet)
 
         /** Letters a-z excluded tone letters v x q */
         val isSyllableLetter: Boolean
@@ -62,11 +62,11 @@ data class InputKeyEvent(
 
         /** Separator; Delimiter; Quote */
         val isApostrophe: Boolean
-                get() = this == InputKeyEvent.apostrophe
+                get() = (this == apostrophe)
 
         /** Grave accent; Backtick; Backquote */
         val isGrave: Boolean
-                get() = this == InputKeyEvent.grave
+                get() = (this == grave)
 
         /** Integer number of the number key */
         val digit: Int?
