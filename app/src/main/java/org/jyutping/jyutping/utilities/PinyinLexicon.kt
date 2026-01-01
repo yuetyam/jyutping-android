@@ -39,7 +39,7 @@ data class PinyinLexicon(
                 val newPinyin: String = this.pinyin + PresetString.SPACE + another.pinyin
                 val newInput: String = this.input + another.input
                 val newMark: String = this.mark + PresetString.SPACE + another.mark
-                val step = 100_0000
+                val step = 1_000_000
                 val newOrder: Int = (this.order * step) + (another.order * step)
                 return PinyinLexicon(text = newText, pinyin = newPinyin, input = newInput, mark = newMark, order = newOrder)
         }

@@ -633,6 +633,6 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                         textMarks.add(textMark)
                 }
                 cursor.close()
-                return textMarks.map { Candidate(type = CandidateType.Text, text = it, input = input, romanization = input) }
+                return textMarks.map { Candidate(type = CandidateType.Text, text = it, romanization = input, input = input) }
         }
 }

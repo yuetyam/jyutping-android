@@ -53,7 +53,7 @@ data class Candidate(
                 val newRomanization = this.romanization + PresetString.SPACE + another.romanization
                 val newInput = this.input + another.input
                 val newMark = this.mark + PresetString.SPACE + another.mark
-                val step = 100_0000
+                val step = 1_000_000
                 val newOrder = (this.order + step) + (another.order + step)
                 return Candidate(text = newText, romanization = newRomanization, input = newInput, mark = newMark, order = newOrder)
         }
@@ -61,6 +61,10 @@ data class Candidate(
                 return this.inputCount.compareTo(other.inputCount).unaryMinus()
                         .takeIf { it != 0 } ?: this.order.compareTo(other.order)
         }
+
+        /** isConcatenated. order > 1_000_000 */
+        val isCompound: Boolean
+                get() = (order > 1_000_000)
 }
 
 fun Candidate.transformed(standard: CharacterStandard, db: DatabaseHelper): Candidate {
