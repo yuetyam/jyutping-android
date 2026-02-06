@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <locale-config xmlns:android="http://schemas.android.com/apk/res/android">
     <locale android:name="en"/>
+    <locale android:name="en-AU"/>
     <locale android:name="en-GB"/>
     <locale android:name="en-US"/>
+    <locale android:name="en-NZ"/>
     <locale android:name="yue"/>
     <locale android:name="yue-Hant"/>
     <locale android:name="yue-Hant-CN"/>

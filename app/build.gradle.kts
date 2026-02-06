@@ -51,10 +51,10 @@ kotlin {
         jvmToolchain(21)
 }
 
-val composeVersion = "1.10.1"
+val composeVersion = "1.10.2"
 dependencies {
-        implementation("androidx.activity:activity-compose:1.12.2")
-        implementation("androidx.activity:activity-ktx:1.12.2")
+        implementation("androidx.activity:activity-compose:1.12.3")
+        implementation("androidx.activity:activity-ktx:1.12.3")
         implementation("androidx.compose.material:material-icons-extended:1.7.8")
         implementation("androidx.compose.material3:material3:1.4.0")
         implementation("androidx.compose.ui:ui:$composeVersion")
@@ -62,7 +62,7 @@ dependencies {
         implementation("androidx.core:core-ktx:1.17.0")
         implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
         implementation("androidx.lifecycle:lifecycle-service:2.10.0")
-        implementation("androidx.navigation:navigation-compose:2.9.6")
+        implementation("androidx.navigation:navigation-compose:2.9.7")
         implementation("com.louiscad.splitties:splitties-systemservices:3.0.0")
         implementation("com.louiscad.splitties:splitties-views:3.0.0")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
