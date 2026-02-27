@@ -1,24 +1,25 @@
 package org.jyutping.jyutping.keyboard
 
+import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.PinyinLexicon
 import kotlin.math.max
 
 object Pinyin {
-        fun reverseLookup(text: String, schemes: List<List<String>>, db: DatabaseHelper): List<Candidate> {
+        fun reverseLookup(text: String, schemes: List<List<String>>, db: DatabaseHelper): List<Lexicon> {
                 val canSegment: Boolean = schemes.firstOrNull().isNullOrEmpty().not()
                 if (canSegment) {
                         return process(text, schemes, db)
                                 .flatMap { lexicon ->
                                         lookupRomanization(lexicon.text, db)
                                                 .map {
-                                                        Candidate(
+                                                        Lexicon(
                                                                 text = lexicon.text,
                                                                 romanization = it,
                                                                 input = lexicon.input,
                                                                 mark = lexicon.mark,
-                                                                order = lexicon.order
+                                                                number = lexicon.order
                                                         )
                                                 }
                                 }
@@ -27,12 +28,12 @@ object Pinyin {
                                 .flatMap { lexicon ->
                                         db.reverseLookup(lexicon.text)
                                                 .map {
-                                                        Candidate(
+                                                        Lexicon(
                                                                 text = lexicon.text,
                                                                 romanization = it,
                                                                 input = lexicon.input,
                                                                 mark = lexicon.mark,
-                                                                order = lexicon.order
+                                                                number = lexicon.order
                                                         )
                                                 }
                                 }

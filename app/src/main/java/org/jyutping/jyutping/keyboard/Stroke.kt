@@ -1,5 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
+import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 
@@ -11,7 +12,7 @@ object Stroke {
          * @param db DatabaseHelper.
          * @return List of Candidate.
          */
-        fun reverseLookup(text: String, db: DatabaseHelper): List<Candidate> {
+        fun reverseLookup(text: String, db: DatabaseHelper): List<Lexicon> {
                 val codeText = text.mapNotNull { codeMap[it] }.joinToString(separator = PresetString.EMPTY)
                 val isWildcardSearch: Boolean = codeText.contains('6')
                 val inputText: String = if (isWildcardSearch) codeText.replace("6", "[12345]") else codeText
@@ -21,7 +22,7 @@ object Stroke {
                         .flatMap { lexicon ->
                                 db.reverseLookup(lexicon.text)
                                         .map { romanization ->
-                                                Candidate(text = lexicon.text, romanization = romanization, input = lexicon.input, order = lexicon.order)
+                                                Lexicon(text = lexicon.text, romanization = romanization, input = lexicon.input, number = lexicon.order)
                                         }
                         }
         }

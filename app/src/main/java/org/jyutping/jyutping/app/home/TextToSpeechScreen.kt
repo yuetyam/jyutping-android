@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.R
@@ -110,7 +111,8 @@ private fun TTSLinkButton() {
                         Text(
                                 text = webAddress,
                                 color = PresetColor.blue,
-                                fontSize = 15.sp
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Normal
                         )
                         Spacer(modifier = Modifier.weight(1.0f))
                         Icon(

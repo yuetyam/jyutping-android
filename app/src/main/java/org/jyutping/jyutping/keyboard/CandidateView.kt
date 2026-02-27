@@ -18,6 +18,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jyutping.jyutping.models.Candidate
 import org.jyutping.jyutping.presets.PresetString
 
 // For CandidateScrollBar
@@ -31,7 +32,6 @@ fun CandidateView(
         deletion: () -> Unit,
         numberLabel: String? = null
 ) {
-        val isCantonese: Boolean = candidate.type.isCantonese()
         val textColor: Color = if (isDarkMode) Color.White else Color.Black
         Box(
                 modifier = Modifier
@@ -45,7 +45,7 @@ fun CandidateView(
                                         onTap = { selection() }
                                 )
                         }
-                        .padding(horizontal = if (isCantonese) 8.dp else 10.dp)
+                        .padding(horizontal = if (candidate.isCantonese) 8.dp else 10.dp)
                         .fillMaxHeight(),
                 contentAlignment = Alignment.Center
         ) {
@@ -58,7 +58,7 @@ fun CandidateView(
                 ) {
                         Color.Transparent
                         Text(
-                                text = if (isCantonese) candidate.romanization else PresetString.SPACE,
+                                text = if (candidate.isCantonese) (candidate.comment ?: PresetString.SPACE) else PresetString.SPACE,
                                 modifier = Modifier
                                         .padding(vertical = 2.dp)
                                         .height(20.dp),
@@ -95,7 +95,6 @@ fun CandidateView(
 // For CandidateBoard
 @Composable
 fun AltCandidateView(modifier: Modifier, candidateState: Int, candidate: Candidate, commentStyle: CommentStyle, isDarkMode: Boolean, selection: () -> Unit, deletion: () -> Unit) {
-        val isCantonese: Boolean = candidate.type.isCantonese()
         val textColor: Color = if (isDarkMode) Color.White else Color.Black
         Column(
                 modifier = modifier
@@ -112,9 +111,9 @@ fun AltCandidateView(modifier: Modifier, candidateState: Int, candidate: Candida
                 verticalArrangement = Arrangement.spacedBy((-2).dp),
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
-                if (isCantonese && commentStyle.isAbove()) {
+                if (candidate.isCantonese && commentStyle.isAbove()) {
                         Text(
-                                text = candidate.romanization,
+                                text = candidate.comment ?: PresetString.SPACE,
                                 color = textColor,
                                 fontSize = 12.sp,
                                 overflow = TextOverflow.Ellipsis,
@@ -128,9 +127,9 @@ fun AltCandidateView(modifier: Modifier, candidateState: Int, candidate: Candida
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
                 )
-                if (isCantonese && commentStyle.isBelow()) {
+                if (candidate.isCantonese && commentStyle.isBelow()) {
                         Text(
-                                text = candidate.romanization,
+                                text = candidate.comment ?: PresetString.SPACE,
                                 color = textColor,
                                 fontSize = 12.sp,
                                 overflow = TextOverflow.Ellipsis,

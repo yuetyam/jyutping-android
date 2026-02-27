@@ -1,6 +1,6 @@
 package org.jyutping.jyutping.utilities
 
-import org.jyutping.jyutping.keyboard.Candidate
+import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.presets.PresetString
 
 data class UserLexicon(
@@ -21,28 +21,28 @@ data class UserLexicon(
                 return id
         }
         companion object {
-                fun convert(candidate: Candidate): UserLexicon {
-                        val idValue: Int = (candidate.lexiconText + candidate.romanization).hashCode()
-                        val shortcutValue: Int = candidate.romanization
+                fun convert(lexicon: Lexicon): UserLexicon {
+                        val idValue: Int = (lexicon.text + lexicon.romanization).hashCode()
+                        val shortcutValue: Int = lexicon.romanization
                                 .split(PresetString.SPACE)
                                 .mapNotNull { it.firstOrNull() }
                                 .joinToString(separator = PresetString.EMPTY)
                                 .hashCode()
-                        val pingValue: Int = candidate.romanization.filter { it.isLetter() }.hashCode()
+                        val pingValue: Int = lexicon.romanization.filter { it.isLetter() }.hashCode()
                         val time: Long = System.currentTimeMillis()
                         return UserLexicon(
                                 id = idValue,
-                                word = candidate.lexiconText,
-                                romanization = candidate.romanization,
+                                word = lexicon.text,
+                                romanization = lexicon.romanization,
                                 shortcut = shortcutValue,
                                 ping = pingValue,
                                 frequency = 1,
                                 latest = time
                         )
                 }
-                fun join(candidates: List<Candidate>): UserLexicon {
-                        val newText: String = candidates.joinToString(separator = PresetString.EMPTY) { it.lexiconText }
-                        val newRomanization: String = candidates.joinToString(separator = PresetString.SPACE) { it.romanization }
+                fun join(lexicons: List<Lexicon>): UserLexicon {
+                        val newText: String = lexicons.joinToString(separator = PresetString.EMPTY) { it.text }
+                        val newRomanization: String = lexicons.joinToString(separator = PresetString.SPACE) { it.romanization }
                         val idValue: Int = (newText + newRomanization).hashCode()
                         val shortcutValue: Int = newRomanization
                                 .split(PresetString.SPACE)

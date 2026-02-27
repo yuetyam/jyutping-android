@@ -8,5 +8,5 @@ object PresetCharacter {
         const val APOSTROPHE: Char = '\''
 
         /** r, v, x, q */
-        val reverseLookupTriggers: HashSet<Char> = hashSetOf('r', 'v', 'x', 'q')
+        val reverseLookupTriggers: Set<Char> = setOf('r', 'v', 'x', 'q')
 }

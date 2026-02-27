@@ -35,15 +35,17 @@ import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
+import org.jyutping.jyutping.models.Candidate
 import org.jyutping.jyutping.models.KeyboardForm
+import org.jyutping.jyutping.models.LexiconType
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import splitties.systemservices.windowManager
 
-private fun Candidate.width(): Dp = when (this.type) {
-        CandidateType.Cantonese -> (this.text.length * 20 + 32).dp
-        CandidateType.Emoji -> 64.dp
-        CandidateType.Symbol -> if (this.text.length == 1) 64.dp else (this.text.length * 18).dp
+private fun Candidate.width(): Dp = when (this.lexicon.type) {
+        LexiconType.Cantonese -> (this.text.length * 20 + 32).dp
+        LexiconType.Emoji -> 64.dp
+        LexiconType.Symbol -> if (this.text.length == 1) 64.dp else (this.text.length * 18).dp
         else -> if (this.text.length == 1) 64.dp else (this.text.length * 18).dp
 }
 

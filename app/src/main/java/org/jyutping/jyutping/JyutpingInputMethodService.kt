@@ -43,7 +43,6 @@ import org.jyutping.jyutping.extensions.markFormatted
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.extensions.toneConverted
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.keyboard.Cangjie
 import org.jyutping.jyutping.keyboard.CangjieVariant
 import org.jyutping.jyutping.keyboard.CommentStyle
@@ -61,10 +60,12 @@ import org.jyutping.jyutping.keyboard.ReturnKeyForm
 import org.jyutping.jyutping.keyboard.SpaceKeyForm
 import org.jyutping.jyutping.keyboard.Stroke
 import org.jyutping.jyutping.models.Structure
-import org.jyutping.jyutping.keyboard.transformed
 import org.jyutping.jyutping.models.BasicInputEvent
+import org.jyutping.jyutping.models.Candidate
 import org.jyutping.jyutping.models.Converter
+import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.models.Researcher
+import org.jyutping.jyutping.models.RomanizationForm
 import org.jyutping.jyutping.models.Segmenter
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.length
@@ -100,7 +101,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         override fun onEvaluateFullscreenMode() = false
 
         private var canBlurWindow: Boolean = false
-        private val blurBlackList: HashSet<String> by lazy { hashSetOf("zte", "nubia", "redmagic", "red magic") }
+        private val blurBlackList: Set<String> by lazy { setOf("zte", "nubia", "redmagic", "red magic") }
         override fun onCreate() {
                 super.onCreate()
                 savedStateRegistryController.performRestore(null)
@@ -109,9 +110,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         val manufacturer = Build.MANUFACTURER.lowercase()
                         val brand = Build.BRAND.lowercase()
                         val shouldDisableBlur: Boolean = blurBlackList.contains(manufacturer) || blurBlackList.contains(brand)
-                        canBlurWindow = if (shouldDisableBlur) { false } else {
-                                getSystemService(WindowManager::class.java)?.isCrossWindowBlurEnabled ?: false
-                        }
+                        canBlurWindow = if (shouldDisableBlur) false else (getSystemService(WindowManager::class.java)?.isCrossWindowBlurEnabled ?: false)
                         PresetColor.attach(canBlur = canBlurWindow)
                         if (canBlurWindow) {
                                 window?.window?.let { win ->
@@ -197,8 +196,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         override fun onFinishInputView(finishingInput: Boolean) {
                 inputClientMonitorJob?.cancel()
                 isPhysicalKeyboardActive.value = false
-                if (selectedCandidates.isNotEmpty()) {
-                        selectedCandidates.clear()
+                if (selectedLexicons.isNotEmpty()) {
+                        selectedLexicons.clear()
                 }
                 if (isBuffering.value) {
                         val text = joinedBufferTexts()
@@ -598,11 +597,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
-        private val selectedCandidates: MutableList<Candidate> by lazy { mutableListOf() }
+        private val selectedLexicons: MutableList<Lexicon> by lazy { mutableListOf() }
         private val userDB by lazy { UserLexiconHelper(this) }
         fun forgetCandidate(candidate: Candidate? = null, index: Int? = null) = when {
-                candidate != null -> userDB.remove(candidate)
-                index != null -> candidates.value.getOrNull(index)?.let { userDB.remove(it) }
+                candidate != null -> userDB.remove(candidate.lexicon)
+                index != null -> candidates.value.getOrNull(index)?.let { userDB.remove(it.lexicon) }
                 else -> {}
         }
         fun clearInputMemory() {
@@ -665,10 +664,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 currentInputConnection.setComposingText(PresetString.EMPTY, 1)
                                 currentInputConnection.finishComposingText()
                                 if (isBuffering.value) {
-                                        if (isInputMemoryOn.value && selectedCandidates.isNotEmpty()) {
-                                                userDB.process(selectedCandidates)
+                                        if (isInputMemoryOn.value && selectedLexicons.isNotEmpty()) {
+                                                userDB.process(selectedLexicons)
                                         }
-                                        selectedCandidates.clear()
+                                        selectedLexicons.clear()
                                         isBuffering.value = false
                                 }
                                 if (keyboardForm.value == KeyboardForm.CandidateBoard) {
@@ -703,7 +702,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         }
                                         val mark = "r $tailMark"
                                         currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
+                                        candidates.value = suggestions.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null ) }.distinct()
                                 }
                                 if (isBuffering.value.not()) {
                                         isBuffering.value = true
@@ -722,7 +721,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 val mark = converted.joinToString(separator = PresetString.EMPTY)
                                                 currentInputConnection.setComposingText(mark, 1)
                                                 val suggestions = Cangjie.reverseLookup(text, cangjieVariant.value, db)
-                                                candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
+                                                candidates.value = suggestions.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null ) }.distinct()
                                         } else {
                                                 currentInputConnection.setComposingText(inputText, 1)
                                         }
@@ -745,7 +744,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 val mark = converted.joinToString(separator = PresetString.EMPTY)
                                                 currentInputConnection.setComposingText(mark, 1)
                                                 val suggestions = Stroke.reverseLookup(transformed, db)
-                                                candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
+                                                candidates.value = suggestions.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null ) }.distinct()
                                         } else {
                                                 currentInputConnection.setComposingText(inputText, 1)
                                         }
@@ -775,7 +774,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val mark: String = inputText.take(1) + PresetString.SPACE + tailMark
                                         currentInputConnection.setComposingText(mark, 1)
                                         val suggestions = Structure.reverseLookup(text, segmentation, db)
-                                        candidates.value = suggestions.map { it.transformed(characterStandard.value, db) }.distinct()
+                                        candidates.value = suggestions.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null ) }.distinct()
                                 }
                                 if (isBuffering.value.negative) {
                                         isBuffering.value = true
@@ -789,15 +788,24 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 val textMarks = if (isEmojiSuggestionsOn.value) db.fetchTextMarks(input = text) else emptyList()
                                 val symbols = if (isEmojiSuggestionsOn.value) db.searchSymbols(text = text, segmentation = segmentation) else emptyList()
                                 val queried = Researcher.suggest(keys = keys, segmentation = segmentation, db = db)
-                                val suggestions = Converter.dispatch(memory = memory, marks = textMarks, symbols = symbols, queried = queried, standard = characterStandard.value, db = db)
+                                val suggestions = Converter.dispatch(
+                                        memory = memory,
+                                        defined = emptyList(),
+                                        marks = textMarks,
+                                        symbols = symbols,
+                                        queried = queried,
+                                        commentForm = RomanizationForm.Full,
+                                        charset = characterStandard.value,
+                                        db = if (characterStandard.value.isSimplified) db else null
+                                )
                                 val mark: String = run {
                                         val hasOtherMarks = keys.any { it.isSyllableLetter.negative }
                                         if (hasOtherMarks) {
                                                 text.toneConverted().markFormatted()
                                         } else {
                                                 val firstCandidate = suggestions.firstOrNull()
-                                                if (firstCandidate?.inputCount == text.length) {
-                                                        firstCandidate.mark
+                                                if (firstCandidate?.lexicon?.inputCount == text.length) {
+                                                        firstCandidate.lexicon.mark
                                                 } else {
                                                         text.toneConverted().markFormatted()
                                                 }
@@ -851,8 +859,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 currentInputConnection.commitText(item.text, 1)
                 val firstKey = bufferEvents.firstOrNull()?.key ?: return
                 if (firstKey.isReverseLookupTrigger) {
-                        selectedCandidates.clear()
-                        var tail = bufferEvents.drop(item.inputCount + 1)
+                        selectedLexicons.clear()
+                        var tail = bufferEvents.drop(item.lexicon.inputCount + 1)
                         while (tail.firstOrNull()?.key?.isApostrophe ?: false) {
                                 tail = tail.drop(1)
                         }
@@ -863,10 +871,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 bufferEvents = bufferEvents.take(1) + bufferEvents.takeLast(tailLength)
                         }
                 } else {
-                        if (item.type.isCantonese()) {
-                                selectedCandidates.add(item)
+                        if (item.isCantonese) {
+                                selectedLexicons.add(item.lexicon)
                         }
-                        val inputLength: Int = item.input.replace(Regex("[456]"), "RR").length
+                        val inputLength: Int = item.lexicon.input.replace(Regex("[456]"), "RR").length
                         var tail = bufferEvents.drop(inputLength)
                         while (tail.firstOrNull()?.key?.isApostrophe ?: false) {
                                 tail = tail.drop(1)

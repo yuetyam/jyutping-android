@@ -6,6 +6,6 @@ object PresetCharacter {
         /** Quote mark; delimiter; apostrophe */
         const val SEPARATOR: Char = '\''
 
-        val reverseLookupTriggers: HashSet<Char> = hashSetOf('r', 'v', 'x', 'q')
-        val cantoneseTones: HashSet<Char> = hashSetOf('1', '2', '3', '4', '5', '6')
+        val reverseLookupTriggers: Set<Char> = setOf('r', 'v', 'x', 'q')
+        val cantoneseTones: Set<Char> = setOf('1', '2', '3', '4', '5', '6')
 }

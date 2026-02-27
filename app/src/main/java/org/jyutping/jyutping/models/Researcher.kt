@@ -265,7 +265,7 @@ private fun Researcher.search(keys: List<VirtualInputKey>, segmentation: Segment
                                 if (toneFreeRomanization.startsWith(schemeSyllableText).negative) return@mapNotNull null
                                 val suffixAnchorText = toneFreeRomanization.drop(schemeSyllableText.length).split(PresetString.SPACE).mapNotNull { it.firstOrNull() }
                                 if (suffixAnchorText != tailAsAnchorText) return@mapNotNull null
-                                return@mapNotNull Lexicon(text = item.text, romanization = item.romanization, input = text, mark = mark, order = item.order)
+                                return@mapNotNull Lexicon(text = item.text, romanization = item.romanization, input = text, mark = mark, number = item.number)
                         }
                 val modifiedTail = if (tail.firstOrNull() == VirtualInputKey.letterY) (listOf(VirtualInputKey.letterJ) + tail.drop(1)) else tail
                 val transformedTailText: String = modifiedTail.joinToString(separator = PresetString.EMPTY) { it.text }
@@ -274,7 +274,7 @@ private fun Researcher.search(keys: List<VirtualInputKey>, segmentation: Segment
                         .mapNotNull { item ->
                                 val toneFreeRomanization = item.romanization.filterNot { it.isCantoneseToneDigit }
                                 if (toneFreeRomanization.startsWith(syllables).negative) return@mapNotNull null
-                                return@mapNotNull Lexicon(text = item.text, romanization = item.romanization, input = text, mark = mark, order = item.order)
+                                return@mapNotNull Lexicon(text = item.text, romanization = item.romanization, input = text, mark = mark, number = item.number)
                         }
                 return@flatMap conjoinedMatched + anchorsMatched
         }
@@ -285,7 +285,7 @@ private fun Researcher.search(keys: List<VirtualInputKey>, segmentation: Segment
         }.mapNotNull { item ->
                 val tail = keys.drop(item.inputCount - 1)
                 if (tail.size > 6) return@mapNotNull null
-                val converted by lazy { Lexicon(text = item.text, romanization = item.romanization, input = text, mark = text, order = item.order) }
+                val converted by lazy { Lexicon(text = item.text, romanization = item.romanization, input = text, mark = text, number = item.number) }
                 val rawSyllable = item.romanization.filter { it.isLowercaseBasicLatinLetter }
                 if (rawSyllable.startsWith(text)) return@mapNotNull converted
                 val lastSyllable = item.romanization.split(PresetString.SPACE).lastOrNull()?.filterNot { it.isCantoneseToneDigit } ?: return@mapNotNull null
@@ -298,13 +298,13 @@ private fun Researcher.search(keys: List<VirtualInputKey>, segmentation: Segment
                 }
         }
         val fetched: List<Lexicon> = run {
-                val idealQueried = queried.filter { it.inputCount == inputLength }.sortedBy { it.order }.distinct()
+                val idealQueried = queried.filter { it.inputCount == inputLength }.sortedBy { it.number }.distinct()
                 val notIdealQueried = queried.filter { it.inputCount < inputLength }.sorted().distinct()
                 val fullInput = (spellMatched + idealQueried + anchorsMatched + prefixMatched + gainedMatched).distinct()
                 val primary = fullInput.take(10)
                 val secondary = fullInput.sorted().take(10)
                 val tertiary = notIdealQueried.take(10)
-                val quaternary = notIdealQueried.sortedBy { it.order }.take(10)
+                val quaternary = notIdealQueried.sortedBy { it.number }.take(10)
                 (primary + secondary + tertiary + quaternary + fullInput + notIdealQueried).distinct()
         }
         val firstInputCount = fetched.firstOrNull()?.inputCount ?: return processSlices(keys = keys, text = text, limit = limit, db = db)
@@ -362,7 +362,7 @@ private fun Researcher.processSlices(keys: List<VirtualInputKey>, text: String, 
 private fun Researcher.modify(item: Lexicon, keys: List<VirtualInputKey>, text: String, inputLength: Int, db: DatabaseHelper): Lexicon {
         if (inputLength <= 1) return item
         if (item.inputCount == inputLength) return item
-        val converted = Lexicon(text = item.text, romanization = item.romanization, input = text, mark = text, order = item.order)
+        val converted = Lexicon(text = item.text, romanization = item.romanization, input = text, mark = text, number = item.number)
         if (item.romanization.filter { it.isLowercaseBasicLatinLetter }.startsWith(text)) return converted
         val lastSyllable = item.romanization.split(PresetString.SPACE).lastOrNull()?.filterNot { it.isCantoneseToneDigit } ?: return item
         val tail = keys.drop(item.inputCount - 1)
@@ -385,10 +385,10 @@ private fun DatabaseHelper.anchorsMatch(keys: List<VirtualInputKey>, input: Stri
         val command = "SELECT rowid, word, romanization FROM core_lexicon WHERE anchors = $code LIMIT ${limitValue};"
         val cursor = this.readableDatabase.rawQuery(command, null)
         while (cursor.moveToNext()) {
-                val order = cursor.getInt(0)
+                val number = cursor.getInt(0)
                 val word = cursor.getString(1)
                 val romanization = cursor.getString(2)
-                val instance = Lexicon(text = word, romanization = romanization, input = inputText, mark = inputText, order = order)
+                val instance = Lexicon(text = word, romanization = romanization, input = inputText, mark = inputText, number = number)
                 instances.add(instance)
         }
         cursor.close()
@@ -402,11 +402,11 @@ private fun DatabaseHelper.spellMatch(text: String, input: String, mark: String?
         val command = "SELECT rowid, word, romanization FROM core_lexicon WHERE spell = $spellCode LIMIT ${limitValue};"
         val cursor = this.readableDatabase.rawQuery(command, null)
         while (cursor.moveToNext()) {
-                val order = cursor.getInt(0)
+                val number = cursor.getInt(0)
                 val word = cursor.getString(1)
                 val romanization = cursor.getString(2)
                 val markText = mark ?: romanization.filterNot { it.isCantoneseToneDigit }
-                val instance = Lexicon(text = word, romanization = romanization, input = input, mark = markText, order = order)
+                val instance = Lexicon(text = word, romanization = romanization, input = input, mark = markText, number = number)
                 instances.add(instance)
         }
         cursor.close()
@@ -419,11 +419,11 @@ private fun DatabaseHelper.strictMatch(anchors: Long, spell: Int, input: String,
         val command = "SELECT rowid, word, romanization FROM core_lexicon WHERE spell = $spell AND anchors = $anchors LIMIT ${limitValue};"
         val cursor = this.readableDatabase.rawQuery(command, null)
         while (cursor.moveToNext()) {
-                val order = cursor.getInt(0)
+                val number = cursor.getInt(0)
                 val word = cursor.getString(1)
                 val romanization = cursor.getString(2)
                 val markText = mark ?: romanization.filterNot { it.isCantoneseToneDigit }
-                val instance = Lexicon(text = word, romanization = romanization, input = input, mark = markText, order = order)
+                val instance = Lexicon(text = word, romanization = romanization, input = input, mark = markText, number = number)
                 instances.add(instance)
         }
         cursor.close()

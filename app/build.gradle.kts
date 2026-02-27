@@ -51,10 +51,10 @@ kotlin {
         jvmToolchain(21)
 }
 
-val composeVersion = "1.10.2"
+val composeVersion = "1.10.4"
 dependencies {
-        implementation("androidx.activity:activity-compose:1.12.3")
-        implementation("androidx.activity:activity-ktx:1.12.3")
+        implementation("androidx.activity:activity-compose:1.12.4")
+        implementation("androidx.activity:activity-ktx:1.12.4")
         implementation("androidx.compose.material:material-icons-extended:1.7.8")
         implementation("androidx.compose.material3:material3:1.4.0")
         implementation("androidx.compose.ui:ui:$composeVersion")
@@ -66,7 +66,7 @@ dependencies {
         implementation("com.louiscad.splitties:splitties-systemservices:3.0.0")
         implementation("com.louiscad.splitties:splitties-views:3.0.0")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
-        testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.2")
+        testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.3")
         androidTestImplementation("androidx.test.ext:junit:1.3.0")
         androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
         androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")

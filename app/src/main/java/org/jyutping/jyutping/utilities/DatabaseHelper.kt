@@ -9,9 +9,9 @@ import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.extensions.generateSymbol
 import org.jyutping.jyutping.extensions.isIdeographicCodePoint
-import org.jyutping.jyutping.keyboard.Candidate
-import org.jyutping.jyutping.keyboard.CandidateType
 import org.jyutping.jyutping.keyboard.ShapeLexicon
+import org.jyutping.jyutping.models.Lexicon
+import org.jyutping.jyutping.models.LexiconType
 import org.jyutping.jyutping.models.charCode
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.search.CantoneseLexicon
@@ -547,7 +547,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 cursor.close()
                 return items.sorted()
         }
-        fun symbolMatch(text: String, input: String): List<Candidate> {
+        fun symbolMatch(text: String, input: String): List<Lexicon> {
                 val code = text.hashCode()
                 val command = "SELECT category, unicode_version, code_point, cantonese, romanization FROM symbol_table WHERE spell = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
@@ -568,8 +568,8 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                         val shouldMapSkinTone: Boolean = emoji.category == EmojiCategory.SmileysAndPeople || emoji.category == EmojiCategory.Activity
                         val mappedCodePointText: String = if (shouldMapSkinTone) (mapSkinTone(codePointText) ?: codePointText) else codePointText
                         val symbolText: String = mappedCodePointText.generateSymbol()
-                        val type: CandidateType = if (emoji.identifier < 10) CandidateType.Emoji else CandidateType.Symbol
-                        Candidate(type = type, text = symbolText, lexiconText = emoji.cantonese, romanization = emoji.romanization, input = input)
+                        val type: LexiconType = if (emoji.identifier < 10) LexiconType.Emoji else LexiconType.Symbol
+                        Lexicon(type = type, text = symbolText, romanization = emoji.romanization, input = input, attached = emoji.cantonese)
                 }
         }
         private fun mapSkinTone(source: String): String? {
@@ -623,7 +623,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return emojis.distinct()
         }
 
-        fun fetchTextMarks(input: String): List<Candidate> {
+        fun fetchTextMarks(input: String): List<Lexicon> {
                 val code = input.hashCode()
                 val command = "SELECT mark FROM mark_table WHERE spell = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
@@ -633,6 +633,6 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                         textMarks.add(textMark)
                 }
                 cursor.close()
-                return textMarks.map { Candidate(type = CandidateType.Text, text = it, romanization = input, input = input) }
+                return textMarks.map { Lexicon(type = LexiconType.Text, text = it, romanization = input, input = input) }
         }
 }

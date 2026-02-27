@@ -7,7 +7,6 @@ import org.jyutping.jyutping.UserSettingsKey
 import org.jyutping.jyutping.extensions.isCantoneseToneDigit
 import org.jyutping.jyutping.extensions.isLowercaseBasicLatinLetter
 import org.jyutping.jyutping.extensions.negative
-import org.jyutping.jyutping.keyboard.Candidate
 import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.models.Scheme
 import org.jyutping.jyutping.models.Segmentation
@@ -37,10 +36,10 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                 db?.execSQL(createTable)
         }
 
-        fun process(candidates: List<Candidate>) {
-                val isNotAllCantonese = candidates.count { it.type.isNotCantonese() } > 0
+        fun process(lexicons: List<Lexicon>) {
+                val isNotAllCantonese = lexicons.any { it.isNotCantonese }
                 if (isNotAllCantonese) return
-                val lexicon = UserLexicon.join(candidates)
+                val lexicon = UserLexicon.join(lexicons)
                 val id = lexicon.id
                 val frequency = find(id)
                 if (frequency != null) {
@@ -74,9 +73,10 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                 }
         }
 
-        fun remove(candidate: Candidate) {
-                if (candidate.type.isNotCantonese()) return
-                val id: Int = (candidate.lexiconText + candidate.romanization).hashCode()
+        fun remove(lexicon: Lexicon) {
+                if (lexicon.isNotCantonese) return
+                // TODO: Use text and romanization instead of id
+                val id: Int = (lexicon.text + lexicon.romanization).hashCode()
                 val command: String = "DELETE FROM memory WHERE id = ${id};"
                 this.writableDatabase.execSQL(command)
         }
@@ -99,11 +99,11 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                 }
                 val queried = query(segmentation = segmentation, idealSchemes = idealSchemes)
                 if (fullMatched.isNotEmpty() || idealQueried.isNotEmpty()) {
-                        return (fullMatched + idealQueried).distinct().map { Lexicon(text = it.word, romanization = it.romanization, input = text, mark = it.mark, order = -1) } + queried
+                        return (fullMatched + idealQueried).distinct().map { Lexicon(text = it.word, romanization = it.romanization, input = text, mark = it.mark, number = -1) } + queried
                 }
                 val shortcuts = shortcutMatch(text = text, input = text, limit = 5)
                 if (shortcuts.isNotEmpty()) {
-                        return shortcuts.map { Lexicon(text = it.word, romanization = it.romanization, input = text, mark = it.mark, order = -1) } + queried
+                        return shortcuts.map { Lexicon(text = it.word, romanization = it.romanization, input = text, mark = it.mark, number = -1) } + queried
                 }
                 val shouldPartiallyMatch: Boolean = idealSchemes.isEmpty() || (keys.lastOrNull() == VirtualInputKey.letterM) || (keys.firstOrNull() == VirtualInputKey.letterM)
                 if (shouldPartiallyMatch.negative) return queried
@@ -183,7 +183,7 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                         .sorted()
                         .distinct()
                         .take(5)
-                        .map { Lexicon(text = it.word, romanization = it.romanization, input = text, mark = it.mark, order = -1) }
+                        .map { Lexicon(text = it.word, romanization = it.romanization, input = text, mark = it.mark, number = -1) }
                 return partialMatched + queried
         }
 
@@ -196,7 +196,7 @@ private fun UserLexiconHelper.query(segmentation: Segmentation, idealSchemes: Li
                         .sorted()
                         .distinct()
                         .take(6)
-                        .map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, order = -2) }
+                        .map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -2) }
         } else {
                 return idealSchemes.flatMap { scheme ->
                         if (scheme.size <= 1) return@flatMap emptyList<InternalLexicon>()
@@ -205,7 +205,7 @@ private fun UserLexiconHelper.query(segmentation: Segmentation, idealSchemes: Li
                         .sorted()
                         .distinct()
                         .take(6)
-                        .map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, order = -2) }
+                        .map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -2) }
         }
 }
 
