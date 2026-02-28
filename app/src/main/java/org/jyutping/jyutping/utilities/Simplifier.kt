@@ -1,72 +1,61 @@
 package org.jyutping.jyutping.utilities
 
-import org.jyutping.jyutping.presets.PresetString
+import org.jyutping.jyutping.extensions.characterCount
+import org.jyutping.jyutping.extensions.isIdeographicCodePoint
+import org.jyutping.jyutping.extensions.negative
+
+private fun DatabaseHelper.t2s(code: Int): Int {
+        val query = "SELECT right FROM variant_sim WHERE left = $code LIMIT 1;"
+        val cursor = this.readableDatabase.rawQuery(query, null)
+        if (cursor.moveToFirst()) {
+                val matchedCode = cursor.getInt(0)
+                cursor.close()
+                return matchedCode
+        } else {
+                cursor.close()
+                return code
+        }
+}
 
 object Simplifier {
         fun convert(text: String, db: DatabaseHelper): String {
                 return when (text.length) {
                         0 -> text
-                        1 -> db.t2s(text.first())
-                        2 -> phrases[text] ?: text.map { db.t2s(it) }.joinToString(separator = PresetString.EMPTY)
+                        1 -> buildString {
+                                appendCodePoint(db.t2s(text.codePointAt(0)))
+                        }
+                        2 -> phrases[text] ?: buildString {
+                                text.codePoints().forEachOrdered { appendCodePoint(db.t2s(it)) }
+                        }
                         else -> phrases[text] ?: transform(text, db)
                 }
         }
         private fun transform(text: String, db: DatabaseHelper): String {
-                val roundOne = replace(text, "W")
-                if (roundOne.matched.isEmpty()) return text.map { db.t2s(it) }.joinToString(separator = PresetString.EMPTY)
-                val roundTwo = replace(roundOne.modified, "X")
-                if (roundTwo.matched.isEmpty()) {
-                        val transformed: String = roundTwo.modified.map { db.t2s(it) }.joinToString(separator = PresetString.EMPTY)
-                        val reverted: String = transformed.replace(roundOne.replacement, roundOne.matched)
-                        return reverted
-                }
-                val roundThree = replace(roundTwo.modified, "Y")
-                if (roundThree.matched.isEmpty()) {
-                        val transformed: String = roundThree.modified.map { db.t2s(it) }.joinToString(separator = PresetString.EMPTY)
-                        val reverted: String = transformed
-                                .replace(roundOne.replacement, roundOne.matched)
-                                .replace(roundTwo.replacement, roundTwo.matched)
-                        return reverted
-                }
-                val roundFour = replace(roundThree.modified, "Z")
-                if (roundFour.matched.isEmpty()) {
-                        val transformed: String = roundFour.modified.map { db.t2s(it) }.joinToString(separator = PresetString.EMPTY)
-                        val reverted: String = transformed
-                                .replace(roundOne.replacement, roundOne.matched)
-                                .replace(roundTwo.replacement, roundTwo.matched)
-                                .replace(roundThree.replacement, roundThree.matched)
-                        return reverted
-                }
-                val transformed: String = roundFour.modified.map { db.t2s(it) }.joinToString(separator = PresetString.EMPTY)
-                val reverted: String = transformed
-                        .replace(roundOne.replacement, roundOne.matched)
-                        .replace(roundTwo.replacement, roundTwo.matched)
-                        .replace(roundThree.replacement, roundThree.matched)
-                        .replace(roundFour.replacement, roundFour.matched)
-                return reverted
-        }
-        private class Replaced(val modified: String, val matched: String, val replacement: String)
-        private fun replace(text: String, replacement: String): Replaced {
-                val textLength: Int = text.length
-                val keys = phrases.keys.filter { it.length <= textLength }.sortedByDescending { it.length }
-                var modified: String = text
-                var matched: String = PresetString.EMPTY
-                for (key in keys) {
-                        if (text.startsWith(key)) {
-                                modified = text.replace(key, replacement)
-                                matched = phrases[key]!!
-                                break
+                val codePoints = text.codePoints().toArray()
+                val charCount = codePoints.size
+                val result = StringBuilder(charCount)
+                var index = 0
+                while (index < charCount) {
+                        var matched = false
+                        val maxLength = minOf(maxPhraseLength, charCount - index)
+                        for (length in maxLength downTo MIN_LENGTH) {
+                                val substring = String(codePoints, index, length)
+                                val replacement = phrases[substring]
+                                if (replacement != null) {
+                                        result.append(replacement)
+                                        index += length
+                                        matched = true
+                                        break
+                                }
+                        }
+                        if (matched.negative) {
+                                val codePoint = codePoints[index]
+                                val convertedCodePoint: Int = if (codePoint.isIdeographicCodePoint) db.t2s(codePoint) else codePoint
+                                result.append(Character.toString(convertedCodePoint))
+                                index += 1
                         }
                 }
-                if (matched.isNotEmpty()) return Replaced(modified, matched, replacement)
-                for (key in keys) {
-                        if (text.contains(key)) {
-                                modified = text.replace(key, replacement)
-                                matched = phrases[key]!!
-                                break
-                        }
-                }
-                return Replaced(modified, matched, replacement)
+                return result.toString()
         }
 
         private val phrases: Map<String, String> = mapOf(
@@ -121,7 +110,6 @@ object Simplifier {
                 "哪吒" to "哪吒",
                 "回覆" to "回复",
                 "壺裏乾坤" to "壶里乾坤",
-                // "大目乾連冥間救母變文" to "大目乾连冥间救母变文",
                 "宫商角徵羽" to "宫商角徵羽",
                 "射覆" to "射复",
                 "尼乾子" to "尼乾子",
@@ -130,7 +118,6 @@ object Simplifier {
                 "幺麼小丑" to "幺麽小丑",
                 "幺麼小醜" to "幺麽小丑",
                 "康乾" to "康乾",
-                "張法乾" to "张法乾",
                 "彷彿" to "仿佛",
                 "彷徨" to "彷徨",
                 "徵弦" to "徵弦",
@@ -150,36 +137,14 @@ object Simplifier {
                 "拜覆" to "拜复",
                 "據瞭解" to "据了解",
                 "文錦覆阱" to "文锦复阱",
-                "於世成" to "於世成",
-                "於乎" to "於乎",
-                "於仲完" to "於仲完",
-                "於倫" to "於伦",
-                "於其一" to "於其一",
-                "於則" to "於则",
-                "於勇明" to "於勇明",
                 "於呼哀哉" to "於呼哀哉",
-                "於單" to "於单",
-                "於坦" to "於坦",
-                "於崇文" to "於崇文",
-                "於忠祥" to "於忠祥",
-                "於惟一" to "於惟一",
-                "於戲" to "於戏",
-                "於敖" to "於敖",
-                "於梨華" to "於梨华",
-                "於清言" to "於清言",
-                "於潛" to "於潜",
-                "於琳" to "於琳",
-                "於穆" to "於穆",
-                "於竹屋" to "於竹屋",
                 "於菟" to "於菟",
                 "於邑" to "於邑",
                 "於陵子" to "於陵子",
                 "旋乾轉坤" to "旋乾转坤",
                 "旋轉乾坤" to "旋转乾坤",
-                "旋轉乾坤之力" to "旋转乾坤之力",
                 "明瞭" to "明了",
                 "明覆" to "明复",
-                "書中自有千鍾粟" to "书中自有千锺粟",
                 "有序" to "有序",
                 "朝乾夕惕" to "朝乾夕惕",
                 "木吒" to "木吒",
@@ -238,7 +203,6 @@ object Simplifier {
                 "藉口" to "借口",
                 "藉喻" to "借喻",
                 "藉寇兵" to "借寇兵",
-                "藉寇兵齎盜糧" to "借寇兵赍盗粮",
                 "藉手" to "借手",
                 "藉據" to "借据",
                 "藉故" to "借故",
@@ -263,7 +227,6 @@ object Simplifier {
                 "藉資" to "借资",
                 "衹得" to "只得",
                 "衹見樹木" to "只见树木",
-                // "衹見樹木不見森林" to "只见树木不见森林",
                 "袖裏乾坤" to "袖里乾坤",
                 "覆上" to "复上",
                 "覆住" to "复住",
@@ -307,8 +270,7 @@ object Simplifier {
                 "踅門瞭戶" to "踅门了户",
                 "躪藉" to "躏借",
                 "郭子乾" to "郭子乾",
-                "酒逢知己千鍾少" to "酒逢知己千锺少",
-                // "酒逢知己千鍾少話不投機半句多" to "酒逢知己千锺少话不投机半句多",
+                "千鍾少" to "千锺少",
                 "醞藉" to "酝借",
                 "重覆" to "重复",
                 "金吒" to "金吒",
@@ -350,4 +312,7 @@ object Simplifier {
                 "龍鍾" to "龙钟",
                 "甚麼" to "什么",
         )
+
+        private const val MIN_LENGTH: Int = 2
+        private val maxPhraseLength: Int = phrases.keys.maxOf { it.characterCount }
 }

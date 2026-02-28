@@ -381,18 +381,6 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 }
         }
 
-        fun t2s(char: Char): String {
-                val code = char.code
-                val query = "SELECT right FROM variant_sim WHERE left = $code LIMIT 1;"
-                val cursor = this.readableDatabase.rawQuery(query, null)
-                if (cursor.moveToFirst()) {
-                        val simplifiedCode = cursor.getInt(0)
-                        cursor.close()
-                        return buildString { appendCodePoint(simplifiedCode) }
-                } else {
-                        return char.toString()
-                }
-        }
         fun reverseLookup(text: String): List<String> {
                 if (text.isBlank()) return emptyList()
                 val romanizations: MutableList<String> = mutableListOf()

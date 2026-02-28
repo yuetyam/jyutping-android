@@ -35,7 +35,6 @@ import kotlinx.coroutines.launch
 import org.jyutping.jyutping.emoji.Emoji
 import org.jyutping.jyutping.emoji.EmojiCategory
 import org.jyutping.jyutping.extensions.convertedS2T
-import org.jyutping.jyutping.extensions.convertedT2S
 import org.jyutping.jyutping.extensions.formattedCodePointText
 import org.jyutping.jyutping.extensions.generateSymbol
 import org.jyutping.jyutping.extensions.isBasicLatinLetter
@@ -78,6 +77,7 @@ import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
 import org.jyutping.jyutping.utilities.ShapeKeyMap
+import org.jyutping.jyutping.utilities.Simplifier
 import org.jyutping.jyutping.utilities.UserLexiconHelper
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
@@ -1247,8 +1247,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 selectedText?.let {
                         if (it.isEmpty()) return
                         val origin: String = it.toString()
-                        val simplified: String = origin.convertedT2S()
-                        val converted: String = if (simplified == origin) origin.convertedS2T() else simplified
+                        val mutilated: String = Simplifier.convert(text = origin, db = db)
+                        val converted: String = if (mutilated == origin) origin.convertedS2T() else mutilated
                         currentInputConnection.commitText(converted, 1)
                 }
         }
