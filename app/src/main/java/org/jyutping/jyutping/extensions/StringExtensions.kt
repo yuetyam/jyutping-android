@@ -58,6 +58,9 @@ fun String.generateSymbol(): String {
         }
 }
 
+/**
+ * Convert Unicode code point text to Character.
+ */
 fun String.toCharText(): String {
         val text = this
         return buildString {

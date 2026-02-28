@@ -3,9 +3,9 @@ package org.jyutping.jyutping.models
 import org.jyutping.jyutping.CharacterStandard
 import org.jyutping.jyutping.extensions.isCantoneseToneDigit
 import org.jyutping.jyutping.utilities.DatabaseHelper
-import org.jyutping.jyutping.utilities.HongKongVariantConverter
+import org.jyutping.jyutping.utilities.HongKongVariant
 import org.jyutping.jyutping.utilities.Simplifier
-import org.jyutping.jyutping.utilities.TaiwanVariantConverter
+import org.jyutping.jyutping.utilities.TaiwanVariant
 
 /** Display Candidate */
 data class Candidate(
@@ -51,8 +51,8 @@ data class Candidate(
         ) : this(
                 text = if (lexicon.isNotCantonese) lexicon.text else when (charset) {
                         CharacterStandard.Traditional -> lexicon.text
-                        CharacterStandard.HongKong -> HongKongVariantConverter.convert(lexicon.text)
-                        CharacterStandard.Taiwan -> TaiwanVariantConverter.convert(lexicon.text)
+                        CharacterStandard.HongKong -> HongKongVariant.convert(lexicon.text)
+                        CharacterStandard.Taiwan -> TaiwanVariant.convert(lexicon.text)
                         CharacterStandard.Simplified -> if (db != null) Simplifier.convert(lexicon.text, db) else lexicon.text
                 },
                 comment = if (lexicon.isNotCantonese) null else when (commentForm) {
