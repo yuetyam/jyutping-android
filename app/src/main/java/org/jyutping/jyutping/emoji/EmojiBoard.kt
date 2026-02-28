@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.EmojiEmotions
 import androidx.compose.material.icons.outlined.EmojiFlags
@@ -28,7 +29,6 @@ import androidx.compose.material.icons.outlined.EmojiTransportation
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -99,7 +100,7 @@ fun EmojiBoard(height: Dp) {
                         Text(
                                 text = context.getString(headerTitleId),
                                 color = if (isDarkMode) Color.White else Color.Black,
-                                fontSize = 13.sp
+                                fontSize = 12.sp
                         )
                 }
                 LazyHorizontalGrid(
@@ -148,7 +149,10 @@ fun EmojiBoard(height: Dp) {
                                 Text(
                                         text = "ABC",
                                         color = if (isDarkMode) Color.White else Color.Black,
-                                        style = MaterialTheme.typography.bodyLarge
+                                        autoSize = TextAutoSize.StepBased(minFontSize = 6.sp, maxFontSize = 16.sp),
+                                        fontSize = 16.sp,
+                                        overflow = TextOverflow.Ellipsis,
+                                        maxLines = 1
                                 )
                         }
                         IconButton(

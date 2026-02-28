@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,6 +35,7 @@ fun CandidateView(
         numberLabel: String? = null
 ) {
         val textColor: Color = if (isDarkMode) Color.White else Color.Black
+        val density = LocalDensity.current
         Box(
                 modifier = Modifier
                         .pointerInput(Unit) {
@@ -63,7 +66,7 @@ fun CandidateView(
                                         .padding(vertical = 2.dp)
                                         .height(20.dp),
                                 color = textColor,
-                                fontSize = 12.sp,
+                                fontSize = with(density) { 12.dp.toSp() },
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1
                         )
@@ -76,7 +79,7 @@ fun CandidateView(
                                 Text(
                                         text = it,
                                         color = textColor.copy(alpha = 0.6f),
-                                        fontSize = 10.sp
+                                        fontSize = with(density) { 10.dp.toSp() }
                                 )
                         }
                         Text(
@@ -84,7 +87,7 @@ fun CandidateView(
                                 modifier = Modifier
                                         .padding(bottom = if (commentStyle.isBelow()) 16.dp else 0.dp),
                                 color = textColor,
-                                fontSize = 20.sp,
+                                fontSize = with(density) { 20.dp.toSp() },
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1
                         )
@@ -115,6 +118,7 @@ fun AltCandidateView(modifier: Modifier, candidateState: Int, candidate: Candida
                         Text(
                                 text = candidate.comment ?: PresetString.SPACE,
                                 color = textColor,
+                                autoSize = TextAutoSize.StepBased(minFontSize = 6.sp, maxFontSize = 12.sp),
                                 fontSize = 12.sp,
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1
@@ -123,6 +127,7 @@ fun AltCandidateView(modifier: Modifier, candidateState: Int, candidate: Candida
                 Text(
                         text = candidate.text,
                         color = textColor,
+                        autoSize = TextAutoSize.StepBased(minFontSize = 15.sp, maxFontSize = 20.sp),
                         fontSize = 20.sp,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
@@ -131,6 +136,7 @@ fun AltCandidateView(modifier: Modifier, candidateState: Int, candidate: Candida
                         Text(
                                 text = candidate.comment ?: PresetString.SPACE,
                                 color = textColor,
+                                autoSize = TextAutoSize.StepBased(minFontSize = 6.sp, maxFontSize = 12.sp),
                                 fontSize = 12.sp,
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1

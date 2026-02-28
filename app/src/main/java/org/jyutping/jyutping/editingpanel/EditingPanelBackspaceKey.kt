@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Job
@@ -107,7 +109,10 @@ fun EditingPanelBackspaceKey(modifier: Modifier) {
                 Text(
                         text = stringResource(id = R.string.editing_panel_key_backspace),
                         color = if (isDarkMode) Color.White else Color.Black,
+                        autoSize = TextAutoSize.StepBased(minFontSize = 5.sp, maxFontSize = 11.sp),
                         fontSize = 11.sp,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
                 )
         }
 }

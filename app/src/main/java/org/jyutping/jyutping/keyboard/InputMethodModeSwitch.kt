@@ -17,9 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
@@ -35,8 +35,9 @@ fun InputMethodModeSwitch() {
         val height: Dp = 25.dp
         val partialWidth: Dp = 36.dp
         val totalWidth: Dp = 60.dp
-        val largerFontSize = 17.sp
-        val miniFontSize = 14.sp
+        val largerFontSize = 17.dp
+        val miniFontSize = 14.dp
+        val density = LocalDensity.current
         Box(
                 modifier = Modifier
                         .border(
@@ -75,7 +76,7 @@ fun InputMethodModeSwitch() {
                                         text = if (characterStandard.isSimplified) "粤" else "粵",
                                         modifier = Modifier.padding(end = if (inputMethodMode.isCantonese) 0.dp else 6.dp),
                                         color = if (isDarkMode) Color.White else Color.Black,
-                                        fontSize = if (inputMethodMode.isCantonese) largerFontSize else miniFontSize
+                                        fontSize = with(density) { if (inputMethodMode.isCantonese) largerFontSize.toSp() else miniFontSize.toSp() }
                                 )
                         }
                 }
@@ -102,7 +103,7 @@ fun InputMethodModeSwitch() {
                                         text = "A",
                                         modifier = Modifier.padding(start = if (inputMethodMode.isABC) 0.dp else 6.dp),
                                         color = if (isDarkMode) Color.White else Color.Black,
-                                        fontSize = if (inputMethodMode.isABC) largerFontSize else miniFontSize
+                                        fontSize = with(density) { if (inputMethodMode.isABC) largerFontSize.toSp() else miniFontSize.toSp() }
                                 )
                         }
                 }

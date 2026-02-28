@@ -20,9 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.models.KeyboardForm
@@ -45,6 +45,7 @@ fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
                 else -> "???"
         }
         val keyShape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
+        val density = LocalDensity.current
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -77,7 +78,7 @@ fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
                 Text(
                         text = keyText,
                         color = if (isDarkMode) Color.White else Color.Black,
-                        fontSize = 18.sp,
+                        fontSize = with(density) { 18.dp.toSp() },
                 )
         }
 }

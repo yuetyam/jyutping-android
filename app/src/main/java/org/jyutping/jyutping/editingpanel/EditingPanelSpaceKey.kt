@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,6 +25,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
@@ -104,7 +106,10 @@ fun EditingPanelSpaceKey(modifier: Modifier) {
                 Text(
                         text = if (isDragging) PresetConstant.SpaceKeyLongPressHint else stringResource(id = R.string.editing_panel_key_space),
                         color = if (isDarkMode) Color.White else Color.Black,
+                        autoSize = TextAutoSize.StepBased(maxFontSize = 15.sp),
                         fontSize = 15.sp,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
                 )
         }
 }
