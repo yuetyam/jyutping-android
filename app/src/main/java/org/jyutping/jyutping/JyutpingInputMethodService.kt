@@ -62,10 +62,12 @@ import org.jyutping.jyutping.models.Structure
 import org.jyutping.jyutping.models.BasicInputEvent
 import org.jyutping.jyutping.models.Candidate
 import org.jyutping.jyutping.models.Converter
+import org.jyutping.jyutping.models.CangjieConverter
 import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.models.Researcher
 import org.jyutping.jyutping.models.RomanizationForm
 import org.jyutping.jyutping.models.Segmenter
+import org.jyutping.jyutping.models.StrokeVirtualKey
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.length
 import org.jyutping.jyutping.models.mark
@@ -76,7 +78,6 @@ import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
-import org.jyutping.jyutping.utilities.ShapeKeyMap
 import org.jyutping.jyutping.utilities.Simplifier
 import org.jyutping.jyutping.utilities.UserLexiconHelper
 import kotlin.math.roundToInt
@@ -710,21 +711,21 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         VirtualInputKey.letterV -> {
                                 updateQwertyForm(QwertyForm.Cangjie)
-                                val inputText = joinedBufferTexts()
-                                if (inputText.length < 2) {
-                                        currentInputConnection.setComposingText(inputText, 1)
+                                val allKeys = bufferEvents.map { it.key }
+                                val textMarks = db.searchTextMarks(allKeys)
+                                val keys = allKeys.drop(1)
+                                val cangjieRadicals = keys.mapNotNull { CangjieConverter.cangjieOf(it) }
+                                val isValidSequence: Boolean = cangjieRadicals.isNotEmpty() && (cangjieRadicals.size == keys.size)
+                                if (isValidSequence) {
+                                        val mark = cangjieRadicals.joinToString(separator = PresetString.EMPTY)
+                                        currentInputConnection.setComposingText(mark, 1)
+                                        val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
+                                        val queried = Cangjie.reverseLookup(text, cangjieVariant.value, db)
+                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null) }.distinct()
                                 } else {
-                                        val text = inputText.drop(1)
-                                        val converted = text.mapNotNull { ShapeKeyMap.cangjieCode(it.toString()) }
-                                        val isValidSequence: Boolean = converted.isNotEmpty() && (converted.size == text.count())
-                                        if (isValidSequence) {
-                                                val mark = converted.joinToString(separator = PresetString.EMPTY)
-                                                currentInputConnection.setComposingText(mark, 1)
-                                                val suggestions = Cangjie.reverseLookup(text, cangjieVariant.value, db)
-                                                candidates.value = suggestions.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null ) }.distinct()
-                                        } else {
-                                                currentInputConnection.setComposingText(inputText, 1)
-                                        }
+                                        val mark = joinedBufferTexts()
+                                        currentInputConnection.setComposingText(mark, 1)
+                                        candidates.value = textMarks.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full) }.distinct()
                                 }
                                 if (isBuffering.value.not()) {
                                         isBuffering.value = true
@@ -732,22 +733,19 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         VirtualInputKey.letterX -> {
                                 updateQwertyForm(QwertyForm.Stroke)
-                                val inputText = joinedBufferTexts()
-                                if (inputText.length < 2) {
-                                        currentInputConnection.setComposingText(inputText, 1)
+                                val allKeys = bufferEvents.map { it.key }
+                                val textMarks = db.searchTextMarks(allKeys)
+                                val keys = allKeys.drop(1)
+                                val isValidSequence: Boolean = keys.isNotEmpty() && StrokeVirtualKey.isValidStrokes(keys)
+                                if (isValidSequence) {
+                                        val mark = StrokeVirtualKey.displayStrokesOf(keys)
+                                        currentInputConnection.setComposingText(mark, 1)
+                                        val queried = Stroke.reverseLookup(keys, db)
+                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null) }.distinct()
                                 } else {
-                                        val text = inputText.drop(1)
-                                        val transformed = ShapeKeyMap.strokeTransform(text)
-                                        val converted = transformed.mapNotNull { ShapeKeyMap.strokeCode(it) }
-                                        val isValidSequence: Boolean = converted.isNotEmpty() && (converted.size == text.length)
-                                        if (isValidSequence) {
-                                                val mark = converted.joinToString(separator = PresetString.EMPTY)
-                                                currentInputConnection.setComposingText(mark, 1)
-                                                val suggestions = Stroke.reverseLookup(transformed, db)
-                                                candidates.value = suggestions.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null ) }.distinct()
-                                        } else {
-                                                currentInputConnection.setComposingText(inputText, 1)
-                                        }
+                                        val mark = joinedBufferTexts()
+                                        currentInputConnection.setComposingText(mark, 1)
+                                        candidates.value = textMarks.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full) }.distinct()
                                 }
                                 if (isBuffering.value.not()) {
                                         isBuffering.value = true
@@ -785,7 +783,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
                                 val segmentation = Segmenter.segment(keys, db)
                                 val memory = if (isInputMemoryOn.value) userDB.search(keys = keys, text = text, segmentation = segmentation, db = db) else emptyList()
-                                val textMarks = if (isEmojiSuggestionsOn.value) db.fetchTextMarks(input = text) else emptyList()
+                                val textMarks = db.searchTextMarks(keys)
                                 val symbols = if (isEmojiSuggestionsOn.value) db.searchSymbols(text = text, segmentation = segmentation) else emptyList()
                                 val queried = Researcher.suggest(keys = keys, segmentation = segmentation, db = db)
                                 val suggestions = Converter.dispatch(

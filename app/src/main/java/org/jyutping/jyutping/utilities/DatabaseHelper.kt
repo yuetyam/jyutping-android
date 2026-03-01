@@ -12,6 +12,7 @@ import org.jyutping.jyutping.extensions.isIdeographicCodePoint
 import org.jyutping.jyutping.keyboard.ShapeLexicon
 import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.models.LexiconType
+import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.charCode
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.search.CantoneseLexicon
@@ -438,10 +439,10 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return items
         }
         fun cangjieMatch(version: Int, text: String): List<ShapeLexicon> {
-                val items: MutableList<ShapeLexicon> = mutableListOf()
                 val code = text.charCode() ?: return emptyList()
                 val command = "SELECT rowid, word FROM cangjie_table WHERE c${version}code = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
+                val items: MutableList<ShapeLexicon> = mutableListOf()
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
                         val word = cursor.getString(1)
@@ -466,10 +467,10 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return items.sorted()
         }
         fun quickMatch(version: Int, text: String): List<ShapeLexicon> {
-                val items: MutableList<ShapeLexicon> = mutableListOf()
                 val code = text.charCode() ?: return emptyList()
                 val command = "SELECT rowid, word FROM quick_table WHERE q${version}code = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
+                val items: MutableList<ShapeLexicon> = mutableListOf()
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
                         val word = cursor.getString(1)
@@ -482,48 +483,6 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
         fun quickGlob(version: Int, text: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
                 val command = "SELECT rowid, word, q${version}complex FROM quick_table WHERE quick${version} GLOB '${text}*' ORDER BY q${version}complex ASC LIMIT 100;"
-                val cursor = this.readableDatabase.rawQuery(command, null)
-                while (cursor.moveToNext()) {
-                        val rowID = cursor.getInt(0)
-                        val word = cursor.getString(1)
-                        val complex = cursor.getInt(2)
-                        val instance = ShapeLexicon(text = word, input = text, complex = complex, order = rowID)
-                        items.add(instance)
-                }
-                cursor.close()
-                return items.sorted()
-        }
-        fun strokeMatch(text: String): List<ShapeLexicon> {
-                val items: MutableList<ShapeLexicon> = mutableListOf()
-                val code = text.hashCode()
-                val command = "SELECT rowid, word FROM stroke_table WHERE spell = ${code};"
-                val cursor = this.readableDatabase.rawQuery(command, null)
-                while (cursor.moveToNext()) {
-                        val rowID = cursor.getInt(0)
-                        val word = cursor.getString(1)
-                        val instance = ShapeLexicon(text = word, input = text, complex = text.length, order = rowID)
-                        items.add(instance)
-                }
-                cursor.close()
-                return items
-        }
-        fun strokeWildcardMatch(text: String): List<ShapeLexicon> {
-                val items: MutableList<ShapeLexicon> = mutableListOf()
-                val command = "SELECT rowid, word, complex FROM stroke_table WHERE stroke LIKE '${text}' LIMIT 100;"
-                val cursor = this.readableDatabase.rawQuery(command, null)
-                while (cursor.moveToNext()) {
-                        val rowID = cursor.getInt(0)
-                        val word = cursor.getString(1)
-                        val complex = cursor.getInt(2)
-                        val instance = ShapeLexicon(text = word, input = text, complex = complex, order = rowID)
-                        items.add(instance)
-                }
-                cursor.close()
-                return items.sorted()
-        }
-        fun strokeGlob(text: String): List<ShapeLexicon> {
-                val items: MutableList<ShapeLexicon> = mutableListOf()
-                val command = "SELECT rowid, word, complex FROM stroke_table WHERE stroke GLOB '${text}*' ORDER BY complex ASC LIMIT 100;"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 while (cursor.moveToNext()) {
                         val rowID = cursor.getInt(0)
@@ -611,8 +570,9 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 return emojis.distinct()
         }
 
-        fun fetchTextMarks(input: String): List<Lexicon> {
-                val code = input.hashCode()
+        fun searchTextMarks(keys: List<VirtualInputKey>): List<Lexicon> {
+                val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
+                val code = text.hashCode()
                 val command = "SELECT mark FROM mark_table WHERE spell = ${code};"
                 val cursor = this.readableDatabase.rawQuery(command, null)
                 val textMarks: MutableList<String> = mutableListOf()
@@ -621,6 +581,6 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                         textMarks.add(textMark)
                 }
                 cursor.close()
-                return textMarks.map { Lexicon(type = LexiconType.Text, text = it, romanization = input, input = input) }
+                return textMarks.map { Lexicon(type = LexiconType.Text, text = it, romanization = text, input = text) }
         }
 }
