@@ -18,7 +18,7 @@ import org.jyutping.jyutping.speech.Speaker
 import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
-fun PronunciationLabel(pronunciation: Pronunciation) {
+fun PronunciationLabel(pronunciation: Pronunciation, word: String? = null) {
         val romanization = pronunciation.romanization
         val ipaText: String? = if (romanization.contains(PresetString.SPACE)) null else Jyutping2IPA.IPAText(romanization)
         val homophoneText: String? = if (pronunciation.homophones.isEmpty()) null else pronunciation.homophones.joinToString(separator = PresetString.SPACE)
@@ -48,7 +48,7 @@ fun PronunciationLabel(pronunciation: Pronunciation) {
                                 )
                         }
                         Spacer(modifier = Modifier.weight(1f))
-                        Speaker(romanization = romanization)
+                        Speaker(romanization = romanization, cantonese = word)
                 }
                 homophoneText?.let {
                         Row {

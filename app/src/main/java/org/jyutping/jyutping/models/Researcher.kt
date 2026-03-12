@@ -434,7 +434,7 @@ fun DatabaseHelper.searchSymbols(text: String, segmentation: Segmentation): List
         val fullMatched = symbolMatch(text = text, input = text)
         val textLength = text.length
         val schemes = segmentation.filter { it.length == textLength }
-        if (schemes.isEmpty()) return fullMatched
+        if (schemes.isEmpty()) return fullMatched.distinct()
         val matches = schemes.flatMap { symbolMatch(text = it.originText, input = text) }
-        return fullMatched + matches
+        return (fullMatched + matches).distinct()
 }

@@ -23,10 +23,10 @@ import androidx.compose.material.icons.outlined.EmojiFlags
 import androidx.compose.material.icons.outlined.EmojiFoodBeverage
 import androidx.compose.material.icons.outlined.EmojiNature
 import androidx.compose.material.icons.outlined.EmojiObjects
-import androidx.compose.material.icons.outlined.EmojiPeople
 import androidx.compose.material.icons.outlined.EmojiSymbols
 import androidx.compose.material.icons.outlined.EmojiTransportation
 import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.SportsSoccer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -240,7 +240,7 @@ fun EmojiBoard(height: Dp) {
                                 modifier = Modifier.weight(indicatorWeight)
                         ) {
                                 Icon(
-                                        imageVector = Icons.Outlined.EmojiPeople,
+                                        imageVector = Icons.Outlined.SportsSoccer,
                                         contentDescription = null,
                                         tint = if (isDarkMode) Color.White else Color.Black
                                 )

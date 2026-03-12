@@ -102,7 +102,7 @@ private fun ChoHokPronunciationView(entry: ChoHokYuetYamCitYiu) {
                                 color = colorScheme.onBackground
                         )
                         Spacer(modifier = Modifier.weight(1f))
-                        Speaker(romanization = entry.romanization)
+                        Speaker(romanization = entry.romanization, cantonese = entry.word)
                 }
                 homophoneText?.let {
                         Row {

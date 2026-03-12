@@ -30,7 +30,7 @@ fun CantoneseLexiconView(lexicon: CantoneseLexicon) {
                                 verticalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
                                 HorizontalDivider()
-                                PronunciationLabel(it)
+                                PronunciationLabel(pronunciation = it, word = lexicon.text)
                         }
                 }
                 lexicon.unihanDefinition?.let {
