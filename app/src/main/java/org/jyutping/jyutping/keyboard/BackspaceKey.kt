@@ -4,7 +4,7 @@ import android.os.Build
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -86,7 +86,7 @@ fun BackspaceKey(modifier: Modifier) {
                                 )
                         }
                         .pointerInput(Unit) {
-                                detectHorizontalDragGestures(
+                                detectDragGestures(
                                         onDragStart = {
                                                 isDraggable = true
                                                 isDragging = true
@@ -99,11 +99,12 @@ fun BackspaceKey(modifier: Modifier) {
                                                 isDraggable = true
                                                 isDragging = false
                                         },
-                                        onHorizontalDrag = { change, dragAmount ->
+                                        onDrag = { change, dragAmount ->
                                                 change.consume()
                                                 if (isDraggable) {
-                                                        val offsetX = change.position.x - change.previousPosition.x
-                                                        if (offsetX < -20f) {
+                                                        val offsetX = -(change.position.x - change.previousPosition.x)
+                                                        // drag from right to left
+                                                        if (offsetX > 20f) {
                                                                 context.audioFeedback(SoundEffect.Delete)
                                                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                                                                         view.performHapticFeedback(HapticFeedbackConstants.GESTURE_END)
@@ -112,6 +113,19 @@ fun BackspaceKey(modifier: Modifier) {
                                                                 }
                                                                 context.clearBuffer()
                                                                 isDraggable = false
+                                                        } else {
+                                                                val offsetY = -(change.position.y - change.previousPosition.y)
+                                                                // drag from bottom to top
+                                                                if (offsetY > 20f) {
+                                                                        context.audioFeedback(SoundEffect.Delete)
+                                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                                                                view.performHapticFeedback(HapticFeedbackConstants.GESTURE_END)
+                                                                        } else {
+                                                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_RELEASE)
+                                                                        }
+                                                                        context.clearBuffer()
+                                                                        isDraggable = false
+                                                                }
                                                         }
                                                 }
                                         }

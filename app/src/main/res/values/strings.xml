@@ -32,7 +32,7 @@
     <string name="home_label_more_introductions">More Introductions</string>
     <string name="screen_title_introductions">Introductions</string>
     <string name="introductions_heading_clear_buffer">Clear current pre-edit text</string>
-    <string name="introductions_content_clear_buffer">Swipe from right to left on the Delete key will clear current pre-edit syllables.</string>
+    <string name="introductions_content_clear_buffer">Swipe right to left, or bottom to top on the Delete key to clear the pre-edit syllables.</string>
     <string name="introductions_heading_forget_candidate">Remove a Candidate from Input Memory</string>
     <string name="introductions_content_forget_candidate">Long-press on a Candidate can delete it from Input Memory.</string>
     <string name="introductions_heading_position_insertion_point">Moving the insertion point</string>
