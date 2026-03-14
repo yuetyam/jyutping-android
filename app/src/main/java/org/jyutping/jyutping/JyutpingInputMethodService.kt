@@ -752,26 +752,34 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                         }
                         VirtualInputKey.letterQ -> {
-                                val inputText = joinedBufferTexts()
-                                if (inputText.length < 2) {
-                                        currentInputConnection.setComposingText(inputText, 1)
+                                val allKeys = bufferEvents.map { it.key }
+                                val textMarks = db.searchTextMarks(allKeys)
+                                val keys = allKeys.drop(1)
+                                if (keys.isEmpty()) {
+                                        val mark = joinedBufferTexts()
+                                        currentInputConnection.setComposingText(mark, 1)
+                                        candidates.value = textMarks.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full) }.distinct()
                                 } else {
-                                        val keys = bufferEvents.drop(1).map { it.key }
+                                        val bufferText = joinedBufferTexts()
                                         val segmentation = Segmenter.segment(keys, db)
-                                        val text = inputText.drop(1)
                                         val tailMark: String = run {
-                                                val bestScheme = segmentation.firstOrNull()
-                                                val leadingLength: Int = bestScheme?.length ?: 0
-                                                val leadingMark: String = bestScheme?.mark ?: PresetString.EMPTY
-                                                when (leadingLength) {
-                                                        0 -> text
-                                                        text.length -> leadingMark
-                                                        else -> (leadingMark + PresetString.SPACE + text.drop(leadingLength))
+                                                val isPeculiar = keys.any { it.isSyllableLetter.negative }
+                                                if (isPeculiar) {
+                                                        bufferText.drop(1).toneConverted().markFormatted()
+                                                } else {
+                                                        val bestScheme = segmentation.firstOrNull()
+                                                        val leadingLength: Int = bestScheme?.length ?: 0
+                                                        val leadingMark: String = bestScheme?.mark ?: PresetString.EMPTY
+                                                        when (leadingLength) {
+                                                                0 -> bufferText.drop(1)
+                                                                (bufferText.length - 1) -> leadingMark
+                                                                else -> (leadingMark + PresetString.SPACE + bufferText.drop(leadingLength + 1))
+                                                        }
                                                 }
                                         }
-                                        val mark: String = inputText.take(1) + PresetString.SPACE + tailMark
+                                        val mark: String = bufferText.take(1) + PresetString.SPACE + tailMark
                                         currentInputConnection.setComposingText(mark, 1)
-                                        val suggestions = Structure.reverseLookup(text, segmentation, db)
+                                        val suggestions = Structure.reverseLookup(keys, segmentation, db)
                                         candidates.value = suggestions.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null ) }.distinct()
                                 }
                                 if (isBuffering.value.negative) {
@@ -797,8 +805,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         db = if (characterStandard.value.isSimplified) db else null
                                 )
                                 val mark: String = run {
-                                        val hasOtherMarks = keys.any { it.isSyllableLetter.negative }
-                                        if (hasOtherMarks) {
+                                        val isPeculiar = keys.any { it.isSyllableLetter.negative }
+                                        if (isPeculiar) {
                                                 text.toneConverted().markFormatted()
                                         } else {
                                                 val firstCandidate = suggestions.firstOrNull()
