@@ -119,10 +119,12 @@ fun SettingsScreen(height: Dp) {
                 SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = PresetColor.green, uncheckedThumbColor = Color.DarkGray, uncheckedTrackColor = Color.LightGray, uncheckedBorderColor = Color.Gray)
         }
         val segmentedButtonColors: SegmentedButtonColors = if (isDarkMode) {
-                SegmentedButtonDefaults.colors(activeContainerColor = PresetColor.green, activeContentColor = Color.White, activeBorderColor = Color.DarkGray, inactiveContainerColor = Color.Black, inactiveContentColor = Color.White, inactiveBorderColor = Color.DarkGray)
+                SegmentedButtonDefaults.colors(activeContainerColor = PresetColor.blue, activeContentColor = Color.White, activeBorderColor = Color.DarkGray, inactiveContainerColor = Color.Black, inactiveContentColor = Color.White, inactiveBorderColor = Color.DarkGray)
         } else {
-                SegmentedButtonDefaults.colors(activeContainerColor = PresetColor.green, activeContentColor = Color.White, activeBorderColor = Color.LightGray, inactiveContainerColor = Color.White, inactiveContentColor = Color.Black, inactiveBorderColor = Color.LightGray)
+                SegmentedButtonDefaults.colors(activeContainerColor = PresetColor.blue, activeContentColor = Color.White, activeBorderColor = Color.LightGray, inactiveContainerColor = Color.White, inactiveContentColor = Color.Black, inactiveBorderColor = Color.LightGray)
         }
+        val onHaptic: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) HapticFeedbackConstants.TOGGLE_ON else HapticFeedbackConstants.VIRTUAL_KEY
+        val offHaptic: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) HapticFeedbackConstants.TOGGLE_OFF else HapticFeedbackConstants.VIRTUAL_KEY
         val version: String by lazy { BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")" }
         Column(
                 modifier = Modifier
@@ -312,6 +314,7 @@ fun SettingsScreen(height: Dp) {
                                                         Switch(
                                                                 checked = isAudioFeedbackOn,
                                                                 onCheckedChange = {
+                                                                        view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                         context.updateAudioFeedback(it)
                                                                 },
                                                                 thumbContent = { SwitchThumbContent(isAudioFeedbackOn) },
@@ -331,6 +334,7 @@ fun SettingsScreen(height: Dp) {
                                                         Switch(
                                                                 checked = isHapticFeedbackOn,
                                                                 onCheckedChange = {
+                                                                        context.audioFeedback(SoundEffect.Click)
                                                                         context.updateHapticFeedback(it)
                                                                 },
                                                                 thumbContent = { SwitchThumbContent(isHapticFeedbackOn) },
@@ -492,6 +496,8 @@ fun SettingsScreen(height: Dp) {
                                         Switch(
                                                 checked = useTenKeyNumberPad,
                                                 onCheckedChange = {
+                                                        context.audioFeedback(SoundEffect.Click)
+                                                        view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                         context.updateUseTenKeyNumberPad(it)
                                                 },
                                                 thumbContent = { SwitchThumbContent(useTenKeyNumberPad) },
@@ -517,6 +523,8 @@ fun SettingsScreen(height: Dp) {
                                                 Switch(
                                                         checked = showLowercaseKeys,
                                                         onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateShowLowercaseKeys(it)
                                                         },
                                                         thumbContent = { SwitchThumbContent(showLowercaseKeys) },
@@ -536,6 +544,8 @@ fun SettingsScreen(height: Dp) {
                                                 Switch(
                                                         checked = previewKeyText,
                                                         onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updatePreviewKeyText(it)
                                                         },
                                                         thumbContent = { SwitchThumbContent(previewKeyText) },
@@ -555,6 +565,8 @@ fun SettingsScreen(height: Dp) {
                                                 Switch(
                                                         checked = isHighContrastPreferred,
                                                         onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateHighContrast(it)
                                                         },
                                                         thumbContent = { SwitchThumbContent(isHighContrastPreferred) },
@@ -581,6 +593,8 @@ fun SettingsScreen(height: Dp) {
                                                 Switch(
                                                         checked = needsInputModeSwitchKey,
                                                         onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateNeedsInputModeSwitchKey(it)
                                                         },
                                                         thumbContent = { SwitchThumbContent(needsInputModeSwitchKey) },
@@ -600,6 +614,8 @@ fun SettingsScreen(height: Dp) {
                                                 Switch(
                                                         checked = needsLeftKey,
                                                         onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateNeedsLeftKey(it)
                                                         },
                                                         thumbContent = { SwitchThumbContent(needsLeftKey) },
@@ -619,6 +635,8 @@ fun SettingsScreen(height: Dp) {
                                                 Switch(
                                                         checked = needsRightKey,
                                                         onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateNeedsRightKey(it)
                                                         },
                                                         thumbContent = { SwitchThumbContent(needsRightKey) },
@@ -678,7 +696,11 @@ fun SettingsScreen(height: Dp) {
                                                         onValueChange = {
                                                                 keyHeightSliderPosition = it
                                                                 context.audioFeedback(SoundEffect.Click)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                                                                        view.performHapticFeedback(HapticFeedbackConstants.SEGMENT_FREQUENT_TICK)
+                                                                } else {
+                                                                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                }
                                                         },
                                                         onValueChangeFinished = {
                                                                 context.updateKeyHeightOffset(keyHeightSliderPosition.roundToInt())
@@ -713,7 +735,15 @@ fun SettingsScreen(height: Dp) {
                                                 ExtraBottomPadding.entries.forEachIndexed { index, level ->
                                                         SegmentedButton(
                                                                 selected = extraBottomPadding == level,
-                                                                onClick = { context.updateExtraBottomPadding(level) },
+                                                                onClick = {
+                                                                        context.audioFeedback(SoundEffect.Click)
+                                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                                                                                view.performHapticFeedback(HapticFeedbackConstants.SEGMENT_TICK)
+                                                                        } else {
+                                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                        }
+                                                                        context.updateExtraBottomPadding(level)
+                                                                },
                                                                 shape = SegmentedButtonDefaults.itemShape(index, ExtraBottomPadding.entries.count()),
                                                                 colors = segmentedButtonColors,
                                                                 icon = {}
@@ -944,6 +974,8 @@ fun SettingsScreen(height: Dp) {
                                         Switch(
                                                 checked = isEmojiSuggestionsOn,
                                                 onCheckedChange = {
+                                                        context.audioFeedback(SoundEffect.Click)
+                                                        view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                         context.updateEmojiSuggestionsState(it)
                                                 },
                                                 thumbContent = { SwitchThumbContent(isEmojiSuggestionsOn) },
@@ -969,6 +1001,8 @@ fun SettingsScreen(height: Dp) {
                                                 Switch(
                                                         checked = isInputMemoryOn,
                                                         onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateInputMemoryState(it)
                                                         },
                                                         thumbContent = { SwitchThumbContent(isInputMemoryOn) },

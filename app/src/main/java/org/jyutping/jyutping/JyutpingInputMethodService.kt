@@ -679,10 +679,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         VirtualInputKey.letterR -> {
                                 updateQwertyForm(QwertyForm.Pinyin)
-                                val inputText = joinedBufferTexts()
-                                if (inputText.length < 2) {
-                                        currentInputConnection.setComposingText(inputText, 1)
+                                if (bufferEvents.size < 2) {
+                                        val mark = joinedBufferTexts()
+                                        currentInputConnection.setComposingText(mark, 1)
                                 } else {
+                                        val inputText = joinedBufferTexts()
                                         val text = inputText.drop(1)
                                         val segmentation = PinyinSegmentor.segment(text, db)
                                         val suggestions = Pinyin.reverseLookup(text, segmentation, db)
@@ -701,7 +702,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                         }
                                                 }
                                         }
-                                        val mark = "r $tailMark"
+                                        val mark: String = inputText.take(1) + PresetString.SPACE + tailMark
                                         currentInputConnection.setComposingText(mark, 1)
                                         candidates.value = suggestions.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null ) }.distinct()
                                 }
