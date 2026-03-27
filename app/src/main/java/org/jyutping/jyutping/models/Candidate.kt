@@ -17,7 +17,10 @@ data class Candidate(
         val comment: String? = null,
 
         /** Internal candidate lexicon */
-        val lexicon: Lexicon
+        val lexicon: Lexicon,
+
+        /** Unique number to differentiate every key event */
+        val sessionState: Long
 ) {
 
         val isCantonese: Boolean
@@ -29,8 +32,7 @@ data class Candidate(
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true
                 if (other !is Candidate) return false
-                if (lexicon.type != other.lexicon.type) return false
-                return (text == other.text) && (comment == other.comment)
+                return (sessionState == other.sessionState) && (lexicon.type == other.lexicon.type) && (text == other.text) && (comment == other.comment)
         }
 
         override fun hashCode(): Int = text.hashCode() * 31 + comment.hashCode()
@@ -41,13 +43,15 @@ data class Candidate(
          * @param commentForm Romanization display form.
          * @param charset CharacterStandard for Lexicon text conversion.
          * @param db DatabaseHelper to simplify Lexicon text.
+         * @param sessionState Unique number to differentiate every key event
          * @return Candidate
          */
         constructor(
                 lexicon: Lexicon,
                 commentForm: RomanizationForm,
                 charset: CharacterStandard = CharacterStandard.Traditional,
-                db: DatabaseHelper? = null
+                db: DatabaseHelper? = null,
+                sessionState: Long
         ) : this(
                 text = if (lexicon.isNotCantonese) lexicon.text else when (charset) {
                         CharacterStandard.Traditional -> lexicon.text
@@ -60,6 +64,7 @@ data class Candidate(
                         RomanizationForm.Toneless -> lexicon.romanization.filterNot { it.isCantoneseToneDigit }
                         RomanizationForm.Nothing -> null
                 },
-                lexicon = lexicon
+                lexicon = lexicon,
+                sessionState = sessionState
         )
 }

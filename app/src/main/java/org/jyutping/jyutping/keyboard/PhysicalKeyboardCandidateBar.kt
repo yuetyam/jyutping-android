@@ -91,7 +91,10 @@ fun PhysicalKeyboardCandidateBar(height: Dp) {
                                 horizontalArrangement = Arrangement.spacedBy(0.dp),
                                 verticalAlignment = Alignment.CenterVertically
                         ) {
-                                itemsIndexed(candidates) { index, candidate ->
+                                itemsIndexed(
+                                        items = candidates,
+                                        key = { index, _ -> (candidateState * 1000L + index) }
+                                ) { index, candidate ->
                                         CandidateView(
                                                 candidateState = candidateState,
                                                 candidate = candidate,

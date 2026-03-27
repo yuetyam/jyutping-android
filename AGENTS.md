@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI Agents (Codex, Claude Code, etc.) when working with code in this repository.
 
 ## Project Overview
 
@@ -201,8 +201,5 @@ All tables are indexed on frequently queried columns (spell, anchors, code) for 
 ## Version & Build Info
 
 - Min SDK: 29 (Android 10)
-- Target SDK: 36 (Android 15)
+- Target SDK: 36 (Android 16)
 - Compile SDK: 36
-- AGP (Android Gradle Plugin): 9.0.0
-- Kotlin: 2.3.0
-- Compose: 1.10.1

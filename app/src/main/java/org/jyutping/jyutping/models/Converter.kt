@@ -12,7 +12,8 @@ object Converter {
                 queried: List<Lexicon>,
                 commentForm: RomanizationForm,
                 charset: CharacterStandard,
-                db: DatabaseHelper? = null
+                db: DatabaseHelper? = null,
+                sessionState: Long
         ): List<Candidate> {
                 val idealMemory = memory.filter { it.isIdealInputMemory }
                 val notIdealMemory = memory.filter { it.isNotIdealInputMemory }
@@ -32,6 +33,6 @@ object Converter {
                                 chained.add(index = index + 1, element = symbol)
                         }
                 }
-                return chained.map { Candidate(lexicon = it, commentForm = commentForm, charset = charset, db = db) }.distinct()
+                return chained.map { Candidate(lexicon = it, commentForm = commentForm, charset = charset, db = db, sessionState = sessionState) }.distinct()
         }
 }

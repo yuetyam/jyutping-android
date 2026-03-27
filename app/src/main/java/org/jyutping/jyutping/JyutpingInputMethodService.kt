@@ -28,10 +28,12 @@ import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jyutping.jyutping.emoji.Emoji
 import org.jyutping.jyutping.emoji.EmojiCategory
 import org.jyutping.jyutping.extensions.convertedS2T
@@ -196,6 +198,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         override fun onFinishInputView(finishingInput: Boolean) {
                 inputClientMonitorJob?.cancel()
+                suggestionJob?.cancel()
                 isPhysicalKeyboardActive.value = false
                 if (selectedLexicons.isNotEmpty()) {
                         selectedLexicons.clear()
@@ -207,6 +210,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
                 if (candidates.value.isNotEmpty()) {
                         candidates.value = emptyList()
+                        candidateState.value += 1L
                 }
                 super.onFinishInputView(finishingInput)
         }
@@ -653,13 +657,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         //endregion
 
-        val candidateState: MutableStateFlow<Int> by lazy { MutableStateFlow(1) }
+        val candidateState: MutableStateFlow<Long> by lazy { MutableStateFlow(1L) }
         val candidates: MutableStateFlow<List<Candidate>> by lazy { MutableStateFlow(listOf()) }
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.DATABASE_NAME) }
-
+        private var suggestionJob: Job? = null
         private var bufferEvents: List<BasicInputEvent> by Delegates.observable(emptyList()) { _, _, newValue ->
-                candidates.value = emptyList()
+                suggestionJob?.cancel()
                 candidateOffset.value = 0
+                val sessionState: Long = candidateState.value + 1L
                 when (newValue.firstOrNull()?.key) {
                         null -> {
                                 currentInputConnection.setComposingText(PresetString.EMPTY, 1)
@@ -676,12 +681,17 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                                 val newForm: QwertyForm = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Jyutping
                                 updateQwertyForm(newForm)
+                                updateSpaceKeyForm()
+                                updateReturnKeyForm()
+                                candidates.value = emptyList()
+                                candidateState.value += 1L
                         }
                         VirtualInputKey.letterR -> {
                                 updateQwertyForm(QwertyForm.Pinyin)
                                 if (bufferEvents.size < 2) {
                                         val mark = joinedBufferTexts()
                                         currentInputConnection.setComposingText(mark, 1)
+                                        candidates.value = emptyList()
                                 } else {
                                         val inputText = joinedBufferTexts()
                                         val text = inputText.drop(1)
@@ -704,11 +714,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         }
                                         val mark: String = inputText.take(1) + PresetString.SPACE + tailMark
                                         currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = suggestions.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null ) }.distinct()
+                                        candidates.value = suggestions.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
                                 }
-                                if (isBuffering.value.not()) {
-                                        isBuffering.value = true
-                                }
+                                updateInputSessionStates()
                         }
                         VirtualInputKey.letterV -> {
                                 updateQwertyForm(QwertyForm.Cangjie)
@@ -722,15 +730,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         currentInputConnection.setComposingText(mark, 1)
                                         val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
                                         val queried = Cangjie.reverseLookup(text, cangjieVariant.value, db)
-                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null) }.distinct()
+                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
                                 } else {
                                         val mark = joinedBufferTexts()
                                         currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = textMarks.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full) }.distinct()
+                                        candidates.value = textMarks.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, sessionState = sessionState) }.distinct()
                                 }
-                                if (isBuffering.value.not()) {
-                                        isBuffering.value = true
-                                }
+                                updateInputSessionStates()
                         }
                         VirtualInputKey.letterX -> {
                                 updateQwertyForm(QwertyForm.Stroke)
@@ -742,15 +748,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val mark = StrokeVirtualKey.displayStrokesOf(keys)
                                         currentInputConnection.setComposingText(mark, 1)
                                         val queried = Stroke.reverseLookup(keys, db)
-                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null) }.distinct()
+                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
                                 } else {
                                         val mark = joinedBufferTexts()
                                         currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = textMarks.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full) }.distinct()
+                                        candidates.value = textMarks.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, sessionState = sessionState) }.distinct()
                                 }
-                                if (isBuffering.value.not()) {
-                                        isBuffering.value = true
-                                }
+                                updateInputSessionStates()
                         }
                         VirtualInputKey.letterQ -> {
                                 val allKeys = bufferEvents.map { it.key }
@@ -759,7 +763,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 if (keys.isEmpty()) {
                                         val mark = joinedBufferTexts()
                                         currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = textMarks.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full) }.distinct()
+                                        candidates.value = textMarks.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, sessionState = sessionState) }.distinct()
                                 } else {
                                         val bufferText = joinedBufferTexts()
                                         val segmentation = Segmenter.segment(keys, db)
@@ -781,20 +785,22 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val mark: String = bufferText.take(1) + PresetString.SPACE + tailMark
                                         currentInputConnection.setComposingText(mark, 1)
                                         val suggestions = Structure.reverseLookup(keys, segmentation, db)
-                                        candidates.value = suggestions.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null ) }.distinct()
+                                        candidates.value = suggestions.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState ) }.distinct()
                                 }
-                                if (isBuffering.value.negative) {
-                                        isBuffering.value = true
-                                }
+                                updateInputSessionStates()
                         }
-                        else -> {
+                        else -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val keys = newValue.map { it.key }
                                 val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
                                 val segmentation = Segmenter.segment(keys, db)
-                                val memory = if (isInputMemoryOn.value) userDB.search(keys = keys, text = text, segmentation = segmentation, db = db) else emptyList()
-                                val textMarks = db.searchTextMarks(keys)
-                                val symbols = if (isEmojiSuggestionsOn.value) db.searchSymbols(text = text, segmentation = segmentation) else emptyList()
-                                val queried = Researcher.suggest(keys = keys, segmentation = segmentation, db = db)
+                                val memoryDeferred = async { if (isInputMemoryOn.value) userDB.search(keys = keys, text = text, segmentation = segmentation, db = db) else emptyList() }
+                                val textMarksDeferred = async { db.searchTextMarks(keys) }
+                                val symbolsDeferred = async { if (isEmojiSuggestionsOn.value) db.searchSymbols(text = text, segmentation = segmentation) else emptyList() }
+                                val queriedDeferred = async { Researcher.suggest(keys = keys, segmentation = segmentation, db = db) }
+                                val memory = memoryDeferred.await()
+                                val textMarks = textMarksDeferred.await()
+                                val symbols = symbolsDeferred.await()
+                                val queried = queriedDeferred.await()
                                 val suggestions = Converter.dispatch(
                                         memory = memory,
                                         defined = emptyList(),
@@ -803,7 +809,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         queried = queried,
                                         commentForm = RomanizationForm.Full,
                                         charset = characterStandard.value,
-                                        db = if (characterStandard.value.isSimplified) db else null
+                                        db = if (characterStandard.value.isSimplified) db else null,
+                                        sessionState = sessionState
                                 )
                                 val mark: String = run {
                                         val isPeculiar = keys.any { it.isSyllableLetter.negative }
@@ -818,14 +825,19 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 }
                                         }
                                 }
-                                currentInputConnection.setComposingText(mark, 1)
-                                candidates.value = suggestions
-                                if (isBuffering.value.not()) {
-                                        isBuffering.value = true
+                                withContext(Dispatchers.Main) {
+                                        currentInputConnection.setComposingText(mark, 1)
+                                        candidates.value = suggestions
+                                        updateInputSessionStates()
                                 }
                         }
                 }
-                candidateState.value += 1
+        }
+        private fun updateInputSessionStates() {
+                if (isBuffering.value.not()) {
+                        isBuffering.value = true
+                }
+                candidateState.value += 1L
                 updateSpaceKeyForm()
                 updateReturnKeyForm()
         }

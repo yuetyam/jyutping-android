@@ -26,7 +26,7 @@ import org.jyutping.jyutping.presets.PresetString
 // For CandidateScrollBar
 @Composable
 fun CandidateView(
-        candidateState: Int,
+        candidateState: Long,
         candidate: Candidate,
         commentStyle: CommentStyle,
         isDarkMode: Boolean,
@@ -41,7 +41,7 @@ fun CandidateView(
                         .pointerInput(Unit) {
                                 detectTapGestures(
                                         onLongPress = {
-                                                if (candidateState > 0) {
+                                                if (candidateState > 0L) {
                                                         deletion()
                                                 }
                                         },
@@ -97,14 +97,22 @@ fun CandidateView(
 
 // For CandidateBoard
 @Composable
-fun AltCandidateView(modifier: Modifier, candidateState: Int, candidate: Candidate, commentStyle: CommentStyle, isDarkMode: Boolean, selection: () -> Unit, deletion: () -> Unit) {
+fun AltCandidateView(
+        modifier: Modifier,
+        candidateState: Long,
+        candidate: Candidate,
+        commentStyle: CommentStyle,
+        isDarkMode: Boolean,
+        selection: () -> Unit,
+        deletion: () -> Unit
+) {
         val textColor: Color = if (isDarkMode) Color.White else Color.Black
         Column(
                 modifier = modifier
                         .pointerInput(Unit) {
                                 detectTapGestures(
                                         onLongPress = {
-                                                if (candidateState > 0) {
+                                                if (candidateState > 0L) {
                                                         deletion()
                                                 }
                                         },

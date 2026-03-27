@@ -49,7 +49,7 @@ private fun Candidate.width(): Dp = when (this.lexicon.type) {
         else -> if (this.text.length == 1) 64.dp else (this.text.length * 18).dp
 }
 
-private class CandidateRow(val identifier: Int, val candidates: List<Candidate>, val width: Dp = candidates.map { it.width() }.fold(0.dp) { acc, w -> acc + w })
+private class CandidateRow(val identifier: Long, val candidates: List<Candidate>, val width: Dp = candidates.map { it.width() }.fold(0.dp) { acc, w -> acc + w })
 
 @Composable
 fun CandidateBoard(height: Dp, isPhysicalKeyboard: Boolean = false) {
@@ -79,11 +79,11 @@ fun CandidateBoard(height: Dp, isPhysicalKeyboard: Boolean = false) {
         LaunchedEffect(candidateState) {
                 state.animateScrollToItem(index = 0, scrollOffset = 0)
         }
-        val minRowIdentifier: Int = 1000
+        val minRowIdentifier: Long = 1000L
         val candidateRows: List<CandidateRow> by lazy {
                 val rows: MutableList<CandidateRow> = mutableListOf()
                 var cache: MutableList<Candidate> = mutableListOf()
-                var rowID: Int = minRowIdentifier
+                var rowID: Long = minRowIdentifier
                 var rowWidth: Dp = 0.dp
                 for (index in candidates.indices) {
                         val candidate = candidates[index]
@@ -96,7 +96,7 @@ fun CandidateBoard(height: Dp, isPhysicalKeyboard: Boolean = false) {
                                 val row = CandidateRow(identifier = rowID, candidates = cache)
                                 rows.add(row)
                                 cache = mutableListOf(candidate)
-                                rowID += 1
+                                rowID += 1L
                                 rowWidth = length
                         }
                 }
@@ -125,7 +125,10 @@ fun CandidateBoard(height: Dp, isPhysicalKeyboard: Boolean = false) {
                         verticalArrangement = Arrangement.Top,
                         horizontalAlignment = Alignment.Start
                 ) {
-                        items(candidateRows) { row ->
+                        items(
+                                items = candidateRows,
+                                key = { (candidateState * 2000L + it.identifier) }
+                        ) { row ->
                                 Row(
                                         modifier = Modifier
                                                 .defaultMinSize(minHeight = collapseHeight)
@@ -133,7 +136,7 @@ fun CandidateBoard(height: Dp, isPhysicalKeyboard: Boolean = false) {
                                         horizontalArrangement = Arrangement.spacedBy(0.dp),
                                         verticalAlignment = rowVerticalAlignment
                                 ) {
-                                        row.candidates.map {
+                                        row.candidates.forEach {
                                                 AltCandidateView(
                                                         modifier = Modifier
                                                                 .padding(2.dp)
