@@ -49,6 +49,15 @@ Jyutping for iOS & macOS: [yuetyam/jyutping](https://github.com/yuetyam/jyutping
 </a>
 <br>
 <br>
+<a href="https://f-droid.org/packages/org.jyutping.jyutping">
+        <img src="images/badge-fdroid-download.svg" alt="F-Droid badge" width="150"/>
+</a>
+<br>
+<a href="https://f-droid.org/packages/org.jyutping.jyutping">
+        <img src="images/qrcode-fdroid.png" alt="F-Droid QR Code" width="150"/>
+</a>
+<br>
+<br>
 Also available on our website: https://jyutping.app/android
 
 ## How to build
@@ -76,11 +85,11 @@ Then open this project with Android Studio.
 ## Thank you for your support
 Website: https://jyutping.app/donate
 
-Patreon: https://patreon.com/bingzheung
-
 愛發電: https://afdian.com/a/jyutping
 
 Ko-fi: https://ko-fi.com/zheung
+
+Patreon: https://patreon.com/bingzheung
 
 PayPal: https://paypal.me/bingzheung
 

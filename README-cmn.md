@@ -43,6 +43,15 @@ Android 粵語拼音輸入法。
 </a>
 <br>
 <br>
+<a href="https://f-droid.org/packages/org.jyutping.jyutping">
+        <img src="images/badge-fdroid-download.svg" alt="F-Droid badge" width="150"/>
+</a>
+<br>
+<a href="https://f-droid.org/packages/org.jyutping.jyutping">
+        <img src="images/qrcode-fdroid.png" alt="F-Droid QR Code" width="150"/>
+</a>
+<br>
+<br>
 更多下載方式請前往官網: https://jyutping.app/android
 
 ## 如何構建（How to build）
@@ -70,11 +79,11 @@ cd ./preparing/
 ## 支持作者開發（Support this project）
 官網: https://jyutping.app/donate
 
-Patreon: https://patreon.com/bingzheung
-
 愛發電: https://afdian.com/a/jyutping
 
 Ko-fi: https://ko-fi.com/zheung
+
+Patreon: https://patreon.com/bingzheung
 
 PayPal: https://paypal.me/bingzheung
 
