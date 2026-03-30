@@ -54,8 +54,6 @@ import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.models.KeyboardInterface
 import org.jyutping.jyutping.models.KeyboardLayout
 import org.jyutping.jyutping.keyboard.NumericLayout
-import org.jyutping.jyutping.keyboard.Pinyin
-import org.jyutping.jyutping.keyboard.PinyinSegmentor
 import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.ReturnKeyForm
 import org.jyutping.jyutping.keyboard.SpaceKeyForm
@@ -66,13 +64,16 @@ import org.jyutping.jyutping.models.Candidate
 import org.jyutping.jyutping.models.Converter
 import org.jyutping.jyutping.models.CangjieConverter
 import org.jyutping.jyutping.models.Lexicon
+import org.jyutping.jyutping.models.PinyinResearcher
+import org.jyutping.jyutping.models.PinyinSegmenter
 import org.jyutping.jyutping.models.Researcher
 import org.jyutping.jyutping.models.RomanizationForm
 import org.jyutping.jyutping.models.Segmenter
 import org.jyutping.jyutping.models.StrokeVirtualKey
 import org.jyutping.jyutping.models.VirtualInputKey
-import org.jyutping.jyutping.models.length
 import org.jyutping.jyutping.models.mark
+import org.jyutping.jyutping.models.schemeLength
+import org.jyutping.jyutping.models.pinyinSchemeLength
 import org.jyutping.jyutping.models.searchSymbols
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
@@ -186,7 +187,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 isDarkMode.value = isNightMode
                 inputMethodMode.value = InputMethodMode.Cantonese
                 keyboardForm.value = KeyboardForm.Alphabetic
-                qwertyForm.value = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Jyutping
+                qwertyForm.value = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Primary
                 updateSpaceKeyForm()
                 updateReturnKeyForm(attribute)
                 inputClientMonitorJob = CoroutineScope(Dispatchers.Main).launch {
@@ -346,7 +347,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
 
         val qwertyForm: MutableStateFlow<QwertyForm> by lazy {
-                val form: QwertyForm = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Jyutping
+                val form: QwertyForm = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Primary
                 MutableStateFlow(form)
         }
         private fun updateQwertyForm(form: QwertyForm) {
@@ -444,7 +445,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun updateKeyboardLayout(layout: KeyboardLayout) {
                 keyboardLayout.value = layout
-                val newForm: QwertyForm = if (layout.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Jyutping
+                val newForm: QwertyForm = if (layout.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Primary
                 updateQwertyForm(newForm)
                 sharedPreferences.edit {
                         putInt(UserSettingsKey.KeyboardLayout, layout.identifier)
@@ -679,44 +680,45 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 if (keyboardForm.value == KeyboardForm.CandidateBoard) {
                                         transformTo(KeyboardForm.Alphabetic)
                                 }
-                                val newForm: QwertyForm = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Jyutping
+                                val newForm: QwertyForm = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Primary
                                 updateQwertyForm(newForm)
                                 updateSpaceKeyForm()
                                 updateReturnKeyForm()
                                 candidates.value = emptyList()
                                 candidateState.value += 1L
                         }
-                        VirtualInputKey.letterR -> {
-                                updateQwertyForm(QwertyForm.Pinyin)
-                                if (bufferEvents.size < 2) {
-                                        val mark = joinedBufferTexts()
-                                        currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = emptyList()
-                                } else {
-                                        val inputText = joinedBufferTexts()
-                                        val text = inputText.drop(1)
-                                        val segmentation = PinyinSegmentor.segment(text, db)
-                                        val suggestions = Pinyin.reverseLookup(text, segmentation, db)
-                                        val tailMark: String = run {
-                                                val firstCandidate = suggestions.firstOrNull()
-                                                if (firstCandidate != null && firstCandidate.inputCount == text.length) {
-                                                        firstCandidate.mark
-                                                } else {
-                                                        val bestScheme = segmentation.firstOrNull()
-                                                        val leadingLength: Int = bestScheme?.map { it.length }?.fold(0) { acc, i -> acc + i } ?: 0
-                                                        val leadingText: String = bestScheme?.joinToString(separator = PresetString.SPACE) ?: PresetString.EMPTY
-                                                        when (leadingLength) {
-                                                                0 -> text
-                                                                text.length -> leadingText
-                                                                else -> (leadingText + PresetString.SPACE + text.drop(leadingLength))
-                                                        }
+                        VirtualInputKey.letterR -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
+                                val allKeys = bufferEvents.map { it.key }
+                                val keys = allKeys.drop(1)
+                                val segmentation = PinyinSegmenter.segment(keys, db)
+                                val textMarksDeferred = async { db.searchTextMarks(allKeys) }
+                                val queriedDeferred = async { PinyinResearcher.reverseLookup(keys, segmentation, db) }
+                                val textMarks = textMarksDeferred.await()
+                                val queried = queriedDeferred.await()
+                                val suggestions = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
+                                val bufferText = joinedBufferTexts()
+                                val tailMark: String = run {
+                                        val firstLexicon = queried.firstOrNull()
+                                        if (firstLexicon != null && firstLexicon.inputCount == keys.size) {
+                                                firstLexicon.mark
+                                        } else {
+                                                val bestScheme = segmentation.firstOrNull()
+                                                val leadingLength: Int = bestScheme?.pinyinSchemeLength ?: 0
+                                                val leadingText: String = bestScheme?.joinToString(separator = PresetString.SPACE) { it.text } ?: PresetString.EMPTY
+                                                when (leadingLength) {
+                                                        0 -> bufferText.drop(1)
+                                                        keys.size -> leadingText
+                                                        else -> (leadingText + PresetString.SPACE + bufferText.drop(leadingLength + 1))
                                                 }
                                         }
-                                        val mark: String = inputText.take(1) + PresetString.SPACE + tailMark
-                                        currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = suggestions.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
                                 }
-                                updateInputSessionStates()
+                                val mark: String = bufferText.take(1) + PresetString.SPACE + tailMark
+                                withContext(Dispatchers.Main) {
+                                        updateQwertyForm(QwertyForm.Pinyin)
+                                        currentInputConnection.setComposingText(mark, 1)
+                                        candidates.value = suggestions
+                                        updateInputSessionStates()
+                                }
                         }
                         VirtualInputKey.letterV -> {
                                 updateQwertyForm(QwertyForm.Cangjie)
@@ -773,7 +775,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                         bufferText.drop(1).toneConverted().markFormatted()
                                                 } else {
                                                         val bestScheme = segmentation.firstOrNull()
-                                                        val leadingLength: Int = bestScheme?.length ?: 0
+                                                        val leadingLength: Int = bestScheme?.schemeLength ?: 0
                                                         val leadingMark: String = bestScheme?.mark ?: PresetString.EMPTY
                                                         when (leadingLength) {
                                                                 0 -> bufferText.drop(1)

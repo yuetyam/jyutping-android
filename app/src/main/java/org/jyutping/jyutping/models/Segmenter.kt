@@ -5,7 +5,7 @@ import kotlin.math.min
 
 typealias Segmentation = List<Scheme>
 
-fun Segmentation.descended(): Segmentation = this.sortedWith(compareBy({it.length.unaryMinus()}, {it.size}))
+fun Segmentation.descended(): Segmentation = this.sortedWith(compareBy({it.schemeLength.unaryMinus()}, {it.size}))
 
 object Segmenter {
         private fun splitLeading(keys: List<VirtualInputKey>, db: DatabaseHelper): List<Syllable> {
@@ -22,7 +22,7 @@ object Segmenter {
                 var shouldContinue = true
                 while (shouldContinue) {
                         for (scheme in segmentation.toList()) {
-                                val schemeLength = scheme.length
+                                val schemeLength = scheme.schemeLength
                                 if (schemeLength >= inputLength) continue
                                 val tailKeys = keys.drop(schemeLength)
                                 val tailSyllables = splitLeading(tailKeys, db)

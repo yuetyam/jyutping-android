@@ -6,7 +6,7 @@ import org.jyutping.jyutping.presets.PresetString
 typealias Scheme = List<Syllable>
 
 /** Count of all input keys */
-val Scheme.length: Int
+val Scheme.schemeLength: Int
         get() = this.map { it.alias.size }.fold(0) { acc, i -> acc + i}
 
 val Scheme.aliasText: String

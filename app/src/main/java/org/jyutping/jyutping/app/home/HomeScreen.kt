@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -21,7 +22,6 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Keyboard
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -38,7 +38,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -182,13 +184,21 @@ fun HomeScreen(navController: NavHostController) {
                                                                 horizontalArrangement = Arrangement.spacedBy(space = 12.dp, alignment = Alignment.CenterHorizontally),
                                                                 verticalAlignment = Alignment.CenterVertically
                                                         ) {
-                                                                Icon(imageVector = Icons.Outlined.Settings, contentDescription = null)
+                                                                Icon(
+                                                                        imageVector = ImageVector.vectorResource(id = R.drawable.button_settings),
+                                                                        contentDescription = null,
+                                                                        modifier = Modifier.size(20.dp)
+                                                                )
                                                                 Text(
                                                                         text = stringResource(id = R.string.home_button_enable_keyboard),
                                                                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                                                                         fontWeight = FontWeight.Medium
                                                                 )
-                                                                Icon(imageVector = Icons.Outlined.Settings, contentDescription = null, modifier = Modifier.alpha(0f))
+                                                                Icon(
+                                                                        imageVector = ImageVector.vectorResource(id = R.drawable.button_settings),
+                                                                        contentDescription = null,
+                                                                        modifier = Modifier.size(20.dp).alpha(0f)
+                                                                )
                                                         }
                                                 }
                                         }

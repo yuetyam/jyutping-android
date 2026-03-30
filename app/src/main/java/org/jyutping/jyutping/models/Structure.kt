@@ -90,7 +90,7 @@ object Structure {
         private fun search(text: String, segmentation: Segmentation, db: DatabaseHelper): List<Lexicon> {
                 val matched = db.structureMatch(text = text)
                 val textLength = text.length
-                val queried = segmentation.filter { it.length == textLength }.flatMap { db.structureMatch(text = it.originText) }
+                val queried = segmentation.filter { it.schemeLength == textLength }.flatMap { db.structureMatch(text = it.originText) }
                 return (matched + queried).distinct()
         }
 }

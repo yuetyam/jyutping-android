@@ -14,7 +14,7 @@ import org.jyutping.jyutping.models.Segmenter
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.aliasAnchors
 import org.jyutping.jyutping.models.aliasText
-import org.jyutping.jyutping.models.length
+import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.models.mark
 import org.jyutping.jyutping.models.originAnchorsText
 import org.jyutping.jyutping.models.originText
@@ -91,7 +91,7 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                 val inputLength = keys.size
                 // val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
                 val fullMatched = spellMatch(text = text, input = text)
-                val idealSchemes = segmentation.filter { it.length == inputLength }
+                val idealSchemes = segmentation.filter { it.schemeLength == inputLength }
                 val idealQueried: List<InternalLexicon> = idealSchemes.flatMap { scheme ->
                         val spellCode = scheme.originText.hashCode()
                         val shortcutCode = scheme.originAnchorsText.hashCode()
@@ -109,7 +109,7 @@ class UserLexiconHelper(context: Context) : SQLiteOpenHelper(context, UserSettin
                 if (shouldPartiallyMatch.negative) return queried
                 val prefixMatched: List<InternalLexicon> = segmentation.flatMap { scheme ->
                         if (scheme.isEmpty()) return@flatMap emptyList<InternalLexicon>()
-                        val tail = keys.drop(scheme.length)
+                        val tail = keys.drop(scheme.schemeLength)
                         if (tail.isEmpty()) return@flatMap emptyList<InternalLexicon>()
                         val schemeAnchors = scheme.aliasAnchors
                         val conjoinedText = (schemeAnchors + tail).joinToString(separator = PresetString.EMPTY) { it.text }

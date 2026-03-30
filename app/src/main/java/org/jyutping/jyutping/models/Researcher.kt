@@ -246,12 +246,12 @@ private fun Researcher.search(keys: List<VirtualInputKey>, segmentation: Segment
         } else if (keys.firstOrNull() == VirtualInputKey.letterM || keys.lastOrNull() == VirtualInputKey.letterM) {
                 true
         } else {
-                segmentation.any { it.length == inputLength }.negative
+                segmentation.any { it.schemeLength == inputLength }.negative
         }
         val prefixesLimit: Int = if (limit == null) 500 else 200
         val prefixMatched: List<Lexicon> = if (shouldMatchPrefixes.negative) emptyList() else segmentation.flatMap { scheme ->
                 if (scheme.isEmpty()) return@flatMap emptyList()
-                val tail = keys.drop(scheme.length)
+                val tail = keys.drop(scheme.schemeLength)
                 val lastAnchor = tail.firstOrNull() ?: return@flatMap emptyList()
                 val schemeAnchors = scheme.aliasAnchors
                 val conjoined = schemeAnchors + tail
@@ -321,7 +321,7 @@ private fun Researcher.search(keys: List<VirtualInputKey>, segmentation: Segment
 }
 
 private fun Researcher.query(inputLength: Int, segmentation: Segmentation, limit: Int? = null, db: DatabaseHelper): List<Lexicon> {
-        val idealSchemes = segmentation.filter { it.length == inputLength }
+        val idealSchemes = segmentation.filter { it.schemeLength == inputLength }
         if (idealSchemes.isEmpty()) {
                 return segmentation.flatMap { performQuery(scheme = it, limit = limit, db = db) }
         } else {
@@ -433,7 +433,7 @@ private fun DatabaseHelper.strictMatch(anchors: Long, spell: Int, input: String,
 fun DatabaseHelper.searchSymbols(text: String, segmentation: Segmentation): List<Lexicon> {
         val fullMatched = symbolMatch(text = text, input = text)
         val textLength = text.length
-        val schemes = segmentation.filter { it.length == textLength }
+        val schemes = segmentation.filter { it.schemeLength == textLength }
         if (schemes.isEmpty()) return fullMatched.distinct()
         val matches = schemes.flatMap { symbolMatch(text = it.originText, input = text) }
         return (fullMatched + matches).distinct()
