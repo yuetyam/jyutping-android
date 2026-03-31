@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.utilities
+package org.jyutping.jyutping.models
 
 import org.jyutping.jyutping.presets.PresetString
 
@@ -19,8 +19,8 @@ data class PinyinLexicon(
         /** Formatted user input for pre-edit display.  */
         val mark: String,
 
-        /** Rank, smaller is preferred. */
-        val order: Int
+        /** Rank, order. (Smaller is preferred) */
+        val number: Int
 ) : Comparable<PinyinLexicon> {
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true
@@ -32,7 +32,7 @@ data class PinyinLexicon(
         }
         override fun compareTo(other: PinyinLexicon): Int {
                 return this.inputCount.compareTo(other.inputCount).unaryMinus()
-                        .takeIf { it != 0 } ?: this.order.compareTo(other.order)
+                        .takeIf { it != 0 } ?: this.number.compareTo(other.number)
         }
         operator fun plus(another: PinyinLexicon): PinyinLexicon {
                 val newText: String = this.text + another.text
@@ -40,7 +40,7 @@ data class PinyinLexicon(
                 val newInput: String = this.input + another.input
                 val newMark: String = this.mark + PresetString.SPACE + another.mark
                 val step = 1_000_000
-                val newOrder: Int = (this.order * step) + (another.order * step)
-                return PinyinLexicon(text = newText, pinyin = newPinyin, input = newInput, mark = newMark, order = newOrder)
+                val newOrder: Int = (this.number * step) + (another.number * step)
+                return PinyinLexicon(text = newText, pinyin = newPinyin, input = newInput, mark = newMark, number = newOrder)
         }
 }

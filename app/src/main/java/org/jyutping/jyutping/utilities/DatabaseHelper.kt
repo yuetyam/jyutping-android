@@ -394,50 +394,6 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                 cursor.close()
                 return romanizations
         }
-        fun pinyinSyllableMatch(text: String): String? {
-                val code = text.charCode() ?: return null
-                val command = "SELECT syllable FROM pinyin_syllable_table WHERE code = $code LIMIT 1;"
-                val cursor = this.readableDatabase.rawQuery(command, null)
-                if (cursor.moveToFirst()) {
-                        val syllable = cursor.getString(0)
-                        cursor.close()
-                        return syllable
-                } else {
-                        cursor.close()
-                        return null
-                }
-        }
-        fun pinyinShortcut(text: String, limit: Int? = null): List<PinyinLexicon> {
-                val code = text.charCode() ?: return emptyList()
-                val items: MutableList<PinyinLexicon> = mutableListOf()
-                val limitValue: Int = limit ?: 50
-                val command = "SELECT rowid, word, romanization FROM pinyin_lexicon WHERE anchors = $code LIMIT ${limitValue};"
-                val cursor = this.readableDatabase.rawQuery(command, null)
-                while (cursor.moveToNext()) {
-                        val rowID = cursor.getInt(0)
-                        val word = cursor.getString(1)
-                        val pinyin = cursor.getString(2)
-                        val instance = PinyinLexicon(text = word, pinyin = pinyin, input = text, mark = text, order = rowID)
-                        items.add(instance)
-                }
-                cursor.close()
-                return items
-        }
-        fun pinyinMatch(text: String): List<PinyinLexicon> {
-                val items: MutableList<PinyinLexicon> = mutableListOf()
-                val code: Int = text.hashCode()
-                val command = "SELECT rowid, word, romanization FROM pinyin_lexicon WHERE spell = ${code};"
-                val cursor = this.readableDatabase.rawQuery(command, null)
-                while (cursor.moveToNext()) {
-                        val rowID = cursor.getInt(0)
-                        val word = cursor.getString(1)
-                        val pinyin = cursor.getString(2)
-                        val instance = PinyinLexicon(text = word, pinyin = pinyin, input = text, mark = pinyin, order = rowID)
-                        items.add(instance)
-                }
-                cursor.close()
-                return items
-        }
         fun cangjieMatch(version: Int, text: String): List<ShapeLexicon> {
                 val code = text.charCode() ?: return emptyList()
                 val command = "SELECT rowid, word FROM cangjie_table WHERE c${version}code = ${code};"
