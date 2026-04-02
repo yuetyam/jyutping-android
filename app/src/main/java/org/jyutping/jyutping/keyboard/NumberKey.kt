@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.KeySide
+import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.shapes.BubbleShape
 import org.jyutping.jyutping.shapes.HalfBubbleShape

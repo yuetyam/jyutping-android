@@ -1,16 +1,22 @@
 package org.jyutping.jyutping.keyboard
 
+/** Elevate / raise the keyboard view */
 enum class ExtraBottomPadding(val identifier: Int) {
+
         None(0),
         Low(1),
         Medium(2),
         High(3);
-        fun paddingValue(): Int = when(this) {
-                None -> 0
-                Low -> 24
-                Medium -> 36
-                High -> 48
-        }
+
+        /** Extra bottom padding value */
+        val applyingValue: Int
+                get() = when(this) {
+                        None -> 0
+                        Low -> 24
+                        Medium -> 36
+                        High -> 48
+                }
+
         companion object {
                 fun paddingLevelOf(identifier: Int): ExtraBottomPadding = entries.find { it.identifier == identifier } ?: None
         }

@@ -84,7 +84,7 @@ fun EmojiBoard(height: Dp) {
                                 }
                         )
                         .systemBarsPadding()
-                        .padding(bottom = extraBottomPadding.paddingValue().dp)
+                        .padding(bottom = extraBottomPadding.applyingValue.dp)
                         .height(height)
                         .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(2.dp),

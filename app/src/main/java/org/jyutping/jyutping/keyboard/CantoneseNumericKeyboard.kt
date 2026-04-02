@@ -19,11 +19,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.extensions.toCharText
-import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.KeyElement
 import org.jyutping.jyutping.models.KeyModel
 import org.jyutping.jyutping.models.KeySide
 import org.jyutping.jyutping.models.KeyboardForm
+import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
@@ -45,7 +45,7 @@ fun CantoneseNumericKeyboard(keyHeight: Dp) {
                                 }
                         )
                         .systemBarsPadding()
-                        .padding(bottom = extraBottomPadding.paddingValue().dp)
+                        .padding(bottom = extraBottomPadding.applyingValue.dp)
                         .fillMaxWidth()
         ) {
                 Box(

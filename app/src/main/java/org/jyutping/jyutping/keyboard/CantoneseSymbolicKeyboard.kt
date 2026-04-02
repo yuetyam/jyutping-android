@@ -44,7 +44,7 @@ fun CantoneseSymbolicKeyboard(keyHeight: Dp) {
                                 }
                         )
                         .systemBarsPadding()
-                        .padding(bottom = extraBottomPadding.paddingValue().dp)
+                        .padding(bottom = extraBottomPadding.applyingValue.dp)
                         .fillMaxWidth()
         ) {
                 Box(

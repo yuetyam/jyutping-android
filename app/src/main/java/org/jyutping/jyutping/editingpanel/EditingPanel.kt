@@ -54,7 +54,7 @@ fun EditingPanel(height: Dp) {
                                 }
                         )
                         .systemBarsPadding()
-                        .padding(bottom = extraBottomPadding.paddingValue().dp)
+                        .padding(bottom = extraBottomPadding.applyingValue.dp)
                         .height(height)
                         .fillMaxWidth()
         ) {

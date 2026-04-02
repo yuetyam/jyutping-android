@@ -114,7 +114,7 @@ fun CandidateBoard(height: Dp, isPhysicalKeyboard: Boolean = false) {
                                 }
                         )
                         .systemBarsPadding()
-                        .padding(bottom = extraBottomPadding.paddingValue().dp)
+                        .padding(bottom = extraBottomPadding.applyingValue.dp)
                         .height(height)
                         .fillMaxWidth(),
                 contentAlignment = Alignment.TopEnd

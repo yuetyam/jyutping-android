@@ -73,7 +73,7 @@ fun PhysicalKeyboardCandidateBar(height: Dp) {
                                 }
                         )
                         .systemBarsPadding()
-                        .padding(bottom = extraBottomPadding.paddingValue().dp)
+                        .padding(bottom = extraBottomPadding.applyingValue.dp)
                         .height(height)
                         .fillMaxWidth(),
                 contentAlignment = Alignment.CenterEnd
