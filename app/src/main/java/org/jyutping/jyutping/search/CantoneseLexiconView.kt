@@ -24,8 +24,8 @@ fun CantoneseLexiconView(lexicon: CantoneseLexicon) {
                         .padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-                WordTextLabel(lexicon.text)
-                lexicon.pronunciations.map {
+                WordTextLabel(word = lexicon.text, isSpeakable = true)
+                lexicon.pronunciations.forEach {
                         Column(
                                 verticalArrangement = Arrangement.spacedBy(2.dp)
                         ) {

@@ -39,9 +39,9 @@ fun FanWanView(entries: List<FanWanCuetYiu>) {
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                         entries.firstOrNull()?.word?.let {
-                                WordTextLabel(it)
+                                WordTextLabel(word = it, isSpeakable = false)
                         }
-                        entries.map {
+                        entries.forEach {
                                 Column(
                                         verticalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {

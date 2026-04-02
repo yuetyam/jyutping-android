@@ -88,7 +88,7 @@ fun HomeScreen(navController: NavHostController) {
                 val ideographicCodePoints = text.codePoints().toArray().filter { it.isIdeographicCodePoint }.distinct()
                 if (ideographicCodePoints.isEmpty()) return listOf(CantoneseLexicon(text))
                 val primary = helper.searchCantoneseLexicon(text)
-                val shouldReturnEarly: Boolean = text.characterCount < 2 || ideographicCodePoints.count() > 3
+                val shouldReturnEarly: Boolean = text.characterCount < 2 || ideographicCodePoints.size > 9
                 if (shouldReturnEarly) return listOf(primary)
                 val subLexicons = ideographicCodePoints.map { helper.searchCantoneseLexicon(Character.toString(it)) }
                 return listOf(primary) + subLexicons
@@ -128,7 +128,7 @@ fun HomeScreen(navController: NavHostController) {
                                                 lexicons.value = searchCantoneseLexicons(text)
                                         }
                                         val codePoints = text.codePoints().toArray().filter { it.isIdeographicCodePoint }.distinct()
-                                        if (codePoints.isEmpty() || codePoints.count() > 3) {
+                                        if (codePoints.isEmpty() || codePoints.size > 9) {
                                                 yingWaaLexicons.value = emptyList()
                                                 choHokLexicons.value = emptyList()
                                                 fanWanLexicons.value = emptyList()

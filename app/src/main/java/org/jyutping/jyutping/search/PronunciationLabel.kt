@@ -3,7 +3,6 @@ package org.jyutping.jyutping.search
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
@@ -26,28 +25,34 @@ fun PronunciationLabel(pronunciation: Pronunciation, word: String? = null) {
         val ttsCollocationText: String? = if (pronunciation.collocations.isEmpty()) null else pronunciation.collocations.take(5).joinToString(separator = "；")
         Column {
                 Row(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                 ) {
-                        Row {
+                        Row(
+                                modifier = Modifier.weight(1f),
+                        ) {
                                 Text(
                                         text = "讀音",
                                         color = colorScheme.onBackground
                                 )
                                 SeparatorMark()
-                                Text(
-                                        text = romanization,
-                                        color = colorScheme.onBackground
-                                )
+                                Row(
+                                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                        Text(
+                                                text = romanization,
+                                                color = colorScheme.onBackground
+                                        )
+                                        ipaText?.let {
+                                                Text(
+                                                        text = it,
+                                                        modifier = Modifier.alpha(0.75f),
+                                                        color = colorScheme.onBackground
+                                                )
+                                        }
+                                }
                         }
-                        ipaText?.let {
-                                Text(
-                                        text = it,
-                                        modifier = Modifier.alpha(0.75f),
-                                        color = colorScheme.onBackground
-                                )
-                        }
-                        Spacer(modifier = Modifier.weight(1f))
                         Speaker(romanization = romanization, cantonese = word)
                 }
                 homophoneText?.let {
@@ -65,10 +70,12 @@ fun PronunciationLabel(pronunciation: Pronunciation, word: String? = null) {
                 }
                 collocationText?.let {
                         Row(
-                                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
                                 verticalAlignment = Alignment.CenterVertically
                         ) {
-                                Row {
+                                Row(
+                                        modifier = Modifier.weight(1f)
+                                ) {
                                         Text(
                                                 text = "詞例",
                                                 color = colorScheme.onBackground
@@ -79,13 +86,12 @@ fun PronunciationLabel(pronunciation: Pronunciation, word: String? = null) {
                                                 color = colorScheme.onBackground
                                         )
                                 }
-                                Spacer(modifier = Modifier.weight(1f))
                                 ttsCollocationText?.let { text ->
                                         Speaker(cantonese = text)
                                 }
                         }
                 }
-                pronunciation.descriptions.map {
+                pronunciation.descriptions.forEach {
                         Row(
                                 modifier = Modifier.padding(vertical = 2.dp)
                         ) {

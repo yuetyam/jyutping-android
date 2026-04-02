@@ -2,7 +2,6 @@ package org.jyutping.jyutping.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,34 +17,40 @@ import org.jyutping.jyutping.speech.Speaker
 import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
-fun WordTextLabel(word: String) {
+fun WordTextLabel(word: String, isSpeakable: Boolean = true) {
         Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
                 Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.weight(1f),
                 ) {
                         Text(
                                 text = "文字",
                                 color = colorScheme.onBackground
                         )
                         SeparatorMark()
-                        Text(
-                                text = word,
-                                color = colorScheme.onBackground
-                        )
+                        Row(
+                                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                        ) {
+                                Text(
+                                        text = word,
+                                        color = colorScheme.onBackground,
+                                )
+                                if (word.characterCount == 1) {
+                                        Text(
+                                                text = word.codePointText(),
+                                                modifier = Modifier.alpha(0.75f),
+                                                color = colorScheme.onBackground,
+                                                fontSize = 13.sp,
+                                                fontFamily = FontFamily.Monospace
+                                        )
+                                }
+                        }
                 }
-                if (word.characterCount == 1) {
-                        Text(
-                                text = word.codePointText(),
-                                modifier = Modifier.alpha(0.75f),
-                                color = colorScheme.onBackground,
-                                fontSize = 13.sp,
-                                fontFamily = FontFamily.Monospace
-                        )
+                if (isSpeakable) {
+                        Speaker(cantonese = word)
                 }
-                Spacer(modifier = Modifier.weight(1f))
-                Speaker(cantonese = word)
         }
 }
