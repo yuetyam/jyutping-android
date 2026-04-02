@@ -29,6 +29,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
@@ -60,8 +61,8 @@ fun GlobeKey(modifier: Modifier) {
                                         },
                                         onTap = {
                                                 if (context.shouldOfferSwitchingToNextInputMethod()) {
-                                                        val didSwitch = context.switchToNextInputMethod(false)
-                                                        if (didSwitch.not()) {
+                                                        val didSwitched = context.switchToNextInputMethod(false)
+                                                        if (didSwitched.negative) {
                                                                 (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)?.showInputMethodPicker()
                                                         }
                                                 } else {

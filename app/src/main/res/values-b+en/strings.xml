@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Jyutping</string>
+    <string name="keyboard_name">Jyutping</string>
     <string name="screen_title_home">Home</string>
     <string name="screen_title_jyutping">Jyutping</string>
     <string name="screen_title_cantonese">Cantonese</string>

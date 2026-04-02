@@ -15,7 +15,7 @@ jobs:
     name: Prepare Database
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: setup JDK
         uses: actions/setup-java@v5
         with:
@@ -30,7 +30,7 @@ jobs:
 #    needs: [prepare]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: setup JDK
         uses: actions/setup-java@v5
         with:
