@@ -1,0 +1,7 @@
+1. Improved typing performance using multi-threading.
+2. Improved reverse lookup of Jyutping using Cangjie, Quick(Sucheng), Stroke, Mandarin Pinyin, and character components.
+3. Improved Traditional–Simplified Chinese conversion in the “Edit” panel.
+4. Improved the Delete key gesture: swipe right-to-left or bottom-to-top to clear pre-edit syllables.
+5. Improved font rendering of candidate words and Jyutping annotations on certain devices.
+6. Improved font rendering across various keyboard components on certain devices.
+7. Improved the text-to-speech (TTS) experience on certain devices.
