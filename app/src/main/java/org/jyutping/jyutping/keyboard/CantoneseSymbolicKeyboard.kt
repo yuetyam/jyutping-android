@@ -151,6 +151,7 @@ fun CantoneseSymbolicKeyboard(keyHeight: Dp) {
                                         members = listOf(
                                                 KeyElement("*"),
                                                 KeyElement("＊", header = PresetString.FULL_WIDTH),
+                                                KeyElement("×"),
                                         )
                                 ),
                                 modifier = Modifier.weight(1f)

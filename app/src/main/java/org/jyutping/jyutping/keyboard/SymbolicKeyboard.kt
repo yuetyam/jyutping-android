@@ -76,7 +76,17 @@ fun SymbolicKeyboard(keyHeight: Dp) {
                                 modifier = Modifier.weight(1f)
                         )
                         SymbolKey(symbol = "^", modifier = Modifier.weight(1f))
-                        SymbolKey(symbol = "*", modifier = Modifier.weight(1f))
+                        EnhancedInputKey(
+                                side = KeySide.Right,
+                                keyModel = KeyModel(
+                                        primary = KeyElement("*"),
+                                        members = listOf(
+                                                KeyElement("*"),
+                                                KeyElement("×"),
+                                        )
+                                ),
+                                modifier = Modifier.weight(1f)
+                        )
                         SymbolKey(symbol = "+", modifier = Modifier.weight(1f))
                         EdgeEnhancedInputKey(
                                 side = KeySide.Right,

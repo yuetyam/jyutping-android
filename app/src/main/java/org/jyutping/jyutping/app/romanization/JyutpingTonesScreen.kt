@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,38 +24,52 @@ import org.jyutping.jyutping.speech.Speaker
 @Composable
 fun JyutpingTonesScreen() {
         LazyColumn(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
                 item {
-                        Row(
-                                modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 8.dp)
+                        Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                                Text(text = "例字", modifier = Modifier.weight(0.16f))
-                                Text(text = "粵拼", modifier = Modifier.weight(0.34f))
-                                Text(text = "聲調", modifier = Modifier.weight(0.25f))
-                                Text(text = "調值", modifier = Modifier.weight(0.25f))
+                                Row(
+                                        modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 8.dp)
+                                ) {
+                                        Text(text = "例字", modifier = Modifier.weight(0.16f))
+                                        Text(text = "粵拼", modifier = Modifier.weight(0.34f))
+                                        Text(text = "聲調", modifier = Modifier.weight(0.25f))
+                                        Text(text = "調值", modifier = Modifier.weight(0.25f))
+                                }
+                                Column(
+                                        modifier = Modifier
+                                                .fillMaxWidth()
+                                                .background(color = colorScheme.background, shape = RoundedCornerShape(12.dp))
+                                                .padding(horizontal = 8.dp, vertical = 4.dp),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                        ToneLabel(word = "芬", syllable = "fan1", toneName = "陰平", toneValue = "55/53")
+                                        ToneLabel(word = "粉", syllable = "fan2", toneName = "陰上", toneValue = "35")
+                                        ToneLabel(word = "糞", syllable = "fan3", toneName = "陰去", toneValue = "33")
+                                        ToneLabel(word = "焚", syllable = "fan4", toneName = "陽平", toneValue = "21/11")
+                                        ToneLabel(word = "憤", syllable = "fan5", toneName = "陽上", toneValue = "13/23")
+                                        ToneLabel(word = "份", syllable = "fan6", toneName = "陽去", toneValue = "22")
+                                        ToneLabel(word = "弗", syllable = "fat1", toneName = "高陰入", toneValue = "5")
+                                        ToneLabel(word = "法", syllable = "faat3", toneName = "低陰入", toneValue = "3")
+                                        ToneLabel(word = "佛", syllable = "fat6", toneName = "陽入", toneValue = "2")
+                                }
                         }
                 }
                 item {
-                        Column(
+                        ToneChartView(
                                 modifier = Modifier
+                                        .height(234.dp)
                                         .fillMaxWidth()
                                         .background(color = colorScheme.background, shape = RoundedCornerShape(12.dp))
-                                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                                ToneLabel(word = "芬", syllable = "fan1", toneName = "陰入", toneValue = "55/53")
-                                ToneLabel(word = "粉", syllable = "fan2", toneName = "陰上", toneValue = "35")
-                                ToneLabel(word = "糞", syllable = "fan3", toneName = "陰去", toneValue = "33")
-                                ToneLabel(word = "焚", syllable = "fan4", toneName = "陽平", toneValue = "21/11")
-                                ToneLabel(word = "憤", syllable = "fan5", toneName = "陽上", toneValue = "13/23")
-                                ToneLabel(word = "份", syllable = "fan6", toneName = "陽去", toneValue = "22")
-                                ToneLabel(word = "弗", syllable = "fat1", toneName = "高陰入", toneValue = "5")
-                                ToneLabel(word = "法", syllable = "faat3", toneName = "低陰入", toneValue = "3")
-                                ToneLabel(word = "佛", syllable = "fat6", toneName = "陽入", toneValue = "2")
-                        }
+                                        .padding(horizontal = 8.dp, vertical = 12.dp),
+                                textColor = colorScheme.onBackground
+                        )
                 }
         }
 }

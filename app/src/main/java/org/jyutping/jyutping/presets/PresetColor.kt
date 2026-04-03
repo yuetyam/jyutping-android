@@ -43,3 +43,13 @@ object AltPresetColor {
         val shallowDark  : Color = Color(0xFF666666)
         val emphaticDark : Color = Color(0xFF444444)
 }
+
+object AppleColor {
+        val blue   = Color(0xFF0088FF)
+        val green  = Color(0xFF34C759)
+        val indigo = Color(0xFF6155F5)
+        val orange = Color(0xFFFF8D28)
+        val purple = Color(0xFFCB30E0)
+        val red    = Color(0xFFFF3814)
+        val teal   = Color(0xFF00C3D0)
+}
