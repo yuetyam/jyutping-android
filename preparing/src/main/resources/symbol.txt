@@ -5223,15 +5223,11 @@
 7	110000	1F521	細楷	sai3 gaai1
 7	110000	1F520	大寫字母	daai6 se2 zi6 mou5
 7	110000	1F520	大楷	daai6 gaai1
-7	110000	1F196	唔好	m4 hou2
-7	110000	1F196	唔得	m4 dak1
-7	110000	1F196	唔掂	m4 dim6
+7	110000	1F196	未夠好	mei6 gau3 hou2
 7	110000	1F197	好	hou2
-7	110000	1F197	得	dak1
-7	110000	1F197	掂	dim6
+7	110000	1F197	好嘅	hou2 ge3
 7	110000	1F199	頂	ding2
 7	110000	1F199	頂	deng2
-7	110000	1F192	好	hou2
 7	110000	1F192	清涼	cing1 loeng4
 7	110000	1F195	新	san1
 7	110000	1F193	免費	min5 fai3
@@ -5266,6 +5262,7 @@
 7	110000	23.FE0F.20E3	井號鍵	zeng2 hou6 gin6
 7	110000	23.FE0F.20E3	井號	zeng2 hou6
 7	110000	23.FE0F.20E3	井鍵	zeng2 gin6
+7	110000	23.FE0F.20E3	數字	sou3 zi6
 7	110000	2A.FE0F.20E3	星號鍵	sing1 hou6 gin6
 7	110000	2A.FE0F.20E3	星號	sing1 hou6
 7	110000	2A.FE0F.20E3	星鍵	sing1 gin6
