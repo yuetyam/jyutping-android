@@ -97,6 +97,7 @@ fun SettingsScreen(height: Dp) {
         val commentStyle by context.commentStyle.collectAsState()
         val cangjieVariant by context.cangjieVariant.collectAsState()
         val isEmojiSuggestionsOn by context.isEmojiSuggestionsOn.collectAsState()
+        val isEnglishSuggestionsOn by context.isEnglishSuggestionsOn.collectAsState()
         val isInputMemoryOn by context.isInputMemoryOn.collectAsState()
         var isTryingToClearInputMemory by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()
@@ -959,28 +960,52 @@ fun SettingsScreen(height: Dp) {
                                 }
                         }
                         item {
-                                Row(
+                                Column(
                                         modifier = Modifier
-                                                .fillMaxWidth()
                                                 .background(color = backColor, shape = sectionShape)
-                                                .padding(horizontal = 8.dp),
-                                        verticalAlignment = Alignment.CenterVertically
+                                                .fillMaxWidth()
                                 ) {
-                                        Text(
-                                                text = stringResource(id = R.string.keyboard_settings_emoji_switch_title),
-                                                color = tintColor
-                                        )
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        Switch(
-                                                checked = isEmojiSuggestionsOn,
-                                                onCheckedChange = {
-                                                        context.audioFeedback(SoundEffect.Click)
-                                                        view.performHapticFeedback(if (it) onHaptic else offHaptic)
-                                                        context.updateEmojiSuggestionsState(it)
-                                                },
-                                                thumbContent = { SwitchThumbContent(isEmojiSuggestionsOn) },
-                                                colors = switchColors
-                                        )
+                                        Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_emoji_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = isEmojiSuggestionsOn,
+                                                        onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(if (it) onHaptic else offHaptic)
+                                                                context.updateEmojiSuggestionsState(it)
+                                                        },
+                                                        thumbContent = { SwitchThumbContent(isEmojiSuggestionsOn) },
+                                                        colors = switchColors
+                                                )
+                                        }
+                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                        Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_english_suggestions_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = isEnglishSuggestionsOn,
+                                                        onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(if (it) onHaptic else offHaptic)
+                                                                context.updateEnglishSuggestionsState(it)
+                                                        },
+                                                        thumbContent = { SwitchThumbContent(isEnglishSuggestionsOn) },
+                                                        colors = switchColors
+                                                )
+                                        }
                                 }
                         }
                         item {

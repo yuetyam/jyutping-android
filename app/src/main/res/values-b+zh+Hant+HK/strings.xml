@@ -100,6 +100,7 @@
     <string name="keyboard_settings_cangjie_variant_quick5">速成五代</string>
     <string name="keyboard_settings_cangjie_variant_quick3">速成三代</string>
     <string name="keyboard_settings_emoji_switch_title">表情符號（Emoji）候選詞</string>
+    <string name="keyboard_settings_english_suggestions_switch_title">英文候選詞</string>
     <string name="keyboard_settings_input_memory_switch_title">記憶輸入</string>
     <string name="keyboard_settings_clear_input_memory">清空輸入記憶</string>
     <string name="keyboard_settings_clear_input_memory_message">清空輸入記憶？</string>

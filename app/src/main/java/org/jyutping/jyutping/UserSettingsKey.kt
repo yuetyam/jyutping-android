@@ -18,8 +18,9 @@ object UserSettingsKey {
         const val KeyHeightOffset: String = "key_height_offset"
         const val ExtraBottomPadding: String = "bottom_padding"
         const val CommentStyle: String = "comment_style"
-        const val Emoji: String = "emoji"
         const val CangjieVariant: String = "cangjie_variant"
+        const val Emoji: String = "emoji"
+        const val EnglishSuggestions = "english_suggestions"
         const val InputMemory: String = "input_memory"
         const val EmojiFrequent: String = "emoji_frequent"
 }

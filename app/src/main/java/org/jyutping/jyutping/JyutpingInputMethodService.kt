@@ -556,18 +556,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         putInt(UserSettingsKey.ExtraBottomPadding, paddingLevel.identifier)
                 }
         }
-        val isEmojiSuggestionsOn: MutableStateFlow<Boolean> by lazy {
-                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.Emoji, 1)
-                val isOn: Boolean = (savedValue == 1)
-                MutableStateFlow(isOn)
-        }
-        fun updateEmojiSuggestionsState(isOn: Boolean) {
-                isEmojiSuggestionsOn.value = isOn
-                val value2save: Int = if (isOn) 1 else 2
-                sharedPreferences.edit {
-                        putInt(UserSettingsKey.Emoji, value2save)
-                }
-        }
         val commentStyle: MutableStateFlow<CommentStyle> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CommentStyle, CommentStyle.AboveCandidates.identifier)
                 val style: CommentStyle = CommentStyle.styleOf(savedValue)
@@ -588,6 +576,30 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 cangjieVariant.value = variant
                 sharedPreferences.edit {
                         putInt(UserSettingsKey.CangjieVariant, variant.identifier)
+                }
+        }
+        val isEmojiSuggestionsOn: MutableStateFlow<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.Emoji, 1)
+                val isOn: Boolean = (savedValue == 1)
+                MutableStateFlow(isOn)
+        }
+        fun updateEmojiSuggestionsState(isOn: Boolean) {
+                isEmojiSuggestionsOn.value = isOn
+                val value2save: Int = if (isOn) 1 else 2
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.Emoji, value2save)
+                }
+        }
+        val isEnglishSuggestionsOn: MutableStateFlow<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.EnglishSuggestions, 1)
+                val isOn: Boolean = (savedValue == 1)
+                MutableStateFlow(isOn)
+        }
+        fun updateEnglishSuggestionsState(isOn: Boolean) {
+                isEnglishSuggestionsOn.value = isOn
+                val value2save: Int = if (isOn) 1 else 2
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.EnglishSuggestions, value2save)
                 }
         }
         val isInputMemoryOn: MutableStateFlow<Boolean> by lazy {
@@ -689,7 +701,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         VirtualInputKey.letterR -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val allKeys = bufferEvents.map { it.key }
-                                val textMarksDeferred = async { db.searchTextMarks(allKeys) }
+                                val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) db.searchTextMarks(allKeys) else emptyList() }
                                 val textMarks = textMarksDeferred.await()
                                 val keys = allKeys.drop(1)
                                 val segmentation = PinyinSegmenter.segment(keys, db)
@@ -722,7 +734,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         VirtualInputKey.letterV -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val allKeys = bufferEvents.map { it.key }
-                                val textMarksDeferred = async { db.searchTextMarks(allKeys) }
+                                val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) db.searchTextMarks(allKeys) else emptyList() }
                                 val textMarks = textMarksDeferred.await()
                                 val keys = allKeys.drop(1)
                                 val cangjieRadicals = keys.mapNotNull { CangjieConverter.cangjieOf(it) }
@@ -742,7 +754,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         VirtualInputKey.letterX -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val allKeys = bufferEvents.map { it.key }
-                                val textMarksDeferred = async { db.searchTextMarks(allKeys) }
+                                val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) db.searchTextMarks(allKeys) else emptyList() }
                                 val textMarks = textMarksDeferred.await()
                                 val keys = allKeys.drop(1)
                                 val isValidSequence: Boolean = keys.isNotEmpty() && StrokeVirtualKey.isValidStrokes(keys)
@@ -760,7 +772,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         VirtualInputKey.letterQ -> {
                                 val allKeys = bufferEvents.map { it.key }
-                                val textMarks = db.searchTextMarks(allKeys)
+                                val textMarks = if (isEnglishSuggestionsOn.value) db.searchTextMarks(allKeys) else emptyList()
                                 val keys = allKeys.drop(1)
                                 if (keys.isEmpty()) {
                                         val mark = joinedBufferTexts()
@@ -793,7 +805,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         else -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val keys = newValue.map { it.key }
-                                val textMarksDeferred = async { db.searchTextMarks(keys) }
+                                val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) db.searchTextMarks(keys) else emptyList() }
                                 val textMarks = textMarksDeferred.await()
                                 val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
                                 val segmentation = Segmenter.segment(keys, db)

@@ -100,6 +100,7 @@
     <string name="keyboard_settings_cangjie_variant_quick5">Quick5 (速成五代)</string>
     <string name="keyboard_settings_cangjie_variant_quick3">Quick3 (速成三代)</string>
     <string name="keyboard_settings_emoji_switch_title">Emoji Suggestions</string>
+    <string name="keyboard_settings_english_suggestions_switch_title">English Suggestions</string>
     <string name="keyboard_settings_input_memory_switch_title">Input Memory</string>
     <string name="keyboard_settings_clear_input_memory">Clear Input Memory</string>
     <string name="keyboard_settings_clear_input_memory_message">Clear Input Memory?</string>
