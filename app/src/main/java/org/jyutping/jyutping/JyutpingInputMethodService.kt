@@ -689,11 +689,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         VirtualInputKey.letterR -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val allKeys = bufferEvents.map { it.key }
+                                val textMarksDeferred = async { db.searchTextMarks(allKeys) }
+                                val textMarks = textMarksDeferred.await()
                                 val keys = allKeys.drop(1)
                                 val segmentation = PinyinSegmenter.segment(keys, db)
-                                val textMarksDeferred = async { db.searchTextMarks(allKeys) }
                                 val queriedDeferred = async { PinyinResearcher.reverseLookup(keys, segmentation, db) }
-                                val textMarks = textMarksDeferred.await()
                                 val queried = queriedDeferred.await()
                                 val suggestions = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
                                 val bufferText = joinedBufferTexts()
@@ -720,43 +720,43 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         updateInputSessionStates()
                                 }
                         }
-                        VirtualInputKey.letterV -> {
-                                updateQwertyForm(QwertyForm.Cangjie)
+                        VirtualInputKey.letterV -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val allKeys = bufferEvents.map { it.key }
-                                val textMarks = db.searchTextMarks(allKeys)
+                                val textMarksDeferred = async { db.searchTextMarks(allKeys) }
+                                val textMarks = textMarksDeferred.await()
                                 val keys = allKeys.drop(1)
                                 val cangjieRadicals = keys.mapNotNull { CangjieConverter.cangjieOf(it) }
                                 val isValidSequence: Boolean = cangjieRadicals.isNotEmpty() && (cangjieRadicals.size == keys.size)
-                                if (isValidSequence) {
-                                        val mark = cangjieRadicals.joinToString(separator = PresetString.EMPTY)
-                                        currentInputConnection.setComposingText(mark, 1)
+                                val mark: String = if (isValidSequence) cangjieRadicals.joinToString(separator = PresetString.EMPTY) else joinedBufferTexts()
+                                val queried: List<Lexicon> = if (isValidSequence.negative) emptyList() else run {
                                         val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
-                                        val queried = Cangjie.reverseLookup(text, cangjieVariant.value, db)
-                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
-                                } else {
-                                        val mark = joinedBufferTexts()
-                                        currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = textMarks.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, sessionState = sessionState) }.distinct()
+                                        val queriedDeferred = async { Cangjie.reverseLookup(text, cangjieVariant.value, db) }
+                                        queriedDeferred.await()
                                 }
-                                updateInputSessionStates()
+                                withContext(Dispatchers.Main) {
+                                        updateQwertyForm(QwertyForm.Cangjie)
+                                        currentInputConnection.setComposingText(mark, 1)
+                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
+                                        updateInputSessionStates()
+                                }
                         }
-                        VirtualInputKey.letterX -> {
-                                updateQwertyForm(QwertyForm.Stroke)
+                        VirtualInputKey.letterX -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val allKeys = bufferEvents.map { it.key }
-                                val textMarks = db.searchTextMarks(allKeys)
+                                val textMarksDeferred = async { db.searchTextMarks(allKeys) }
+                                val textMarks = textMarksDeferred.await()
                                 val keys = allKeys.drop(1)
                                 val isValidSequence: Boolean = keys.isNotEmpty() && StrokeVirtualKey.isValidStrokes(keys)
-                                if (isValidSequence) {
-                                        val mark = StrokeVirtualKey.displayStrokesOf(keys)
-                                        currentInputConnection.setComposingText(mark, 1)
-                                        val queried = Stroke.reverseLookup(keys, db)
-                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
-                                } else {
-                                        val mark = joinedBufferTexts()
-                                        currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = textMarks.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, sessionState = sessionState) }.distinct()
+                                val mark: String = if (isValidSequence) StrokeVirtualKey.displayStrokesOf(keys) else joinedBufferTexts()
+                                val queried: List<Lexicon> = if (isValidSequence.negative) emptyList() else run {
+                                        val queriedDeferred = async { Stroke.reverseLookup(keys, db) }
+                                        queriedDeferred.await()
                                 }
-                                updateInputSessionStates()
+                                withContext(Dispatchers.Main) {
+                                        updateQwertyForm(QwertyForm.Stroke)
+                                        currentInputConnection.setComposingText(mark, 1)
+                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
+                                        updateInputSessionStates()
+                                }
                         }
                         VirtualInputKey.letterQ -> {
                                 val allKeys = bufferEvents.map { it.key }
@@ -793,14 +793,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         else -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val keys = newValue.map { it.key }
+                                val textMarksDeferred = async { db.searchTextMarks(keys) }
+                                val textMarks = textMarksDeferred.await()
                                 val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
                                 val segmentation = Segmenter.segment(keys, db)
                                 val memoryDeferred = async { if (isInputMemoryOn.value) userDB.search(keys = keys, text = text, segmentation = segmentation, db = db) else emptyList() }
-                                val textMarksDeferred = async { db.searchTextMarks(keys) }
                                 val symbolsDeferred = async { if (isEmojiSuggestionsOn.value) db.searchSymbols(text = text, segmentation = segmentation) else emptyList() }
                                 val queriedDeferred = async { Researcher.suggest(keys = keys, segmentation = segmentation, db = db) }
                                 val memory = memoryDeferred.await()
-                                val textMarks = textMarksDeferred.await()
                                 val symbols = symbolsDeferred.await()
                                 val queried = queriedDeferred.await()
                                 val suggestions = Converter.dispatch(

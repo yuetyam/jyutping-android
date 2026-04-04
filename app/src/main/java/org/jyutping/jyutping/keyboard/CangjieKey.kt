@@ -52,7 +52,7 @@ fun CangjieKey(virtual: VirtualInputKey, modifier: Modifier, position: Alignment
         val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
         val keyboardCase by context.keyboardCase.collectAsState()
         val displayKeyLetter: String = if (showLowercaseKeys && keyboardCase.isLowercased) virtual.text else virtual.text.uppercase()
-        val keyRadical: String = CangjieConverter.cangjieOf(virtual)?.toString() ?: virtual.text
+        val keyRadical: String = CangjieConverter.cangjieOf(virtual) ?: virtual.text
         val shouldPreviewKey by context.previewKeyText.collectAsState()
         val density = LocalDensity.current
         var baseSize by remember { mutableStateOf(Size.Zero) }
