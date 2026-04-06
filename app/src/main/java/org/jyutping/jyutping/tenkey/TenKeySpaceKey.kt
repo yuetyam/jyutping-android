@@ -27,8 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.presets.AltPresetColor
-import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
 
@@ -96,7 +94,7 @@ fun TenKeySpaceKey(modifier: Modifier) {
                                 shape = keyShape
                         )
                         .background(
-                                color = keyBackColor(isDarkMode, isHighContrastPreferred, (isPressing || isDragging)),
+                                color = ToolBox.inputKeyBackColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey = false, isPressing = (isPressing || isDragging)),
                                 shape = keyShape
                         )
                         .fillMaxSize(),
@@ -107,19 +105,5 @@ fun TenKeySpaceKey(modifier: Modifier) {
                         color = if (isDarkMode) Color.White else Color.Black,
                         fontSize = 15.sp
                 )
-        }
-}
-
-private fun keyBackColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean): Color = if (isHighContrastPreferred) {
-        if (isDarkMode) {
-                if (isPressing) AltPresetColor.emphaticDark else AltPresetColor.shallowDark
-        } else {
-                if (isPressing) AltPresetColor.emphaticLight else AltPresetColor.shallowLight
-        }
-} else {
-        if (isDarkMode) {
-                if (isPressing) PresetColor.emphaticDark else PresetColor.shallowDark
-        } else {
-                if (isPressing) PresetColor.emphaticLight else PresetColor.shallowLight
         }
 }

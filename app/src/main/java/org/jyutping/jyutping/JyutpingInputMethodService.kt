@@ -977,9 +977,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun performReturn() {
                 if (isBuffering.value) {
-                        val text = joinedBufferTexts()
-                        currentInputConnection.commitText(text, 1)
-                        clearBuffer()
+                        if (keyboardForm.value.isNineKeyStroke && candidates.value.isNotEmpty()) {
+                                candidates.value.firstOrNull()?.let { selectCandidate(it) }
+                        } else {
+                                val text = joinedBufferTexts()
+                                currentInputConnection.commitText(text, 1)
+                                clearBuffer()
+                        }
                         return
                 }
                 val imeOptions = currentInputEditorInfo.imeOptions

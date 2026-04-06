@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -35,8 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.presets.AltPresetColor
-import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
 
@@ -74,20 +73,20 @@ fun TenKeySymbolSidebar(unitHeight: Dp, modifier: Modifier) {
                                                         onPress = {
                                                                 isPressing = true
                                                                 pressingIndex = index
-                                                                context.audioFeedback(SoundEffect.Input)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                                 tryAwaitRelease()
                                                                 isPressing = false
                                                                 pressingIndex = -1
                                                         },
                                                         onTap = {
+                                                                context.audioFeedback(SoundEffect.Input)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                                 context.input(symbol)
                                                                 pressingState += 1
                                                         }
                                                 )
                                         }
                                         .background(
-                                                color = keyBackColor(isDarkMode, isHighContrastPreferred, isPressing && pressingIndex == index)
+                                                color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressing = (isPressing && pressingIndex == index))
                                         )
                                         .height(unitHeight)
                                         .fillMaxWidth(),
@@ -100,23 +99,10 @@ fun TenKeySymbolSidebar(unitHeight: Dp, modifier: Modifier) {
                                 )
                         }
                         HorizontalDivider(
+                                modifier.alpha(0.75f),
                                 thickness = 1.dp,
                                 color = Color.Gray
                         )
                 }
-        }
-}
-
-private fun keyBackColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean): Color = if (isHighContrastPreferred) {
-        if (isDarkMode) {
-                if (isPressing) AltPresetColor.shallowDark else AltPresetColor.emphaticDark
-        } else {
-                if (isPressing) AltPresetColor.shallowLight else AltPresetColor.emphaticLight
-        }
-} else {
-        if (isDarkMode) {
-                if (isPressing) PresetColor.shallowDark else PresetColor.emphaticDark
-        } else {
-                if (isPressing) PresetColor.shallowLight else PresetColor.emphaticLight
         }
 }
