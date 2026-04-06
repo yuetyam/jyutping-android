@@ -5,13 +5,9 @@ package org.jyutping.jyutping.keyboard
  */
 enum class NumericLayout(var identifier: Int) {
 
-        /**
-         * Normal Numeric Keyboard
-         */
+        /** Normal Numeric Keyboard */
         Default(1),
 
-        /**
-         * 10-Key KeyPad
-         */
+        /** 10-Key KeyPad */
         NumberKeyPad(2);
 }

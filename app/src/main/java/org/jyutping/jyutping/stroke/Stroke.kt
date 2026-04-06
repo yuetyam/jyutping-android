@@ -1,14 +1,14 @@
-package org.jyutping.jyutping.keyboard
+package org.jyutping.jyutping.stroke
 
+import org.jyutping.jyutping.keyboard.ShapeLexicon
 import org.jyutping.jyutping.models.Lexicon
-import org.jyutping.jyutping.models.StrokeVirtualKey
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 
 object Stroke {
         fun reverseLookup(keys: List<VirtualInputKey>, db: DatabaseHelper): List<Lexicon> {
-                val strokeKeys = keys.mapNotNull { StrokeVirtualKey.strokeKeyOf(it) }
+                val strokeKeys = keys.mapNotNull { it.strokeVirtualKey }
                 val isWildcard: Boolean = strokeKeys.any { it.isWildcard }
                 val input: String = strokeKeys.joinToString(separator = PresetString.EMPTY) { it.code.toString() }
                 val text: String = if (isWildcard) input.replace("6", "[12345]") else input

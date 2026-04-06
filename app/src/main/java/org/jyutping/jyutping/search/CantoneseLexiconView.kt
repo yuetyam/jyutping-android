@@ -40,7 +40,7 @@ fun CantoneseLexiconView(lexicon: CantoneseLexicon) {
                                 HorizontalDivider()
                                 Row {
                                         Text(
-                                                text = "英文",
+                                                text = "英語",
                                                 color = colorScheme.onBackground
                                         )
                                         SeparatorMark()

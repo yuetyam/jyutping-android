@@ -1,5 +1,7 @@
 package org.jyutping.jyutping.models
 
+import org.jyutping.jyutping.stroke.StrokeVirtualKey
+
 /**
  * Internal virtual input key
  * @property character Key character
@@ -71,6 +73,12 @@ data class VirtualInputKey(
         /** Integer number of the number key */
         val digit: Int?
                 get() = if (this.isNumber) (this.code - 10) else null
+
+        val strokeVirtualKey: StrokeVirtualKey?
+                get() = StrokeVirtualKey.strokeKeyOf(this)
+
+        val displayStrokeKeyText: String?
+                get() = StrokeVirtualKey.displayStrokeKeyTextOf(this)
 
         companion object {
                 val number0 = VirtualInputKey('0', code = 10, keyCode = 7)

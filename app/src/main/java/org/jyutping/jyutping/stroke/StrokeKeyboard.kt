@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.keyboard
+package org.jyutping.jyutping.stroke
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,6 +18,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.keyboard.BackspaceKey
+import org.jyutping.jyutping.keyboard.BottomKeyRow
+import org.jyutping.jyutping.keyboard.CandidateScrollBar
+import org.jyutping.jyutping.keyboard.ShiftKey
 import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.presets.AltPresetColor
@@ -27,11 +31,10 @@ import org.jyutping.jyutping.presets.PresetConstant
 @Composable
 fun StrokeKeyboard(keyHeight: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
-        val isBuffering by context.isBuffering.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
-        val useTenKeyNumberPad by context.useTenKeyNumberPad.collectAsState()
+        val useNineKeyNumberPad by context.useNineKeyNumberPad.collectAsState()
         Column(
                 modifier = Modifier
                         .background(
@@ -51,11 +54,7 @@ fun StrokeKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                 ) {
-                        if (isBuffering) {
-                                CandidateScrollBar()
-                        } else {
-                                ToolBar()
-                        }
+                        CandidateScrollBar()
                 }
                 Row(
                         modifier = Modifier
@@ -108,7 +107,7 @@ fun StrokeKeyboard(keyHeight: Dp) {
                         BackspaceKey(modifier = Modifier.weight(1.3f))
                 }
                 BottomKeyRow(
-                        transform = if (useTenKeyNumberPad) KeyboardForm.TenKeyNumeric else KeyboardForm.Numeric,
+                        transform = if (useNineKeyNumberPad) KeyboardForm.NineKeyNumeric else KeyboardForm.Numeric,
                         height = keyHeight
                 )
         }

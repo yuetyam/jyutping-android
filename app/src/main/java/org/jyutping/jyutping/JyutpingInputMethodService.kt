@@ -48,37 +48,38 @@ import org.jyutping.jyutping.keyboard.Cangjie
 import org.jyutping.jyutping.keyboard.CangjieVariant
 import org.jyutping.jyutping.keyboard.CommentStyle
 import org.jyutping.jyutping.keyboard.ExtraBottomPadding
+import org.jyutping.jyutping.keyboard.NumericLayout
+import org.jyutping.jyutping.keyboard.QwertyForm
+import org.jyutping.jyutping.keyboard.ReturnKeyForm
+import org.jyutping.jyutping.keyboard.SpaceKeyForm
+import org.jyutping.jyutping.models.BasicInputEvent
+import org.jyutping.jyutping.models.Candidate
+import org.jyutping.jyutping.models.CangjieConverter
+import org.jyutping.jyutping.models.Converter
 import org.jyutping.jyutping.models.InputMethodMode
 import org.jyutping.jyutping.models.KeyboardCase
 import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.models.KeyboardInterface
 import org.jyutping.jyutping.models.KeyboardLayout
-import org.jyutping.jyutping.keyboard.NumericLayout
-import org.jyutping.jyutping.keyboard.QwertyForm
-import org.jyutping.jyutping.keyboard.ReturnKeyForm
-import org.jyutping.jyutping.keyboard.SpaceKeyForm
-import org.jyutping.jyutping.keyboard.Stroke
-import org.jyutping.jyutping.models.Structure
-import org.jyutping.jyutping.models.BasicInputEvent
-import org.jyutping.jyutping.models.Candidate
-import org.jyutping.jyutping.models.Converter
-import org.jyutping.jyutping.models.CangjieConverter
 import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.models.PinyinResearcher
 import org.jyutping.jyutping.models.PinyinSegmenter
 import org.jyutping.jyutping.models.Researcher
 import org.jyutping.jyutping.models.RomanizationForm
 import org.jyutping.jyutping.models.Segmenter
-import org.jyutping.jyutping.models.StrokeVirtualKey
+import org.jyutping.jyutping.models.Structure
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.mark
-import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.models.pinyinSchemeLength
+import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.models.searchSymbols
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.presets.PresetString
+import org.jyutping.jyutping.stroke.Stroke
+import org.jyutping.jyutping.stroke.StrokeLayout
+import org.jyutping.jyutping.stroke.StrokeVirtualKey
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
 import org.jyutping.jyutping.utilities.Simplifier
@@ -280,24 +281,21 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         val spaceKeyForm: MutableStateFlow<SpaceKeyForm> by lazy { MutableStateFlow(SpaceKeyForm.Fallback) }
         private fun updateSpaceKeyForm() {
+                val isSimplified: Boolean = characterStandard.value.isSimplified
                 val newForm: SpaceKeyForm = when {
                         inputMethodMode.value.isABC -> SpaceKeyForm.English
-                        keyboardForm.value == KeyboardForm.TenKeyNumeric -> SpaceKeyForm.Fallback
-                        else -> {
-                                val isSimplified: Boolean = characterStandard.value.isSimplified
-                                if (isBuffering.value) {
-                                        if (candidates.value.isEmpty()) {
-                                                if (isSimplified) SpaceKeyForm.ConfirmSimplified else SpaceKeyForm.Confirm
-                                        } else {
-                                                if (isSimplified) SpaceKeyForm.SelectSimplified else SpaceKeyForm.Select
-                                        }
+                        keyboardForm.value.isNineKeyNumeric -> SpaceKeyForm.Fallback
+                        isBuffering.value -> {
+                                if (candidates.value.isEmpty()) {
+                                        if (isSimplified) SpaceKeyForm.ConfirmSimplified else SpaceKeyForm.Confirm
                                 } else {
-                                        when (keyboardCase.value) {
-                                                KeyboardCase.Lowercased -> if (isSimplified) SpaceKeyForm.LowercasedSimplified else SpaceKeyForm.Lowercased
-                                                KeyboardCase.Uppercased -> if (isSimplified) SpaceKeyForm.UppercasedSimplified else SpaceKeyForm.Uppercased
-                                                KeyboardCase.CapsLocked -> if (isSimplified) SpaceKeyForm.CapsLockedSimplified else SpaceKeyForm.CapsLocked
-                                        }
+                                        if (isSimplified) SpaceKeyForm.SelectSimplified else SpaceKeyForm.Select
                                 }
+                        }
+                        else -> when (keyboardCase.value) {
+                                KeyboardCase.Lowercased -> if (isSimplified) SpaceKeyForm.LowercasedSimplified else SpaceKeyForm.Lowercased
+                                KeyboardCase.Uppercased -> if (isSimplified) SpaceKeyForm.UppercasedSimplified else SpaceKeyForm.Uppercased
+                                KeyboardCase.CapsLocked -> if (isSimplified) SpaceKeyForm.CapsLockedSimplified else SpaceKeyForm.CapsLocked
                         }
                 }
                 if (spaceKeyForm.value != newForm) {
@@ -359,8 +357,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         val keyboardForm: MutableStateFlow<KeyboardForm> by lazy { MutableStateFlow(KeyboardForm.Alphabetic) }
         fun transformTo(destination: KeyboardForm) {
                 if (isBuffering.value) {
-                        val shouldKeepBuffer: Boolean = (destination == KeyboardForm.Alphabetic) || (destination == KeyboardForm.CandidateBoard)
-                        if (shouldKeepBuffer.not()) {
+                        val shouldKeepBuffer: Boolean = when (destination) {
+                                KeyboardForm.Alphabetic,
+                                KeyboardForm.CandidateBoard,
+                                KeyboardForm.NineKeyStroke -> true
+                                else -> false
+                        }
+                        if (shouldKeepBuffer.negative) {
                                 val text = joinedBufferTexts()
                                 currentInputConnection.commitText(text, 1)
                                 clearBuffer()
@@ -451,18 +454,32 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         putInt(UserSettingsKey.KeyboardLayout, layout.identifier)
                 }
         }
-        val useTenKeyNumberPad: MutableStateFlow<Boolean> by lazy {
+        val useNineKeyNumberPad: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.NumericLayout, NumericLayout.Default.identifier)
-                val shouldUseTenKeyNumberPad: Boolean = savedValue == NumericLayout.NumberKeyPad.identifier
-                MutableStateFlow(shouldUseTenKeyNumberPad)
+                val isUsing: Boolean = (savedValue == NumericLayout.NumberKeyPad.identifier)
+                MutableStateFlow(isUsing)
         }
-        fun updateUseTenKeyNumberPad(isOn: Boolean) {
-                useTenKeyNumberPad.value = isOn
-                val value2save: Int = if (isOn) NumericLayout.NumberKeyPad.identifier else NumericLayout.Default.identifier
+        fun updateUseNineKeyNumberPad(isOn: Boolean) {
+                useNineKeyNumberPad.value = isOn
+                val value: Int = if (isOn) NumericLayout.NumberKeyPad.identifier else NumericLayout.Default.identifier
                 sharedPreferences.edit {
-                        putInt(UserSettingsKey.NumericLayout, value2save)
+                        putInt(UserSettingsKey.NumericLayout, value)
                 }
         }
+
+        val useNineKeyStrokeLayout: MutableStateFlow<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.StrokeLayout, StrokeLayout.Default.identifier)
+                val isUsing: Boolean = (savedValue == StrokeLayout.NineKey.identifier)
+                MutableStateFlow(isUsing)
+        }
+        fun updateUseNineKeyStrokeLayout(isOn: Boolean) {
+                useNineKeyStrokeLayout.value = isOn
+                val value: Int = if (isOn) StrokeLayout.NineKey.identifier else StrokeLayout.Default.identifier
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.StrokeLayout, value)
+                }
+        }
+
         val showLowercaseKeys: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.KeyCase, 1)
                 val isLowercase: Boolean = (savedValue == 1)
@@ -689,8 +706,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         selectedLexicons.clear()
                                         isBuffering.value = false
                                 }
-                                if (keyboardForm.value == KeyboardForm.CandidateBoard) {
-                                        transformTo(KeyboardForm.Alphabetic)
+                                when (keyboardForm.value) {
+                                        KeyboardForm.CandidateBoard,
+                                        KeyboardForm.NineKeyStroke -> transformTo(KeyboardForm.Alphabetic)
+                                        else -> {}
                                 }
                                 val newForm: QwertyForm = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Primary
                                 updateQwertyForm(newForm)
@@ -764,7 +783,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         queriedDeferred.await()
                                 }
                                 withContext(Dispatchers.Main) {
-                                        updateQwertyForm(QwertyForm.Stroke)
+                                        if (useNineKeyStrokeLayout.value && keyboardForm.value.isNineKeyStroke.negative) {
+                                                transformTo(KeyboardForm.NineKeyStroke)
+                                        } else {
+                                                updateQwertyForm(QwertyForm.Stroke)
+                                        }
                                         currentInputConnection.setComposingText(mark, 1)
                                         candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
                                         updateInputSessionStates()

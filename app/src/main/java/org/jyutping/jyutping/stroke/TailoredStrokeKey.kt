@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.keyboard
+package org.jyutping.jyutping.stroke
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
@@ -17,68 +17,102 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.models.KeyboardForm
+import org.jyutping.jyutping.presets.AltPresetColor
+import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
+import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
-fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
+fun TailoredStrokeKey(key: StrokeVirtualKey, modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        val keyboardInterface by context.keyboardInterface.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
-        val keyText: String = when (destination) {
-                KeyboardForm.Alphabetic -> "ABC"
-                KeyboardForm.NineKeyNumeric -> "123"
-                KeyboardForm.Numeric -> "123"
-                KeyboardForm.Symbolic -> "#+="
-                else -> "???"
-        }
-        val keyShape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
-        val density = LocalDensity.current
+        val keyShape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
                                 detectTapGestures(
                                         onPress = {
                                                 isPressing = true
-                                                context.audioFeedback(SoundEffect.Click)
+                                                context.audioFeedback(SoundEffect.Input)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                 tryAwaitRelease()
                                                 isPressing = false
                                         },
                                         onTap = {
-                                                context.transformTo(destination)
+                                                context.handle(key.virtualInputKey)
                                         }
                                 )
                         }
-                        .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
+                        .padding(3.dp)
                         .border(
                                 width = 1.dp,
                                 color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
                                 shape = keyShape
                         )
                         .background(
-                                color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressing),
+                                color = keyBackColor(isDarkMode, isHighContrastPreferred, isPressing),
                                 shape = keyShape
                         )
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
         ) {
                 Text(
-                        text = keyText,
+                        text = key.strokeText ?: PresetString.QUESTION_MARK,
                         color = if (isDarkMode) Color.White else Color.Black,
-                        fontSize = with(density) { 18.dp.toSp() },
+                        fontSize = 24.sp,
                 )
+        }
+}
+
+@Composable
+fun TailoredStrokePlaceholderKey(modifier: Modifier) {
+        val context = LocalContext.current as JyutpingInputMethodService
+        val isDarkMode by context.isDarkMode.collectAsState()
+        val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
+        val keyShape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+        Box(
+                modifier = modifier
+                        .alpha(0.66f)
+                        .padding(3.dp)
+                        .border(
+                                width = 1.dp,
+                                color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
+                                shape = keyShape
+                        )
+                        .background(
+                                color = keyBackColor(isDarkMode, isHighContrastPreferred, false),
+                                shape = keyShape
+                        )
+                        .fillMaxSize(),
+                contentAlignment = Alignment.Center
+        ) {
+                // Nothing
+        }
+}
+
+private fun keyBackColor(isDarkMode: Boolean, isHighContrastPreferred: Boolean, isPressing: Boolean): Color = if (isHighContrastPreferred) {
+        if (isDarkMode) {
+                if (isPressing) AltPresetColor.emphaticDark else AltPresetColor.shallowDark
+        } else {
+                if (isPressing) AltPresetColor.emphaticLight else AltPresetColor.shallowLight
+        }
+} else {
+        if (isDarkMode) {
+                if (isPressing) PresetColor.emphaticDark else PresetColor.shallowDark
+        } else {
+                if (isPressing) PresetColor.emphaticLight else PresetColor.shallowLight
         }
 }

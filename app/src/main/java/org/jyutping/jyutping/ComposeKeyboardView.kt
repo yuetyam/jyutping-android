@@ -25,17 +25,18 @@ import org.jyutping.jyutping.keyboard.CangjieKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseNumericKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseSymbolicKeyboard
 import org.jyutping.jyutping.keyboard.CommentStyle
-import org.jyutping.jyutping.models.InputMethodMode
-import org.jyutping.jyutping.models.KeyboardForm
-import org.jyutping.jyutping.models.KeyboardInterface
 import org.jyutping.jyutping.keyboard.NumericKeyboard
 import org.jyutping.jyutping.keyboard.PhysicalKeyboardCandidateBar
 import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.SettingsScreen
-import org.jyutping.jyutping.keyboard.StrokeKeyboard
 import org.jyutping.jyutping.keyboard.SymbolicKeyboard
 import org.jyutping.jyutping.keyboard.TripleStrokeKeyboard
+import org.jyutping.jyutping.models.InputMethodMode
+import org.jyutping.jyutping.models.KeyboardForm
+import org.jyutping.jyutping.models.KeyboardInterface
 import org.jyutping.jyutping.presets.PresetConstant
+import org.jyutping.jyutping.stroke.StrokeKeyboard
+import org.jyutping.jyutping.stroke.TailoredStrokeKeyboard
 import org.jyutping.jyutping.tenkey.TenKeyNumericKeyboard
 import splitties.systemservices.windowManager
 import kotlin.math.min
@@ -109,7 +110,8 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                                 InputMethodMode.ABC -> SymbolicKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                 InputMethodMode.Cantonese -> CantoneseSymbolicKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                         }
-                        KeyboardForm.TenKeyNumeric -> TenKeyNumericKeyboard(height = keyboardHeight(keyOffset))
+                        KeyboardForm.NineKeyNumeric -> TenKeyNumericKeyboard(height = keyboardHeight(keyOffset))
+                        KeyboardForm.NineKeyStroke -> TailoredStrokeKeyboard(height = keyboardHeight(keyOffset))
                         KeyboardForm.CandidateBoard -> CandidateBoard(height = keyboardHeight(keyOffset))
                         KeyboardForm.Settings -> SettingsScreen(height = keyboardHeight(keyOffset))
                         KeyboardForm.EmojiBoard -> EmojiBoard(height = keyboardHeight(keyOffset))

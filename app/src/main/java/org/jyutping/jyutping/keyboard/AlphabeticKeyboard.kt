@@ -30,7 +30,7 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
-        val useTenKeyNumberPad by context.useTenKeyNumberPad.collectAsState()
+        val useNineKeyNumberPad by context.useNineKeyNumberPad.collectAsState()
         Column(
                 modifier = Modifier
                         .background(
@@ -107,7 +107,7 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
                         BackspaceKey(modifier = Modifier.weight(1.3f))
                 }
                 BottomKeyRow(
-                        transform = if (useTenKeyNumberPad) KeyboardForm.TenKeyNumeric else KeyboardForm.Numeric,
+                        transform = if (useNineKeyNumberPad) KeyboardForm.NineKeyNumeric else KeyboardForm.Numeric,
                         height = keyHeight
                 )
         }

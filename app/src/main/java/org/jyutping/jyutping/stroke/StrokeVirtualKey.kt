@@ -1,18 +1,30 @@
-package org.jyutping.jyutping.models
+package org.jyutping.jyutping.stroke
 
+import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.presets.PresetString
 
 /**
- * Stroke Input Event
+ * Stroke Input Event. 筆畫輸入
  * @property code Unique identifier; internal processing code.
  */
 enum class StrokeVirtualKey(val code: Int) {
 
+        /** 橫 w */
         Horizontal(1),
+
+        /** 豎 s */
         Vertical(2),
+
+        /** 撇 a */
         LeftFalling(3),
+
+        /** 點 d */
         RightFalling(4),
+
+        /** 折 z */
         Turning(5),
+
+        /** 通配 x */
         Wildcard(6);
 
         val isWildcard: Boolean

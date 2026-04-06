@@ -84,7 +84,8 @@ fun SettingsScreen(height: Dp) {
         val isAudioFeedbackOn by context.isAudioFeedbackOn.collectAsState()
         val isHapticFeedbackOn by context.isHapticFeedbackOn.collectAsState()
         val keyboardLayout by context.keyboardLayout.collectAsState()
-        val useTenKeyNumberPad by context.useTenKeyNumberPad.collectAsState()
+        val useNineKeyNumberPad by context.useNineKeyNumberPad.collectAsState()
+        val useNineKeyStrokeLayout by context.useNineKeyStrokeLayout.collectAsState()
         val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
         val previewKeyText by context.previewKeyText.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
@@ -482,28 +483,52 @@ fun SettingsScreen(height: Dp) {
                                 }
                         }
                         item {
-                                Row(
+                                Column(
                                         modifier = Modifier
-                                                .fillMaxWidth()
                                                 .background(color = backColor, shape = sectionShape)
-                                                .padding(horizontal = 8.dp),
-                                        verticalAlignment = Alignment.CenterVertically
+                                                .fillMaxWidth()
                                 ) {
-                                        Text(
-                                                text = stringResource(id = R.string.keyboard_settings_numeric_layout_switch_title),
-                                                color = tintColor
-                                        )
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        Switch(
-                                                checked = useTenKeyNumberPad,
-                                                onCheckedChange = {
-                                                        context.audioFeedback(SoundEffect.Click)
-                                                        view.performHapticFeedback(if (it) onHaptic else offHaptic)
-                                                        context.updateUseTenKeyNumberPad(it)
-                                                },
-                                                thumbContent = { SwitchThumbContent(useTenKeyNumberPad) },
-                                                colors = switchColors
-                                        )
+                                        Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_numeric_layout_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = useNineKeyNumberPad,
+                                                        onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(if (it) onHaptic else offHaptic)
+                                                                context.updateUseNineKeyNumberPad(it)
+                                                        },
+                                                        thumbContent = { SwitchThumbContent(useNineKeyNumberPad) },
+                                                        colors = switchColors
+                                                )
+                                        }
+                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                        Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_stroke_layout_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = useNineKeyStrokeLayout,
+                                                        onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(if (it) onHaptic else offHaptic)
+                                                                context.updateUseNineKeyStrokeLayout(it)
+                                                        },
+                                                        thumbContent = { SwitchThumbContent(useNineKeyStrokeLayout) },
+                                                        colors = switchColors
+                                                )
+                                        }
                                 }
                         }
                         item {

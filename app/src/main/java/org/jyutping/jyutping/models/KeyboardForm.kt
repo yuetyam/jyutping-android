@@ -10,11 +10,18 @@ enum class KeyboardForm {
         Numeric,
         Settings,
         Symbolic,
-        TenKeyNumeric;
+        NineKeyNumeric,
+        NineKeyStroke;
 
         val isBufferable: Boolean
                 get() = when (this) {
-                        Alphabetic, CandidateBoard -> true
+                        Alphabetic, CandidateBoard, NineKeyStroke -> true
                         else -> false
                 }
+
+        val isNineKeyNumeric: Boolean
+                get() = (this == NineKeyNumeric)
+
+        val isNineKeyStroke: Boolean
+                get() = (this == NineKeyStroke)
 }

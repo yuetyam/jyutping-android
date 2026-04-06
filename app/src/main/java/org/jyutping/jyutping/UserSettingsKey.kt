@@ -9,6 +9,7 @@ object UserSettingsKey {
         const val HapticFeedback: String = "haptic_feedback"
         const val KeyboardLayout: String = "keyboard_layout"
         const val NumericLayout: String = "numeric_layout"
+        const val StrokeLayout: String = "stroke_layout"
         const val KeyCase: String = "key_case"
         const val KeyTextPreview: String = "key_preview"
         const val HighContrast: String = "high_contrast"
