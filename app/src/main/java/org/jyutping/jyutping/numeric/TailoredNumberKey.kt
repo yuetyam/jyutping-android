@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.tenkey
+package org.jyutping.jyutping.numeric
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
@@ -25,19 +25,68 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
+import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
+import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.ToolBox
 
+/** Number input key for 10-key numeric keyboard */
 @Composable
-fun TenKeyNumericInputKey(keyText: String, modifier: Modifier) {
+fun TailoredNumberKey(virtual: VirtualInputKey, modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
         val keyShape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+        Box(
+                modifier = modifier
+                        .pointerInput(Unit) {
+                                detectTapGestures(
+                                        onPress = {
+                                                isPressing = true
+                                                context.audioFeedback(SoundEffect.Input)
+                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                                tryAwaitRelease()
+                                                isPressing = false
+                                        },
+                                        onTap = {
+                                                context.handle(virtual)
+                                        }
+                                )
+                        }
+                        .padding(3.dp)
+                        .border(
+                                width = 1.dp,
+                                color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
+                                shape = keyShape
+                        )
+                        .background(
+                                color = keyBackColor(isDarkMode, isHighContrastPreferred, isPressing),
+                                shape = keyShape
+                        )
+                        .fillMaxSize(),
+                contentAlignment = Alignment.Center
+        ) {
+                Text(
+                        text = virtual.text,
+                        color = if (isDarkMode) Color.White else Color.Black,
+                        fontSize = 24.sp,
+                )
+        }
+}
+
+@Composable
+fun TailoredNumericDotKey(modifier: Modifier) {
+        val view = LocalView.current
+        val context = LocalContext.current as JyutpingInputMethodService
+        val isDarkMode by context.isDarkMode.collectAsState()
+        val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
+        var isPressing by remember { mutableStateOf(false) }
+        val keyShape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+        val keyText: String = PresetString.PERIOD
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {

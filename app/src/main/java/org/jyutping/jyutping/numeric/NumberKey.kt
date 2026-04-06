@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.keyboard
+package org.jyutping.jyutping.numeric
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background

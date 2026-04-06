@@ -23,7 +23,7 @@ import org.jyutping.jyutping.models.KeyElement
 import org.jyutping.jyutping.models.KeyModel
 import org.jyutping.jyutping.models.KeySide
 import org.jyutping.jyutping.models.KeyboardForm
-import org.jyutping.jyutping.models.VirtualInputKey
+import org.jyutping.jyutping.numeric.NumberRow
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
@@ -55,33 +55,7 @@ fun NumericKeyboard(keyHeight: Dp) {
                 ) {
                         ToolBar()
                 }
-                Row(
-                        modifier = Modifier
-                                .height(keyHeight)
-                                .fillMaxWidth()
-                ) {
-                        NumberKey(VirtualInputKey.number1, modifier = Modifier.weight(1f), position = Alignment.Start)
-                        NumberKey(VirtualInputKey.number2, modifier = Modifier.weight(1f))
-                        NumberKey(VirtualInputKey.number3, modifier = Modifier.weight(1f))
-                        NumberKey(VirtualInputKey.number4, modifier = Modifier.weight(1f))
-                        NumberKey(VirtualInputKey.number5, modifier = Modifier.weight(1f))
-                        NumberKey(VirtualInputKey.number6, modifier = Modifier.weight(1f))
-                        NumberKey(VirtualInputKey.number7, modifier = Modifier.weight(1f))
-                        NumberKey(VirtualInputKey.number8, modifier = Modifier.weight(1f))
-                        NumberKey(VirtualInputKey.number9, modifier = Modifier.weight(1f))
-                        EdgeEnhancedInputKey(
-                                side = KeySide.Right,
-                                virtual = VirtualInputKey.number0,
-                                keyModel = KeyModel(
-                                        primary = KeyElement("0"),
-                                        members = listOf(
-                                                KeyElement("0"),
-                                                KeyElement("°"),
-                                        )
-                                ),
-                                modifier = Modifier.weight(1f)
-                        )
-                }
+                NumberRow(keyHeight)
                 Row(
                         modifier = Modifier
                                 .height(keyHeight)

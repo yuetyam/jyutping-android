@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.keyboard
+package org.jyutping.jyutping.numeric
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -7,10 +7,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
+import org.jyutping.jyutping.keyboard.EdgeEnhancedInputKey
+import org.jyutping.jyutping.models.KeyElement
+import org.jyutping.jyutping.models.KeyModel
+import org.jyutping.jyutping.models.KeySide
 import org.jyutping.jyutping.models.VirtualInputKey
 
+/** ABC keyboard number key row */
 @Composable
-fun NumberKeyRow(height: Dp) {
+fun NumberRow(height: Dp) {
         Row(
                 modifier = Modifier
                         .height(height)
@@ -25,6 +30,17 @@ fun NumberKeyRow(height: Dp) {
                 NumberKey(VirtualInputKey.number7, modifier = Modifier.weight(1f))
                 NumberKey(VirtualInputKey.number8, modifier = Modifier.weight(1f))
                 NumberKey(VirtualInputKey.number9, modifier = Modifier.weight(1f))
-                NumberKey(VirtualInputKey.number0, modifier = Modifier.weight(1f), position = Alignment.End)
+                EdgeEnhancedInputKey(
+                        side = KeySide.Right,
+                        virtual = VirtualInputKey.number0,
+                        keyModel = KeyModel(
+                                primary = KeyElement(VirtualInputKey.number0.text),
+                                members = listOf(
+                                        KeyElement(VirtualInputKey.number0.text),
+                                        KeyElement("°"),
+                                )
+                        ),
+                        modifier = Modifier.weight(1f)
+                )
         }
 }

@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.keyboard
+package org.jyutping.jyutping.numeric
 
 /**
  * Numeric keyboard for the Qwerty KeyboardLayout.

@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.tenkey
+package org.jyutping.jyutping.numeric
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,12 +21,18 @@ import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.keyboard.ToolBar
 import org.jyutping.jyutping.models.KeyboardForm
+import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
+import org.jyutping.jyutping.tenkey.TenKeyBackspaceKey
+import org.jyutping.jyutping.tenkey.TenKeyReturnKey
+import org.jyutping.jyutping.tenkey.TenKeySpaceKey
+import org.jyutping.jyutping.tenkey.TenKeySymbolSidebar
+import org.jyutping.jyutping.tenkey.TenKeyTransformKey
 
 @Composable
-fun TenKeyNumericKeyboard(height: Dp) {
+fun TailoredNumericKeyboard(height: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
@@ -77,29 +83,29 @@ fun TenKeyNumericKeyboard(height: Dp) {
                                 Row(
                                         modifier = Modifier.weight(0.25f)
                                 ) {
-                                        TenKeyNumericInputKey(keyText = "1", modifier = Modifier.weight(1f))
-                                        TenKeyNumericInputKey(keyText = "2", modifier = Modifier.weight(1f))
-                                        TenKeyNumericInputKey(keyText = "3", modifier = Modifier.weight(1f))
+                                        TailoredNumberKey(VirtualInputKey.number1, modifier = Modifier.weight(1f))
+                                        TailoredNumberKey(VirtualInputKey.number2, modifier = Modifier.weight(1f))
+                                        TailoredNumberKey(VirtualInputKey.number3, modifier = Modifier.weight(1f))
                                 }
                                 Row(
                                         modifier = Modifier.weight(0.25f)
                                 ) {
-                                        TenKeyNumericInputKey(keyText = "4", modifier = Modifier.weight(1f))
-                                        TenKeyNumericInputKey(keyText = "5", modifier = Modifier.weight(1f))
-                                        TenKeyNumericInputKey(keyText = "6", modifier = Modifier.weight(1f))
+                                        TailoredNumberKey(VirtualInputKey.number4, modifier = Modifier.weight(1f))
+                                        TailoredNumberKey(VirtualInputKey.number5, modifier = Modifier.weight(1f))
+                                        TailoredNumberKey(VirtualInputKey.number6, modifier = Modifier.weight(1f))
                                 }
                                 Row(
                                         modifier = Modifier.weight(0.25f)
                                 ) {
-                                        TenKeyNumericInputKey(keyText = "7", modifier = Modifier.weight(1f))
-                                        TenKeyNumericInputKey(keyText = "8", modifier = Modifier.weight(1f))
-                                        TenKeyNumericInputKey(keyText = "9", modifier = Modifier.weight(1f))
+                                        TailoredNumberKey(VirtualInputKey.number7, modifier = Modifier.weight(1f))
+                                        TailoredNumberKey(VirtualInputKey.number8, modifier = Modifier.weight(1f))
+                                        TailoredNumberKey(VirtualInputKey.number9, modifier = Modifier.weight(1f))
                                 }
                                 Row(
                                         modifier = Modifier.weight(0.25f)
                                 ) {
-                                        TenKeyNumericInputKey(keyText = ".", modifier = Modifier.weight(1f))
-                                        TenKeyNumericInputKey(keyText = "0", modifier = Modifier.weight(1f))
+                                        TailoredNumericDotKey(modifier = Modifier.weight(1f))
+                                        TailoredNumberKey(VirtualInputKey.number0, modifier = Modifier.weight(1f))
                                         TenKeySpaceKey(modifier = Modifier.weight(1f))
                                 }
                         }

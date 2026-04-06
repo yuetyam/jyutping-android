@@ -48,7 +48,6 @@ import org.jyutping.jyutping.keyboard.Cangjie
 import org.jyutping.jyutping.keyboard.CangjieVariant
 import org.jyutping.jyutping.keyboard.CommentStyle
 import org.jyutping.jyutping.keyboard.ExtraBottomPadding
-import org.jyutping.jyutping.keyboard.NumericLayout
 import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.ReturnKeyForm
 import org.jyutping.jyutping.keyboard.SpaceKeyForm
@@ -73,6 +72,7 @@ import org.jyutping.jyutping.models.mark
 import org.jyutping.jyutping.models.pinyinSchemeLength
 import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.models.searchSymbols
+import org.jyutping.jyutping.numeric.NumericLayout
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant

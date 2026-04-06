@@ -34,10 +34,10 @@ import org.jyutping.jyutping.keyboard.TripleStrokeKeyboard
 import org.jyutping.jyutping.models.InputMethodMode
 import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.models.KeyboardInterface
+import org.jyutping.jyutping.numeric.TailoredNumericKeyboard
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.stroke.StrokeKeyboard
 import org.jyutping.jyutping.stroke.TailoredStrokeKeyboard
-import org.jyutping.jyutping.tenkey.TenKeyNumericKeyboard
 import splitties.systemservices.windowManager
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -110,7 +110,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                                 InputMethodMode.ABC -> SymbolicKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                 InputMethodMode.Cantonese -> CantoneseSymbolicKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                         }
-                        KeyboardForm.NineKeyNumeric -> TenKeyNumericKeyboard(height = keyboardHeight(keyOffset))
+                        KeyboardForm.NineKeyNumeric -> TailoredNumericKeyboard(height = keyboardHeight(keyOffset))
                         KeyboardForm.NineKeyStroke -> TailoredStrokeKeyboard(height = keyboardHeight(keyOffset))
                         KeyboardForm.CandidateBoard -> CandidateBoard(height = keyboardHeight(keyOffset))
                         KeyboardForm.Settings -> SettingsScreen(height = keyboardHeight(keyOffset))
