@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.tenkey
+package org.jyutping.jyutping.ninekey
 
 import android.content.Context
 import android.view.HapticFeedbackConstants

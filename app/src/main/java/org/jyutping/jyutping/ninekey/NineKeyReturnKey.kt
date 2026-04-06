@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.tenkey
+package org.jyutping.jyutping.ninekey
 
 import android.os.Build
 import android.view.HapticFeedbackConstants
@@ -24,10 +24,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
@@ -35,7 +35,7 @@ import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
-fun TenKeyReturnKey(modifier: Modifier) {
+fun NineKeyReturnKey(modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()
@@ -43,6 +43,7 @@ fun TenKeyReturnKey(modifier: Modifier) {
         val keyText by context.returnKeyText.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
         val keyShape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+        val density = LocalDensity.current
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -87,7 +88,7 @@ fun TenKeyReturnKey(modifier: Modifier) {
                         Text(
                                 text = keyText ?: "return",
                                 color = if (isDarkMode) Color.White else Color.Black,
-                                fontSize = 15.sp
+                                fontSize = with(density) { 15.dp.toSp() },
                         )
                 }
         }

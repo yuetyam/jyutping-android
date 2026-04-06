@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.tenkey
+package org.jyutping.jyutping.ninekey
 
 import android.os.Build
 import android.view.HapticFeedbackConstants
@@ -39,7 +39,7 @@ import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
-fun TenKeyBackspaceKey(modifier: Modifier) {
+fun NineKeyBackspaceKey(modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()
@@ -61,7 +61,7 @@ fun TenKeyBackspaceKey(modifier: Modifier) {
                                                 isLongPressing = true
                                                 longPressJob = longPressCoroutineScope.launch {
                                                         while (isActive && isLongPressing) {
-                                                                delay(100)
+                                                                delay(100) // 0.1s
                                                                 context.audioFeedback(SoundEffect.Delete)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.backspace()
@@ -101,8 +101,9 @@ fun TenKeyBackspaceKey(modifier: Modifier) {
                                         onHorizontalDrag = { change, dragAmount ->
                                                 change.consume()
                                                 if (isDraggable) {
-                                                        val offsetX = change.position.x - change.previousPosition.x
-                                                        if (offsetX < -20f) {
+                                                        val offsetX = -(change.position.x - change.previousPosition.x)
+                                                        // drag from right to left
+                                                        if (offsetX > 20f) {
                                                                 context.audioFeedback(SoundEffect.Delete)
                                                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                                                                         view.performHapticFeedback(HapticFeedbackConstants.GESTURE_END)
@@ -111,6 +112,19 @@ fun TenKeyBackspaceKey(modifier: Modifier) {
                                                                 }
                                                                 context.clearBuffer()
                                                                 isDraggable = false
+                                                        } else {
+                                                                val offsetY = -(change.position.y - change.previousPosition.y)
+                                                                // drag from bottom to top
+                                                                if (offsetY > 20f) {
+                                                                        context.audioFeedback(SoundEffect.Delete)
+                                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                                                                view.performHapticFeedback(HapticFeedbackConstants.GESTURE_END)
+                                                                        } else {
+                                                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_RELEASE)
+                                                                        }
+                                                                        context.clearBuffer()
+                                                                        isDraggable = false
+                                                                }
                                                         }
                                                 }
                                         }
@@ -123,7 +137,7 @@ fun TenKeyBackspaceKey(modifier: Modifier) {
                                 shape = keyShape
                         )
                         .background(
-                                color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, (isPressing || isDragging)),
+                                color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressing = (isPressing || isDragging)),
                                 shape = keyShape
                         )
                         .fillMaxSize(),

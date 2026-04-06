@@ -62,7 +62,7 @@ fun BackspaceKey(modifier: Modifier) {
                                                 isLongPressing = true
                                                 longPressJob = longPressCoroutineScope.launch {
                                                         while (isActive && isLongPressing) {
-                                                                delay(100)
+                                                                delay(100) // 0.1s
                                                                 context.audioFeedback(SoundEffect.Delete)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.backspace()
@@ -138,7 +138,7 @@ fun BackspaceKey(modifier: Modifier) {
                                 shape = keyShape
                         )
                         .background(
-                                color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, (isPressing || isDragging)),
+                                color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressing = (isPressing || isDragging)),
                                 shape = keyShape
                         )
                         .fillMaxSize(),

@@ -22,14 +22,14 @@ import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.keyboard.ToolBar
 import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.models.VirtualInputKey
+import org.jyutping.jyutping.ninekey.NineKeyBackspaceKey
+import org.jyutping.jyutping.ninekey.NineKeyNavigateKey
+import org.jyutping.jyutping.ninekey.NineKeyReturnKey
+import org.jyutping.jyutping.ninekey.NineKeySpaceKey
+import org.jyutping.jyutping.ninekey.SidebarPanel
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
-import org.jyutping.jyutping.tenkey.TenKeyBackspaceKey
-import org.jyutping.jyutping.tenkey.TenKeyReturnKey
-import org.jyutping.jyutping.tenkey.TenKeySpaceKey
-import org.jyutping.jyutping.tenkey.TenKeySymbolSidebar
-import org.jyutping.jyutping.tenkey.TenKeyTransformKey
 
 @Composable
 fun TailoredNumericKeyboard(height: Dp) {
@@ -68,11 +68,11 @@ fun TailoredNumericKeyboard(height: Dp) {
                         Column(
                                 modifier = Modifier.weight(0.2f)
                         ) {
-                                TenKeySymbolSidebar(
+                                SidebarPanel(
                                         unitHeight = sidebarUnitHeight,
                                         modifier = Modifier.weight(0.75f)
                                 )
-                                TenKeyTransformKey(
+                                NineKeyNavigateKey(
                                         destination = KeyboardForm.Alphabetic,
                                         modifier = Modifier.weight(0.25f)
                                 )
@@ -106,18 +106,18 @@ fun TailoredNumericKeyboard(height: Dp) {
                                 ) {
                                         TailoredNumericDotKey(modifier = Modifier.weight(1f))
                                         TailoredNumberKey(VirtualInputKey.number0, modifier = Modifier.weight(1f))
-                                        TenKeySpaceKey(modifier = Modifier.weight(1f))
+                                        NineKeySpaceKey(modifier = Modifier.weight(1f))
                                 }
                         }
                         Column(
                                 modifier = Modifier.weight(0.2f)
                         ) {
-                                TenKeyBackspaceKey(modifier = Modifier.weight(0.25f))
-                                TenKeyTransformKey(
+                                NineKeyBackspaceKey(modifier = Modifier.weight(0.25f))
+                                NineKeyNavigateKey(
                                         destination = KeyboardForm.Numeric,
                                         modifier = Modifier.weight(0.25f)
                                 )
-                                TenKeyReturnKey(modifier = Modifier.weight(0.5f))
+                                NineKeyReturnKey(modifier = Modifier.weight(0.5f))
                         }
                 }
         }

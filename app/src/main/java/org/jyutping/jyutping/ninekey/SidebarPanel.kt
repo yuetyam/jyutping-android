@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.tenkey
+package org.jyutping.jyutping.ninekey
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
@@ -30,17 +30,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
-fun TenKeySymbolSidebar(unitHeight: Dp, modifier: Modifier) {
+fun SidebarPanel(unitHeight: Dp, modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()
@@ -52,6 +52,7 @@ fun TenKeySymbolSidebar(unitHeight: Dp, modifier: Modifier) {
         LaunchedEffect(pressingState) {
                 state.animateScrollToItem(index = 0, scrollOffset = 0)
         }
+        val density = LocalDensity.current
         val symbols: List<String> = listOf("+", "-", "*", "/", "=", "%", ":", "@", "#", ",", "~", "≈")
         LazyColumn(
                 modifier = modifier
@@ -95,7 +96,7 @@ fun TenKeySymbolSidebar(unitHeight: Dp, modifier: Modifier) {
                                 Text(
                                         text = symbol,
                                         color = if (isDarkMode) Color.White else Color.Black,
-                                        fontSize = 18.sp
+                                        fontSize = with(density) { 18.dp.toSp() },
                                 )
                         }
                         HorizontalDivider(

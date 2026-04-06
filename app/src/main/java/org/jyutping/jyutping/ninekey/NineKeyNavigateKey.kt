@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.tenkey
+package org.jyutping.jyutping.ninekey
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
@@ -20,9 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.models.KeyboardForm
@@ -30,19 +30,22 @@ import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
-fun TenKeyTransformKey(destination: KeyboardForm, modifier: Modifier) {
+fun NineKeyNavigateKey(destination: KeyboardForm, modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val useNineKeyNumberPad by context.useNineKeyNumberPad.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
         val keyText: String = when (destination) {
                 KeyboardForm.Alphabetic -> "ABC"
-                KeyboardForm.Numeric -> "#@$"
+                KeyboardForm.Numeric -> if (useNineKeyNumberPad) "#@$" else "123"
                 KeyboardForm.Symbolic -> "#+="
+                KeyboardForm.NineKeyNumeric -> "123"
                 else -> "???"
         }
         val keyShape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+        val density = LocalDensity.current
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -75,7 +78,7 @@ fun TenKeyTransformKey(destination: KeyboardForm, modifier: Modifier) {
                 Text(
                         text = keyText,
                         color = if (isDarkMode) Color.White else Color.Black,
-                        fontSize = 18.sp,
+                        fontSize = with(density) { 18.dp.toSp() },
                 )
         }
 }

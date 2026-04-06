@@ -20,12 +20,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.keyboard.CandidateScrollBar
+import org.jyutping.jyutping.ninekey.NineKeyBackspaceKey
+import org.jyutping.jyutping.ninekey.NineKeyReturnKey
+import org.jyutping.jyutping.ninekey.NineKeySpaceKey
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
-import org.jyutping.jyutping.tenkey.TenKeyBackspaceKey
-import org.jyutping.jyutping.tenkey.TenKeyReturnKey
-import org.jyutping.jyutping.tenkey.TenKeySpaceKey
 
 @Composable
 fun TailoredStrokeKeyboard(height: Dp) {
@@ -89,14 +89,14 @@ fun TailoredStrokeKeyboard(height: Dp) {
                                         TailoredStrokePlaceholderKey(modifier = Modifier.weight(1f))
                                         TailoredStrokePlaceholderKey(modifier = Modifier.weight(1f))
                                 }
-                                TenKeySpaceKey(modifier = Modifier.weight(0.25f))
+                                NineKeySpaceKey(modifier = Modifier.weight(0.25f))
                         }
                         Column(
                                 modifier = Modifier.weight(0.2f)
                         ) {
-                                TenKeyBackspaceKey(modifier = Modifier.weight(0.25f))
+                                NineKeyBackspaceKey(modifier = Modifier.weight(0.25f))
                                 TailoredStrokePlaceholderKey(modifier = Modifier.weight(0.25f))
-                                TenKeyReturnKey(modifier = Modifier.weight(0.5f))
+                                NineKeyReturnKey(modifier = Modifier.weight(0.5f))
                         }
                 }
         }
