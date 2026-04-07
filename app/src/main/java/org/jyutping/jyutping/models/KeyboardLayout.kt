@@ -9,13 +9,7 @@ enum class KeyboardLayout(val identifier: Int) {
         TripleStroke(2),
 
         /** 九宮格（9 鍵） */
-        NineKey(3),
-
-        /** 14 鍵 */
-        FourteenKey(4),
-
-        /** 18 鍵 */
-        EighteenKey(5);
+        NineKey(3);
 
         /** 26 鍵全鍵盤 */
         val isQwerty: Boolean
@@ -28,14 +22,6 @@ enum class KeyboardLayout(val identifier: Int) {
         /** 九宮格（9 鍵） */
         val isNineKey: Boolean
                 get() = (this == NineKey)
-
-        /** 14 鍵 */
-        val isFourteenKey: Boolean
-                get() = (this == FourteenKey)
-
-        /** 18 鍵 */
-        val isEighteenKey: Boolean
-                get() = (this == EighteenKey)
 
         companion object {
                 fun layoutOf(value: Int): KeyboardLayout = entries.find { it.identifier == value } ?: Qwerty

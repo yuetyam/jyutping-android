@@ -32,12 +32,12 @@ import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 
 @Composable
-fun TailoredNumericKeyboard(height: Dp) {
+fun TailoredNumericKeyboard(keyHeight: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
-        val keyHeight: Dp = (height - PresetConstant.ToolBarHeight.dp) / 4f
+        val totalHeight: Dp = (keyHeight * 4) + PresetConstant.ToolBarHeight.dp
         val sidebarUnitHeight: Dp = keyHeight * 3f / 4f
         Column(
                 modifier = Modifier
@@ -50,7 +50,7 @@ fun TailoredNumericKeyboard(height: Dp) {
                         )
                         .systemBarsPadding()
                         .padding(bottom = extraBottomPadding.applyingValue.dp)
-                        .height(height)
+                        .height(totalHeight)
                         .fillMaxWidth()
         ) {
                 Box(

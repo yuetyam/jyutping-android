@@ -24,10 +24,9 @@ fun Iterable<Char>.anchorsCode(): Long? {
                 .radix100Combined()
         return code
 }
-fun Iterable<Int>.radix100Combined(): Long {
-        if (this.count() >= 10) return 0
-        return this.fold(0) { acc, i -> acc * 100 + i }
-}
+fun Iterable<Int>.radix100Combined(): Long = if (this.count() >= 10) 0L else this.fold(0L) { acc, i -> acc * 100L + i}
+
+fun Iterable<Int>.decimalCombined(): Long = if (this.count() >= 19) 0L else this.fold(0L) { acc, i -> acc * 10L + i}
 
 val Char.interCode: Int?
         get() = CharCode.letterCodeMap[this] ?: CharCode.numberCodeMap[this]

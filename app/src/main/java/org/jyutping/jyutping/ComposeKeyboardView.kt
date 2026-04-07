@@ -34,6 +34,8 @@ import org.jyutping.jyutping.keyboard.TripleStrokeKeyboard
 import org.jyutping.jyutping.models.InputMethodMode
 import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.models.KeyboardInterface
+import org.jyutping.jyutping.models.KeyboardLayout
+import org.jyutping.jyutping.ninekey.NineKeyKeyboard
 import org.jyutping.jyutping.numeric.TailoredNumericKeyboard
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.stroke.StrokeKeyboard
@@ -88,6 +90,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                         return
                 }
 
+                val keyboardLayout by ctx.keyboardLayout.collectAsState()
                 val keyboardForm by ctx.keyboardForm.collectAsState()
                 val qwertyForm by ctx.qwertyForm.collectAsState()
                 val inputMethodMode by ctx.inputMethodMode.collectAsState()
@@ -100,7 +103,10 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                                         InputMethodMode.ABC -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                         InputMethodMode.Cantonese -> TripleStrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                 }
-                                else -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                                else -> when (keyboardLayout) {
+                                        KeyboardLayout.NineKey -> NineKeyKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                                        else -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                                }
                         }
                         KeyboardForm.Numeric -> when (inputMethodMode) {
                                 InputMethodMode.ABC -> NumericKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
@@ -110,8 +116,8 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                                 InputMethodMode.ABC -> SymbolicKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                 InputMethodMode.Cantonese -> CantoneseSymbolicKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                         }
-                        KeyboardForm.NineKeyNumeric -> TailoredNumericKeyboard(height = keyboardHeight(keyOffset))
-                        KeyboardForm.NineKeyStroke -> TailoredStrokeKeyboard(height = keyboardHeight(keyOffset))
+                        KeyboardForm.NineKeyNumeric -> TailoredNumericKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                        KeyboardForm.NineKeyStroke -> TailoredStrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                         KeyboardForm.CandidateBoard -> CandidateBoard(height = keyboardHeight(keyOffset))
                         KeyboardForm.Settings -> SettingsScreen(height = keyboardHeight(keyOffset))
                         KeyboardForm.EmojiBoard -> EmojiBoard(height = keyboardHeight(keyOffset))
@@ -121,11 +127,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
         }
 
         @Composable
-        private fun keyboardHeight(keyOffset: Int): Dp {
-                val keyRowHeight: Dp = responsiveKeyHeight(keyOffset)
-                val summedHeight: Dp = keyRowHeight * 4
-                return summedHeight + PresetConstant.ToolBarHeight.dp
-        }
+        private fun keyboardHeight(keyOffset: Int): Dp = (responsiveKeyHeight(keyOffset) * 4) + PresetConstant.ToolBarHeight.dp
 
         @Composable
         private fun responsiveKeyHeight(offset: Int): Dp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) api34ResponsiveKeyHeight(offset) else legacyResponsiveKeyHeight(offset)

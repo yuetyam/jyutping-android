@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.stroke
+package org.jyutping.jyutping.ninekey
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,20 +20,23 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.keyboard.CandidateScrollBar
-import org.jyutping.jyutping.ninekey.NineKeyBackspaceKey
-import org.jyutping.jyutping.ninekey.NineKeyReturnKey
-import org.jyutping.jyutping.ninekey.NineKeySpaceKey
+import org.jyutping.jyutping.keyboard.ToolBar
+import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 
 @Composable
-fun TailoredStrokeKeyboard(keyHeight: Dp) {
+fun NineKeyKeyboard(keyHeight: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
+        val isBuffering by context.isBuffering.collectAsState()
+        val useNineKeyNumberPad by context.useNineKeyNumberPad.collectAsState()
+        val needsInputModeSwitchKey by context.needsInputModeSwitchKey.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
-        val totalHeight = (keyHeight * 4) + PresetConstant.ToolBarHeight.dp
+        val totalHeight: Dp = (keyHeight * 4) + PresetConstant.ToolBarHeight.dp
+        val sidebarUnitHeight: Dp = keyHeight * 3f / 4f
         Column(
                 modifier = Modifier
                         .background(
@@ -54,7 +57,11 @@ fun TailoredStrokeKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                 ) {
-                        CandidateScrollBar()
+                        if (isBuffering) {
+                                CandidateScrollBar()
+                        } else {
+                                ToolBar()
+                        }
                 }
                 Row(
                         modifier = Modifier.fillMaxSize(),
@@ -63,8 +70,14 @@ fun TailoredStrokeKeyboard(keyHeight: Dp) {
                         Column(
                                 modifier = Modifier.weight(0.2f)
                         ) {
-                                TailoredStrokePlaceholderKey(modifier = Modifier.weight(0.75f))
-                                TailoredStrokePlaceholderKey(modifier = Modifier.weight(0.25f))
+                                SidebarPanel(
+                                        unitHeight = sidebarUnitHeight,
+                                        modifier = Modifier.weight(0.75f)
+                                )
+                                NineKeyNavigateKey(
+                                        destination = if (useNineKeyNumberPad) KeyboardForm.NineKeyNumeric else KeyboardForm.Numeric,
+                                        modifier = Modifier.weight(0.25f)
+                                )
                         }
                         Column(
                                 modifier = Modifier.weight(0.6f)
@@ -72,31 +85,43 @@ fun TailoredStrokeKeyboard(keyHeight: Dp) {
                                 Row(
                                         modifier = Modifier.weight(0.25f)
                                 ) {
-                                        TailoredStrokeKey(StrokeVirtualKey.Horizontal, modifier = Modifier.weight(1f))
-                                        TailoredStrokeKey(StrokeVirtualKey.Vertical, modifier = Modifier.weight(1f))
-                                        TailoredStrokeKey(StrokeVirtualKey.LeftFalling, modifier = Modifier.weight(1f))
+                                        NineKeySpecialKey(modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(Combo.ABC, modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(Combo.DEF, modifier = Modifier.weight(1f))
                                 }
                                 Row(
                                         modifier = Modifier.weight(0.25f)
                                 ) {
-                                        TailoredStrokeKey(StrokeVirtualKey.RightFalling, modifier = Modifier.weight(1f))
-                                        TailoredStrokeKey(StrokeVirtualKey.Turning, modifier = Modifier.weight(1f))
-                                        TailoredStrokeKey(StrokeVirtualKey.Wildcard, modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(Combo.GHI, modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(Combo.JKL, modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(Combo.MNO, modifier = Modifier.weight(1f))
                                 }
                                 Row(
                                         modifier = Modifier.weight(0.25f)
                                 ) {
-                                        TailoredStrokePlaceholderKey(modifier = Modifier.weight(1f))
-                                        TailoredStrokePlaceholderKey(modifier = Modifier.weight(1f))
-                                        TailoredStrokePlaceholderKey(modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(Combo.PQRS, modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(Combo.TUV, modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(Combo.WXYZ, modifier = Modifier.weight(1f))
                                 }
-                                NineKeySpaceKey(modifier = Modifier.weight(0.25f))
+                                Row(
+                                        modifier = Modifier.weight(0.25f)
+                                ) {
+                                        if (needsInputModeSwitchKey) {
+                                                NineKeyGlobeKey(modifier = Modifier.weight(0.33f))
+                                                NineKeySpaceKey(modifier = Modifier.weight(0.67f))
+                                        } else {
+                                                NineKeySpaceKey(modifier = Modifier.weight(1f))
+                                        }
+                                }
                         }
                         Column(
                                 modifier = Modifier.weight(0.2f)
                         ) {
                                 NineKeyBackspaceKey(modifier = Modifier.weight(0.25f))
-                                TailoredStrokePlaceholderKey(modifier = Modifier.weight(0.25f))
+                                NineKeyNavigateKey(
+                                        destination = if (useNineKeyNumberPad) KeyboardForm.Numeric else KeyboardForm.Symbolic,
+                                        modifier = Modifier.weight(0.25f)
+                                )
                                 NineKeyReturnKey(modifier = Modifier.weight(0.5f))
                         }
                 }

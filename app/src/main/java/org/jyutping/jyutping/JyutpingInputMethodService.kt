@@ -61,6 +61,7 @@ import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.models.KeyboardInterface
 import org.jyutping.jyutping.models.KeyboardLayout
 import org.jyutping.jyutping.models.Lexicon
+import org.jyutping.jyutping.models.NineKeyResearcher
 import org.jyutping.jyutping.models.PinyinResearcher
 import org.jyutping.jyutping.models.PinyinSegmenter
 import org.jyutping.jyutping.models.Researcher
@@ -72,6 +73,7 @@ import org.jyutping.jyutping.models.mark
 import org.jyutping.jyutping.models.pinyinSchemeLength
 import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.models.searchSymbols
+import org.jyutping.jyutping.ninekey.Combo
 import org.jyutping.jyutping.numeric.NumericLayout
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
@@ -871,7 +873,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
         private fun updateInputSessionStates() {
-                if (isBuffering.value.not()) {
+                if (isBuffering.value.negative) {
                         isBuffering.value = true
                 }
                 candidateState.value += 1L
@@ -881,7 +883,12 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         val isBuffering: MutableStateFlow<Boolean> by lazy { MutableStateFlow(false) }
         fun clearBuffer() {
-                bufferEvents = emptyList()
+                if (bufferEvents.isNotEmpty()) {
+                        bufferEvents = emptyList()
+                }
+                if (bufferCombos.isNotEmpty()) {
+                        bufferCombos = emptyList()
+                }
         }
         private fun joinedBufferTexts(): String = bufferEvents.joinToString(separator = PresetString.EMPTY) { if (it.case.isLowercased) it.key.text else it.key.text.uppercase() }
         fun handle(key: VirtualInputKey) {
@@ -910,69 +917,136 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 currentInputConnection.commitText(text, 1)
                 adjustKeyboardCase()
         }
+        fun nineKeyProcess(combo: Combo) {
+                bufferCombos = bufferCombos + combo
+        }
+        private var bufferCombos: List<Combo> by Delegates.observable(emptyList()) { _, _, newValue ->
+                suggestionJob?.cancel()
+                candidateOffset.value = 0
+                val sessionState: Long = candidateState.value + 1L
+                when (newValue.firstOrNull()) {
+                        null -> {
+                                currentInputConnection.setComposingText(PresetString.EMPTY, 1)
+                                currentInputConnection.finishComposingText()
+                                if (isBuffering.value) {
+                                        if (isInputMemoryOn.value && selectedLexicons.isNotEmpty()) {
+                                                userDB.process(selectedLexicons)
+                                        }
+                                        selectedLexicons.clear()
+                                        isBuffering.value = false
+                                }
+                                when (keyboardForm.value) {
+                                        KeyboardForm.CandidateBoard,
+                                        KeyboardForm.NineKeyStroke -> transformTo(KeyboardForm.Alphabetic)
+                                        else -> {}
+                                }
+                                updateSpaceKeyForm()
+                                updateReturnKeyForm()
+                                candidates.value = emptyList()
+                                candidateState.value += 1L
+                        }
+                        Combo.Special -> {}
+                        else -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
+                                val queriedDeferred = async { NineKeyResearcher.nineKeySearch(combos = newValue, db = db) }
+                                val queried = queriedDeferred.await()
+                                // TODO: NineKey Searches
+                                val suggestions = Converter.dispatch(
+                                        memory = emptyList(),
+                                        defined = emptyList(),
+                                        marks = emptyList(),
+                                        symbols = emptyList(),
+                                        queried = queried,
+                                        commentForm = RomanizationForm.Full,
+                                        charset = characterStandard.value,
+                                        db = if (characterStandard.value.isSimplified) db else null,
+                                        sessionState = sessionState
+                                )
+                                // FIXME: NineKey Mark
+                                val mark: String = suggestions.firstOrNull()?.lexicon?.mark ?: "X"
+                                withContext(Dispatchers.Main) {
+                                        currentInputConnection.setComposingText(mark, 1)
+                                        candidates.value = suggestions
+                                        updateInputSessionStates()
+                                }
+                        }
+                }
+        }
         fun selectCandidate(candidate: Candidate? = null, index: Int = 0) {
                 val item: Candidate = candidate ?: candidates.value.getOrNull(index) ?: return
                 currentInputConnection.commitText(item.text, 1)
-                val firstKey = bufferEvents.firstOrNull()?.key ?: return
-                if (firstKey.isReverseLookupTrigger) {
-                        selectedLexicons.clear()
-                        var tail = bufferEvents.drop(item.lexicon.inputCount + 1)
-                        while (tail.firstOrNull()?.key?.isApostrophe ?: false) {
-                                tail = tail.drop(1)
+                when (keyboardLayout.value) {
+                        KeyboardLayout.Qwerty, KeyboardLayout.TripleStroke -> {
+                                val firstKey = bufferEvents.firstOrNull()?.key ?: return
+                                if (firstKey.isReverseLookupTrigger) {
+                                        selectedLexicons.clear()
+                                        var tail = bufferEvents.drop(item.lexicon.inputCount + 1)
+                                        while (tail.firstOrNull()?.key?.isApostrophe ?: false) {
+                                                tail = tail.drop(1)
+                                        }
+                                        val tailLength = tail.size
+                                        if (tailLength < 1) {
+                                                clearBuffer()
+                                        } else {
+                                                bufferEvents = bufferEvents.take(1) + bufferEvents.takeLast(tailLength)
+                                        }
+                                } else {
+                                        if (item.isCantonese) {
+                                                selectedLexicons.add(item.lexicon)
+                                        } else {
+                                                selectedLexicons.clear()
+                                        }
+                                        val inputLength: Int = item.lexicon.input.replace(Regex("[456]"), "RR").length
+                                        var tail = bufferEvents.drop(inputLength)
+                                        while (tail.firstOrNull()?.key?.isApostrophe ?: false) {
+                                                tail = tail.drop(1)
+                                        }
+                                        val tailLength = tail.size
+                                        if (tailLength < 1) {
+                                                clearBuffer()
+                                        } else {
+                                                bufferEvents = bufferEvents.takeLast(tailLength)
+                                        }
+                                }
                         }
-                        val tailLength = tail.size
-                        if (tailLength < 1) {
-                                clearBuffer()
-                        } else {
-                                bufferEvents = bufferEvents.take(1) + bufferEvents.takeLast(tailLength)
-                        }
-                } else {
-                        if (item.isCantonese) {
-                                selectedLexicons.add(item.lexicon)
-                        }
-                        val inputLength: Int = item.lexicon.input.replace(Regex("[456]"), "RR").length
-                        var tail = bufferEvents.drop(inputLength)
-                        while (tail.firstOrNull()?.key?.isApostrophe ?: false) {
-                                tail = tail.drop(1)
-                        }
-                        val tailLength = tail.size
-                        if (tailLength < 1) {
-                                clearBuffer()
-                        } else {
-                                bufferEvents = bufferEvents.takeLast(tailLength)
+                        KeyboardLayout.NineKey -> {
+                                if (item.isCantonese) {
+                                        selectedLexicons.add(item.lexicon)
+                                } else {
+                                        selectedLexicons.clear()
+                                }
+                                val tailLength: Int = bufferCombos.size - item.lexicon.inputCount
+                                bufferCombos = if (tailLength < 1) emptyList() else bufferCombos.takeLast(tailLength)
                         }
                 }
         }
         fun backspace() {
                 if (isBuffering.value) {
-                        bufferEvents = bufferEvents.dropLast(1)
-                        return
-                }
-                val noSelectedText: Boolean = currentInputConnection.getSelectedText(0).isNullOrEmpty()
-                if (noSelectedText) {
-                        sendDownUpKeyEvents(KeyEvent.KEYCODE_DEL)
-                        /*
-                        val hasTextBeforeCursor: Boolean = currentInputConnection.getTextBeforeCursor(1, 0).isNullOrEmpty().not()
-                        if (hasTextBeforeCursor) {
-                                currentInputConnection.deleteSurroundingTextInCodePoints(1, 0)
+                        when (keyboardLayout.value) {
+                                KeyboardLayout.Qwerty -> {
+                                        bufferEvents = bufferEvents.dropLast(1)
+                                }
+                                KeyboardLayout.TripleStroke -> {
+                                        bufferEvents = bufferEvents.dropLast(1)
+                                }
+                                KeyboardLayout.NineKey -> {
+                                        bufferCombos = bufferCombos.dropLast(1)
+                                }
                         }
-                        */
                 } else {
-                        currentInputConnection.commitText(PresetString.EMPTY, 1)
+                        val hasSelectedText: Boolean = currentInputConnection.getSelectedText(0).isNullOrEmpty().negative
+                        if (hasSelectedText) {
+                                currentInputConnection.commitText(PresetString.EMPTY, 1)
+                        } else {
+                                sendDownUpKeyEvents(KeyEvent.KEYCODE_DEL)
+                        }
                 }
         }
         fun forwardDelete() {
-                val noSelectedText: Boolean = currentInputConnection.getSelectedText(0).isNullOrEmpty()
-                if (noSelectedText) {
-                        sendDownUpKeyEvents(KeyEvent.KEYCODE_FORWARD_DEL)
-                        /*
-                        val hasTextAfterCursor: Boolean = currentInputConnection.getTextAfterCursor(1, 0).isNullOrEmpty().not()
-                        if (hasTextAfterCursor) {
-                                currentInputConnection.deleteSurroundingTextInCodePoints(0, 1)
-                        }
-                        */
-                } else {
+                val hasSelectedText: Boolean = currentInputConnection.getSelectedText(0).isNullOrEmpty().negative
+                if (hasSelectedText) {
                         currentInputConnection.commitText(PresetString.EMPTY, 1)
+                } else {
+                        sendDownUpKeyEvents(KeyEvent.KEYCODE_FORWARD_DEL)
                 }
         }
         fun performReturn() {
@@ -992,7 +1066,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         sendDownUpKeyEvents(KeyEvent.KEYCODE_ENTER)
                         return
                 }
-                val hasActionLabel: Boolean = currentInputEditorInfo.actionLabel.isNullOrEmpty().not()
+                val hasActionLabel: Boolean = currentInputEditorInfo.actionLabel.isNullOrEmpty().negative
                 val actionId = currentInputEditorInfo.actionId
                 val hasSpecifiedActionId: Boolean = when (actionId) {
                         EditorInfo.IME_ACTION_UNSPECIFIED,
@@ -1100,7 +1174,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
 
                 // Handle number keys 0-9 to select candidates (0 for 10th candidate)
-                val digitOffset = when (event.keyCode) {
+                val digitOffset: Int? = when (event.keyCode) {
                         KeyEvent.KEYCODE_1 -> 0
                         KeyEvent.KEYCODE_2 -> 1
                         KeyEvent.KEYCODE_3 -> 2
@@ -1253,9 +1327,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         val isClipboardEmpty: MutableStateFlow<Boolean> by lazy { MutableStateFlow(true) }
         private fun isCurrentClipboardEmpty(): Boolean {
                 val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-                if (clipboard.hasPrimaryClip().not()) return true
-                val hasText: Boolean = clipboard.primaryClipDescription?.hasMimeType(MIMETYPE_TEXT_PLAIN) == true
-                return hasText.not()
+                if (clipboard.hasPrimaryClip().negative) return true
+                val hasText: Boolean = clipboard.primaryClipDescription?.hasMimeType(MIMETYPE_TEXT_PLAIN) ?: return true
+                return hasText.negative
         }
         fun paste() {
                 val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
@@ -1344,7 +1418,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         private val audioManager by lazy { getSystemService(AUDIO_SERVICE) as AudioManager }
         fun audioFeedback(effect: SoundEffect) {
                 if (isAudioFeedbackOn.value) {
-                        audioManager.playSoundEffect(effect.soundId(), -1f)
+                        audioManager.playSoundEffect(effect.soundId, -1f)
                 }
         }
         //endregion
