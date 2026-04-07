@@ -72,7 +72,7 @@
     <string name="keyboard_settings_keyboard_feedback_audio_switch_title">Sound</string>
     <string name="keyboard_settings_keyboard_feedback_haptic_switch_title">Haptic</string>
     <string name="keyboard_settings_keyboard_layout_header">Keyboard Layout</string>
-    <string name="keyboard_settings_keyboard_layout_qwerty">QWERTY (26鍵全鍵盤)</string>
+    <string name="keyboard_settings_keyboard_layout_qwerty">QWERTY (26鍵)</string>
     <string name="keyboard_settings_keyboard_layout_triple_stroke">Triple-Stroke (26鍵三拼)</string>
     <string name="keyboard_settings_keyboard_layout_nine_key">9 Key (九宮格)</string>
     <string name="keyboard_settings_keyboard_layout_fourteen_key">14 Key</string>
