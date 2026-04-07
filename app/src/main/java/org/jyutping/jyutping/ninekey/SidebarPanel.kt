@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
@@ -43,6 +44,8 @@ import org.jyutping.jyutping.utilities.ToolBox
 fun SidebarPanel(unitHeight: Dp, modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val keyboardForm by context.keyboardForm.collectAsState()
+        val isBuffering by context.isBuffering.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
@@ -53,7 +56,8 @@ fun SidebarPanel(unitHeight: Dp, modifier: Modifier) {
                 state.animateScrollToItem(index = 0, scrollOffset = 0)
         }
         val density = LocalDensity.current
-        val symbols: List<String> = listOf("+", "-", "*", "/", "=", "%", ":", "@", "#", ",", "~", "≈")
+        val punctuation: List<String> = listOf("，", "。", "？", "！", "、", "：", "；", "／", "…", "~", "～")
+        val symbols: List<String> = listOf("+", "-", "*", "/", "=", "%", ":", "@", "#", ",", "$", "~", "≈")
         LazyColumn(
                 modifier = modifier
                         .padding(3.dp)
@@ -66,7 +70,7 @@ fun SidebarPanel(unitHeight: Dp, modifier: Modifier) {
                         .fillMaxSize(),
                 state = state
         ) {
-                itemsIndexed(symbols) { index, symbol ->
+                itemsIndexed(if (keyboardForm.isNineKeyNumeric) symbols else punctuation) { index, symbol ->
                         Box(
                                 modifier = Modifier
                                         .pointerInput(Unit) {
@@ -81,7 +85,9 @@ fun SidebarPanel(unitHeight: Dp, modifier: Modifier) {
                                                         onTap = {
                                                                 context.audioFeedback(SoundEffect.Input)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                                                context.input(symbol)
+                                                                if (isBuffering.negative) {
+                                                                        context.input(symbol)
+                                                                }
                                                                 pressingState += 1
                                                         }
                                                 )
@@ -95,6 +101,7 @@ fun SidebarPanel(unitHeight: Dp, modifier: Modifier) {
                         ) {
                                 Text(
                                         text = symbol,
+                                        modifier = Modifier.alpha(if (isBuffering) 0f else 1f),
                                         color = if (isDarkMode) Color.White else Color.Black,
                                         fontSize = with(density) { 18.dp.toSp() },
                                 )
