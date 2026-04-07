@@ -61,7 +61,6 @@ object AppDataPreparer {
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("jyutping.txt") ?: error("Can not load jyutping.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO jyutping_table (word, romanization) VALUES (?, ?);"
-                println("Inserting ${sourceLines.size} jyutping entries...")
                 val inserted = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(PresetString.TAB)
@@ -85,7 +84,6 @@ object AppDataPreparer {
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("collocation.txt") ?: error("Can not load collocation.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO collocation_table (word, romanization, collocation) VALUES (?, ?, ?);"
-                println("Inserting ${sourceLines.size} collocation entries...")
                 val insertedColl = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(PresetString.TAB)
@@ -111,7 +109,6 @@ object AppDataPreparer {
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("wordshk.txt") ?: error("Can not load wordshk.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO dictionary_table (word, romanization, description) VALUES (?, ?, ?);"
-                println("Inserting ${sourceLines.size} dictionary entries...")
                 val insertedColl = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(PresetString.TAB)
@@ -136,7 +133,6 @@ object AppDataPreparer {
                 println("Created definition table successfully.")
                 val entries = UnihanDefinition.generate()
                 val insertEntryCommand: String = "INSERT INTO definition_table (code, definition) VALUES (?, ?);"
-                println("Inserting ${entries.size} definition entries...")
                 val insertedDef = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
                         statement.setInt(1, entry.first)
                         statement.setString(2, entry.second)
@@ -155,7 +151,6 @@ object AppDataPreparer {
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("yingwaa.txt") ?: error("Can not load yingwaa.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO yingwaa_table (code, word, romanization, pronunciation, pronunciationmark, interpretation) VALUES (?, ?, ?, ?, ?, ?);"
-                println("Inserting ${sourceLines.size} yingwaa entries...")
                 val insertedYw = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(PresetString.TAB)
@@ -187,7 +182,6 @@ object AppDataPreparer {
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("chohok.txt") ?: error("Can not load chohok.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO chohok_table (code, word, romanization, initial, final, tone, faancit) VALUES (?, ?, ?, ?, ?, ?, ?);"
-                println("Inserting ${sourceLines.size} chohok entries...")
                 val insertedCh = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(PresetString.TAB)
@@ -221,7 +215,6 @@ object AppDataPreparer {
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("fanwan.txt") ?: error("Can not load fanwan.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO fanwan_table (code, word, romanization, initial, final, yamyeung, tone, rhyme, interpretation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
-                println("Inserting ${sourceLines.size} fanwan entries...")
                 val insertedFan = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(PresetString.TAB)
@@ -259,7 +252,6 @@ object AppDataPreparer {
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("gwongwan.txt") ?: error("Can not load gwongwan.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO gwongwan_table (code, word, rhyme, subrhyme, subrhymeserial, subrhymenumber, upper, lower, initial, rounding, division, rhymeclass, repeating, tone, interpretation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?);"
-                println("Inserting ${sourceLines.size} gwongwan entries...")
                 val insertedGw = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(",")

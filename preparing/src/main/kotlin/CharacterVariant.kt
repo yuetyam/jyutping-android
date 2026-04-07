@@ -1,7 +1,6 @@
 package org.jyutping.preparing
 
 import java.io.InputStream
-import kotlin.io.bufferedReader
 
 data class VariantMap(val left: Int, val right: Int): Comparable<VariantMap> {
         override fun equals(other: Any?): Boolean {

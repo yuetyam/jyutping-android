@@ -31,7 +31,6 @@ data class Quick(
                                 connection.createStatement().execute(createTableCommand)
                                 val insertCommand: String = "INSERT INTO cangjie5table (word, cangjie) VALUES (?, ?);"
                                 val cangjie5Data = readCangjie5Data()
-                                println("Inserting ${cangjie5Data.size} cangjie5 rows (temp DB)...")
                                 val inserted = batchInsert(connection, insertCommand, cangjie5Data) { statement, obj ->
                                         statement.setString(1, obj.first)
                                         statement.setString(2, obj.second)
@@ -45,7 +44,6 @@ data class Quick(
                                 connection.createStatement().execute(createTableCommand)
                                 val insertCommand: String = "INSERT INTO cangjie3table (word, cangjie) VALUES (?, ?);"
                                 val cangjie3Data = readCangjie3Data()
-                                println("Inserting ${cangjie3Data.size} cangjie3 rows (temp DB)...")
                                 val inserted3 = batchInsert(connection, insertCommand, cangjie3Data) { statement, obj ->
                                         statement.setString(1, obj.first)
                                         statement.setString(2, obj.second)

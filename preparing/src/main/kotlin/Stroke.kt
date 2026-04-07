@@ -23,12 +23,11 @@ data class Stroke(
         companion object {
                 fun generate(): List<Stroke> {
                         val connection: Connection = DriverManager.getConnection("jdbc:sqlite::memory:")
-                        val  createTableCommand: String = "CREATE TABLE stroke_table(word TEXT NOT NULL, stroke TEXT NOT NULL);"
+                        val createTableCommand: String = "CREATE TABLE stroke_table(word TEXT NOT NULL, stroke TEXT NOT NULL);"
                         connection.createStatement().execute(createTableCommand)
 
                         val insertCommand: String = "INSERT INTO stroke_table (word, stroke) VALUES (?, ?);"
                         val strokeData = readStrokeData()
-                        println("Inserting ${strokeData.size} stroke rows (temp DB)...")
                         val inserted = batchInsert(connection, insertCommand, strokeData) { statement, obj ->
                                 statement.setString(1, obj.first)
                                 statement.setString(2, obj.second)

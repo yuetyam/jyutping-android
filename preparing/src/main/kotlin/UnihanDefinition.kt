@@ -13,7 +13,6 @@ object UnihanDefinition {
 
                 val insertCommand: String = "INSERT INTO definition_table (word, definition) VALUES (?, ?);"
                 val strokeData = readDefinitionData()
-                println("Inserting ${strokeData.size} definition rows (temp DB)...")
                 val inserted = batchInsert(connection, insertCommand, strokeData) { statement, obj ->
                         statement.setString(1, obj.first)
                         statement.setString(2, obj.second)

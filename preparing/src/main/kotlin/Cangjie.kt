@@ -27,25 +27,23 @@ data class Cangjie(
                 fun generate(): List<Cangjie> {
                         val connection: Connection = DriverManager.getConnection("jdbc:sqlite::memory:")
                         run {
-                                val  createTableCommand: String = "CREATE TABLE cangjie5table(word TEXT NOT NULL, cangjie TEXT NOT NULL);"
+                                val createTableCommand: String = "CREATE TABLE cangjie5table(word TEXT NOT NULL, cangjie TEXT NOT NULL);"
                                 connection.createStatement().execute(createTableCommand)
                                 val insertCommand: String = "INSERT INTO cangjie5table (word, cangjie) VALUES (?, ?);"
                                 val cangjie5Data = readCangjie5Data()
-                                println("Inserting ${cangjie5Data.size} cangjie5 rows (temp DB)...")
-                                        val inserted = batchInsert(connection, insertCommand, cangjie5Data) { statement, obj ->
-                                                statement.setString(1, obj.first)
-                                                statement.setString(2, obj.second)
-                                        }
-                                        println("Inserted cangjie5 rows (temp DB): $inserted")
+                                val inserted = batchInsert(connection, insertCommand, cangjie5Data) { statement, obj ->
+                                        statement.setString(1, obj.first)
+                                        statement.setString(2, obj.second)
+                                }
+                                println("Inserted cangjie5 rows (temp DB): $inserted")
                                 val createIndexCommand: String = "CREATE INDEX cangjie5wordindex ON cangjie5table(word);"
                                 connection.createStatement().execute(createIndexCommand)
                         }
                         run {
-                                val  createTableCommand: String = "CREATE TABLE cangjie3table(word TEXT NOT NULL, cangjie TEXT NOT NULL);"
+                                val createTableCommand: String = "CREATE TABLE cangjie3table(word TEXT NOT NULL, cangjie TEXT NOT NULL);"
                                 connection.createStatement().execute(createTableCommand)
                                 val insertCommand: String = "INSERT INTO cangjie3table (word, cangjie) VALUES (?, ?);"
                                 val cangjie3Data = readCangjie3Data()
-                                println("Inserting ${cangjie3Data.size} cangjie3 rows (temp DB)...")
                                 val inserted3 = batchInsert(connection, insertCommand, cangjie3Data) { statement, obj ->
                                         statement.setString(1, obj.first)
                                         statement.setString(2, obj.second)

@@ -7,9 +7,11 @@ fun main() {
         val dbFile = File(dbPath)
         if (dbFile.exists()) {
                 val isDeleted = dbFile.delete()
-                println(if (isDeleted) "Deleted the old database file successfully." else "Failed to delete the old database file.")
-        } else {
-                println("No old database file exists at ${dbFile.absolutePath}")
+                if (isDeleted) {
+                        println("Deleted the old database file successfully")
+                } else {
+                        println("Failed to delete the old database file at ${dbFile.absolutePath}")
+                }
         }
         val url = "jdbc:sqlite:$dbPath"
         AppDataPreparer.prepare(url)
