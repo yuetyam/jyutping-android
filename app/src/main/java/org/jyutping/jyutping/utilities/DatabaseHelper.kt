@@ -475,7 +475,7 @@ class DatabaseHelper(context: Context, databaseName: String) : SQLiteOpenHelper(
                         Lexicon(type = type, text = symbolText, romanization = emoji.romanization, input = input, attached = emoji.cantonese)
                 }
         }
-        private fun mapSkinTone(source: String): String? {
+        fun mapSkinTone(source: String): String? {
                 val command = "SELECT target FROM emoji_skin_map WHERE source = ?;"
                 val cursor = this.readableDatabase.rawQuery(command, arrayOf(source))
                 if (cursor.moveToFirst()) {

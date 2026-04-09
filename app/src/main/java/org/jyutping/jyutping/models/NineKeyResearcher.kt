@@ -1,5 +1,8 @@
 package org.jyutping.jyutping.models
 
+import org.jyutping.jyutping.emoji.Emoji
+import org.jyutping.jyutping.emoji.EmojiCategory
+import org.jyutping.jyutping.extensions.generateSymbol
 import org.jyutping.jyutping.extensions.isCantoneseToneDigit
 import org.jyutping.jyutping.extensions.isSpace
 import org.jyutping.jyutping.ninekey.Combo
@@ -73,4 +76,48 @@ private fun DatabaseHelper.nineKeyCodeMatch(code: Long, limit: Int? = null): Lis
         }
         cursor.close()
         return items
+}
+
+fun DatabaseHelper.queryTextMarks(combos: List<Combo>): List<Lexicon> {
+        val code = combos.map { it.number }.decimalCombined()
+        if (code < 1) return emptyList()
+        val items: MutableList<Lexicon> = mutableListOf()
+        val command = "SELECT input, mark FROM mark_table WHERE nine_key_code = ${code};"
+        val cursor = this.readableDatabase.rawQuery(command, null)
+        while (cursor.moveToNext()) {
+                val input = cursor.getString(0)
+                val textMark = cursor.getString(1)
+                val instance = Lexicon(type = LexiconType.Text, text = textMark, romanization = textMark, input = input)
+                items.add(instance)
+        }
+        cursor.close()
+        return items
+}
+
+fun DatabaseHelper.nineKeySearchSymbols(combos: List<Combo>): List<Lexicon> {
+        val code = combos.map { it.number }.decimalCombined()
+        if (code < 1) return emptyList()
+        val command = "SELECT category, unicode_version, code_point, cantonese, romanization FROM symbol_table WHERE nine_key_code = ${code};"
+        val cursor = this.readableDatabase.rawQuery(command, null)
+        val emojis: MutableList<Emoji> = mutableListOf()
+        while (cursor.moveToNext()) {
+                val categoryCode = cursor.getInt(0)
+                val unicodeVersion = cursor.getInt(1)
+                val codePointText = cursor.getString(2)
+                val cantonese = cursor.getString(3)
+                val romanization = cursor.getString(4)
+                val category = EmojiCategory.categoryOf(categoryCode) ?: EmojiCategory.Frequent
+                val entry = Emoji(category = category, unicodeVersion = unicodeVersion, identifier = categoryCode, text = codePointText, cantonese = cantonese, romanization = romanization)
+                emojis.add(entry)
+        }
+        cursor.close()
+        val input: String = combos.mapNotNull { it.letters.firstOrNull() }.joinToString(separator = PresetString.EMPTY)
+        return emojis.map { emoji ->
+                val codePointText = emoji.text
+                val shouldMapSkinTone: Boolean = emoji.category == EmojiCategory.SmileysAndPeople || emoji.category == EmojiCategory.Activity
+                val mappedCodePointText: String = if (shouldMapSkinTone) (mapSkinTone(codePointText) ?: codePointText) else codePointText
+                val symbolText: String = mappedCodePointText.generateSymbol()
+                val type: LexiconType = if (emoji.identifier < 10) LexiconType.Emoji else LexiconType.Symbol
+                Lexicon(type = type, text = symbolText, romanization = emoji.romanization, input = input, attached = emoji.cantonese)
+        }
 }

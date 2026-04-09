@@ -70,7 +70,9 @@ import org.jyutping.jyutping.models.Segmenter
 import org.jyutping.jyutping.models.Structure
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.mark
+import org.jyutping.jyutping.models.nineKeySearchSymbols
 import org.jyutping.jyutping.models.pinyinSchemeLength
+import org.jyutping.jyutping.models.queryTextMarks
 import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.models.searchSymbols
 import org.jyutping.jyutping.ninekey.Combo
@@ -947,21 +949,25 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         Combo.Special -> {}
                         else -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
+                                val textMarksDeprecated = async { if (isEnglishSuggestionsOn.value) db.queryTextMarks(newValue) else emptyList() }
+                                val symbolsDeferred = async { if (isEmojiSuggestionsOn.value) db.nineKeySearchSymbols(newValue) else emptyList() }
                                 val queriedDeferred = async { NineKeyResearcher.nineKeySearch(combos = newValue, db = db) }
+                                val textMarks = textMarksDeprecated.await()
+                                val symbols = symbolsDeferred.await()
                                 val queried = queriedDeferred.await()
-                                // TODO: NineKey Searches
+                                // FIXME: NineKey memory search
                                 val suggestions = Converter.dispatch(
                                         memory = emptyList(),
                                         defined = emptyList(),
-                                        marks = emptyList(),
-                                        symbols = emptyList(),
+                                        marks = textMarks,
+                                        symbols = symbols,
                                         queried = queried,
                                         commentForm = RomanizationForm.Full,
                                         charset = characterStandard.value,
                                         db = if (characterStandard.value.isSimplified) db else null,
                                         sessionState = sessionState
                                 )
-                                // FIXME: NineKey Mark
+                                // FIXME: NineKey mark
                                 val mark: String = suggestions.firstOrNull()?.lexicon?.mark ?: "X"
                                 withContext(Dispatchers.Main) {
                                         currentInputConnection.setComposingText(mark, 1)

@@ -24,6 +24,7 @@ fun Iterable<Char>.anchorsCode(): Long? {
                 .radix100Combined()
         return code
 }
+
 fun Iterable<Int>.radix100Combined(): Long = if (this.count() >= 10) 0L else this.fold(0L) { acc, i -> acc * 100L + i}
 
 fun Iterable<Int>.decimalCombined(): Long = if (this.count() >= 19) 0L else this.fold(0L) { acc, i -> acc * 10L + i}
