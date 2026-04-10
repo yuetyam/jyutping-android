@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This file provides guidance to AI Agents (Codex, Claude Code, etc.) when working with code in this repository.
+This file provides guidance to AI Agents (Codex, Copilot, Claude Code, etc.) when working with code in this repository.
 
 ## Project Overview
 
@@ -10,10 +10,13 @@ The project uses **Jetpack Compose** for UI and **Kotlin** for implementation. I
 
 ## Building and Development
 
-### Prerequisites
+### Build Environments and Tools
 - Android Studio 2025.1.1+
-- Android SDK 36
 - Java 21
+- Min SDK: 29 (Android 10)
+- Target SDK: 36 (Android 16)
+- Compile SDK: 36
+
 
 ### One-Time Setup: Prepare Databases
 
@@ -67,30 +70,39 @@ Presentation (Compose UI)
 
 ### Key Modules
 
-#### **app/** - Main IME Application (~19,400 LOC, 163 Kotlin files)
+#### **app/** - Main IME Application (20000+ LOC, 170+ Kotlin files)
 
 **JyutpingInputMethodService.kt** - Core IME service
-- Manages 30+ MutableStateFlow properties (input mode, candidates, buffer, settings)
+- Manages 60+ MutableStateFlow properties (input mode, candidates, buffer, settings)
 - Handles soft keyboard input (VirtualInputKey enums) and physical keyboard events
 - Processes input into candidates via Segmenter, Researcher, and Converter
 - Records user memory in UserLexiconHelper for learning
 
 **Package structure:**
-- `keyboard/` - 50+ Compose components for different keyboard layouts and candidate display
+- `keyboard/` - 30+ Compose components for different keyboard layouts and candidate display
 - `models/` - Input/output data models, linguistic structures, and processing logic
 - `utilities/` - Database access, shape mapping (stroke/cangjie), character conversion
 - `editingpanel/` - Keyboard text editing buttons (copy/paste/cursor movement)
 - `search/` - Part of the main app, linguistic lookup (definitions, collocations, homophones)
 - `app/` - Main part of the main app, settings and educational screens (Cantonese, romanization guides)
 - `ui/` - Compose theme and reusable components
-- `tenkey/`, `emoji/`, `feedback/` - Specialized features
+- `ninekey/` - Nine-key (T9-style) keyboard layout
+- `numeric/` - Numeric keyboard layout
+- `stroke/` - Stroke input keyboard layout
+- `shapes/` - Custom Compose bubble shapes for key rendering
+- `emoji/` - Emoji keyboard
+- `feedback/` - Audio and haptic feedback
+- `extensions/` - Kotlin extension functions (Boolean, Char, String)
+- `linguistics/` - IPA conversion and Old Cantonese data
+- `presets/` - Preset constants, characters, colors, and strings
+- `speech/` - Text-to-speech (TTS) support
 
 #### **preparing/** - Build-Time Data Preparation (~1,600 LOC, 17 files)
 
 Generates `appdb.sqlite3` by:
 - **AppDataPreparer** - Creates linguistic reference tables (definitions, collocations, dictionaries)
 - **KeyboardDataPreparer** - Creates input method tables (core lexicon, stroke/cangjie/pinyin data, variants)
-- Database includes 70+ indexes for performance
+- Database includes 25 tables and 56 indexes for performance
 
 ## Critical Data Flows
 
@@ -99,14 +111,14 @@ Generates `appdb.sqlite3` by:
 User taps key → VirtualInputKey → bufferEvents (observable)
   → Determine input mode (Cantonese/Pinyin/Stroke/etc.)
   → Segmenter.segment() → Researcher.suggest()
-  → UserLexiconHelper.search() + fetchTextMarks()
+  → UserLexiconHelper.search() + searchTextMarks()
   → Converter.dispatch() (merging + sorting)
   → candidates StateFlow → CandidateBoard renders
 ```
 
 ### Physical Keyboard Input
 - Hardware key events → `onKeyDown()/onKeyUp()` → `handlePhysicalKeyEvent()`
-- PhysicalKeyMapper converts key codes to VirtualInputKeys
+- Key codes are mapped to VirtualInputKeys within the service
 - Can trigger full CandidateBoard or inline PhysicalKeyboardCandidateBar
 - Numbers 1-9 and 0 select candidates 1-10 respectively; Tab cycles through groups of 10
 
@@ -124,16 +136,19 @@ Core input tables:
 - `core_lexicon` - Main word database
 - `structure_table` - Character composition (stroke/shape codes)
 - `syllable_table`, `pinyin_syllable_table` - Syllable mappings
+- `pinyin_lexicon` - Pinyin input lexicon
 - `stroke_table`, `cangjie_table`, `quick_table` - Shape input methods
 
 Linguistic reference tables:
+- `jyutping_table` - Jyutping romanization lookups
 - `collocation_table` - Word collocations
 - `dictionary_table` - Character/word definitions
+- `definition_table` - Unicode character definitions
 - `yingwaa_table`, `chohok_table`, `fanwan_table`, `gwongwan_table` - Specialized dictionaries
 
 Display/variant tables:
 - `symbol_table`, `mark_table` - Symbols and tone marks
-- `variant_simplified`, `variant_hongkong`, etc. - Character variants
+- `variant_sim`, `variant_hk`, `variant_tw`, `variant_prc`, `variant_abp`, `variant_old` - Character variants
 - `emoji_skin_map` - Emoji modifiers
 
 All tables are indexed on frequently queried columns (spell, anchors, code) for fast lookup.
@@ -154,7 +169,7 @@ All tables are indexed on frequently queried columns (spell, anchors, code) for 
 
 ### Character Conversion
 - Simplifier converts Traditional → Simplified
-- HongKongVariantConverter, TaiwanVariantConverter handle regional variants
+- HongKongVariant, TaiwanVariant handle regional variants
 - CharacterStandard StateFlow determines display mode (applied in Converter)
 
 ### Database Queries
@@ -172,7 +187,7 @@ All tables are indexed on frequently queried columns (spell, anchors, code) for 
 4. Test input flow via physical and soft keyboard
 
 ### Modifying Character Conversion
-- TaiwanVariantConverter, HongKongVariantConverter handle variants
+- TaiwanVariant, HongKongVariant handle regional variants
 - Simplifier handles Traditional-Simplified conversion
 - Changes applied in Converter.dispatch() before ranking
 - Resource files in `preparing/src/main/resources/` drive variant generation
@@ -185,9 +200,10 @@ All tables are indexed on frequently queried columns (spell, anchors, code) for 
 
 ## File Organization Notes
 
-- Source code: `app/src/main/kotlin/org/jyutping/jyutping/`
+- Source code: `app/src/main/java/org/jyutping/jyutping/`
 - Resources: `app/src/main/res/`, `preparing/src/main/resources/`
 - Database asset: `app/src/main/assets/appdb.sqlite3`
+- Confusion data: `app/src/main/assets/confusion.json`
 - Build outputs: `app/build/outputs/`
 
 ## Known Constraints
@@ -197,9 +213,3 @@ All tables are indexed on frequently queried columns (spell, anchors, code) for 
 - Physical keyboard support only on devices with hardware keyboards
 - Database is pre-built; schema changes require preparing module rebuild
 - Character variant tables add database size but enable fast conversion
-
-## Version & Build Info
-
-- Min SDK: 29 (Android 10)
-- Target SDK: 36 (Android 16)
-- Compile SDK: 36
