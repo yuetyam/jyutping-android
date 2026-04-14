@@ -24,9 +24,8 @@ import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 
 @Composable
-fun AlphabeticKeyboard(keyHeight: Dp) {
+fun ABCKeyboard(keyHeight: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
-        val isBuffering by context.isBuffering.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
@@ -50,11 +49,7 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                 ) {
-                        if (isBuffering) {
-                                CandidateScrollBar()
-                        } else {
-                                ToolBar()
-                        }
+                        ToolBar()
                 }
                 Row(
                         modifier = Modifier
@@ -106,7 +101,7 @@ fun AlphabeticKeyboard(keyHeight: Dp) {
                         HiddenKey(hidden = HiddenVirtualKey.Backspace, modifier = Modifier.weight(0.2f))
                         BackspaceKey(modifier = Modifier.weight(1.3f))
                 }
-                BottomKeyRow(
+                ABCBottomKeyRow(
                         transform = if (useNineKeyNumberPad) KeyboardForm.NineKeyNumeric else KeyboardForm.Numeric,
                         height = keyHeight
                 )

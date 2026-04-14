@@ -10,16 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import org.jyutping.jyutping.JyutpingInputMethodService
-import org.jyutping.jyutping.models.InputMethodMode
 import org.jyutping.jyutping.models.KeyElement
 import org.jyutping.jyutping.models.KeyModel
 import org.jyutping.jyutping.models.KeySide
 import org.jyutping.jyutping.models.KeyboardForm
 
 @Composable
-fun BottomKeyRow(transform: KeyboardForm, height: Dp) {
+fun CantoneseBottomKeyRow(transform: KeyboardForm, height: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
-        val inputMethodMode by context.inputMethodMode.collectAsState()
         val isBuffering by context.isBuffering.collectAsState()
         val needsInputModeSwitchKey by context.needsInputModeSwitchKey.collectAsState()
         val needsLeftKey by context.needsLeftKey.collectAsState()
@@ -48,8 +46,8 @@ fun BottomKeyRow(transform: KeyboardForm, height: Dp) {
                 if (needsLeftKey) {
                         if (isBuffering) {
                                 SeparatorKey(modifier = Modifier.weight(1f))
-                        } else when (inputMethodMode) {
-                                InputMethodMode.Cantonese -> EnhancedBottomInputKey(
+                        } else {
+                                EnhancedBottomInputKey(
                                         side = KeySide.Left,
                                         keyModel = KeyModel(
                                                 primary = KeyElement("，"),
@@ -58,19 +56,6 @@ fun BottomKeyRow(transform: KeyboardForm, height: Dp) {
                                                         KeyElement("！"),
                                                         KeyElement("？"),
                                                         KeyElement("、"),
-                                                )
-                                        ),
-                                        modifier = Modifier.weight(1f)
-                                )
-                                InputMethodMode.ABC -> EnhancedBottomInputKey(
-                                        side = KeySide.Left,
-                                        keyModel = KeyModel(
-                                                primary = KeyElement(","),
-                                                members = listOf(
-                                                        KeyElement(","),
-                                                        KeyElement("!"),
-                                                        KeyElement("?"),
-                                                        KeyElement(";"),
                                                 )
                                         ),
                                         modifier = Modifier.weight(1f)
@@ -84,8 +69,8 @@ fun BottomKeyRow(transform: KeyboardForm, height: Dp) {
                 if (needsRightKey) {
                         if (isBuffering) {
                                 SeparatorKey(modifier = Modifier.weight(1f))
-                        } else when (inputMethodMode) {
-                                InputMethodMode.Cantonese -> EnhancedBottomInputKey(
+                        } else {
+                                EnhancedBottomInputKey(
                                         side = KeySide.Right,
                                         keyModel = KeyModel(
                                                 primary = KeyElement("。"),
@@ -93,19 +78,6 @@ fun BottomKeyRow(transform: KeyboardForm, height: Dp) {
                                                         KeyElement("。"),
                                                         KeyElement("？"),
                                                         KeyElement("！"),
-                                                        KeyElement("…"),
-                                                )
-                                        ),
-                                        modifier = Modifier.weight(1f)
-                                )
-                                InputMethodMode.ABC -> EnhancedBottomInputKey(
-                                        side = KeySide.Right,
-                                        keyModel = KeyModel(
-                                                primary = KeyElement("."),
-                                                members = listOf(
-                                                        KeyElement("."),
-                                                        KeyElement("?"),
-                                                        KeyElement("!"),
                                                         KeyElement("…"),
                                                 )
                                         ),

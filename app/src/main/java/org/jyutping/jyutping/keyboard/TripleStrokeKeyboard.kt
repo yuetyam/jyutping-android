@@ -160,7 +160,7 @@ fun TripleStrokeKeyboard(keyHeight: Dp) {
                         HiddenKey(hidden = HiddenVirtualKey.Backspace, modifier = Modifier.weight(0.2f))
                         BackspaceKey(modifier = Modifier.weight(1.3f))
                 }
-                BottomKeyRow(
+                CantoneseBottomKeyRow(
                         transform = if (useNineKeyNumberPad) KeyboardForm.NineKeyNumeric else KeyboardForm.Numeric,
                         height = keyHeight
                 )

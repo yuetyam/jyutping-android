@@ -67,7 +67,7 @@ fun ExpressionsScreen() {
                 }
                 item {
                         DifferentView(
-                                heading = "區分「係」以及「喺」",
+                                heading = "區分【係】以及【喺】",
                                 lines = listOf(
                                         "係 hai6：謂語，義同「是」。",
                                         "喺 hai2：表方位、時間，義同「在」。",
@@ -78,18 +78,20 @@ fun ExpressionsScreen() {
                 }
                 item {
                         DifferentView(
-                                heading = "區分「諗」以及「冧」",
+                                heading = "區分【諗】【冧】【霖】",
                                 lines = listOf(
                                         "諗 nam2：想、思考、覺得。",
                                         "冧 lam3：表示倒塌、倒下。",
+                                        "霖 lam4：本義連綿落雨，多見於人名。",
                                         "例：我諗緊今晚食咩。",
-                                        "例：佢畀人㨃冧咗。"
+                                        "例：佢畀人㨃冧咗。",
+                                        "例：甘霖時雨。"
                                 )
                         )
                 }
                 item {
                         DifferentView(
-                                heading = "區分「咁」以及「噉」",
+                                heading = "區分【咁】以及【噉】",
                                 lines = listOf(
                                         "咁 gam3，音同「禁」。",
                                         "噉 gam2，音同「感」。",
@@ -209,7 +211,7 @@ private fun DifferentView(heading: String, lines: List<String>) {
                                 color = colorScheme.onBackground,
                                 style = MaterialTheme.typography.titleMedium
                         )
-                        lines.map { Text(text = it, color = colorScheme.onBackground) }
+                        lines.forEach { Text(text = it, color = colorScheme.onBackground) }
                 }
         }
 }
@@ -242,7 +244,7 @@ private fun Expression(heading: String, labels: List<LabelEntry>) {
                                 style = MaterialTheme.typography.titleMedium
                         )
                 }
-                labels.map {
+                labels.forEach {
                         IconLabel(entry = it)
                 }
         }

@@ -446,6 +446,6 @@ fun CantoneseNumericKeyboard(keyHeight: Dp) {
                         Spacer(modifier = Modifier.weight(0.2f))
                         BackspaceKey(modifier = Modifier.weight(1.3f))
                 }
-                BottomKeyRow(transform = KeyboardForm.Alphabetic, height = keyHeight)
+                CantoneseAltBottomKeyRow(transform = KeyboardForm.Alphabetic, height = keyHeight)
         }
 }

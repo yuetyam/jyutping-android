@@ -204,6 +204,7 @@ All tables are indexed on frequently queried columns (spell, anchors, code) for 
 - Resources: `app/src/main/res/`, `preparing/src/main/resources/`
 - Database asset: `app/src/main/assets/appdb.sqlite3`
 - Confusion data: `app/src/main/assets/confusion.json`
+- F-Droid metadata: `metadata/` - Follows the [Fastlane/Triple-T](https://f-droid.org/docs/All_About_Descriptions_Graphics_and_Screenshots/) structure for F-Droid store listings. Contains localized directories (`en-US`, `zh-CN`, `zh-HK`, `zh-TW`) each with `title.txt`, `short_description.txt`, `full_description.txt`, `changelogs/` (per-versionCode), and `images/` (icon, feature graphic, screenshots in `en-US`).
 - Build outputs: `app/build/outputs/`
 
 ## Known Constraints

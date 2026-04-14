@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,7 +24,7 @@ import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 
 @Composable
-fun CangjieKeyboard(keyHeight: Dp) {
+fun CantoneseKeyboard(keyHeight: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isBuffering by context.isBuffering.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
@@ -62,33 +61,33 @@ fun CangjieKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth()
                                 .height(keyHeight)
                 ) {
-                        CangjieKey(virtual = VirtualInputKey.letterQ, modifier = Modifier.weight(1f), position = Alignment.Start)
-                        CangjieKey(virtual = VirtualInputKey.letterW, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterE, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterR, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterT, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterY, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterU, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterI, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterO, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterP, modifier = Modifier.weight(1f), position = Alignment.End)
+                        LetterKey(virtual = VirtualInputKey.letterQ, modifier = Modifier.weight(1f), position = Alignment.Start)
+                        LetterKey(virtual = VirtualInputKey.letterW, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterE, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterR, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterT, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterY, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterU, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterI, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterO, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterP, modifier = Modifier.weight(1f), position = Alignment.End)
                 }
                 Row(
                         modifier = Modifier
                                 .fillMaxWidth()
                                 .height(keyHeight)
                 ) {
-                        Spacer(modifier = Modifier.weight(0.5f))
-                        CangjieKey(virtual = VirtualInputKey.letterA, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterS, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterD, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterF, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterG, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterH, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterJ, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterK, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterL, modifier = Modifier.weight(1f))
-                        Spacer(modifier = Modifier.weight(0.5f))
+                        HiddenKey(hidden = HiddenVirtualKey.LetterA, modifier = Modifier.weight(0.5f))
+                        LetterKey(virtual = VirtualInputKey.letterA, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterS, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterD, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterF, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterG, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterH, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterJ, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterK, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterL, modifier = Modifier.weight(1f))
+                        HiddenKey(hidden = HiddenVirtualKey.LetterL, modifier = Modifier.weight(0.5f))
                 }
                 Row(
                         modifier = Modifier
@@ -96,18 +95,18 @@ fun CangjieKeyboard(keyHeight: Dp) {
                                 .height(keyHeight)
                 ) {
                         ShiftKey(modifier = Modifier.weight(1.3f))
-                        Spacer(modifier = Modifier.weight(0.2f))
-                        CangjieKey(virtual = VirtualInputKey.letterZ, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterX, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterC, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterV, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterB, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterN, modifier = Modifier.weight(1f))
-                        CangjieKey(virtual = VirtualInputKey.letterM, modifier = Modifier.weight(1f))
-                        Spacer(modifier = Modifier.weight(0.2f))
+                        HiddenKey(hidden = HiddenVirtualKey.LetterZ, modifier = Modifier.weight(0.2f))
+                        LetterKey(virtual = VirtualInputKey.letterZ, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterX, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterC, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterV, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterB, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterN, modifier = Modifier.weight(1f))
+                        LetterKey(virtual = VirtualInputKey.letterM, modifier = Modifier.weight(1f))
+                        HiddenKey(hidden = HiddenVirtualKey.Backspace, modifier = Modifier.weight(0.2f))
                         BackspaceKey(modifier = Modifier.weight(1.3f))
                 }
-                SimpleBottomKeyRow(
+                CantoneseBottomKeyRow(
                         transform = if (useNineKeyNumberPad) KeyboardForm.NineKeyNumeric else KeyboardForm.Numeric,
                         height = keyHeight
                 )

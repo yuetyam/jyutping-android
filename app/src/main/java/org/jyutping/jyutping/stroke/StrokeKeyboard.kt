@@ -19,9 +19,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.keyboard.BackspaceKey
-import org.jyutping.jyutping.keyboard.BottomKeyRow
 import org.jyutping.jyutping.keyboard.CandidateScrollBar
 import org.jyutping.jyutping.keyboard.ShiftKey
+import org.jyutping.jyutping.keyboard.SimpleBottomKeyRow
 import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.presets.AltPresetColor
@@ -106,7 +106,7 @@ fun StrokeKeyboard(keyHeight: Dp) {
                         Spacer(modifier = Modifier.weight(0.2f))
                         BackspaceKey(modifier = Modifier.weight(1.3f))
                 }
-                BottomKeyRow(
+                SimpleBottomKeyRow(
                         transform = if (useNineKeyNumberPad) KeyboardForm.NineKeyNumeric else KeyboardForm.Numeric,
                         height = keyHeight
                 )

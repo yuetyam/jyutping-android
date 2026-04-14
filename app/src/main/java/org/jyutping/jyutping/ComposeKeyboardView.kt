@@ -19,9 +19,10 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.jyutping.jyutping.editingpanel.EditingPanel
 import org.jyutping.jyutping.emoji.EmojiBoard
-import org.jyutping.jyutping.keyboard.AlphabeticKeyboard
+import org.jyutping.jyutping.keyboard.ABCKeyboard
 import org.jyutping.jyutping.keyboard.CandidateBoard
 import org.jyutping.jyutping.keyboard.CangjieKeyboard
+import org.jyutping.jyutping.keyboard.CantoneseKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseNumericKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseSymbolicKeyboard
 import org.jyutping.jyutping.keyboard.CommentStyle
@@ -100,12 +101,15 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                                 QwertyForm.Cangjie -> CangjieKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                 QwertyForm.Stroke -> StrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                 QwertyForm.TripleStroke -> when (inputMethodMode) {
-                                        InputMethodMode.ABC -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                                        InputMethodMode.ABC -> ABCKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                         InputMethodMode.Cantonese -> TripleStrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                 }
-                                else -> when (keyboardLayout) {
-                                        KeyboardLayout.NineKey -> NineKeyKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
-                                        else -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                                else -> when (inputMethodMode) {
+                                        InputMethodMode.ABC -> ABCKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                                        InputMethodMode.Cantonese -> when (keyboardLayout) {
+                                                KeyboardLayout.NineKey -> NineKeyKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                                                else -> CantoneseKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                                        }
                                 }
                         }
                         KeyboardForm.Numeric -> when (inputMethodMode) {
@@ -122,7 +126,8 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                         KeyboardForm.Settings -> SettingsScreen(height = keyboardHeight(keyOffset))
                         KeyboardForm.EmojiBoard -> EmojiBoard(height = keyboardHeight(keyOffset))
                         KeyboardForm.EditingPanel -> EditingPanel(height = keyboardHeight(keyOffset))
-                        else -> AlphabeticKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                        KeyboardForm.NumberPad,
+                        KeyboardForm.DecimalPad -> NumericKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                 }
         }
 
