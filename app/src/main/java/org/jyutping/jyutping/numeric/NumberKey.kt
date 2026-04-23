@@ -73,7 +73,7 @@ fun NumberKey(virtual: VirtualInputKey, modifier: Modifier, position: Alignment.
         ) {
                 Box(
                         modifier = modifier
-                                .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
+                                .padding(horizontal = keyboardInterface.keyHorizontalPadding, vertical = keyboardInterface.keyVerticalPadding)
                                 .onGloballyPositioned { layoutCoordinates ->
                                         val originalSize = layoutCoordinates.size
                                         val width = originalSize.width.div(density.density)

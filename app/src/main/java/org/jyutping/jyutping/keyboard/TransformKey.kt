@@ -62,7 +62,7 @@ fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
                                         }
                                 )
                         }
-                        .padding(horizontal = keyboardInterface.keyHorizontalPadding(), vertical = keyboardInterface.keyVerticalPadding())
+                        .padding(horizontal = keyboardInterface.keyHorizontalPadding, vertical = keyboardInterface.keyVerticalPadding)
                         .border(
                                 width = 1.dp,
                                 color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
