@@ -40,7 +40,7 @@ import org.jyutping.jyutping.presets.PresetColor
 fun TextToSpeechScreen() {
         SelectionContainer {
                 LazyColumn(
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+                        contentPadding = PaddingValues(start = 14.dp, top = 8.dp, end = 14.dp, bottom = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                         item {
@@ -118,7 +118,7 @@ private fun TTSLinkButton() {
                         Icon(
                                 imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
                                 contentDescription = null,
-                                modifier = Modifier.size(18.dp).alpha(0.75f),
+                                modifier = Modifier.size(18.dp).alpha(0.66f),
                                 tint = colorScheme.onBackground
                         )
                 }

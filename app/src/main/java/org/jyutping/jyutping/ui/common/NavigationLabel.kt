@@ -13,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,9 +23,15 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
-fun NavigationLabel(icon: ImageVector, text: String, onClick: () -> Unit) {
+fun NavigationLabel(
+        icon: ImageVector,
+        iconTint: Color = PresetColor.blue,
+        text: String,
+        onClick: () -> Unit
+) {
         Button(
                 onClick = onClick,
                 shape = CircleShape,
@@ -32,27 +39,28 @@ fun NavigationLabel(icon: ImageVector, text: String, onClick: () -> Unit) {
                         containerColor = Color.Transparent,
                         contentColor = LocalContentColor.current
                 ),
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
+                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp)
         ) {
                 Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(14.dp),
                         verticalAlignment = Alignment.CenterVertically
                 ) {
                         Icon(
                                 imageVector = icon,
                                 contentDescription = null,
-                                tint = colorScheme.onBackground
+                                tint = iconTint
                         )
                         Text(
                                 text = text,
-                                color = colorScheme.onBackground
+                                color = colorScheme.onBackground,
+                                style = MaterialTheme.typography.bodyLarge
                         )
                         Spacer(modifier = Modifier.weight(1.0f))
                         Icon(
                                 imageVector = Icons.AutoMirrored.Rounded.ArrowForward,
                                 contentDescription = null,
-                                modifier = Modifier.size(18.dp).alpha(0.75f),
+                                modifier = Modifier.size(22.dp).alpha(0.66f),
                                 tint = colorScheme.onBackground
                         )
                 }

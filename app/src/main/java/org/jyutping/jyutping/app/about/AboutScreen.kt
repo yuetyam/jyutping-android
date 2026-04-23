@@ -32,6 +32,7 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.ui.common.AppLinkLabel
 import org.jyutping.jyutping.ui.common.EnhancedHorizontalDivider
@@ -54,18 +56,11 @@ import org.jyutping.jyutping.utilities.AppMaster
 @Composable
 fun AboutScreen() {
         LazyColumn(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                contentPadding = PaddingValues(start = 14.dp, top = 8.dp, end = 14.dp, bottom = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
                 item {
-                        Column(
-                                modifier = Modifier
-                                        .clip(RoundedCornerShape(12.dp))
-                                        .background(colorScheme.background)
-                                        .fillMaxWidth()
-                        ) {
-                                VersionLabel()
-                        }
+                        VersionLabel()
                 }
                 item {
                         Column(
@@ -125,19 +120,22 @@ private fun VersionLabel() {
         val version: String by lazy { BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")" }
         Row(
                 modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(colorScheme.background)
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 10.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        .padding(start = 10.dp, top = 10.dp, end = 12.dp, bottom = 10.dp),
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
                 Icon(
                         imageVector = Icons.Outlined.Info,
                         contentDescription = null,
-                        tint = colorScheme.onBackground
+                        tint = PresetColor.blue
                 )
                 Text(
                         text = stringResource(id = R.string.about_label_version),
-                        color = colorScheme.onBackground
+                        color = colorScheme.onBackground,
+                        style = MaterialTheme.typography.bodyLarge
                 )
                 Spacer(modifier = Modifier.weight(1.0f))
                 SelectionContainer {
@@ -184,24 +182,25 @@ private fun EmailFeedbackButton() {
                                         Toast.makeText(context, "Email Unavailable", Toast.LENGTH_LONG).show()
                                 }
                         }
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        .padding(horizontal = 10.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
                 Icon(
                         imageVector = Icons.Outlined.Email,
                         contentDescription = null,
-                        tint = colorScheme.onBackground
+                        tint = PresetColor.blue
                 )
                 Text(
                         text = stringResource(id = R.string.about_label_email),
-                        color = colorScheme.onBackground
+                        color = colorScheme.onBackground,
+                        style = MaterialTheme.typography.bodyLarge
                 )
                 Spacer(modifier = Modifier.weight(1.0f))
                 Icon(
                         imageVector = Icons.Outlined.Edit,
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp).alpha(0.75f),
+                        modifier = Modifier.size(18.dp).alpha(0.66f),
                         tint = colorScheme.onBackground
                 )
         }

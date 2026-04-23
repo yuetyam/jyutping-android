@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -60,7 +61,7 @@ fun ConfusionScreen(navController: NavHostController) {
         }
         SelectionContainer {
                 LazyColumn(
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                        contentPadding = PaddingValues(start = 14.dp, top = 8.dp, end = 14.dp, bottom = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                         items(entries.value) {
@@ -78,6 +79,7 @@ private fun ConfusionElementView(element: ConfusionElement) {
                                 color = colorScheme.background,
                                 shape = RoundedCornerShape(12.dp)
                         )
+                        .fillMaxWidth()
                         .padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(14.dp),
                 verticalAlignment = Alignment.CenterVertically

@@ -31,7 +31,8 @@ import org.jyutping.jyutping.presets.PresetColor
 @Composable
 fun ExpressionsScreen() {
         LazyColumn(
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                contentPadding = PaddingValues(start = 14.dp, top = 8.dp, end = 14.dp, bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
                 item {
                         Expression(
@@ -197,12 +198,11 @@ private fun DifferentView(heading: String, lines: List<String>) {
         SelectionContainer {
                 Column(
                         modifier = Modifier
-                                .padding(vertical = 8.dp)
-                                .fillMaxWidth()
                                 .background(
                                         color = colorScheme.background,
                                         shape = RoundedCornerShape(12.dp)
                                 )
+                                .fillMaxWidth()
                                 .padding(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -228,12 +228,11 @@ private class LabelEntry(val type: LabelType, val text: String)
 private fun Expression(heading: String, labels: List<LabelEntry>) {
         Column(
                 modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxWidth()
                         .background(
                                 color = colorScheme.background,
                                 shape = RoundedCornerShape(12.dp)
                         )
+                        .fillMaxWidth()
                         .padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
