@@ -51,6 +51,7 @@ import org.jyutping.jyutping.R
 import org.jyutping.jyutping.Screen
 import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.isIdeographicCodePoint
+import org.jyutping.jyutping.presets.AppleColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.presets.PresetString
@@ -250,6 +251,8 @@ fun HomeScreen(navController: NavHostController) {
                         }
                         item {
                                 TextCard(
+                                        indicator = "#",
+                                        indicatorColor = AppleColor.green,
                                         heading = stringResource(id = R.string.guide_abbreviated_input_heading),
                                         content = stringResource(id = R.string.guide_abbreviated_input_row1),
                                         subContent = stringResource(id = R.string.guide_abbreviated_input_row2)
@@ -257,12 +260,16 @@ fun HomeScreen(navController: NavHostController) {
                         }
                         item {
                                 TextCard(
+                                        indicator = "R",
+                                        indicatorColor = AppleColor.red,
                                         heading = stringResource(id = R.string.guide_pinyin_reverse_lookup_heading),
                                         content = stringResource(id = R.string.guide_pinyin_reverse_lookup_body)
                                 )
                         }
                         item {
                                 TextCard(
+                                        indicator = "V",
+                                        indicatorColor = AppleColor.blue,
                                         heading = stringResource(id = R.string.guide_cangjie_reverse_lookup_heading),
                                         content = stringResource(id = R.string.guide_cangjie_reverse_lookup_body),
                                         subContent = stringResource(id = R.string.guide_cangjie_reverse_lookup_note)
@@ -270,12 +277,16 @@ fun HomeScreen(navController: NavHostController) {
                         }
                         item {
                                 TextCard(
+                                        indicator = "X",
+                                        indicatorColor = AppleColor.purple,
                                         heading = stringResource(id = R.string.guide_stroke_reverse_lookup_heading),
                                         content = stringResource(id = R.string.guide_stroke_reverse_lookup_body)
                                 )
                         }
                         item {
                                 TextCard(
+                                        indicator = "＊",
+                                        indicatorColor = AppleColor.purple,
                                         heading = stringResource(id = R.string.guide_stroke_reverse_lookup_examples),
                                         content = "w = 橫(waang)\ns = 豎(syu)\na = 撇\nd = 點(dim)\nz = 折(zit)",
                                         shouldMonospaceContent = true
@@ -283,12 +294,16 @@ fun HomeScreen(navController: NavHostController) {
                         }
                         item {
                                 TextCard(
+                                        indicator = "Q",
+                                        indicatorColor = AppleColor.indigo,
                                         heading = stringResource(id = R.string.guide_structure_reverse_lookup_heading),
                                         content = stringResource(id = R.string.guide_structure_reverse_lookup_body)
                                 )
                         }
                         item {
                                 TextCard(
+                                        indicator = "6",
+                                        indicatorColor = AppleColor.orange,
                                         heading = stringResource(id = R.string.guide_tones_input_heading),
                                         content = stringResource(id = R.string.guide_tones_input_body),
                                         subContent = stringResource(id = R.string.guide_tones_input_examples),

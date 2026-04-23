@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.presets.AppleColor
 import org.jyutping.jyutping.ui.common.TextCard
 
 @Composable
@@ -19,18 +20,21 @@ fun IntroductionsScreen() {
                 ) {
                         item {
                                 TextCard(
+                                        indicatorColor = AppleColor.blue,
                                         heading = stringResource(id = R.string.introductions_heading_clear_buffer),
                                         content = stringResource(id = R.string.introductions_content_clear_buffer)
                                 )
                         }
                         item {
                                 TextCard(
+                                        indicatorColor = AppleColor.purple,
                                         heading = stringResource(id = R.string.introductions_heading_forget_candidate),
                                         content = stringResource(id = R.string.introductions_content_forget_candidate)
                                 )
                         }
                         item {
                                 TextCard(
+                                        indicatorColor = AppleColor.indigo,
                                         heading = stringResource(id = R.string.introductions_heading_position_insertion_point),
                                         content = stringResource(id = R.string.introductions_content_position_insertion_point)
                                 )

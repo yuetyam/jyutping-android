@@ -13,7 +13,7 @@
     <string name="screen_title_tts">Text to Speech</string>
     <string name="tts_notice_row1">This app uses the system-provided text-to-speech (TTS) functionality.</string>
     <string name="tts_notice_row2">If the speaker button to the right of the text or Jyutping syllable is greyed out and does not respond when tapped, the system may be missing Cantonese voices.</string>
-    <string name="tts_notice_row3">Users can resolve this by installing usable voice engines themselves. The Google TTS voice engine is recommended. For details, please refer to:</string>
+    <string name="tts_notice_row3">Users can resolve this by installing usable voice engines. The Google TTS voice engine is recommended. For details, please refer to:</string>
     <string name="guide_abbreviated_input_heading">Quick Input with Initials</string>
     <string name="guide_abbreviated_input_row1">Type faster by entering only syllable initials (e.g., “nh” → “你好”).</string>
     <string name="guide_abbreviated_input_row2">Combine abbreviated and full input for flexibility (e.g., “nhou” / “neih” → “你好”).</string>
@@ -82,9 +82,9 @@
     <string name="keyboard_settings_show_lowercase_keys_switch_title">Show Lowercase Keys</string>
     <string name="keyboard_settings_key_text_preview_switch_title">Key Text Preview</string>
     <string name="keyboard_settings_high_contrast_switch_title">High Contrast Colour Schemes</string>
-    <string name="keyboard_settings_globe_key_switch_title">Show Input Method Switch Key</string>
-    <string name="keyboard_settings_left_key_switch_title">Show Comma Key</string>
-    <string name="keyboard_settings_right_key_switch_title">Show Period Key</string>
+    <string name="keyboard_settings_globe_key_switch_title">Input Method Switch Key</string>
+    <string name="keyboard_settings_left_key_switch_title">Comma Key</string>
+    <string name="keyboard_settings_right_key_switch_title">Period Key</string>
     <string name="keyboard_settings_key_height_offset_title">Key Height Adjustment</string>
     <string name="keyboard_settings_bottom_padding_title">Bottom Padding</string>
     <string name="keyboard_settings_bottom_padding_none">0</string>
