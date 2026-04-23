@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.extensions.characterCount
-import org.jyutping.jyutping.extensions.codePointText
+import org.jyutping.jyutping.extensions.codePointsText
 import org.jyutping.jyutping.speech.Speaker
 import org.jyutping.jyutping.ui.common.SeparatorMark
 
@@ -40,7 +40,7 @@ fun WordTextLabel(word: String, isSpeakable: Boolean = true) {
                                 )
                                 if (word.characterCount == 1) {
                                         Text(
-                                                text = word.codePointText(),
+                                                text = word.codePointsText,
                                                 modifier = Modifier.alpha(0.75f),
                                                 color = colorScheme.onBackground,
                                                 fontSize = 13.sp,

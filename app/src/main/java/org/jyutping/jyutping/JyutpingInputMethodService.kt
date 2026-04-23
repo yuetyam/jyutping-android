@@ -37,7 +37,7 @@ import kotlinx.coroutines.withContext
 import org.jyutping.jyutping.emoji.Emoji
 import org.jyutping.jyutping.emoji.EmojiCategory
 import org.jyutping.jyutping.extensions.convertedS2T
-import org.jyutping.jyutping.extensions.formattedCodePointText
+import org.jyutping.jyutping.extensions.formattedCodePointsText
 import org.jyutping.jyutping.extensions.generateSymbol
 import org.jyutping.jyutping.extensions.isBasicLatinLetter
 import org.jyutping.jyutping.extensions.markFormatted
@@ -672,7 +672,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 val combined: List<String> = (listOf(latest.text) + previous).distinct()
                 if (combined.count() < PresetConstant.FrequentEmojiCount) return
                 val update: List<String> = combined.take(PresetConstant.FrequentEmojiCount)
-                val value2save: String = update.joinToString(separator = ",") { it.formattedCodePointText() }
+                val value2save: String = update.joinToString(separator = ",") { it.formattedCodePointsText() }
                 sharedPreferences.edit {
                         putString(UserSettingsKey.EmojiFrequent, value2save)
                 }

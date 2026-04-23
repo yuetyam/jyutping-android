@@ -36,15 +36,20 @@ fun String.markFormatted(): String {
 }
 
 /**
- * Example: U+5929
+ * A space-separated list of Unicode code points in `U+XXXX` notation.
+ *
+ * Each code point is formatted as uppercase hexadecimal, padded to at least four digits.
+ *
+ * For example, the character é in decomposed form (e + combining acute accent) is represented as: "U+0065 U+0301".
  */
-fun String.codePointText() = this.codePoints().toArray().joinToString(separator = PresetString.SPACE) { "U+" + it.toString(radix = 16).uppercase() }
+val String.codePointsText: String
+        get() = codePoints().toArray().joinToString(separator = PresetString.SPACE) { String.format("U+%04X", it) }
 
 /**
- * Convert Emoji text to Unicode code point text
+ * Convert Emoji text to Unicode code points as a String
  * @return Formatted Unicode code point text. Example: 1F469.200D.1F373
  */
-fun String.formattedCodePointText(): String = this.codePoints().toArray().joinToString(separator = ".") { it.toString(radix = 16).uppercase() }
+fun String.formattedCodePointsText(): String = codePoints().toArray().joinToString(separator = PresetString.PERIOD) { it.toString(radix = 16).uppercase() }
 
 /**
  * Create Emoji/Symbol text from this code point text.
@@ -74,4 +79,4 @@ fun String.toCharText(): String {
  * A non-BMP character would count as one.
  * */
 val String.characterCount: Int
-        get() = this.codePoints().count().toInt()
+        get() = codePoints().count().toInt()
