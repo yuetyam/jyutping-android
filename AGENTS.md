@@ -11,11 +11,12 @@ The project uses **Jetpack Compose** for UI and **Kotlin** for implementation. I
 ## Building and Development
 
 ### Build Environments and Tools
-- Android Studio 2025.1.1+
-- Java 21
+- Android Studio 2025.3.4+
+- Android Gradle plugin 9.2.0+
+- JDK 21
 - Min SDK: 29 (Android 10)
-- Target SDK: 36 (Android 16)
-- Compile SDK: 36
+- Target SDK: 37 (Android 17)
+- Compile SDK: 37
 
 
 ### One-Time Setup: Prepare Databases

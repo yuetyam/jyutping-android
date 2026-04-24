@@ -56,7 +56,7 @@ Android 粵語拼音輸入法。
 
 ## 如何構建（How to build）
 前置要求（Build requirements）：
-- Android Studio 2025.1.1+
+- Android Studio 2025.3.4+
 
 倉庫體積比較大，建議加 `--depth` 來 clone：
 ~~~bash

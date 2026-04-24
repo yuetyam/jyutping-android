@@ -31,7 +31,7 @@ import org.jyutping.jyutping.presets.PresetColor
 @Composable
 fun ExpressionsScreen() {
         LazyColumn(
-                contentPadding = PaddingValues(start = 14.dp, top = 8.dp, end = 14.dp, bottom = 16.dp),
+                contentPadding = PaddingValues(start = 14.dp, top = 8.dp, end = 14.dp, bottom = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
                 item {
@@ -178,7 +178,7 @@ fun ExpressionsScreen() {
                         SelectionContainer {
                                 Text(
                                         text = etymologyNote,
-                                        modifier = Modifier.padding(8.dp),
+                                        modifier = Modifier.padding(6.dp),
                                         color = colorScheme.onBackground,
                                         style = MaterialTheme.typography.bodySmall
                                 )

@@ -6,11 +6,11 @@ plugins {
 
 android {
         namespace = "org.jyutping.jyutping"
-        compileSdk = 36
+        compileSdk = 37
         defaultConfig {
                 applicationId = "org.jyutping.jyutping"
                 minSdk = 29
-                targetSdk = 36
+                targetSdk = 37
                 versionCode = 59
                 versionName = "0.59.0"
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

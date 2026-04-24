@@ -62,7 +62,7 @@ Also available on our website: https://jyutping.app/android
 
 ## How to build
 Build requirements:
-- Android Studio 2025.1.1+
+- Android Studio 2025.3.4+
 
 Clone with `--depth` to reduce code size:
 ~~~bash
