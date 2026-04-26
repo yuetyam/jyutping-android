@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun EnhancedHorizontalDivider() = HorizontalDivider(
-        modifier = Modifier.padding(start = 40.dp, end = 10.dp),
+        modifier = Modifier.padding(start = 44.dp, end = 10.dp),
         thickness = 1.dp,
         color = DividerDefaults.color.copy(alpha = 0.66f)
 )

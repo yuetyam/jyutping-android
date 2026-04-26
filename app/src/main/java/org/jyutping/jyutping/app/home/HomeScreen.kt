@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
@@ -236,7 +235,7 @@ fun HomeScreen(navController: NavHostController) {
                                 DisableSelection {
                                         Column(
                                                 modifier = Modifier
-                                                        .clip(RoundedCornerShape(12.dp))
+                                                        .clip(CircleShape)
                                                         .background(colorScheme.background)
                                                         .fillMaxWidth()
                                         ) {
@@ -314,7 +313,7 @@ fun HomeScreen(navController: NavHostController) {
                                 DisableSelection {
                                         Column(
                                                 modifier = Modifier
-                                                        .clip(RoundedCornerShape(12.dp))
+                                                        .clip(CircleShape)
                                                         .background(colorScheme.background)
                                                         .fillMaxWidth()
                                         ) {

@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -80,7 +81,7 @@ fun TextToSpeechScreen() {
                                                 modifier = Modifier.fillMaxWidth()
                                                         .padding(horizontal = 12.dp, vertical = 8.dp),
                                         )
-                                        HorizontalDivider()
+                                        HorizontalDivider(color = DividerDefaults.color.copy(alpha = 0.66f))
                                         TTSLinkButton()
                                 }
                         }

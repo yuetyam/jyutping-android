@@ -62,15 +62,13 @@ class MainActivity : ComponentActivity() {
                                                                 },
                                                                 colors = TopAppBarDefaults.topAppBarColors(
                                                                         containerColor = colorScheme.secondaryContainer,
-                                                                        scrolledContainerColor = colorScheme.tertiaryContainer,
-                                                                        navigationIconContentColor = colorScheme.onBackground,
-                                                                        titleContentColor = colorScheme.onBackground,
-                                                                        actionIconContentColor = colorScheme.onBackground
+                                                                        navigationIconContentColor = colorScheme.onSecondaryContainer,
+                                                                        titleContentColor = colorScheme.onSecondaryContainer
                                                                 )
                                                         )
                                                 },
                                                 bottomBar = { AppBottomBar(navController = navController) },
-                                                containerColor = colorScheme.tertiaryContainer
+                                                containerColor = colorScheme.surfaceContainerHighest
                                         ) { paddingValues ->
                                                 Box(modifier = Modifier.padding(paddingValues)) {
                                                         AppContent(navController = navController)

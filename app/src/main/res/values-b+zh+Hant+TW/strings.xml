@@ -9,9 +9,9 @@
     <string name="search_field_placeholder">查字音</string>
     <string name="home_button_enable_keyboard">啓用鍵盤</string>
     <string name="home_button_select_keyboard">選擇鍵盤</string>
-    <string name="home_label_tts">文字語音朗讀</string>
-    <string name="screen_title_tts">文字語音朗讀</string>
-    <string name="tts_notice_row1">應用程式使用嘅係，系統提供嘅文字語音朗讀（TTS）功能。</string>
+    <string name="home_label_tts">文字轉語音朗讀</string>
+    <string name="screen_title_tts">文字轉語音朗讀</string>
+    <string name="tts_notice_row1">應用程式使用嘅係，系統提供嘅文字轉語音朗讀（TTS）功能。</string>
     <string name="tts_notice_row2">如果文字、粵拼音節右邊嘅喇叭掣係灰色嘅，撳咗冇反應，可能係因爲系統缺少粵語語音引擎。</string>
     <string name="tts_notice_row3">用戶可以自行安裝語音引擎解決。推薦 Google TTS 語音引擎。具體可參閱：</string>
     <string name="guide_abbreviated_input_heading">簡拼</string>
