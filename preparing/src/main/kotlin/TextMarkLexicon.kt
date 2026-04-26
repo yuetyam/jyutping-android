@@ -6,7 +6,7 @@ data class TextMarkLexicon(
         val input: String,
         val mark: String,
         val spellCode: Int,
-        val charCode: Long,
+        // val charCode: Long,
         val nineKeyCode: Long
 ) {
         override fun equals(other: Any?): Boolean {
@@ -29,9 +29,9 @@ data class TextMarkLexicon(
                         val input = parts[0]
                         val mark = parts[1]
                         val spellCode = input.hashCode()
-                        val charCode = input.charCode ?: 0
+                        // val charCode = input.charCode ?: 0
                         val nineKeyCode = input.nineKeyCharCode ?: 0
-                        return TextMarkLexicon(input = input, mark = mark, spellCode = spellCode, charCode = charCode, nineKeyCode = nineKeyCode)
+                        return TextMarkLexicon(input = input, mark = mark, spellCode = spellCode, nineKeyCode = nineKeyCode)
                 }
         }
 }

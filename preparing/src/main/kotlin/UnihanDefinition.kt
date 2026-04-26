@@ -8,7 +8,7 @@ import kotlin.use
 object UnihanDefinition {
         fun generate(): List<Pair<Int, String>> {
                 val connection: Connection = DriverManager.getConnection("jdbc:sqlite::memory:")
-                val  createTableCommand: String = "CREATE TABLE definition_table(word TEXT NOT NULL, definition TEXT NOT NULL);"
+                val  createTableCommand: String = "CREATE TABLE definition_table (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, definition TEXT NOT NULL);"
                 connection.createStatement().execute(createTableCommand)
 
                 val insertCommand: String = "INSERT INTO definition_table (word, definition) VALUES (?, ?);"

@@ -6,10 +6,6 @@ import kotlin.use
 
 object AppDataPreparer {
         fun prepare(url: String) {
-
-                // Use core_lexicon table instead
-                // createJyutpingTable(url)
-
                 createCollocationTable(url)
                 createDictionaryTable(url)
                 createDefinitionTable(url)
@@ -21,14 +17,7 @@ object AppDataPreparer {
         }
         private fun createIndexes(url: String) {
                 val commands: List<String> = listOf(
-                        // "CREATE INDEX ix_jyutping_word ON jyutping_table(word);",
-                        // "CREATE INDEX ix_jyutping_romanization ON jyutping_table(romanization);",
-
-                        "CREATE INDEX ix_collocation_word ON collocation_table(word);",
-                        "CREATE INDEX ix_collocation_romanization ON collocation_table(romanization);",
-
-                        "CREATE INDEX ix_dictionary_word ON dictionary_table(word);",
-                        "CREATE INDEX ix_dictionary_romanization ON dictionary_table(romanization);",
+                        "CREATE INDEX ix_dictionary_word_romanization ON dictionary_table (word, romanization);",
 
                         "CREATE INDEX ix_yingwaa_code ON yingwaa_table(code);",
                         "CREATE INDEX ix_yingwaa_romanization ON yingwaa_table(romanization);",
@@ -51,40 +40,19 @@ object AppDataPreparer {
                 println("Successfully created app data indexes.")
         }
 
-        private fun createJyutpingTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE jyutping_table(word TEXT NOT NULL, romanization TEXT NOT NULL);"
-                val connection = DriverManager.getConnection(url)
-                connection.createStatement().use { statement ->
-                        statement.executeUpdate(createTableCommand)
-                }
-                println("Created jyutping table successfully.")
-                val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("jyutping.txt") ?: error("Can not load jyutping.txt")
-                val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val insertEntryCommand: String = "INSERT INTO jyutping_table (word, romanization) VALUES (?, ?);"
-                val inserted = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
-                        val badLineFormat = "bad line format: $line"
-                        val parts = line.split(PresetString.TAB)
-                        if (parts.size != 2) error(badLineFormat)
-                        val word = parts[0]
-                        val romanization = parts[1]
-                        statement.setString(1, word)
-                        statement.setString(2, romanization)
-                }
-                connection.close()
-                println("Inserted jyutping entries successfully: $inserted")
-        }
+        @Deprecated(message = "Use core_lexicon table instead")
+        private fun createJyutpingTable(url: String) {}
 
         private fun createCollocationTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE collocation_table(word TEXT NOT NULL, romanization TEXT NOT NULL, collocation TEXT NOT NULL);"
+                val createTableCommand: String = "CREATE TABLE collocation_table (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, romanization TEXT NOT NULL, collocation TEXT NOT NULL, UNIQUE (word, romanization));"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
                 }
-                println("Created collocation table successfully.")
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("collocation.txt") ?: error("Can not load collocation.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO collocation_table (word, romanization, collocation) VALUES (?, ?, ?);"
-                val insertedColl = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
+                val insertedCount = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(PresetString.TAB)
                         if (parts.size != 3) error(badLineFormat)
@@ -96,20 +64,19 @@ object AppDataPreparer {
                         statement.setString(3, collocation)
                 }
                 connection.close()
-                println("Inserted collocation entries successfully: $insertedColl")
+                println("Inserted collocation entries successfully: $insertedCount")
         }
 
         private fun createDictionaryTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE dictionary_table(word TEXT NOT NULL, romanization TEXT NOT NULL, description TEXT NOT NULL);"
+                val createTableCommand: String = "CREATE TABLE dictionary_table (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, romanization TEXT NOT NULL, description TEXT NOT NULL);"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
                 }
-                println("Created dictionary table successfully.")
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("wordshk.txt") ?: error("Can not load wordshk.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO dictionary_table (word, romanization, description) VALUES (?, ?, ?);"
-                val insertedColl = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
+                val insertedCount = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(PresetString.TAB)
                         if (parts.size != 3) error(badLineFormat)
@@ -121,24 +88,23 @@ object AppDataPreparer {
                         statement.setString(3, description)
                 }
                 connection.close()
-                println("Inserted dictionary entries successfully: $insertedColl")
+                println("Inserted dictionary entries successfully: $insertedCount")
         }
 
         private fun createDefinitionTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE definition_table(code INTEGER NOT NULL PRIMARY KEY, definition TEXT NOT NULL);"
+                val createTableCommand: String = "CREATE TABLE definition_table (code INTEGER PRIMARY KEY, definition TEXT NOT NULL);"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
                 }
-                println("Created definition table successfully.")
                 val entries = UnihanDefinition.generate()
                 val insertEntryCommand: String = "INSERT INTO definition_table (code, definition) VALUES (?, ?);"
-                val insertedDef = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
+                val insertedCount = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
                         statement.setInt(1, entry.first)
                         statement.setString(2, entry.second)
                 }
                 connection.close()
-                println("Inserted definition entries successfully: $insertedDef")
+                println("Inserted definition entries successfully: $insertedCount")
         }
 
         private fun createYingWaaTable(url: String) {
@@ -147,11 +113,10 @@ object AppDataPreparer {
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
                 }
-                println("Created yingwaa table successfully.")
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("yingwaa.txt") ?: error("Can not load yingwaa.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO yingwaa_table (code, word, romanization, pronunciation, pronunciationmark, interpretation) VALUES (?, ?, ?, ?, ?, ?);"
-                val insertedYw = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
+                val insertedCount = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(PresetString.TAB)
                         if (parts.size != 6) error(badLineFormat)
@@ -169,7 +134,7 @@ object AppDataPreparer {
                         statement.setString(6, interpretation)
                 }
                 connection.close()
-                println("Inserted yingwaa entries successfully: $insertedYw")
+                println("Inserted yingwaa entries successfully: $insertedCount")
         }
 
         private fun createChoHokTable(url: String) {
@@ -178,11 +143,10 @@ object AppDataPreparer {
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
                 }
-                println("Created chohok table successfully.")
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("chohok.txt") ?: error("Can not load chohok.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO chohok_table (code, word, romanization, initial, final, tone, faancit) VALUES (?, ?, ?, ?, ?, ?, ?);"
-                val insertedCh = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
+                val insertedCount = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(PresetString.TAB)
                         if (parts.size != 7) error(badLineFormat)
@@ -202,7 +166,7 @@ object AppDataPreparer {
                         statement.setString(7, faancit)
                 }
                 connection.close()
-                println("Inserted chohok entries successfully: $insertedCh")
+                println("Inserted chohok entries successfully: $insertedCount")
         }
 
         private fun createFanWanTable(url: String) {
@@ -211,11 +175,10 @@ object AppDataPreparer {
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
                 }
-                println("Created fanwan table successfully.")
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("fanwan.txt") ?: error("Can not load fanwan.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO fanwan_table (code, word, romanization, initial, final, yamyeung, tone, rhyme, interpretation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
-                val insertedFan = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
+                val insertedCount = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(PresetString.TAB)
                         if (parts.size != 9) error(badLineFormat)
@@ -239,7 +202,7 @@ object AppDataPreparer {
                         statement.setString(9, interpretation)
                 }
                 connection.close()
-                println("Inserted fanwan entries successfully: $insertedFan")
+                println("Inserted fanwan entries successfully: $insertedCount")
         }
 
         private fun createGwongWanTable(url: String) {
@@ -248,11 +211,10 @@ object AppDataPreparer {
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
                 }
-                println("Created gwongwan table successfully.")
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("gwongwan.txt") ?: error("Can not load gwongwan.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO gwongwan_table (code, word, rhyme, subrhyme, subrhymeserial, subrhymenumber, upper, lower, initial, rounding, division, rhymeclass, repeating, tone, interpretation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?);"
-                val insertedGw = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
+                val insertedCount = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(",")
                         if (parts.size != 15) error(badLineFormat)
@@ -288,6 +250,6 @@ object AppDataPreparer {
                         statement.setString(15, interpretation)
                 }
                 connection.close()
-                println("Inserted gwongwan entries successfully: $insertedGw")
+                println("Inserted gwongwan entries successfully: $insertedCount")
         }
 }
