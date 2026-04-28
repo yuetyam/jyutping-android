@@ -19,6 +19,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistry
@@ -51,6 +52,8 @@ import org.jyutping.jyutping.keyboard.ExtraBottomPadding
 import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.ReturnKeyForm
 import org.jyutping.jyutping.keyboard.SpaceKeyForm
+import org.jyutping.jyutping.memory.InputMemoryHelper
+import org.jyutping.jyutping.memory.searchMemory
 import org.jyutping.jyutping.models.BasicInputEvent
 import org.jyutping.jyutping.models.Candidate
 import org.jyutping.jyutping.models.CangjieConverter
@@ -87,7 +90,6 @@ import org.jyutping.jyutping.stroke.StrokeVirtualKey
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
 import org.jyutping.jyutping.utilities.Simplifier
-import org.jyutping.jyutping.utilities.UserLexiconHelper
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
@@ -133,6 +135,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 } else {
                         canBlurWindow = false
                         PresetColor.attach(canBlur = false)
+                }
+                lifecycleScope.launch(Dispatchers.IO) {
+                        memoryHelper.performMemoryMigration()
                 }
         }
         override fun onConfigurationChanged(newConfig: Configuration) {
@@ -637,14 +642,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
 
         private val selectedLexicons: MutableList<Lexicon> by lazy { mutableListOf() }
-        private val userDB by lazy { UserLexiconHelper(this) }
+        private val memoryHelper by lazy { InputMemoryHelper(this) }
         fun forgetCandidate(candidate: Candidate? = null, index: Int? = null) = when {
-                candidate != null -> userDB.remove(candidate.lexicon)
-                index != null -> candidates.value.getOrNull(index)?.let { userDB.remove(it.lexicon) }
+                candidate != null -> memoryHelper.forget(candidate.lexicon)
+                index != null -> candidates.value.getOrNull(index)?.let { memoryHelper.forget(it.lexicon) }
                 else -> {}
         }
         fun clearInputMemory() {
-                userDB.deleteAll()
+                memoryHelper.deleteAll()
                 clearLocalEmojiFrequent()
         }
 
@@ -705,7 +710,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 currentInputConnection.finishComposingText()
                                 if (isBuffering.value) {
                                         if (isInputMemoryOn.value && selectedLexicons.isNotEmpty()) {
-                                                userDB.process(selectedLexicons)
+                                                Lexicon.concatenate(selectedLexicons)?.let { memoryHelper.handle(it) }
                                         }
                                         selectedLexicons.clear()
                                         isBuffering.value = false
@@ -836,7 +841,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 val textMarks = textMarksDeferred.await()
                                 val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
                                 val segmentation = Segmenter.segment(keys, db)
-                                val memoryDeferred = async { if (isInputMemoryOn.value) userDB.search(keys = keys, text = text, segmentation = segmentation, db = db) else emptyList() }
+                                val memoryDeferred = async { if (isInputMemoryOn.value) memoryHelper.searchMemory(keys = keys, text = text, segmentation = segmentation, db = db) else emptyList() }
                                 val symbolsDeferred = async { if (isEmojiSuggestionsOn.value) db.searchSymbols(text = text, segmentation = segmentation) else emptyList() }
                                 val queriedDeferred = async { Researcher.suggest(keys = keys, segmentation = segmentation, db = db) }
                                 val memory = memoryDeferred.await()
@@ -932,7 +937,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 currentInputConnection.finishComposingText()
                                 if (isBuffering.value) {
                                         if (isInputMemoryOn.value && selectedLexicons.isNotEmpty()) {
-                                                userDB.process(selectedLexicons)
+                                                Lexicon.concatenate(selectedLexicons)?.let { memoryHelper.handle(it) }
                                         }
                                         selectedLexicons.clear()
                                         isBuffering.value = false

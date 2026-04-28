@@ -88,8 +88,9 @@ data class Lexicon(
 
         companion object {
                 fun concatenate(lexicons: List<Lexicon>): Lexicon? {
-                        val containsNonCantonese: Boolean = lexicons.any { it.isNotCantonese }
-                        if (containsNonCantonese) return null
+                        val isNotAllCantonese: Boolean = lexicons.any { it.isNotCantonese }
+                        if (isNotAllCantonese) return null
+                        if (lexicons.size == 1) { return lexicons.first() }
                         val newText: String = lexicons.joinToString(separator = PresetString.EMPTY) { it.text }
                         val newRomanization: String = lexicons.joinToString(separator = PresetString.SPACE) { it.romanization }
                         val newInput: String = lexicons.joinToString(separator = PresetString.EMPTY) { it.input }

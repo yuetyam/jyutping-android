@@ -2,7 +2,8 @@ package org.jyutping.jyutping
 
 @Suppress("ConstPropertyName")
 object UserSettingsKey {
-        const val UserLexiconDatabaseFileName: String = "memory.sqlite3"
+        const val InputMemoryDatabaseFileName: String = "memory.sqlite3"
+        const val MemoryMigration2026: String = "input_memory_migration2026"
         const val PreferencesFileName: String = "org.jyutping.jyutping.settings"
         const val CharacterStandard: String = "character_standard"
         const val AudioFeedback: String = "audio_feedback"
