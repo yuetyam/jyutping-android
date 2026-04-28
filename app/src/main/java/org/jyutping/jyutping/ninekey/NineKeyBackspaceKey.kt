@@ -4,7 +4,7 @@ import android.os.Build
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -85,7 +85,7 @@ fun NineKeyBackspaceKey(modifier: Modifier) {
                                 )
                         }
                         .pointerInput(Unit) {
-                                detectHorizontalDragGestures(
+                                detectDragGestures(
                                         onDragStart = {
                                                 isDraggable = true
                                                 isDragging = true
@@ -98,7 +98,7 @@ fun NineKeyBackspaceKey(modifier: Modifier) {
                                                 isDraggable = true
                                                 isDragging = false
                                         },
-                                        onHorizontalDrag = { change, dragAmount ->
+                                        onDrag = { change, dragAmount ->
                                                 change.consume()
                                                 if (isDraggable) {
                                                         val offsetX = -(change.position.x - change.previousPosition.x)

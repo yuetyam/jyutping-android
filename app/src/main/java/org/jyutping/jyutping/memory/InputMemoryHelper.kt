@@ -8,6 +8,7 @@ import androidx.core.content.edit
 import org.jyutping.jyutping.UserSettingsKey
 import org.jyutping.jyutping.extensions.isCantoneseToneDigit
 import org.jyutping.jyutping.extensions.isLowercaseBasicLatinLetter
+import org.jyutping.jyutping.extensions.isSpace
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.models.Scheme
@@ -16,11 +17,13 @@ import org.jyutping.jyutping.models.Segmenter
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.aliasAnchors
 import org.jyutping.jyutping.models.aliasText
+import org.jyutping.jyutping.models.decimalCombined
 import org.jyutping.jyutping.models.mark
 import org.jyutping.jyutping.models.originAnchorsText
 import org.jyutping.jyutping.models.originText
 import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.models.syllableText
+import org.jyutping.jyutping.ninekey.Combo
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import kotlin.getValue
@@ -390,6 +393,63 @@ private fun InputMemoryHelper.strictMatch(spell: Int, shortcut: Int, input: Stri
         }
         cursor.close()
         return instances
+}
+
+fun InputMemoryHelper.nineKeyMemorySearch(combos: List<Combo>): List<Lexicon> {
+        val inputLength: Int = combos.size
+        val fullCode: Long = combos.map { it.number }.decimalCombined()
+        when (inputLength) {
+                0 -> return emptyList()
+                1 -> return (nineKeyCodeMatch(fullCode, 100) + nineKeyAnchorsMatch(fullCode, 5)).map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -1) }
+                else -> {}
+        }
+        val fullCodeMatched = nineKeyCodeMatch(fullCode, 100)
+        val fullAnchorsMatched = nineKeyAnchorsMatch(fullCode, 4)
+        val ideal = (fullCodeMatched.take(10) + (fullCodeMatched + fullAnchorsMatched).sorted())
+                .distinct()
+                .map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -1) }
+        val queried = 1.rangeUntil(inputLength).flatMap { number ->
+                val code = combos.dropLast(number).map { it.number }.decimalCombined()
+                return@flatMap if (code < 1) emptyList() else nineKeyCodeMatch(code, limit = 4)
+        }.distinct().take(6).map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -2) }
+        return ideal + queried
+}
+private fun InputMemoryHelper.nineKeyAnchorsMatch(code: Long, limit: Int? = null): List<InternalLexicon> {
+        if (code < 1) return emptyList()
+        val items: MutableList<InternalLexicon> = mutableListOf()
+        val limitValue: Int = limit ?: 30
+        val command = "SELECT word, romanization, frequency, latest FROM core_memory WHERE nine_key_anchors = $code LIMIT ${limitValue};"
+        val cursor = this.readableDatabase.rawQuery(command, null)
+        while (cursor.moveToNext()) {
+                val word = cursor.getString(0)
+                val romanization = cursor.getString(1)
+                val frequency = cursor.getLong(2)
+                val latest = cursor.getLong(3)
+                val anchors = romanization.split(PresetString.SPACE).mapNotNull { it.firstOrNull() }.joinToString(separator = PresetString.EMPTY)
+                val instance = InternalLexicon(word = word, romanization = romanization, input = anchors, frequency = frequency, latest = latest, mark = anchors)
+                items.add(instance)
+        }
+        cursor.close()
+        return items
+}
+private fun InputMemoryHelper.nineKeyCodeMatch(code: Long, limit: Int? = null): List<InternalLexicon> {
+        if (code < 1) return emptyList()
+        val items: MutableList<InternalLexicon> = mutableListOf()
+        val limitValue: Int = limit ?: -1
+        val command = "SELECT word, romanization, frequency, latest FROM core_memory WHERE nine_key_code = $code LIMIT ${limitValue};"
+        val cursor = this.readableDatabase.rawQuery(command, null)
+        while (cursor.moveToNext()) {
+                val word = cursor.getString(0)
+                val romanization = cursor.getString(1)
+                val frequency = cursor.getLong(2)
+                val latest = cursor.getLong(3)
+                val mark = romanization.filterNot { it.isCantoneseToneDigit }
+                val input = mark.filterNot { it.isSpace }
+                val instance = InternalLexicon(word = word, romanization = romanization, input = input, frequency = frequency, latest = latest, mark = mark)
+                items.add(instance)
+        }
+        cursor.close()
+        return items
 }
 
 private data class InternalLexicon(

@@ -107,7 +107,7 @@ fun SidebarPanel(unitHeight: Dp, modifier: Modifier) {
                                 )
                         }
                         HorizontalDivider(
-                                modifier.alpha(0.75f),
+                                modifier.alpha(0.5f),
                                 thickness = 1.dp,
                                 color = Color.Gray
                         )

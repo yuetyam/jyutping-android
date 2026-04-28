@@ -53,6 +53,7 @@ import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.ReturnKeyForm
 import org.jyutping.jyutping.keyboard.SpaceKeyForm
 import org.jyutping.jyutping.memory.InputMemoryHelper
+import org.jyutping.jyutping.memory.nineKeyMemorySearch
 import org.jyutping.jyutping.memory.searchMemory
 import org.jyutping.jyutping.models.BasicInputEvent
 import org.jyutping.jyutping.models.Candidate
@@ -954,15 +955,16 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         Combo.Special -> {}
                         else -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
+                                val memoryDeferred = async { if (isInputMemoryOn.value) memoryHelper.nineKeyMemorySearch(newValue) else emptyList() }
                                 val textMarksDeprecated = async { if (isEnglishSuggestionsOn.value) db.queryTextMarks(newValue) else emptyList() }
                                 val symbolsDeferred = async { if (isEmojiSuggestionsOn.value) db.nineKeySearchSymbols(newValue) else emptyList() }
                                 val queriedDeferred = async { NineKeyResearcher.nineKeySearch(combos = newValue, db = db) }
+                                val memory = memoryDeferred.await()
                                 val textMarks = textMarksDeprecated.await()
                                 val symbols = symbolsDeferred.await()
                                 val queried = queriedDeferred.await()
-                                // FIXME: NineKey memory search
                                 val suggestions = Converter.dispatch(
-                                        memory = emptyList(),
+                                        memory = memory,
                                         defined = emptyList(),
                                         marks = textMarks,
                                         symbols = symbols,
@@ -972,8 +974,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         db = if (characterStandard.value.isSimplified) db else null,
                                         sessionState = sessionState
                                 )
-                                // FIXME: NineKey mark
-                                val mark: String = suggestions.firstOrNull()?.lexicon?.mark ?: "X"
+                                val mark: String = run {
+                                        val firstCandidate = suggestions.firstOrNull()
+                                        if (firstCandidate?.lexicon?.inputCount == newValue.size) {
+                                                firstCandidate.lexicon.mark
+                                        } else {
+                                                newValue.joinToString(separator = PresetString.EMPTY) { it.letters.first() }
+                                        }
+                                }
                                 withContext(Dispatchers.Main) {
                                         currentInputConnection.setComposingText(mark, 1)
                                         candidates.value = suggestions
