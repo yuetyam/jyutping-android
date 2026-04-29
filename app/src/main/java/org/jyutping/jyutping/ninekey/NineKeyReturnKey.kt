@@ -56,11 +56,12 @@ fun NineKeyReturnKey(modifier: Modifier) {
                                                 } else {
                                                         view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                                 }
-                                                tryAwaitRelease()
-                                                isPressing = false
-                                        },
-                                        onTap = {
                                                 context.performReturn()
+                                                try {
+                                                        tryAwaitRelease()
+                                                } finally {
+                                                        isPressing = false
+                                                }
                                         }
                                 )
                         }

@@ -44,11 +44,12 @@ fun NineKeyInputKey(key: Combo, modifier: Modifier) {
                                                 isPressing = true
                                                 context.audioFeedback(SoundEffect.Input)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                                tryAwaitRelease()
-                                                isPressing = false
-                                        },
-                                        onTap = {
                                                 context.nineKeyProcess(key)
+                                                try {
+                                                        tryAwaitRelease()
+                                                } finally {
+                                                        isPressing = false
+                                                }
                                         }
                                 )
                         }

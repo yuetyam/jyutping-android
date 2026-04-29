@@ -26,7 +26,6 @@ import org.jyutping.jyutping.models.syllableText
 import org.jyutping.jyutping.ninekey.Combo
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
-import kotlin.getValue
 
 class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 3) {
 

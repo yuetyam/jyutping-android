@@ -47,12 +47,13 @@ fun NineKeySpecialKey(modifier: Modifier) {
                                                 isPressing = true
                                                 context.audioFeedback(SoundEffect.Input)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                                tryAwaitRelease()
-                                                isPressing = false
-                                        },
-                                        onTap = {
                                                 if (isBuffering.negative) {
                                                         context.nineKeyProcess(Combo.Special)
+                                                }
+                                                try {
+                                                        tryAwaitRelease()
+                                                } finally {
+                                                        isPressing = false
                                                 }
                                         }
                                 )

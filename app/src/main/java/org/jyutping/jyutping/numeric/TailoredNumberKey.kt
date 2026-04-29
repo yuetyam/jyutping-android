@@ -47,11 +47,12 @@ fun TailoredNumberKey(virtual: VirtualInputKey, modifier: Modifier) {
                                                 isPressing = true
                                                 context.audioFeedback(SoundEffect.Input)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                                tryAwaitRelease()
-                                                isPressing = false
-                                        },
-                                        onTap = {
                                                 context.handle(virtual)
+                                                try {
+                                                        tryAwaitRelease()
+                                                } finally {
+                                                        isPressing = false
+                                                }
                                         }
                                 )
                         }
@@ -93,11 +94,12 @@ fun TailoredNumericDotKey(modifier: Modifier) {
                                                 isPressing = true
                                                 context.audioFeedback(SoundEffect.Input)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                                tryAwaitRelease()
-                                                isPressing = false
-                                        },
-                                        onTap = {
                                                 context.input(keyText)
+                                                try {
+                                                        tryAwaitRelease()
+                                                } finally {
+                                                        isPressing = false
+                                                }
                                         }
                                 )
                         }

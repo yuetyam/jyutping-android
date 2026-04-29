@@ -54,11 +54,12 @@ fun NineKeyNavigateKey(destination: KeyboardForm, modifier: Modifier) {
                                                 isPressing = true
                                                 context.audioFeedback(SoundEffect.Click)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                                tryAwaitRelease()
-                                                isPressing = false
-                                        },
-                                        onTap = {
                                                 context.transformTo(destination)
+                                                try {
+                                                        tryAwaitRelease()
+                                                } finally {
+                                                        isPressing = false
+                                                }
                                         }
                                 )
                         }

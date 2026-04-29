@@ -11,7 +11,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -206,35 +209,31 @@ fun EnhancedInputKey(
                 }
                 if (shouldPreviewKey && isTouching) {
                         val shape: Shape = BubbleShape()
+                        val offsetY: Int = (baseSize.height * 1.5F / 2F * density.density).toInt().unaryMinus()
                         val width: Float = baseSize.width / 3F * 5F
                         val height: Float = baseSize.height * 2.5F
-                        val offsetY: Int = (baseSize.height * 1.5F / 2F * density.density).toInt().unaryMinus()
-                        Popup(
-                                alignment = Alignment.Center,
-                                offset = IntOffset(x = 0, y = offsetY)
-                        ) {
-                                Box(
-                                        modifier = modifier
-                                                .border(
-                                                        width = 1.dp,
-                                                        color = ToolBox.previewKeyBorderColor(isDarkMode, isHighContrastPreferred),
-                                                        shape = shape
-                                                )
-                                                .background(
-                                                        color = ToolBox.previewInputKeyBackColor(isDarkMode, isHighContrastPreferred),
-                                                        shape = shape
-                                                )
-                                                .width(width.dp)
-                                                .height(height.dp),
-                                        contentAlignment = Alignment.Center
-                                ) {
-                                        Text(
-                                                text = keyModel.primary.text.textCased(displayTextCase),
-                                                modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
-                                                color = if (isDarkMode) Color.White else Color.Black,
-                                                fontSize = if (keyModel.primary.isTextSingular) 32.sp else 22.sp
+                        Box(
+                                modifier = Modifier
+                                        .offset { IntOffset(0, offsetY) }
+                                        .requiredWidth(width.dp)
+                                        .requiredHeight(height.dp)
+                                        .border(
+                                                width = 1.dp,
+                                                color = ToolBox.previewKeyBorderColor(isDarkMode, isHighContrastPreferred),
+                                                shape = shape
                                         )
-                                }
+                                        .background(
+                                                color = ToolBox.previewInputKeyBackColor(isDarkMode, isHighContrastPreferred),
+                                                shape = shape
+                                        ),
+                                contentAlignment = Alignment.Center,
+                        ) {
+                                Text(
+                                        text = keyModel.primary.text.textCased(displayTextCase),
+                                        modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
+                                        color = if (isDarkMode) Color.White else Color.Black,
+                                        fontSize = if (keyModel.primary.isTextSingular) 32.sp else 22.sp
+                                )
                         }
                 }
                 if (isLongPressing) {

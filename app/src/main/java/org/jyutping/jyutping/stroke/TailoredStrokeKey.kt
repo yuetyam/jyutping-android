@@ -46,11 +46,12 @@ fun TailoredStrokeKey(key: StrokeVirtualKey, modifier: Modifier) {
                                                 isPressing = true
                                                 context.audioFeedback(SoundEffect.Input)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                                tryAwaitRelease()
-                                                isPressing = false
-                                        },
-                                        onTap = {
                                                 context.handle(key.virtualInputKey)
+                                                try {
+                                                        tryAwaitRelease()
+                                                } finally {
+                                                        isPressing = false
+                                                }
                                         }
                                 )
                         }

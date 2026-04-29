@@ -9,6 +9,7 @@ val debugStoreFile = providers.gradleProperty("DEBUG_STORE_FILE")
 val debugStorePassword = providers.gradleProperty("DEBUG_STORE_CODE").orElse("android")
 val debugKeyAlias = providers.gradleProperty("DEBUG_KEY_ALIAS").orElse("androiddebugkey")
 val debugKeyPassword = providers.gradleProperty("DEBUG_KEY_CODE").orElse("android")
+val hasCustomDebugStore = debugStoreFile.map { file(it).exists() }
 
 android {
         namespace = "org.jyutping.jyutping"
@@ -23,17 +24,21 @@ android {
                 vectorDrawables.useSupportLibrary = true
         }
         signingConfigs {
-                create("CustomDebug") {
-                        storeFile = file(debugStoreFile.get())
-                        storePassword = debugStorePassword.get()
-                        keyAlias = debugKeyAlias.get()
-                        keyPassword = debugKeyPassword.get()
+                if (hasCustomDebugStore.get()) {
+                        create("CustomDebug") {
+                                storeFile = file(debugStoreFile.get())
+                                storePassword = debugStorePassword.get()
+                                keyAlias = debugKeyAlias.get()
+                                keyPassword = debugKeyPassword.get()
+                        }
                 }
         }
         buildTypes {
                 debug {
                         isMinifyEnabled = false
-                        signingConfig = signingConfigs.getByName("CustomDebug")
+                        if (hasCustomDebugStore.get()) {
+                                signingConfig = signingConfigs.getByName("CustomDebug")
+                        }
                 }
                 release {
                         isMinifyEnabled = true

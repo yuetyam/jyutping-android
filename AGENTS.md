@@ -65,7 +65,7 @@ Tests are currently disabled (`tasks.withType<Test>().configureEach { enabled = 
 Presentation (Compose UI)
   ↓ JyutpingInputMethodService (state holder + event handler)
   ↓ Business Logic (Segmenter, Researcher, Converter)
-  ↓ Data Access (DatabaseHelper, UserLexiconHelper)
+  ↓ Data Access (DatabaseHelper, InputMemoryHelper)
   ↓ SQLite Database
 ```
 
@@ -77,7 +77,7 @@ Presentation (Compose UI)
 - Manages 60+ MutableStateFlow properties (input mode, candidates, buffer, settings)
 - Handles soft keyboard input (VirtualInputKey enums) and physical keyboard events
 - Processes input into candidates via Segmenter, Researcher, and Converter
-- Records user memory in UserLexiconHelper for learning
+- Records user memory in InputMemoryHelper for learning
 
 **Package structure:**
 - `keyboard/` - 30+ Compose components for different keyboard layouts and candidate display
@@ -112,7 +112,6 @@ Generates `appdb.sqlite3` by:
 User taps key → VirtualInputKey → bufferEvents (observable)
   → Determine input mode (Cantonese/Pinyin/Stroke/etc.)
   → Segmenter.segment() → Researcher.suggest()
-  → UserLexiconHelper.search() + searchTextMarks()
   → Converter.dispatch() (merging + sorting)
   → candidates StateFlow → CandidateBoard renders
 ```
@@ -126,7 +125,7 @@ User taps key → VirtualInputKey → bufferEvents (observable)
 ### Candidate Selection & User Memory
 - User selects candidate → `selectCandidate()`
 - Commits text via InputConnection
-- Records in UserLexiconHelper (separate database) for future ranking
+- Records in InputMemoryHelper (separate database) for future ranking
 - Clears buffer if input is complete
 
 ## Database Schema
@@ -177,7 +176,7 @@ All tables are indexed on frequently queried columns (spell, anchors, code) for 
 - DatabaseHelper provides typed query methods
 - All queries use parameterized statements (SQL injection safe)
 - Results wrapped in domain models (Candidate, Pronunciation, etc.)
-- UserLexiconHelper maintains separate user-learned data
+- InputMemoryHelper maintains separate user-learned data
 
 ## Common Development Tasks
 
@@ -196,7 +195,7 @@ All tables are indexed on frequently queried columns (spell, anchors, code) for 
 ### Debugging IME Input
 - JyutpingInputMethodService.bufferEvents observable receives all input
 - CandidateBoard displays top candidates in real-time
-- UserLexiconHelper can be inspected for learned words
+- InputMemoryHelper can be inspected for learned words
 - Physical keyboard candidate bar shows current state
 
 ## File Organization Notes

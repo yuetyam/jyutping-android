@@ -6,9 +6,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +31,6 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.models.KeySide
@@ -65,11 +65,12 @@ fun LetterKey(virtual: VirtualInputKey, modifier: Modifier, position: Alignment.
                                                 isPressing = true
                                                 context.audioFeedback(SoundEffect.Input)
                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                                tryAwaitRelease()
-                                                isPressing = false
-                                        },
-                                        onTap = {
                                                 context.handle(virtual)
+                                                try {
+                                                        tryAwaitRelease()
+                                                } finally {
+                                                        isPressing = false
+                                                }
                                         }
                                 )
                         }
@@ -121,32 +122,28 @@ fun LetterKey(virtual: VirtualInputKey, modifier: Modifier, position: Alignment.
                                 else -> baseSize.width / 3F * 5F
                         }
                         val height: Float = baseSize.height * 2.5F
-                        Popup(
-                                alignment = Alignment.Center,
-                                offset = IntOffset(x = offsetX, y = offsetY)
-                        ) {
-                                Box(
-                                        modifier = modifier
-                                                .border(
-                                                        width = 1.dp,
-                                                        color = ToolBox.previewKeyBorderColor(isDarkMode, isHighContrastPreferred),
-                                                        shape = shape
-                                                )
-                                                .background(
-                                                        color = ToolBox.previewInputKeyBackColor(isDarkMode, isHighContrastPreferred),
-                                                        shape = shape
-                                                )
-                                                .width(width.dp)
-                                                .height(height.dp),
-                                        contentAlignment = Alignment.Center
-                                ) {
-                                        Text(
-                                                text = virtual.text.textCased(displayTextCase),
-                                                modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
-                                                color = if (isDarkMode) Color.White else Color.Black,
-                                                fontSize = 32.sp
+                        Box(
+                                modifier = Modifier
+                                        .offset { IntOffset(offsetX, offsetY) }
+                                        .requiredWidth(width.dp)
+                                        .requiredHeight(height.dp)
+                                        .border(
+                                                width = 1.dp,
+                                                color = ToolBox.previewKeyBorderColor(isDarkMode, isHighContrastPreferred),
+                                                shape = shape
                                         )
-                                }
+                                        .background(
+                                                color = ToolBox.previewInputKeyBackColor(isDarkMode, isHighContrastPreferred),
+                                                shape = shape
+                                        ),
+                                contentAlignment = Alignment.Center,
+                        ) {
+                                Text(
+                                        text = virtual.text.textCased(displayTextCase),
+                                        modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
+                                        color = if (isDarkMode) Color.White else Color.Black,
+                                        fontSize = 32.sp
+                                )
                         }
                 }
         }
