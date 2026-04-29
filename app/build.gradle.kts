@@ -4,6 +4,12 @@ plugins {
         id("org.jetbrains.kotlin.plugin.serialization")
 }
 
+val debugStoreFile = providers.gradleProperty("DEBUG_STORE_FILE")
+    .orElse(providers.systemProperty("user.home").map { "$it/.android/debug.keystore" })
+val debugStorePassword = providers.gradleProperty("DEBUG_STORE_CODE").orElse("android")
+val debugKeyAlias = providers.gradleProperty("DEBUG_KEY_ALIAS").orElse("androiddebugkey")
+val debugKeyPassword = providers.gradleProperty("DEBUG_KEY_CODE").orElse("android")
+
 android {
         namespace = "org.jyutping.jyutping"
         compileSdk = 37
@@ -16,9 +22,18 @@ android {
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 vectorDrawables.useSupportLibrary = true
         }
+        signingConfigs {
+                create("CustomDebug") {
+                        storeFile = file(debugStoreFile.get())
+                        storePassword = debugStorePassword.get()
+                        keyAlias = debugKeyAlias.get()
+                        keyPassword = debugKeyPassword.get()
+                }
+        }
         buildTypes {
                 debug {
                         isMinifyEnabled = false
+                        signingConfig = signingConfigs.getByName("CustomDebug")
                 }
                 release {
                         isMinifyEnabled = true

@@ -1143,7 +1143,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
         fun dismissKeyboard() {
-                requestHideSelf(InputMethodManager.HIDE_NOT_ALWAYS)
+                requestHideSelf(0)
         }
 
         // New: Physical keyboard support - central handler
