@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,7 +39,6 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.models.KeyModel
@@ -245,80 +243,76 @@ fun EnhancedInputKey(
                         val width: Float = (baseSize.width / 3F * 5F) + (baseSize.width * expansionCount)
                         val height: Float = baseSize.height * 2.5F
                         val memberIndices = if (side.isLeft) keyModel.members.indices else keyModel.members.indices.reversed()
-                        Popup(
-                                alignment = Alignment.Center,
-                                offset = IntOffset(x = offsetX, y = offsetY)
+                        Box(
+                                modifier = Modifier
+                                        .offset { IntOffset(offsetX, offsetY) }
+                                        .requiredWidth(width.dp)
+                                        .requiredHeight(height.dp)
+                                        .border(
+                                                width = 1.dp,
+                                                color = ToolBox.previewKeyBorderColor(isDarkMode, isHighContrastPreferred),
+                                                shape = shape
+                                        )
+                                        .background(
+                                                color = ToolBox.previewInputKeyBackColor(isDarkMode, isHighContrastPreferred),
+                                                shape = shape
+                                        ),
+                                contentAlignment = Alignment.Center,
                         ) {
-                                Box(
-                                        modifier = modifier
-                                                .border(
-                                                        width = 1.dp,
-                                                        color = ToolBox.previewKeyBorderColor(isDarkMode, isHighContrastPreferred),
-                                                        shape = shape
-                                                )
-                                                .background(
-                                                        color = ToolBox.previewInputKeyBackColor(isDarkMode, isHighContrastPreferred),
-                                                        shape = shape
-                                                )
-                                                .width(width.dp)
-                                                .height(height.dp),
-                                        contentAlignment = Alignment.Center
+                                Row(
+                                        modifier = Modifier
+                                                .padding(
+                                                        bottom = (baseSize.height * 1.3F).dp,
+                                                        start = (baseSize.width / 3F).dp,
+                                                        end = (baseSize.width / 3F).dp,
+                                                ),
+                                        horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                        Row(
-                                                modifier = Modifier
-                                                        .padding(
-                                                                bottom = (baseSize.height * 1.3F).dp,
-                                                                start = (baseSize.width / 3F).dp,
-                                                                end = (baseSize.width / 3F).dp,
-                                                        ),
-                                                horizontalArrangement = Arrangement.SpaceBetween
-                                        ) {
-                                                for (index in memberIndices) {
-                                                        Box(
-                                                                modifier = modifier
-                                                                        .background(
-                                                                                color = if (index == selectedIndex) PresetColor.blue else Color.Transparent,
-                                                                                shape = keyShape
-                                                                        )
-                                                                        .height(baseSize.height.dp)
-                                                                        .fillMaxWidth(),
-                                                                contentAlignment = Alignment.Center
-                                                        ) {
-                                                                keyModel.members.getOrNull(index)?.let { element ->
-                                                                        element.header?.let { header ->
-                                                                                Box(
-                                                                                        modifier = Modifier
-                                                                                                .alpha(0.75f)
-                                                                                                .fillMaxSize(),
-                                                                                        contentAlignment = Alignment.TopCenter
-                                                                                ) {
-                                                                                        Text(
-                                                                                                text = header,
-                                                                                                color = if (isDarkMode || index == selectedIndex) Color.White else Color.Black,
-                                                                                                fontSize = 9.sp
-                                                                                        )
-                                                                                }
+                                        for (index in memberIndices) {
+                                                Box(
+                                                        modifier = modifier
+                                                                .background(
+                                                                        color = if (index == selectedIndex) PresetColor.blue else Color.Transparent,
+                                                                        shape = keyShape
+                                                                )
+                                                                .height(baseSize.height.dp)
+                                                                .fillMaxWidth(),
+                                                        contentAlignment = Alignment.Center
+                                                ) {
+                                                        keyModel.members.getOrNull(index)?.let { element ->
+                                                                element.header?.let { header ->
+                                                                        Box(
+                                                                                modifier = Modifier
+                                                                                        .alpha(0.75f)
+                                                                                        .fillMaxSize(),
+                                                                                contentAlignment = Alignment.TopCenter
+                                                                        ) {
+                                                                                Text(
+                                                                                        text = header,
+                                                                                        color = if (isDarkMode || index == selectedIndex) Color.White else Color.Black,
+                                                                                        fontSize = 9.sp
+                                                                                )
                                                                         }
-                                                                        element.footer?.let { footer ->
-                                                                                Box(
-                                                                                        modifier = Modifier
-                                                                                                .alpha(0.75f)
-                                                                                                .fillMaxSize(),
-                                                                                        contentAlignment = Alignment.BottomCenter
-                                                                                ) {
-                                                                                        Text(
-                                                                                                text = footer,
-                                                                                                color = if (isDarkMode || index == selectedIndex) Color.White else Color.Black,
-                                                                                                fontSize = 9.sp
-                                                                                        )
-                                                                                }
-                                                                        }
-                                                                        Text(
-                                                                                text = element.text.textCased(displayTextCase),
-                                                                                color = if (isDarkMode || index == selectedIndex) Color.White else Color.Black,
-                                                                                fontSize = if (element.isTextSingular) 24.sp else 20.sp
-                                                                        )
                                                                 }
+                                                                element.footer?.let { footer ->
+                                                                        Box(
+                                                                                modifier = Modifier
+                                                                                        .alpha(0.75f)
+                                                                                        .fillMaxSize(),
+                                                                                contentAlignment = Alignment.BottomCenter
+                                                                        ) {
+                                                                                Text(
+                                                                                        text = footer,
+                                                                                        color = if (isDarkMode || index == selectedIndex) Color.White else Color.Black,
+                                                                                        fontSize = 9.sp
+                                                                                )
+                                                                        }
+                                                                }
+                                                                Text(
+                                                                        text = element.text.textCased(displayTextCase),
+                                                                        color = if (isDarkMode || index == selectedIndex) Color.White else Color.Black,
+                                                                        fontSize = if (element.isTextSingular) 24.sp else 20.sp
+                                                                )
                                                         }
                                                 }
                                         }
