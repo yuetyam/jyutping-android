@@ -953,7 +953,34 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 candidates.value = emptyList()
                                 candidateState.value += 1L
                         }
-                        Combo.Special -> {}
+                        Combo.Special -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
+                                if (newValue.size < 2) {
+                                        withContext(Dispatchers.Main) {
+                                                currentInputConnection.setComposingText(VirtualInputKey.letterR.text, 1)
+                                                candidates.value = emptyList()
+                                                updateInputSessionStates()
+                                        }
+                                } else {
+                                        val keys = newValue.drop(1)
+                                        val queriedDeferred = async { PinyinResearcher.nineKeyReverseLookup(keys, db) }
+                                        val queried = queriedDeferred.await()
+                                        val suggestions = queried.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
+                                        val tailMark: String = run {
+                                                val firstCandidate = suggestions.firstOrNull()
+                                                if (firstCandidate?.lexicon?.inputCount == keys.size) {
+                                                        firstCandidate.lexicon.mark
+                                                } else {
+                                                        keys.joinToString(separator = PresetString.EMPTY) { it.letters.first() }
+                                                }
+                                        }
+                                        val mark: String = VirtualInputKey.letterR.text + PresetString.SPACE + tailMark
+                                        withContext(Dispatchers.Main) {
+                                                currentInputConnection.setComposingText(mark, 1)
+                                                candidates.value = suggestions
+                                                updateInputSessionStates()
+                                        }
+                                }
+                        }
                         else -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val memoryDeferred = async { if (isInputMemoryOn.value) memoryHelper.nineKeyMemorySearch(newValue) else emptyList() }
                                 val textMarksDeprecated = async { if (isEnglishSuggestionsOn.value) db.queryTextMarks(newValue) else emptyList() }
@@ -994,40 +1021,33 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 val item: Candidate = candidate ?: candidates.value.getOrNull(index) ?: return
                 currentInputConnection.commitText(item.text, 1)
                 when (keyboardLayout.value) {
-                        KeyboardLayout.Qwerty, KeyboardLayout.TripleStroke -> {
-                                val firstKey = bufferEvents.firstOrNull()?.key ?: return
-                                if (firstKey.isReverseLookupTrigger) {
-                                        selectedLexicons.clear()
-                                        var tail = bufferEvents.drop(item.lexicon.inputCount + 1)
-                                        while (tail.firstOrNull()?.key?.isApostrophe ?: false) {
-                                                tail = tail.drop(1)
-                                        }
-                                        val tailLength = tail.size
-                                        if (tailLength < 1) {
-                                                clearBuffer()
-                                        } else {
-                                                bufferEvents = bufferEvents.take(1) + bufferEvents.takeLast(tailLength)
-                                        }
-                                } else {
-                                        if (item.isCantonese) {
-                                                selectedLexicons.add(item.lexicon)
-                                        } else {
-                                                selectedLexicons.clear()
-                                        }
-                                        val inputLength: Int = item.lexicon.input.replace(Regex("[456]"), "RR").length
-                                        var tail = bufferEvents.drop(inputLength)
-                                        while (tail.firstOrNull()?.key?.isApostrophe ?: false) {
-                                                tail = tail.drop(1)
-                                        }
-                                        val tailLength = tail.size
-                                        if (tailLength < 1) {
-                                                clearBuffer()
-                                        } else {
-                                                bufferEvents = bufferEvents.takeLast(tailLength)
-                                        }
+                        KeyboardLayout.Qwerty, KeyboardLayout.TripleStroke -> if (bufferEvents.first().key.isReverseLookupTrigger) {
+                                selectedLexicons.clear()
+                                var tail = bufferEvents.drop(item.lexicon.inputCount + 1)
+                                while (tail.firstOrNull()?.key?.isApostrophe ?: false) {
+                                        tail = tail.drop(1)
                                 }
+                                val tailLength = tail.size
+                                bufferEvents = if (tailLength < 1) emptyList() else (bufferEvents.take(1) + bufferEvents.takeLast(tailLength))
+                        } else {
+                                if (item.isCantonese) {
+                                        selectedLexicons.add(item.lexicon)
+                                } else {
+                                        selectedLexicons.clear()
+                                }
+                                val inputLength: Int = item.lexicon.input.replace(Regex("[456]"), "RR").length
+                                var tail = bufferEvents.drop(inputLength)
+                                while (tail.firstOrNull()?.key?.isApostrophe ?: false) {
+                                        tail = tail.drop(1)
+                                }
+                                val tailLength = tail.size
+                                bufferEvents = if (tailLength < 1) emptyList() else bufferEvents.takeLast(tailLength)
                         }
-                        KeyboardLayout.NineKey -> {
+                        KeyboardLayout.NineKey -> if (bufferCombos.first().isSpecial) {
+                                selectedLexicons.clear()
+                                val tailLength: Int = (bufferCombos.size - 1) - item.lexicon.inputCount
+                                bufferCombos = if (tailLength < 1) emptyList() else (bufferCombos.take(1) + bufferCombos.takeLast(tailLength))
+                        } else {
                                 if (item.isCantonese) {
                                         selectedLexicons.add(item.lexicon)
                                 } else {

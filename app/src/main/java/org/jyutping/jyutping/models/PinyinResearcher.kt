@@ -2,6 +2,7 @@ package org.jyutping.jyutping.models
 
 import org.jyutping.jyutping.extensions.isSpace
 import org.jyutping.jyutping.extensions.negative
+import org.jyutping.jyutping.ninekey.Combo
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import kotlin.math.max
@@ -41,6 +42,21 @@ object PinyinResearcher {
                                                 }
                                 }
                 }
+        }
+        fun nineKeyReverseLookup(combos: List<Combo>, db: DatabaseHelper): List<Lexicon> {
+                return db.pinyinNineKeySearch(combos)
+                        .flatMap { lexicon ->
+                                db.lookupRomanization(lexicon.text)
+                                        .map { romanization ->
+                                                Lexicon(
+                                                        text = lexicon.text,
+                                                        romanization = romanization,
+                                                        input = lexicon.input,
+                                                        mark = lexicon.mark,
+                                                        number = lexicon.number
+                                                )
+                                        }
+                        }
         }
 }
 
@@ -189,6 +205,70 @@ private fun DatabaseHelper.pinyinSpellMatch(text: String, limit: Int? = null): L
                 val word = cursor.getString(1)
                 val pinyin = cursor.getString(2)
                 val instance = PinyinLexicon(text = word, pinyin = pinyin, input = text, mark = pinyin, number = rowID)
+                items.add(instance)
+        }
+        cursor.close()
+        return items
+}
+
+private fun DatabaseHelper.pinyinNineKeySearch(combos: List<Combo>, limit: Int? = null): List<PinyinLexicon> {
+        val inputLength: Int = combos.size
+        val fullCode: Long = combos.map { it.digit }.decimalCombined()
+        when (inputLength) {
+                0 -> return emptyList()
+                1 -> return pinyinNineKeyCodeMatch(fullCode, limit) + pinyinNineKeyAnchorsMatch(fullCode, 100)
+                else -> {}
+        }
+        val fullMatched = pinyinNineKeyCodeMatch(fullCode, limit)
+        val idealAnchorsMatched = pinyinNineKeyAnchorsMatch(fullCode, 4)
+        val codeMatched: List<PinyinLexicon> = 1.rangeUntil(inputLength).flatMap { number ->
+                val code = combos.dropLast(number).map { it.digit }.decimalCombined()
+                return@flatMap if (code < 1) emptyList() else pinyinNineKeyCodeMatch(code, limit)
+        }
+        val anchorsMatched: List<PinyinLexicon> = 0.rangeUntil(inputLength).flatMap { number ->
+                val code = combos.dropLast(number).map { it.digit }.decimalCombined()
+                return@flatMap if (code < 1) emptyList() else pinyinNineKeyAnchorsMatch(code, limit)
+        }
+        val queried = (fullMatched + idealAnchorsMatched + codeMatched + anchorsMatched)
+        val firstInputCount = queried.firstOrNull()?.inputCount ?: 0
+        if (firstInputCount >= inputLength) return queried
+        val tailCombos = combos.drop(firstInputCount)
+        val tailCode = tailCombos.map { it.digit }.decimalCombined()
+        if (tailCode < 1) return queried
+        val tailLexicons = pinyinNineKeyCodeMatch(tailCode, 20) + pinyinNineKeyAnchorsMatch(tailCode, 20)
+        if (tailLexicons.isEmpty()) return queried
+        val head = queried.firstOrNull() ?: return queried
+        val concatenated = tailLexicons.map { head + it }.sorted().take(1)
+        return concatenated + queried
+}
+private fun DatabaseHelper.pinyinNineKeyAnchorsMatch(code: Long, limit: Int? = null): List<PinyinLexicon> {
+        if (code < 1) return emptyList()
+        val items: MutableList<PinyinLexicon> = mutableListOf()
+        val limitValue: Int = limit ?: 30
+        val command = "SELECT rowid, word, romanization FROM pinyin_lexicon WHERE nine_key_anchors = $code LIMIT ${limitValue};"
+        val cursor = this.readableDatabase.rawQuery(command, null)
+        while (cursor.moveToNext()) {
+                val rowID = cursor.getInt(0)
+                val word = cursor.getString(1)
+                val pinyin = cursor.getString(2)
+                val anchors = pinyin.split(PresetString.SPACE).mapNotNull { it.firstOrNull() }.joinToString(separator = PresetString.EMPTY)
+                val instance = PinyinLexicon(text = word, pinyin = pinyin, input = anchors, mark = anchors, number = rowID)
+                items.add(instance)
+        }
+        cursor.close()
+        return items
+}
+private fun DatabaseHelper.pinyinNineKeyCodeMatch(code: Long, limit: Int? = null): List<PinyinLexicon> {
+        if (code < 1) return emptyList()
+        val items: MutableList<PinyinLexicon> = mutableListOf()
+        val limitValue: Int = limit ?: -1
+        val command = "SELECT rowid, word, romanization FROM pinyin_lexicon WHERE nine_key_code = $code LIMIT ${limitValue};"
+        val cursor = this.readableDatabase.rawQuery(command, null)
+        while (cursor.moveToNext()) {
+                val rowID = cursor.getInt(0)
+                val word = cursor.getString(1)
+                val pinyin = cursor.getString(2)
+                val instance = PinyinLexicon(text = word, pinyin = pinyin, input = pinyin.filterNot { it.isSpace }, mark = pinyin, number = rowID)
                 items.add(instance)
         }
         cursor.close()

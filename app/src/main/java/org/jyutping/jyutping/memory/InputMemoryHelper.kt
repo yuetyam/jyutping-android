@@ -397,7 +397,7 @@ private fun InputMemoryHelper.strictMatch(spell: Int, shortcut: Int, input: Stri
 
 fun InputMemoryHelper.nineKeyMemorySearch(combos: List<Combo>): List<Lexicon> {
         val inputLength: Int = combos.size
-        val fullCode: Long = combos.map { it.number }.decimalCombined()
+        val fullCode: Long = combos.map { it.digit }.decimalCombined()
         when (inputLength) {
                 0 -> return emptyList()
                 1 -> return (nineKeyCodeMatch(fullCode, 100) + nineKeyAnchorsMatch(fullCode, 5)).map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -1) }
@@ -409,7 +409,7 @@ fun InputMemoryHelper.nineKeyMemorySearch(combos: List<Combo>): List<Lexicon> {
                 .distinct()
                 .map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -1) }
         val queried = 1.rangeUntil(inputLength).flatMap { number ->
-                val code = combos.dropLast(number).map { it.number }.decimalCombined()
+                val code = combos.dropLast(number).map { it.digit }.decimalCombined()
                 return@flatMap if (code < 1) emptyList() else nineKeyCodeMatch(code, limit = 4)
         }.distinct().take(6).map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -2) }
         return ideal + queried

@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
@@ -33,6 +34,7 @@ import org.jyutping.jyutping.utilities.ToolBox
 fun NineKeySpecialKey(modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val isBuffering by context.isBuffering.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
@@ -49,7 +51,9 @@ fun NineKeySpecialKey(modifier: Modifier) {
                                                 isPressing = false
                                         },
                                         onTap = {
-                                                // context.nineKeyProcess(Combo.Special)
+                                                if (isBuffering.negative) {
+                                                        context.nineKeyProcess(Combo.Special)
+                                                }
                                         }
                                 )
                         }
@@ -69,8 +73,7 @@ fun NineKeySpecialKey(modifier: Modifier) {
                 Box(
 
                         modifier = Modifier
-                                // .alpha(0.35f)
-                                .alpha(0f)
+                                .alpha(if (isBuffering) 0f else 0.35f)
                                 .padding(bottom = 2.dp)
                                 .fillMaxSize(),
                         contentAlignment = Alignment.BottomCenter
@@ -83,7 +86,7 @@ fun NineKeySpecialKey(modifier: Modifier) {
                 }
                 Text(
                         text = Combo.Special.text,
-                        modifier = Modifier.alpha(0f),
+                        modifier = Modifier.alpha(if (isBuffering) 0f else 1f),
                         color = if (isDarkMode) Color.White else Color.Black,
                         fontSize = 16.sp,
                 )

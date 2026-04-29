@@ -25,14 +25,14 @@ data class PinyinLexicon(
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true
                 if (other !is PinyinLexicon) return false
-                return this.text == other.text && this.input == other.input
+                return (text == other.text) && (input == other.input)
         }
         override fun hashCode(): Int {
                 return text.hashCode() * 31 + input.hashCode()
         }
         override fun compareTo(other: PinyinLexicon): Int {
-                return this.inputCount.compareTo(other.inputCount).unaryMinus()
-                        .takeIf { it != 0 } ?: this.number.compareTo(other.number)
+                return inputCount.compareTo(other.inputCount).unaryMinus()
+                        .takeIf { it != 0 } ?: number.compareTo(other.number)
         }
         operator fun plus(another: PinyinLexicon): PinyinLexicon {
                 val newText: String = this.text + another.text

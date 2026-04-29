@@ -12,7 +12,7 @@ import org.jyutping.jyutping.utilities.DatabaseHelper
 object NineKeyResearcher {
         fun nineKeySearch(combos: List<Combo>, limit: Int? = null, db: DatabaseHelper): List<Lexicon> {
                 val inputLength: Int = combos.size
-                val fullCode: Long = combos.map { it.number }.decimalCombined()
+                val fullCode: Long = combos.map { it.digit }.decimalCombined()
                 when (inputLength) {
                         0 -> return emptyList()
                         1 -> return db.nineKeyCodeMatch(fullCode, limit) + db.nineKeyAnchorsMatch(fullCode, 100)
@@ -21,18 +21,18 @@ object NineKeyResearcher {
                 val fullMatched = db.nineKeyCodeMatch(fullCode, limit)
                 val idealAnchorsMatched = db.nineKeyAnchorsMatch(fullCode, 4)
                 val codeMatched: List<Lexicon> = 1.rangeUntil(inputLength).flatMap { number ->
-                        val code = combos.dropLast(number).map { it.number }.decimalCombined()
+                        val code = combos.dropLast(number).map { it.digit }.decimalCombined()
                         return@flatMap if (code < 1) emptyList() else db.nineKeyCodeMatch(code, limit)
                 }
                 val anchorsMatched: List<Lexicon> = 0.rangeUntil(inputLength).flatMap { number ->
-                        val code = combos.dropLast(number).map { it.number }.decimalCombined()
+                        val code = combos.dropLast(number).map { it.digit }.decimalCombined()
                         return@flatMap if (code < 1) emptyList() else db.nineKeyAnchorsMatch(code, limit)
                 }
                 val queried = (fullMatched + idealAnchorsMatched + codeMatched + anchorsMatched)
                 val firstInputCount = queried.firstOrNull()?.inputCount ?: 0
                 if (firstInputCount >= inputLength) return queried
                 val tailCombos = combos.drop(firstInputCount)
-                val tailCode = tailCombos.map { it.number }.decimalCombined()
+                val tailCode = tailCombos.map { it.digit }.decimalCombined()
                 if (tailCode < 1) return queried
                 val tailLexicons = db.nineKeyCodeMatch(tailCode, 20) + db.nineKeyAnchorsMatch(tailCode, 20)
                 if (tailLexicons.isEmpty()) return queried
@@ -79,7 +79,7 @@ private fun DatabaseHelper.nineKeyCodeMatch(code: Long, limit: Int? = null): Lis
 }
 
 fun DatabaseHelper.queryTextMarks(combos: List<Combo>): List<Lexicon> {
-        val code = combos.map { it.number }.decimalCombined()
+        val code = combos.map { it.digit }.decimalCombined()
         if (code < 1) return emptyList()
         val items: MutableList<Lexicon> = mutableListOf()
         val command = "SELECT input, mark FROM mark_table WHERE nine_key_code = ${code};"
@@ -95,7 +95,7 @@ fun DatabaseHelper.queryTextMarks(combos: List<Combo>): List<Lexicon> {
 }
 
 fun DatabaseHelper.nineKeySearchSymbols(combos: List<Combo>): List<Lexicon> {
-        val code = combos.map { it.number }.decimalCombined()
+        val code = combos.map { it.digit }.decimalCombined()
         if (code < 1) return emptyList()
         val command = "SELECT category, unicode_version, code_point, cantonese, romanization FROM symbol_table WHERE nine_key_code = ${code};"
         val cursor = this.readableDatabase.rawQuery(command, null)

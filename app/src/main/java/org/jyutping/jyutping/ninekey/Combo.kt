@@ -2,9 +2,9 @@ package org.jyutping.jyutping.ninekey
 
 /**
  * 10-key / T9 keyboard element
- * @param number Key number; identified code
+ * @param digit Key number; identified code
  * */
-enum class Combo(val number: Int) {
+enum class Combo(val digit: Int) {
 
         Special(1),
         ABC(2),
@@ -15,6 +15,9 @@ enum class Combo(val number: Int) {
         PQRS(7),
         TUV(8),
         WXYZ(9);
+
+        val isSpecial: Boolean
+                get() = (this == Special)
 
         /** Key display text */
         val text: String
