@@ -115,13 +115,13 @@ fun LetterKey(virtual: VirtualInputKey, modifier: Modifier, position: Alignment.
                                 Alignment.End -> (baseSize.width / 4F * density.density).toInt().unaryMinus()
                                 else -> 0
                         }
-                        val offsetY: Int = (baseSize.height * 1.5F / 2F * density.density).toInt().unaryMinus()
+                        val offsetY: Int = (baseSize.height * 1.35F / 2F * density.density).toInt().unaryMinus()
                         val width: Float = when (position) {
                                 Alignment.Start -> baseSize.width / 2F * 3F
                                 Alignment.End -> baseSize.width / 2F * 3F
                                 else -> baseSize.width / 3F * 5F
                         }
-                        val height: Float = baseSize.height * 2.5F
+                        val height: Float = baseSize.height * 2.4F
                         Box(
                                 modifier = Modifier
                                         .offset { IntOffset(offsetX, offsetY) }
@@ -140,7 +140,7 @@ fun LetterKey(virtual: VirtualInputKey, modifier: Modifier, position: Alignment.
                         ) {
                                 Text(
                                         text = virtual.text.textCased(displayTextCase),
-                                        modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
+                                        modifier = Modifier.padding(bottom = (baseSize.height * 1.25F).dp),
                                         color = if (isDarkMode) Color.White else Color.Black,
                                         fontSize = 32.sp
                                 )

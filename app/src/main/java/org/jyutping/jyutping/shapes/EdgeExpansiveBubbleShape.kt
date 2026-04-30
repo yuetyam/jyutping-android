@@ -42,7 +42,7 @@ class EdgeExpansiveBubbleShape(
         private fun leftBasedPath(size: Size, density: Density): Path {
                 val maxWidth = size.width
                 val height = size.height
-                val curveHeight: Float = height / 5F
+                val curveHeight: Float = height / 6F
                 val keyHeight: Float = (height - curveHeight) / 2F
                 val keyWidth = maxWidth / (4F + 3F * expansionCount) * 3F
                 val curveWidth: Float = keyWidth / 3F
@@ -129,7 +129,7 @@ class EdgeExpansiveBubbleShape(
         private fun rightBasedPath(size: Size, density: Density): Path {
                 val maxWidth = size.width
                 val height = size.height
-                val curveHeight: Float = height / 5F
+                val curveHeight: Float = height / 6F
                 val keyHeight: Float = (height - curveHeight) / 2F
                 val keyWidth = maxWidth / (4F + 3F * expansionCount) * 3F
                 val curveWidth: Float = keyWidth / 3F

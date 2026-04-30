@@ -195,9 +195,9 @@ fun EnhancedBottomInputKey(
                 }
                 if (shouldPreviewKey && isTouching) {
                         val shape: Shape = BubbleShape()
-                        val offsetY: Int = (baseSize.height * 1.5F / 2F * density.density).toInt().unaryMinus()
+                        val offsetY: Int = (baseSize.height * 1.35F / 2F * density.density).toInt().unaryMinus()
                         val width: Float = baseSize.width / 3F * 5F
-                        val height: Float = baseSize.height * 2.5F
+                        val height: Float = baseSize.height * 2.4F
                         Box(
                                 modifier = Modifier
                                         .offset { IntOffset(0, offsetY) }
@@ -216,7 +216,7 @@ fun EnhancedBottomInputKey(
                         ) {
                                 Text(
                                         text = keyModel.primary.text,
-                                        modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
+                                        modifier = Modifier.padding(bottom = (baseSize.height * 1.25F).dp),
                                         color = if (isDarkMode) Color.White else Color.Black,
                                         fontSize = if (keyModel.primary.isTextSingular) 32.sp else 22.sp
                                 )
@@ -227,9 +227,9 @@ fun EnhancedBottomInputKey(
                         val shape: Shape = ExpansiveBubbleShape(side = side, expansionCount = expansionCount)
                         val adjustWidth = (baseSize.width * expansionCount / 2F * density.density).toInt()
                         val offsetX: Int = if (side.isLeft) adjustWidth else adjustWidth.unaryMinus()
-                        val offsetY: Int = (baseSize.height * 1.5F / 2F * density.density).toInt().unaryMinus()
+                        val offsetY: Int = (baseSize.height * 1.35F / 2F * density.density).toInt().unaryMinus()
                         val width: Float = (baseSize.width / 3F * 5F) + (baseSize.width * expansionCount)
-                        val height: Float = baseSize.height * 2.5F
+                        val height: Float = baseSize.height * 2.4F
                         val memberIndices = if (side.isLeft) keyModel.members.indices else keyModel.members.indices.reversed()
                         Box(
                                 modifier = Modifier
@@ -250,7 +250,7 @@ fun EnhancedBottomInputKey(
                                 Row(
                                         modifier = Modifier
                                                 .padding(
-                                                        bottom = (baseSize.height * 1.3F).dp,
+                                                        bottom = (baseSize.height * 1.25F).dp,
                                                         start = (baseSize.width / 3F).dp,
                                                         end = (baseSize.width / 3F).dp,
                                                 ),

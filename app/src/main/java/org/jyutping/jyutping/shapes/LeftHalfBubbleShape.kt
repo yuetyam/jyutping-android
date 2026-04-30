@@ -25,6 +25,11 @@ import org.jyutping.jyutping.presets.PresetConstant
 //        +   |       |   +
 //        +---A---o-------+
 
+@Deprecated(
+        message = "Use HalfBubbleShape(side:) instead",
+        replaceWith = ReplaceWith("HalfBubbleShape()"),
+        level = DeprecationLevel.ERROR
+)
 class LeftHalfBubbleShape : Shape {
         override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
                 val width = size.width
@@ -33,7 +38,7 @@ class LeftHalfBubbleShape : Shape {
                 val keyCornerRadius: Float = PresetConstant.keyCornerRadius * 2F * density.density
                 val previewCornerRadius: Float = PresetConstant.keyCornerRadius * 1.62F * 2F * density.density
                 val curveWidth: Float = width / 3F
-                val curveHeight: Float = if (isPhoneLandscape) (height / 3F) else (height / 5F)
+                val curveHeight: Float = if (isPhoneLandscape) (height / 3F) else (height / 6F)
                 val keyWidth: Float = width - curveWidth
                 val keyHeight: Float = (height - curveHeight) / 2F
                 val pointO = Offset(x = width - (keyWidth / 2F), y = height)

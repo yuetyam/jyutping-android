@@ -125,9 +125,9 @@ fun StrokeKey(virtual: VirtualInputKey, modifier: Modifier) {
                 }
                 if ((keyStroke != null) && shouldPreviewKey && isPressing) {
                         val shape = BubbleShape()
-                        val offsetY: Int = (baseSize.height * 1.5F / 2F * density.density).toInt().unaryMinus()
+                        val offsetY: Int = (baseSize.height * 1.35F / 2F * density.density).toInt().unaryMinus()
                         val width: Float = baseSize.width / 3F * 5F
-                        val height: Float = baseSize.height * 2.5F
+                        val height: Float = baseSize.height * 2.4F
                         Box(
                                 modifier = Modifier
                                         .offset { IntOffset(0, offsetY) }
@@ -146,7 +146,7 @@ fun StrokeKey(virtual: VirtualInputKey, modifier: Modifier) {
                         ) {
                                 Text(
                                         text = keyStroke,
-                                        modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
+                                        modifier = Modifier.padding(bottom = (baseSize.height * 1.25F).dp),
                                         color = if (isDarkMode) Color.White else Color.Black,
                                         style = MaterialTheme.typography.headlineLarge
                                 )

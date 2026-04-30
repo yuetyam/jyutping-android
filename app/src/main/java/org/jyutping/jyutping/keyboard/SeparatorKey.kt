@@ -116,9 +116,9 @@ fun SeparatorKey(modifier: Modifier) {
                 }
                 if (shouldPreviewKey && isPressing) {
                         val shape = BubbleShape()
-                        val offsetY: Int = (baseSize.height * 1.5F / 2F * density.density).toInt().unaryMinus()
+                        val offsetY: Int = (baseSize.height * 1.35F / 2F * density.density).toInt().unaryMinus()
                         val width: Float = baseSize.width / 3F * 5F
-                        val height: Float = baseSize.height * 2.5F
+                        val height: Float = baseSize.height * 2.4F
                         Box(
                                 modifier = Modifier
                                         .offset { IntOffset(0, offsetY) }
@@ -137,7 +137,7 @@ fun SeparatorKey(modifier: Modifier) {
                         ) {
                                 Text(
                                         text = PresetString.APOSTROPHE,
-                                        modifier = Modifier.padding(bottom = (baseSize.height * 1.3F).dp),
+                                        modifier = Modifier.padding(bottom = (baseSize.height * 1.25F).dp),
                                         color = textColor,
                                         fontSize = 32.sp
                                 )

@@ -44,7 +44,7 @@ class ExpansiveBubbleShape(
                 val height = size.height
 
                 // C to D
-                val curveHeight: Float = height / 5F
+                val curveHeight: Float = height / 6F
 
                 // A to C
                 val keyHeight: Float = (height - curveHeight) / 2F
@@ -160,7 +160,7 @@ class ExpansiveBubbleShape(
                 val height = size.height
 
                 // C to D
-                val curveHeight: Float = height / 5F
+                val curveHeight: Float = height / 6F
 
                 // A to C
                 val keyHeight: Float = (height - curveHeight) / 2F
