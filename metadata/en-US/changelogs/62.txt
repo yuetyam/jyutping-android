@@ -1,0 +1,5 @@
+1. Added a 9-key (T9) Jyutping keyboard layout.
+2. Added a 9-key (T9) layout option for Stroke-based Jyutping reverse lookup.
+3. Improved performance, reducing key press latency and input lag.
+4. Refined the main app interface.
+5. Updated the app icon.

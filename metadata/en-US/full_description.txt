@@ -1,38 +1,42 @@
-Jyutping keyboard is a precise, fluent and easy-to-use Cantonese input method.
-It fully supports the LSHK Jyutping romanization system, helping you type quickly and accurately, and making the typing experience effortless and enjoyable.
+Jyutping is a Cantonese input method that is intuitive and efficient—making typing fast, accurate, and effortless.
+Type Cantonese just as you speak it — naturally and fluently.
+Every input reinforces your pronunciation. The more you use Jyutping, the more familiar you become with Cantonese.
 
-With Jyutping, every input reinforces your pronunciation. The more you type with Jyutping, the more proficient you'll become in Cantonese.
+Ready to use right out of the box, with virtually no complicated setup.
+Open source, ad-free, and fully offline — no privacy concerns.
 
-It's ready to use right out of the box; no complicated setup required.
-Completely free, open source, and ad-free. Works entirely offline, so you never have to worry about privacy concerns.
-
-You can reverse lookup Jyutping using input methods you're familiar with, such as Mandarin Pinyin, Cangjie, Quick (Sucheng), or Stroke input.
+Based on the Jyutping romanization scheme developed by the Linguistic Society of Hong Kong (LSHK), and compatible with various spelling habits.
+You can perform reverse lookup of Jyutping using Mandarin Pinyin, Cangjie, Quick (Sucheng), Stroke input, and character decomposition. Detailed explanations are available within the app.
 
 Keyboard feature highlights:
-• Regular Jyutping input: For example, neihou → 你好.
-• Abbreviated input with Jyutping initials: For example, nh / nhou / neih → 你好.
-• Accurate input with Jyutping tones: Type precisely while helping learners become familiar with Cantonese tones.
-• Jyutping annotations/hints on candidates: Makes it easier to get started, while letting you practice, review, and correct pronunciation.
-• Supports Traditional and Simplified Chinese characters: Freely switch between scripts. Traditional characters follow both Hong Kong and Taiwan standards.
-• Reverse lookup with Mandarin Pinyin: Start with r, then enter Mandarin Pinyin (e.g., rlin → 林).
-• Reverse lookup with Cangjie or Quick (Sucheng): Start with v, then enter Cangjie or Quick code (e.g., vdd → 林).
-• Reverse lookup with Stroke input: Start with x, then enter Stroke code (e.g., xwsad → 木).
-• Reverse lookup with character components: Start with q, then input the Jyutping of two component characters (e.g., qmukmuk → 林).
-• Emoji candidate suggestions: Match Cantonese words. For example, typing “daai cung (大蟲)” gives you the tiger emoji.
-• Massive Cantonese vocabulary, aligned with Cantonese sentence structure, ensures smooth and fluent typing.
-• Convenient tools for copying, cutting, pasting, and moving the cursor backward/forward.
-• Sound and haptic feedback with multiple options available.
+• Standard Jyutping input, e.g. neihou → 你好
+• Abbreviated Jyutping input, e.g. nh / nhou / neih → 你好
+• Tone input support for greater accuracy, helping learners master Cantonese tones and pronunciation
+• Candidate words display corresponding Jyutping syllables, making typing easier while reinforcing correct pronunciation
+• Supports both Traditional and Simplified Chinese characters, with Traditional characters distinguishing between Hong Kong and Taiwan standards
+• Reverse lookup via Mandarin Pinyin: prefix with R (e.g. rlin → 林)
+• Reverse lookup via Cangjie or Quick (Sucheng): prefix with V (e.g. vdd → 林)
+• Reverse lookup via stroke input: prefix with X (e.g. xwsad → 木)
+• Reverse lookup via character decomposition: prefix with Q (e.g. qmukmuk → 林)
+• Emoji suggestions that match Cantonese expressions, e.g. daai cung (大蟲) suggests the tiger emoji
+• A rich vocabulary tailored to Cantonese usage and grammar for smooth, natural typing
+• Includes common English vocabulary for seamless bilingual input
+• Multiple keyboard layouts available: 26-key QWERTY, 26-key triple-spell, 9-key (T9), etc.
+• Fully supports light and dark modes, with adjustable keyboard height
+• Convenient editing tools: copy, cut, paste, and cursor movement
+• Optional sound and haptic feedback for key presses
 
-Key features of the main app:
-• Detailed guide to all Jyutping keyboard functions.
-• Jyutping romanization scheme tables.
-• Common Cantonese words and expressions.
-• Pronunciation of frequently used Cantonese words.
-• Cantonese pronunciation search and dictionary lookup.
-• Text-to-Jyutping conversion.
-• Cantonese text-to-speech.
+The main app provides extensive Cantonese resources for convenient learning and reference:
+• Detailed guides for using all Jyutping keyboard functions
+• Jyutping scheme tables of initials, finals, and tones
+• Common Cantonese phrases and expressions
+• Pronunciations of commonly used Cantonese words
+• Cantonese pronunciation lookup and dictionary search
+• Text-to-Jyutping conversion
+• Cantonese text-to-speech
 
-We do not collect or share any personal information.
+We respect user privacy and do not collect any personal information.
+
 This app is fully open source on GitHub:
 https://github.com/yuetyam/jyutping-android
 
