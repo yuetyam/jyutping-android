@@ -7,6 +7,4 @@ object PresetConstant {
         const val largeKeyCornerRadius: Float = 8f
         const val SpaceKeyLongPressHint: String = "← →"
         const val FrequentEmojiCount: Int = 30
-        const val keyboardPackageName: String = "org.jyutping.jyutping"
-        const val keyboardId: String = "org.jyutping.jyutping/.JyutpingInputMethodService"
 }

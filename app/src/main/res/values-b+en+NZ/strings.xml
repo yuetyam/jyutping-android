@@ -6,6 +6,7 @@
     <string name="screen_title_jyutping">Jyutping</string>
     <string name="screen_title_cantonese">Cantonese</string>
     <string name="screen_title_about">About</string>
+    <string name="general_go_to_settings">Go to Settings</string>
     <string name="search_field_placeholder">Search Pronunciation</string>
     <string name="home_button_enable_keyboard">Enable this keyboard</string>
     <string name="home_button_select_keyboard">Select this keyboard</string>
@@ -38,6 +39,11 @@
     <string name="introductions_content_forget_candidate">Long-press on a Candidate can delete it from Input Memory.</string>
     <string name="introductions_heading_position_insertion_point">Moving the insertion point</string>
     <string name="introductions_content_position_insertion_point">Touch and hold the Space bar until the keyboard triggers sound and haptic feedback; then, slide your finger left or right.</string>
+    <string name="home_label_display_languages">Change Display Language</string>
+    <string name="screen_title_display_languages">Display Languages</string>
+    <string name="display_languages_heading">Change Display Language</string>
+    <string name="display_languages_content">Starting from Android 13, apps can support per-app language settings.</string>
+    <string name="display_languages_sub_content">However, keyboards can’t support per-app language settings due to system limitations.</string>
     <string name="jyutping_label_initials">Jyutping Initials</string>
     <string name="jyutping_label_finals">Jyutping Finals</string>
     <string name="jyutping_label_tones">Jyutping Tones</string>

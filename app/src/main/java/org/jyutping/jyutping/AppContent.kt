@@ -8,6 +8,7 @@ import org.jyutping.jyutping.app.about.AboutScreen
 import org.jyutping.jyutping.app.cantonese.CantoneseScreen
 import org.jyutping.jyutping.app.cantonese.ConfusionScreen
 import org.jyutping.jyutping.app.cantonese.ExpressionsScreen
+import org.jyutping.jyutping.app.home.DisplayLanguagesScreen
 import org.jyutping.jyutping.app.home.HomeScreen
 import org.jyutping.jyutping.app.home.IntroductionsScreen
 import org.jyutping.jyutping.app.home.TextToSpeechScreen
@@ -39,6 +40,9 @@ fun AppContent(navController: NavHostController) {
                 }
                 composable(route = Screen.Introductions.route) {
                         IntroductionsScreen()
+                }
+                composable(route = Screen.DisplayLanguages.route) {
+                        DisplayLanguagesScreen()
                 }
                 composable(route = Screen.JyutpingInitials.route) {
                         JyutpingInitialsScreen()

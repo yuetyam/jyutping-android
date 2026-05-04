@@ -7,14 +7,13 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.jyutping.jyutping.presets.PresetConstant
 import java.util.Locale
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 class TTSProvider(private val context: Context?) : TextToSpeech.OnInitListener {
 
-        private val logTag: String = PresetConstant.keyboardPackageName + ".tts"
+        private val logTag: String = "org.jyutping.jyutping.tts"
 
         private var tts: TextToSpeech? = null
 

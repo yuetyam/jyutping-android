@@ -6,6 +6,7 @@
     <string name="screen_title_jyutping">粵拼</string>
     <string name="screen_title_cantonese">粵語</string>
     <string name="screen_title_about">關於</string>
+    <string name="general_go_to_settings">前往設置</string>
     <string name="search_field_placeholder">查字音</string>
     <string name="home_button_enable_keyboard">啓用鍵盤</string>
     <string name="home_button_select_keyboard">選擇鍵盤</string>
@@ -21,7 +22,7 @@
     <string name="guide_pinyin_reverse_lookup_body">以 r 開始，再輸入普通話拼音，例如 rlin → 林。</string>
     <string name="guide_cangjie_reverse_lookup_heading">用倉頡／速成反查粵拼</string>
     <string name="guide_cangjie_reverse_lookup_body">以 v 開始，再輸入倉頡或速成碼，例如 vdd → 林。</string>
-    <string name="guide_cangjie_reverse_lookup_note">鍵盤設定介面可以揀倉頡、速成版本。</string>
+    <string name="guide_cangjie_reverse_lookup_note">鍵盤設置介面可以揀倉頡、速成版本。</string>
     <string name="guide_stroke_reverse_lookup_heading">用筆畫輸入反查粵拼</string>
     <string name="guide_stroke_reverse_lookup_body">以 x 開始，再輸入筆畫碼，例如 xwsad → 木。</string>
     <string name="guide_stroke_reverse_lookup_examples">筆畫輸入</string>
@@ -38,6 +39,11 @@
     <string name="introductions_content_forget_candidate">長按某一個候選詞可以將佢從輸入記憶刪除。</string>
     <string name="introductions_heading_position_insertion_point">移動文字輸入位置</string>
     <string name="introductions_content_position_insertion_point">長按空格鍵(Space)直到觸發鍵盤聲音以及觸感回應，然後向左或者向右滑動手指。</string>
+    <string name="home_label_display_languages">更改介面顯示語言</string>
+    <string name="screen_title_display_languages">顯示語言</string>
+    <string name="display_languages_heading">更改介面顯示語言</string>
+    <string name="display_languages_content">從 Android 13 開始，應用可以適配系統爲其單獨設置介面顯示語言。</string>
+    <string name="display_languages_sub_content">之但係，由於系統局限，鍵盤介面顯示語言無此設置項。</string>
     <string name="jyutping_label_initials">粵拼聲母表</string>
     <string name="jyutping_label_finals">粵拼韻母表</string>
     <string name="jyutping_label_tones">粵拼聲調表</string>

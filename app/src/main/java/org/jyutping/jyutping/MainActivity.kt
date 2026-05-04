@@ -97,6 +97,7 @@ class MainActivity : ComponentActivity() {
                 Screen.Home.route -> Screen.Home.title
                 Screen.TextToSpeech.route -> Screen.TextToSpeech.title
                 Screen.Introductions.route -> Screen.Introductions.title
+                Screen.DisplayLanguages.route -> Screen.DisplayLanguages.title
                 Screen.Jyutping.route -> Screen.Jyutping.title
                 Screen.JyutpingInitials.route -> Screen.JyutpingInitials.title
                 Screen.JyutpingFinals.route -> Screen.JyutpingFinals.title

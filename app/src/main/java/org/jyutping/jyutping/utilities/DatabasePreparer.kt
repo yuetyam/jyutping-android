@@ -3,7 +3,6 @@ package org.jyutping.jyutping.utilities
 import android.content.Context
 import android.util.Log
 import org.jyutping.jyutping.BuildConfig
-import org.jyutping.jyutping.presets.PresetConstant
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -21,7 +20,7 @@ object DatabasePreparer {
         private const val DATABASES_DIR_NAME: String = "databases"
         private const val DATABASES_PATH_BLOCK: String = "/databases/"
         private const val FILENAME_PREFIX: String = "appdb-v"
-        private const val LOG_TAG: String = PresetConstant.keyboardPackageName + ".utilities.DatabasePreparer"
+        private const val LOG_TAG: String = "org.jyutping.jyutping.DatabasePreparer"
 
         fun prepare(context: Context) {
                 val databaseExists: Boolean = doesDatabaseExist(context)

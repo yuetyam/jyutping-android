@@ -16,11 +16,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Keyboard
+import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -46,13 +48,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
+import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.Screen
 import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.isIdeographicCodePoint
 import org.jyutping.jyutping.presets.AppleColor
 import org.jyutping.jyutping.presets.PresetColor
-import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.search.CantoneseLexicon
 import org.jyutping.jyutping.search.CantoneseLexiconView
@@ -64,6 +66,7 @@ import org.jyutping.jyutping.search.GwongWanCharacter
 import org.jyutping.jyutping.search.GwongWanView
 import org.jyutping.jyutping.search.YingWaaFanWan
 import org.jyutping.jyutping.search.YingWaaView
+import org.jyutping.jyutping.ui.common.EnhancedHorizontalDivider
 import org.jyutping.jyutping.ui.common.NavigationLabel
 import org.jyutping.jyutping.ui.common.SearchField
 import org.jyutping.jyutping.ui.common.TextCard
@@ -100,12 +103,13 @@ fun HomeScreen(navController: NavHostController) {
                 val observer = LifecycleEventObserver { _, event ->
                         if (event == Lifecycle.Event.ON_START) {
                                 val manager = navController.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                                isKeyboardEnabled.value = manager.enabledInputMethodList.any { it.packageName == PresetConstant.keyboardPackageName }
+                                isKeyboardEnabled.value = manager.enabledInputMethodList.any { it.packageName == navController.context.packageName }
                                 isKeyboardSelected.value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                                        manager.currentInputMethodInfo?.packageName == PresetConstant.keyboardPackageName
+                                        manager.currentInputMethodInfo?.packageName == navController.context.packageName
                                 } else {
+                                        val selfKeyboardId = "org.jyutping.jyutping/.JyutpingInputMethodService"
                                         val defaultKeyboardId = Settings.Secure.getString(navController.context.contentResolver, Settings.Secure.DEFAULT_INPUT_METHOD)
-                                        defaultKeyboardId == PresetConstant.keyboardId
+                                        defaultKeyboardId == selfKeyboardId
                                 }
                         }
                 }
@@ -313,7 +317,7 @@ fun HomeScreen(navController: NavHostController) {
                                 DisableSelection {
                                         Column(
                                                 modifier = Modifier
-                                                        .clip(CircleShape)
+                                                        .clip(RoundedCornerShape(12.dp))
                                                         .background(colorScheme.background)
                                                         .fillMaxWidth()
                                         ) {
@@ -322,6 +326,18 @@ fun HomeScreen(navController: NavHostController) {
                                                         text = stringResource(id = R.string.home_label_more_introductions)
                                                 ) {
                                                         navController.navigate(route = Screen.Introductions.route)
+                                                }
+                                                if (BuildConfig.DEBUG) {
+                                                        // TODO: Enhance Display Language Switching
+                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                                EnhancedHorizontalDivider()
+                                                                NavigationLabel(
+                                                                        icon = Icons.Outlined.Public,
+                                                                        text = stringResource(id = R.string.home_label_display_languages)
+                                                                ) {
+                                                                        navController.navigate(route = Screen.DisplayLanguages.route)
+                                                                }
+                                                        }
                                                 }
                                         }
                                 }

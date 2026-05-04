@@ -47,7 +47,6 @@ import androidx.core.net.toUri
 import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.presets.PresetColor
-import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.ui.common.AppLinkLabel
 import org.jyutping.jyutping.ui.common.EnhancedHorizontalDivider
 import org.jyutping.jyutping.ui.common.WebLinkLabel
@@ -177,7 +176,7 @@ private fun EmailFeedbackButton() {
                                 try {
                                         context.startActivity(intent)
                                 } catch (e: ActivityNotFoundException) {
-                                        val logTag: String = PresetConstant.keyboardPackageName + ".about"
+                                        val logTag = "org.jyutping.jyutping.about"
                                         e.message?.let { Log.i(logTag, it) }
                                         Toast.makeText(context, "Email Unavailable", Toast.LENGTH_LONG).show()
                                 }
