@@ -61,13 +61,13 @@ fun TailoredStrokeKeyboard(keyHeight: Dp) {
                         horizontalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
                         Column(
-                                modifier = Modifier.weight(0.2f)
+                                modifier = Modifier.weight(0.188f)
                         ) {
                                 TailoredStrokePlaceholderKey(modifier = Modifier.weight(0.75f))
                                 TailoredStrokePlaceholderKey(modifier = Modifier.weight(0.25f))
                         }
                         Column(
-                                modifier = Modifier.weight(0.6f)
+                                modifier = Modifier.weight(0.624f)
                         ) {
                                 Row(
                                         modifier = Modifier.weight(0.25f)
@@ -93,7 +93,7 @@ fun TailoredStrokeKeyboard(keyHeight: Dp) {
                                 NineKeySpaceKey(modifier = Modifier.weight(0.25f))
                         }
                         Column(
-                                modifier = Modifier.weight(0.2f)
+                                modifier = Modifier.weight(0.188f)
                         ) {
                                 NineKeyBackspaceKey(modifier = Modifier.weight(0.25f))
                                 TailoredStrokePlaceholderKey(modifier = Modifier.weight(0.25f))
