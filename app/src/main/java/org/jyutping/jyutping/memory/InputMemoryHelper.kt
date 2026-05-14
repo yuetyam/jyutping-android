@@ -228,11 +228,12 @@ fun InputMemoryHelper.searchMemory(keys: List<VirtualInputKey>, text: String, se
         }
         val queried = query(segmentation = segmentation, idealSchemes = idealSchemes)
         if (fullMatched.isNotEmpty() || idealQueried.isNotEmpty()) {
-                return (fullMatched + idealQueried).distinct().map { Lexicon(text = it.word, romanization = it.romanization, input = text, mark = it.mark, number = -1) } + queried
+                return (fullMatched + idealQueried).regularSorted().map { Lexicon(text = it.word, romanization = it.romanization, input = text, mark = it.mark, number = -1) } + queried
         }
-        val shortcuts = shortcutMatch(text = text, input = text, limit = 5)
+        val shortcutLimit: Int = if (segmentation.firstOrNull()?.isEmpty() ?: true) 100 else 5
+        val shortcuts = shortcutMatch(text = text, input = text, limit = shortcutLimit)
         if (shortcuts.isNotEmpty()) {
-                return shortcuts.map { Lexicon(text = it.word, romanization = it.romanization, input = text, mark = it.mark, number = -1) } + queried
+                return shortcuts.regularSorted(isOrdered = true).map { Lexicon(text = it.word, romanization = it.romanization, input = text, mark = it.mark, number = -1) } + queried
         }
         val shouldPartiallyMatch: Boolean = idealSchemes.isEmpty() || (keys.lastOrNull() == VirtualInputKey.letterM) || (keys.firstOrNull() == VirtualInputKey.letterM)
         if (shouldPartiallyMatch.negative) return queried
@@ -309,8 +310,7 @@ fun InputMemoryHelper.searchMemory(keys: List<VirtualInputKey>, text: String, se
                         }
                 }
         val partialMatched = (prefixMatched + gainedMatched)
-                .sorted()
-                .distinct()
+                .peculiarSorted()
                 .take(5)
                 .map { Lexicon(text = it.word, romanization = it.romanization, input = text, mark = it.mark, number = -1) }
         return partialMatched + queried
@@ -320,8 +320,7 @@ private fun InputMemoryHelper.query(segmentation: Segmentation, idealSchemes: Li
         if (segmentation.isEmpty()) return emptyList()
         if (idealSchemes.isEmpty()) {
                 return segmentation.flatMap { performQuery(scheme = it) }
-                        .sorted()
-                        .distinct()
+                        .peculiarSorted()
                         .take(6)
                         .map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -2) }
         } else {
@@ -329,8 +328,7 @@ private fun InputMemoryHelper.query(segmentation: Segmentation, idealSchemes: Li
                         if (scheme.size <= 1) return@flatMap emptyList<InternalLexicon>()
                         return@flatMap 1.rangeUntil(scheme.size).reversed().map { scheme.take(it) }.flatMap { performQuery(scheme = it) }
                 }
-                        .sorted()
-                        .distinct()
+                        .peculiarSorted()
                         .take(6)
                         .map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -2) }
         }
@@ -399,18 +397,18 @@ fun InputMemoryHelper.nineKeyMemorySearch(combos: List<Combo>): List<Lexicon> {
         val fullCode: Long = combos.map { it.digit }.decimalCombined()
         when (inputLength) {
                 0 -> return emptyList()
-                1 -> return (nineKeyCodeMatch(fullCode, 100) + nineKeyAnchorsMatch(fullCode, 5)).map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -1) }
+                1 -> return (nineKeyCodeMatch(fullCode, 100) + nineKeyAnchorsMatch(fullCode, 100)).map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -1) }
                 else -> {}
         }
-        val fullCodeMatched = nineKeyCodeMatch(fullCode, 100)
-        val fullAnchorsMatched = nineKeyAnchorsMatch(fullCode, 4)
-        val ideal = (fullCodeMatched.take(10) + (fullCodeMatched + fullAnchorsMatched).sorted())
+        val fullCodeMatched = nineKeyCodeMatch(fullCode, 100).regularSorted(isOrdered = true)
+        val fullAnchorsMatched = nineKeyAnchorsMatch(fullCode, 100).regularSorted(isOrdered = true)
+        val ideal = (fullCodeMatched.take(10) + (fullCodeMatched + fullAnchorsMatched.take(5)).regularSorted())
                 .distinct()
                 .map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -1) }
         val queried = 1.rangeUntil(inputLength).flatMap { number ->
                 val code = combos.dropLast(number).map { it.digit }.decimalCombined()
                 return@flatMap if (code < 1) emptyList() else nineKeyCodeMatch(code, limit = 4)
-        }.distinct().take(6).map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -2) }
+        }.peculiarSorted().take(6).map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -2) }
         return ideal + queried
 }
 private fun InputMemoryHelper.nineKeyAnchorsMatch(code: Long, limit: Int? = null): List<InternalLexicon> {
@@ -473,4 +471,13 @@ private data class InternalLexicon(
                         .takeIf { it != 0 } ?: frequency.compareTo(other.frequency).unaryMinus()
                         .takeIf { it != 0 } ?: latest.compareTo(other.latest).unaryMinus()
         }
+}
+
+private fun List<InternalLexicon>.regularSorted(isOrdered: Boolean = false): List<InternalLexicon> {
+        val frequencyPreferred = if (isOrdered) this else sortedByDescending{ it.frequency }
+        val datePreferred = sortedByDescending { it.latest }
+        return (frequencyPreferred.take(3) + datePreferred.take(5) + frequencyPreferred).distinct()
+}
+private fun List<InternalLexicon>.peculiarSorted(): List<InternalLexicon> {
+        return map { it.inputCount }.distinct().sortedDescending().flatMap { inputCount -> this.filter { it.inputCount == inputCount }.regularSorted() }
 }
