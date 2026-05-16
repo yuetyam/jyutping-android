@@ -480,14 +480,7 @@ fun SettingsScreen(height: Dp) {
                                                         colors = switchColors
                                                 )
                                         }
-                                }
-                        }
-                        item {
-                                Column(
-                                        modifier = Modifier
-                                                .background(color = backColor, shape = sectionShape)
-                                                .fillMaxWidth()
-                                ) {
+                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                         Row(
                                                 modifier = Modifier.padding(horizontal = 8.dp),
                                                 verticalAlignment = Alignment.CenterVertically
