@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,12 +31,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
-import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
@@ -44,6 +45,8 @@ import org.jyutping.jyutping.utilities.ToolBox
 fun SidebarPanel(unitHeight: Dp, modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
+        val sidebarEntries by context.sidebarEntries.collectAsState()
+        val candidateState by context.candidateState.collectAsState()
         val keyboardForm by context.keyboardForm.collectAsState()
         val isBuffering by context.isBuffering.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
@@ -55,9 +58,7 @@ fun SidebarPanel(unitHeight: Dp, modifier: Modifier) {
         LaunchedEffect(pressingState) {
                 state.animateScrollToItem(index = 0, scrollOffset = 0)
         }
-        val density = LocalDensity.current
-        val punctuation: List<String> = listOf("，", "。", "？", "！", "、", "：", "；", "／", "…", "~", "～")
-        val symbols: List<String> = listOf("+", "-", "*", "/", "=", "%", ":", "@", "#", ",", "$", "~", "≈")
+        val entries = if (keyboardForm.isNineKeyNumeric) SidebarEntry.symbols else if (isBuffering) sidebarEntries else SidebarEntry.punctuation
         LazyColumn(
                 modifier = modifier
                         .padding(3.dp)
@@ -66,11 +67,18 @@ fun SidebarPanel(unitHeight: Dp, modifier: Modifier) {
                                 color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
                                 shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
                         )
+                        .background(
+                                color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, false),
+                                shape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+                        )
                         .clip(RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp))
                         .fillMaxSize(),
                 state = state
         ) {
-                itemsIndexed(if (keyboardForm.isNineKeyNumeric) symbols else punctuation) { index, symbol ->
+                itemsIndexed(
+                        items = entries,
+                        key = { index, _ -> (candidateState * 1000L + index) }
+                ) { index, entry ->
                         Box(
                                 modifier = Modifier
                                         .pointerInput(Unit) {
@@ -85,29 +93,33 @@ fun SidebarPanel(unitHeight: Dp, modifier: Modifier) {
                                                         onTap = {
                                                                 context.audioFeedback(SoundEffect.Input)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                                                if (isBuffering.negative) {
-                                                                        context.input(symbol)
+                                                                if (isBuffering) {
+                                                                        context.handleSidebarTap(index, entry)
+                                                                } else {
+                                                                        context.input(entry.text)
                                                                 }
                                                                 pressingState += 1
                                                         }
                                                 )
                                         }
                                         .background(
-                                                color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressing = (isPressing && pressingIndex == index))
+                                                color = if (entry.isSelected) Color.Gray.copy(alpha = 0.5f) else Color.Transparent
                                         )
-                                        .height(unitHeight)
+                                        .height(if (entry.isSelected) (unitHeight / 2) else unitHeight)
                                         .fillMaxWidth(),
                                 contentAlignment = Alignment.Center
                         ) {
                                 Text(
-                                        text = symbol,
-                                        modifier = Modifier.alpha(if (isBuffering) 0f else 1f),
+                                        text = entry.text,
                                         color = if (isDarkMode) Color.White else Color.Black,
-                                        fontSize = with(density) { 18.dp.toSp() },
+                                        autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = if (entry.isSymbol) 20.sp else 16.sp),
+                                        fontSize = if (entry.isSymbol) 20.sp else 16.sp,
+                                        overflow = TextOverflow.Ellipsis,
+                                        maxLines = 1
                                 )
                         }
                         HorizontalDivider(
-                                modifier.alpha(0.5f),
+                                modifier.alpha(0.35f),
                                 thickness = 1.dp,
                                 color = Color.Gray
                         )

@@ -40,6 +40,7 @@ import org.jyutping.jyutping.extensions.convertedS2T
 import org.jyutping.jyutping.extensions.formattedCodePointsText
 import org.jyutping.jyutping.extensions.generateSymbol
 import org.jyutping.jyutping.extensions.isBasicLatinLetter
+import org.jyutping.jyutping.extensions.isCantoneseToneDigit
 import org.jyutping.jyutping.extensions.markFormatted
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.extensions.toneConverted
@@ -79,6 +80,7 @@ import org.jyutping.jyutping.models.queryTextMarks
 import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.models.searchSymbols
 import org.jyutping.jyutping.ninekey.Combo
+import org.jyutping.jyutping.ninekey.SidebarEntry
 import org.jyutping.jyutping.numeric.NumericLayout
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
@@ -92,6 +94,7 @@ import org.jyutping.jyutping.utilities.DatabasePreparer
 import org.jyutping.jyutping.utilities.Simplifier
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
+import kotlin.time.Duration.Companion.milliseconds
 
 class JyutpingInputMethodService: LifecycleInputMethodService(),
         ViewModelStoreOwner,
@@ -202,7 +205,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 updateReturnKeyForm(attribute)
                 inputClientMonitorJob = CoroutineScope(Dispatchers.Main).launch {
                         while (isActive) {
-                                delay(500L) // 0.5s
+                                delay(500L.milliseconds) // 0.5s
                                 monitorInputClient()
                         }
                 }
@@ -697,7 +700,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         //endregion
 
         val candidateState: MutableStateFlow<Long> by lazy { MutableStateFlow(1L) }
-        val candidates: MutableStateFlow<List<Candidate>> by lazy { MutableStateFlow(listOf()) }
+        val candidates: MutableStateFlow<List<Candidate>> by lazy { MutableStateFlow(emptyList()) }
         private val db by lazy { DatabaseHelper(this, DatabasePreparer.DATABASE_NAME) }
         private var suggestionJob: Job? = null
         private var bufferEvents: List<BasicInputEvent> by Delegates.observable(emptyList()) { _, _, newValue ->
@@ -941,6 +944,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         }
                                         selectedLexicons.clear()
                                         isBuffering.value = false
+                                        clearSidebarEntries()
                                 }
                                 when (keyboardForm.value) {
                                         KeyboardForm.CandidateBoard,
@@ -1010,12 +1014,64 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                                 withContext(Dispatchers.Main) {
                                         currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = suggestions
+                                        nineKeyCachedCandidates = suggestions
+                                        updateSidebarEntries(shouldRefresh = true)
                                         updateInputSessionStates()
                                 }
                         }
                 }
         }
+
+        val sidebarEntries: MutableStateFlow<MutableList<SidebarEntry>> by lazy { MutableStateFlow(mutableListOf()) }
+        private var selectedSidebarEntries: List<SidebarEntry> = emptyList()
+        private var nineKeyCachedCandidates: List<Candidate> = emptyList()
+        fun handleSidebarTap(index: Int, entry: SidebarEntry) {
+                val shouldClearSelected: Boolean = entry.isSelected && (index < selectedSidebarEntries.lastIndex)
+                if (shouldClearSelected) {
+                        selectedSidebarEntries = emptyList()
+                } else {
+                        sidebarEntries.value.removeAt(index)
+                        val newEntry = SidebarEntry(text = entry.text, isSelected = entry.isSelected.negative)
+                        sidebarEntries.value.add(index = index, element = newEntry)
+                        sidebarEntries.value.sortByDescending { it.isSelected }
+                        selectedSidebarEntries = sidebarEntries.value.filter { it.isSelected }
+                }
+                updateSidebarEntries()
+                candidateState.value += 1L
+        }
+        private fun updateSidebarEntries(shouldRefresh: Boolean = false) {
+                if (shouldRefresh || selectedSidebarEntries.isEmpty()) {
+                        candidates.value = nineKeyCachedCandidates
+                        sidebarEntries.value = candidates.value.mapNotNull { if (it.isNotCantonese) null else it.lexicon.romanization.split(PresetString.SPACE).firstOrNull()?.dropLast(1) }
+                                .distinct()
+                                .map { SidebarEntry(it) }
+                                .toMutableList()
+                        selectedSidebarEntries = emptyList()
+                } else {
+                        val selected = selectedSidebarEntries.map { it.text }
+                        val selectedCount = selectedSidebarEntries.size
+                        candidates.value = nineKeyCachedCandidates.filter { item ->
+                                val syllables = item.lexicon.romanization.filterNot { it.isCantoneseToneDigit }.split(PresetString.SPACE)
+                                return@filter if (syllables.size < selectedCount) selected.take(syllables.size) == syllables else syllables.take(selectedCount) == selected
+                        }
+                        val selectedLength = selected.fold(0) { acc, text -> acc + text.length }
+                        if (selectedLength >= bufferCombos.size) {
+                                sidebarEntries.value = selectedSidebarEntries.toMutableList()
+                        } else {
+                                val leadingLength = selectedLength + selectedCount
+                                val newEntries = candidates.value.mapNotNull { candidate -> candidate.lexicon.romanization.filterNot { it.isCantoneseToneDigit }.drop(leadingLength).split(PresetString.SPACE).firstOrNull() }
+                                        .filterNot { it.isBlank() }
+                                        .distinct()
+                                        .map { SidebarEntry(it) }
+                                sidebarEntries.value = (selectedSidebarEntries + newEntries).toMutableList()
+                        }
+                }
+        }
+        private fun clearSidebarEntries() {
+                sidebarEntries.value = mutableListOf()
+                selectedSidebarEntries = emptyList()
+        }
+
         fun selectCandidate(candidate: Candidate? = null, index: Int = 0) {
                 val item: Candidate = candidate ?: candidates.value.getOrNull(index) ?: return
                 currentInputConnection.commitText(item.text, 1)
