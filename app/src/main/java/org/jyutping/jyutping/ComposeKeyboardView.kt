@@ -44,6 +44,7 @@ import org.jyutping.jyutping.stroke.TailoredStrokeKeyboard
 import splitties.systemservices.windowManager
 import kotlin.math.min
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.milliseconds
 
 class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
 
@@ -60,7 +61,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                 val lastPhysicalKey by ctx.lastPhysicalKey.collectAsState()
                 LaunchedEffect(lastPhysicalKey) {
                         if (lastPhysicalKey != null) {
-                                delay(250L)
+                                delay(250L.milliseconds) // 0.25s
                                 ctx.lastPhysicalKey.value = null
                         }
                 }

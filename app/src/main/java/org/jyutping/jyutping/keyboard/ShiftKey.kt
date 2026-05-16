@@ -34,6 +34,7 @@ import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.models.KeyboardCase
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun ShiftKey(modifier: Modifier) {
@@ -54,7 +55,7 @@ fun ShiftKey(modifier: Modifier) {
         var doubleTappingBuffer by remember { mutableIntStateOf(0) }
         LaunchedEffect(isInTheMediumOfDoubleTapping) {
                 while (isInTheMediumOfDoubleTapping) {
-                        delay(100L) // 0.1s
+                        delay(100L.milliseconds) // 0.1s
                         if (doubleTappingBuffer >= 3) {
                                 doubleTappingBuffer = 0
                                 isInTheMediumOfDoubleTapping = false

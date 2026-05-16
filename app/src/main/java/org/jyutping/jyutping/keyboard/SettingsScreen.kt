@@ -74,6 +74,7 @@ import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import java.util.Locale
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun SettingsScreen(height: Dp) {
@@ -1046,7 +1047,7 @@ fun SettingsScreen(height: Dp) {
                                                                         }
                                                                         context.clearInputMemory()
                                                                         coroutineScope.launch {
-                                                                                delay(1000L) // 1s
+                                                                                delay(1000L.milliseconds) // 1s
                                                                                 isTryingToClearInputMemory = false
                                                                         }
                                                                 },
@@ -1063,7 +1064,7 @@ fun SettingsScreen(height: Dp) {
                                                                         context.audioFeedback(SoundEffect.Click)
                                                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                         coroutineScope.launch {
-                                                                                delay(300L) // 0.3s
+                                                                                delay(300L.milliseconds) // 0.3s
                                                                                 isTryingToClearInputMemory = false
                                                                         }
                                                                 },

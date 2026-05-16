@@ -37,6 +37,7 @@ import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun NineKeyBackspaceKey(modifier: Modifier) {
@@ -61,7 +62,7 @@ fun NineKeyBackspaceKey(modifier: Modifier) {
                                                 isLongPressing = true
                                                 longPressJob = longPressCoroutineScope.launch {
                                                         while (isActive && isLongPressing) {
-                                                                delay(100) // 0.1s
+                                                                delay(100L.milliseconds) // 0.1s
                                                                 context.audioFeedback(SoundEffect.Delete)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.backspace()
