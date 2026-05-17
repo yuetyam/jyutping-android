@@ -138,8 +138,8 @@ fun NumericKeyboard(keyHeight: Dp) {
                                 .height(keyHeight)
                                 .fillMaxWidth()
                 ) {
-                        TransformKey(destination = KeyboardForm.Symbolic, modifier = Modifier.weight(1.3f))
-                        Spacer(modifier = Modifier.weight(0.2f))
+                        TransformKey(destination = KeyboardForm.Symbolic, modifier = Modifier.weight(1.4f))
+                        Spacer(modifier = Modifier.weight(0.1f))
                         EnhancedInputKey(
                                 side = KeySide.Left,
                                 keyModel = KeyModel(
@@ -199,8 +199,8 @@ fun NumericKeyboard(keyHeight: Dp) {
                                 ),
                                 modifier = Modifier.weight(1f)
                         )
-                        Spacer(modifier = Modifier.weight(0.2f))
-                        BackspaceKey(modifier = Modifier.weight(1.3f))
+                        Spacer(modifier = Modifier.weight(0.1f))
+                        BackspaceKey(modifier = Modifier.weight(1.4f))
                 }
                 ABCBottomKeyRow(transform = KeyboardForm.Alphabetic, height = keyHeight)
         }

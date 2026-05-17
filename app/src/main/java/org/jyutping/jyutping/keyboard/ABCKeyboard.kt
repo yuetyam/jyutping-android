@@ -89,8 +89,8 @@ fun ABCKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth()
                                 .height(keyHeight)
                 ) {
-                        ShiftKey(modifier = Modifier.weight(1.3f))
-                        HiddenKey(hidden = HiddenVirtualKey.LetterZ, modifier = Modifier.weight(0.2f))
+                        ShiftKey(modifier = Modifier.weight(1.4f))
+                        HiddenKey(hidden = HiddenVirtualKey.LetterZ, modifier = Modifier.weight(0.1f))
                         LetterKey(virtual = VirtualInputKey.letterZ, modifier = Modifier.weight(1f))
                         LetterKey(virtual = VirtualInputKey.letterX, modifier = Modifier.weight(1f))
                         LetterKey(virtual = VirtualInputKey.letterC, modifier = Modifier.weight(1f))
@@ -98,8 +98,8 @@ fun ABCKeyboard(keyHeight: Dp) {
                         LetterKey(virtual = VirtualInputKey.letterB, modifier = Modifier.weight(1f))
                         LetterKey(virtual = VirtualInputKey.letterN, modifier = Modifier.weight(1f))
                         LetterKey(virtual = VirtualInputKey.letterM, modifier = Modifier.weight(1f))
-                        HiddenKey(hidden = HiddenVirtualKey.Backspace, modifier = Modifier.weight(0.2f))
-                        BackspaceKey(modifier = Modifier.weight(1.3f))
+                        HiddenKey(hidden = HiddenVirtualKey.Backspace, modifier = Modifier.weight(0.1f))
+                        BackspaceKey(modifier = Modifier.weight(1.4f))
                 }
                 ABCBottomKeyRow(
                         transform = if (useNineKeyNumberPad) KeyboardForm.NineKeyNumeric else KeyboardForm.Numeric,

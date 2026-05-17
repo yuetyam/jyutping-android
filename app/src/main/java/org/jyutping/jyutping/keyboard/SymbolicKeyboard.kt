@@ -122,8 +122,8 @@ fun SymbolicKeyboard(keyHeight: Dp) {
                                 .height(keyHeight)
                                 .fillMaxWidth()
                 ) {
-                        TransformKey(destination = KeyboardForm.Numeric, modifier = Modifier.weight(1.3f))
-                        Spacer(modifier = Modifier.weight(0.2f))
+                        TransformKey(destination = KeyboardForm.Numeric, modifier = Modifier.weight(1.4f))
+                        Spacer(modifier = Modifier.weight(0.1f))
                         SymbolKey(symbol = "…", modifier = Modifier.weight(1f))
                         SymbolKey(symbol = "©", modifier = Modifier.weight(1f))
                         SymbolKey(symbol = "®", modifier = Modifier.weight(1f))
@@ -143,8 +143,8 @@ fun SymbolicKeyboard(keyHeight: Dp) {
                                 ),
                                 modifier = Modifier.weight(1f)
                         )
-                        Spacer(modifier = Modifier.weight(0.2f))
-                        BackspaceKey(modifier = Modifier.weight(1.3f))
+                        Spacer(modifier = Modifier.weight(0.1f))
+                        BackspaceKey(modifier = Modifier.weight(1.4f))
                 }
                 ABCBottomKeyRow(transform = KeyboardForm.Alphabetic, height = keyHeight)
         }

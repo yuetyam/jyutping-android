@@ -94,8 +94,8 @@ fun StrokeKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth()
                                 .height(keyHeight)
                 ) {
-                        ShiftKey(modifier = Modifier.weight(1.3f))
-                        Spacer(modifier = Modifier.weight(0.2f))
+                        ShiftKey(modifier = Modifier.weight(1.4f))
+                        Spacer(modifier = Modifier.weight(0.1f))
                         StrokeKey(virtual = VirtualInputKey.letterZ, modifier = Modifier.weight(1f))
                         StrokeKey(virtual = VirtualInputKey.letterX, modifier = Modifier.weight(1f))
                         StrokeKey(virtual = VirtualInputKey.letterC, modifier = Modifier.weight(1f))
@@ -103,8 +103,8 @@ fun StrokeKeyboard(keyHeight: Dp) {
                         StrokeKey(virtual = VirtualInputKey.letterB, modifier = Modifier.weight(1f))
                         StrokeKey(virtual = VirtualInputKey.letterN, modifier = Modifier.weight(1f))
                         StrokeKey(virtual = VirtualInputKey.letterM, modifier = Modifier.weight(1f))
-                        Spacer(modifier = Modifier.weight(0.2f))
-                        BackspaceKey(modifier = Modifier.weight(1.3f))
+                        Spacer(modifier = Modifier.weight(0.1f))
+                        BackspaceKey(modifier = Modifier.weight(1.4f))
                 }
                 SimpleBottomKeyRow(
                         transform = if (useNineKeyNumberPad) KeyboardForm.NineKeyNumeric else KeyboardForm.Numeric,

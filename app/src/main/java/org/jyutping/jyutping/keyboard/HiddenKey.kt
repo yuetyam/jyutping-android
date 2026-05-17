@@ -23,12 +23,14 @@ fun HiddenKey(hidden: HiddenVirtualKey, modifier: Modifier) {
         Box(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
-                                context.audioFeedback(SoundEffect.Click)
-                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                 val virtualInputKey = hidden.virtualInputKey
                                 if (virtualInputKey == null) {
+                                        context.audioFeedback(SoundEffect.Delete)
+                                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         context.backspace()
                                 } else {
+                                        context.audioFeedback(SoundEffect.Input)
+                                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                         context.handle(virtualInputKey)
                                 }
                         }
