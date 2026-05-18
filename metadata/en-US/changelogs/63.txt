@@ -1,0 +1,5 @@
+1. Added syllable selection support for the 9-key keyboard.
+2. Slightly increased the key size in the typing area of the 9-key keyboard for a better typing experience.
+3. Slightly increased the size of the Delete key on the 26-key keyboard for a better typing experience.
+4. Slightly improved the candidate sorting algorithm for smoother typing.
+5. Slightly improved the reverse lookup feature using character decomposition input.

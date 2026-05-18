@@ -3327,9 +3327,14 @@
 4	110000	1F3C9	橄欖球	gam2 laam5 kau4
 4	110000	1F94F	飛盤	fei1 pun4
 4	110000	1F3B1	檯球	toi2 kau4
+4	110000	1F3B1	打檯球	daa2 toi4 kau4
 4	110000	1F3B1	桌球	coek3 kau4
 4	110000	1F3B1	桌球	zoek3 kau4
+4	110000	1F3B1	打桌球	daa2 coek3 kau4
+4	110000	1F3B1	打桌球	daa2 zoek3 kau4
+4	110000	1FA80	搖搖球	jiu4 jiu4 kau4
 4	110000	1FA80	溜溜球	lau6 lau6 kau4
+4	110000	1FA80	悠悠球	jau4 jau4 kau4
 4	110000	1F3D3	乒乓球	bing1 bam1 kau4
 4	110000	1F3D3	乒乓球	bing1 bong1 kau4
 4	110000	1F3D3	乒乓球	ping1 pong1 kau4
@@ -3340,6 +3345,7 @@
 4	110000	1F3D3	乒乓	bing1 bong1
 4	110000	1F3D3	乒乓	ping1 pong1
 4	110000	1F3F8	羽毛球	jyu5 mou4 kau4
+4	110000	1F3F8	羽球	jyu5 kau4
 4	110000	1F3D2	冰上曲棍球	bing1 soeng6 kuk1 gwan3 kau4
 4	110000	1F3D1	曲棍球	kuk1 gwan3 kau4
 4	110000	1F94D	長曲棍球	coeng4 kuk1 gwan3 kau4
@@ -3364,11 +3370,13 @@
 4	110000	1FA81	放鷂	fong3 jiu2
 4	140000	1F6DD	滑梯	waat6 tai1
 4	140000	1F6DD	瀡滑梯	soe4 waat6 tai1
+4	140000	1F6DD	瀡梯	soe4 tai1
 4	140000	1F6DD	瀡	soe4
 4	110000	1F3F9	射箭	se6 zin3
 4	110000	1F3F9	弓箭	gung1 zin3
 4	110000	1F3F9	箭術	zin3 seot6
 4	110000	1F3F9	射	se6
+4	110000	1F3F9	箭矢	zin3 ci2
 4	110000	1F3A3	釣魚	diu3 jyu2
 4	110000	1F3A3	釣魚	diu3 jyu4
 4	110000	1F3A3	垂釣	seoi4 diu3
@@ -3384,8 +3392,11 @@
 4	110000	1F3BD	運動衫	wan6 dung6 saam1
 4	110000	1F6F9	滑板	waat6 baan2
 4	110000	1F6FC	輪滑鞋	leon4 waat6 haai4
+4	110000	1F6FC	輪滑	leon4 waat6
 4	110000	1F6F7	雪橇	syut3 hiu1
 4	110000	26F8	冰鞋	bing1 haai4
+4	110000	26F8	滑冰	waat6 bing1
+4	110000	26F8	溜冰	lau6 bing1
 4	110000	1F94C	冰壺石	bing1 wu4 sek6
 4	110000	1F94C	冰壺	bing1 wu4
 4	110000	1F3BF	滑雪屐	waat6 syut3 kek6
@@ -4187,8 +4198,12 @@
 6	110000	1F56F	蠟燭	laap6 zuk1
 6	110000	1F56F	火燭	fo2 zuk1
 6	110000	1F56F	燭	zuk1
+6	110000	1F56F	蠟炬	laap6 geoi6
+6	110000	1F56F	燭炬	zuk1 geoi6
 6	110000	1FA94	油燈	jau4 dang1
 6	110000	1FA94	燈	dang1
+6	110000	1FA94	燈燭	dang1 zuk1
+6	110000	1FA94	燈炬	dang1 geoi6
 6	110000	1F9EF	滅火器	mit6 fo2 hei3
 6	110000	1F9EF	滅火筒	mit6 fo2 tung2
 6	110000	1F9EF	滅火	mit6 fo2
@@ -4224,9 +4239,18 @@
 6	110000	1F4B0	錢銀	cin2 ngan2
 6	110000	1F4B0	錢財	cin4 coi4
 6	110000	1F4B0	財富	coi4 fu3
+6	110000	1F4B3	信用咭	seon3 jung6 kaat1
+6	110000	1F4B3	銀行咭	ngan4 hong4 kaat1
+6	110000	1F4B3	咭	kaat1
+6	110000	1F4B3	張咭	zoeng1 kaat1
 6	110000	1F4B3	信用卡	seon3 jung6 kaa1
+6	110000	1F4B3	信用卡	seon3 jung6 kaat1
 6	110000	1F4B3	銀行卡	ngan4 hong4 kaa1
+6	110000	1F4B3	銀行卡	ngan4 hong4 kaat1
+6	110000	1F4B3	張卡	zoeng1 kaa1
+6	110000	1F4B3	張卡	zoeng1 kaat1
 6	110000	1F4B3	卡	kaa1
+6	110000	1F4B3	卡	kaat1
 6	140000	1FAAA	身份證	san1 fan2 zing3
 6	110000	1F48E	鑽石	zyun3 sek6
 6	110000	1F48E	鑽	zyun3
@@ -4490,10 +4514,8 @@
 6	110000	1F6D2	購物車	gau3 mat6 ce1
 6	110000	1F6D2	購物	kau3 mat6
 6	110000	1F6D2	購物	gau3 mat6
-6	110000	1F6D2	買餸車	maai5 sung3 ce1
-6	110000	1F6D2	買餸	maai5 sung3
-6	110000	1F6D2	超級市場	ciu1 kap1 si5 coeng4
-6	110000	1F6D2	超市	ciu1 si5
+6	110000	1F6D2	採購	coi2 kau3
+6	110000	1F6D2	採購	coi2 gau3
 6	110000	1F381.FE0F	禮盒	lai5 hap2
 6	110000	1F381.FE0F	禮盒	lai5 hap6
 6	110000	1F381.FE0F	禮品盒	lai5 ban2 hap6
@@ -4629,7 +4651,9 @@
 6	110000	1F5D1	廢紙簍	fai3 zi2 lau4
 6	110000	1F5D1	垃圾簍	laap6 saap3 lau4
 6	110000	1F5D1	垃圾	laap6 saap3
-6	110000	1F4C7	卡片索引	kaa1 pin2 saak3 jan5
+6	110000	1F4C7	咭片索引	kaat1 pin2 sok3 jan5
+6	110000	1F4C7	卡片索引	kaa1 pin2 sok3 jan5
+6	110000	1F4C7	卡片索引	kaat1 pin2 sok3 jan5
 6	110000	1F5C3	存檔盒	cyun4 dong2 hap6
 6	110000	1F5F3	投票箱	tau4 piu3 soeng1
 6	110000	1F5F3	投票	tau4 piu3
@@ -4755,6 +4779,7 @@
 6	110000	1F50D	搜索	sau2 sok3
 6	110000	1F50D	搜索	sau2 saak3
 6	110000	1F50D	檢索	gim2 sok3
+6	110000	1F50D	檢索	gim2 saak3
 6	110000	1F50E	放大鏡	fong3 daai6 geng3
 6	110000	1F50F	隱秘	jan2 bei3
 6	110000	1F510	鎖匙	so2 si4
@@ -4960,11 +4985,10 @@
 7	110000	26D4.FE0F	拒絕	keoi5 zyut6
 7	110000	26D4.FE0F	嚴禁	jim4 gam3
 7	110000	26D4.FE0F	唔准	m4 zeon2
-7	110000	1F4DB	名牌	ming4 paai2
-7	110000	1F4DB	名卡	ming4 kaa1
-7	110000	1F4DB	名卡	meng2 kaa1
-7	110000	1F4DB	姓名牌	sing3 ming4 paai2
+7	110000	1F4DB	姓名咭	sing3 ming4 kaat1
 7	110000	1F4DB	姓名卡	sing3 ming4 kaa1
+7	110000	1F4DB	姓名卡	sing3 ming4 kaat1
+7	110000	1F4DB	姓名牌	sing3 ming4 paai2
 7	110000	1F6AB	禁止	gam3 zi2
 7	110000	1F6AB	拒絕	keoi5 zyut6
 7	110000	1F6AB	嚴禁	jim4 gam3
@@ -5781,8 +5805,8 @@
 8	110000	1F1F8.1F1EC	星島	sing1 dou2
 8	110000	1F1F8.1F1FD	荷屬聖馬丁	ho4 suk6 sing3 maa5 ding1
 8	110000	1F1F8.1F1FD	聖馬丁島	sing3 maa5 ding1 dou2
-8	110000	1F1F8.1F1F0	斯洛伐克	si1 lok6 fat6 hak1
-8	110000	1F1F8.1F1EE	斯洛文尼亞	si1 lok6 man4 nei4 aa3
+8	110000	1F1F8.1F1F0	斯洛伐克	si1 lok3 fat6 hak1
+8	110000	1F1F8.1F1EE	斯洛文尼亞	si1 lok3 man4 nei4 aa3
 8	110000	1F1EC.1F1F8	南佐治亞及南三文治	naam4 zo3 zi6 aa3 kap6 naam4 saam1 man4 zi6
 8	110000	1F1F8.1F1E7	所羅門羣島	so2 lo4 mun4 kwan4 dou2
 8	110000	1F1F8.1F1F4	索馬里	sok3 maa5 lei5
