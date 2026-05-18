@@ -740,7 +740,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 val queried = queriedDeferred.await()
                                 val suggestions = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
                                 val bufferText = joinedBufferTexts()
-                                val tailMark: String = run {
+                                val tailMark: String = if (keys.isEmpty()) PresetString.EMPTY else run {
                                         val firstLexicon = queried.firstOrNull()
                                         if (firstLexicon != null && firstLexicon.inputCount == keys.size) {
                                                 firstLexicon.mark
@@ -755,7 +755,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 }
                                         }
                                 }
-                                val mark: String = bufferText.take(1) + PresetString.SPACE + tailMark
+                                val mark: String = if (keys.isEmpty()) bufferText.take(1) else (bufferText.take(1) + PresetString.SPACE + tailMark)
                                 withContext(Dispatchers.Main) {
                                         updateQwertyForm(QwertyForm.Pinyin)
                                         currentInputConnection.setComposingText(mark, 1)
@@ -805,38 +805,38 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         updateInputSessionStates()
                                 }
                         }
-                        VirtualInputKey.letterQ -> {
+                        VirtualInputKey.letterQ -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val allKeys = bufferEvents.map { it.key }
-                                val textMarks = if (isEnglishSuggestionsOn.value) db.searchTextMarks(allKeys) else emptyList()
+                                val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) db.searchTextMarks(allKeys) else emptyList() }
+                                val textMarks = textMarksDeferred.await()
                                 val keys = allKeys.drop(1)
-                                if (keys.isEmpty()) {
-                                        val mark = joinedBufferTexts()
-                                        currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = textMarks.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, sessionState = sessionState) }.distinct()
-                                } else {
-                                        val bufferText = joinedBufferTexts()
-                                        val segmentation = Segmenter.segment(keys, db)
-                                        val tailMark: String = run {
-                                                val isPeculiar = keys.any { it.isSyllableLetter.negative }
-                                                if (isPeculiar) {
-                                                        bufferText.drop(1).toneConverted().markFormatted()
-                                                } else {
-                                                        val bestScheme = segmentation.firstOrNull()
-                                                        val leadingLength: Int = bestScheme?.schemeLength ?: 0
-                                                        val leadingMark: String = bestScheme?.mark ?: PresetString.EMPTY
-                                                        when (leadingLength) {
-                                                                0 -> bufferText.drop(1)
-                                                                (bufferText.length - 1) -> leadingMark
-                                                                else -> (leadingMark + PresetString.SPACE + bufferText.drop(leadingLength + 1))
-                                                        }
+                                val segmentation = Segmenter.segment(keys, db)
+                                val queried: List<Lexicon> = if (keys.isEmpty()) emptyList() else run {
+                                        val queriedDeferred = async { Structure.reverseLookup(keys, segmentation, db) }
+                                        queriedDeferred.await()
+                                }
+                                val bufferText = joinedBufferTexts()
+                                val tailMark: String = if (keys.isEmpty()) PresetString.EMPTY else run {
+                                        val isPeculiar = keys.any { it.isSyllableLetter.negative }
+                                        if (isPeculiar) {
+                                                bufferText.drop(1).toneConverted().markFormatted()
+                                        } else {
+                                                val bestScheme = segmentation.firstOrNull()
+                                                val leadingLength: Int = bestScheme?.schemeLength ?: 0
+                                                val leadingMark: String = bestScheme?.mark ?: PresetString.EMPTY
+                                                when (leadingLength) {
+                                                        0 -> bufferText.drop(1)
+                                                        keys.size -> leadingMark
+                                                        else -> (leadingMark + PresetString.SPACE + bufferText.drop(leadingLength + 1))
                                                 }
                                         }
-                                        val mark: String = bufferText.take(1) + PresetString.SPACE + tailMark
-                                        currentInputConnection.setComposingText(mark, 1)
-                                        val suggestions = Structure.reverseLookup(keys, segmentation, db)
-                                        candidates.value = suggestions.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState ) }.distinct()
                                 }
-                                updateInputSessionStates()
+                                val mark: String = if (keys.isEmpty()) bufferText.take(1) else (bufferText.take(1) + PresetString.SPACE + tailMark)
+                                withContext(Dispatchers.Main) {
+                                        currentInputConnection.setComposingText(mark, 1)
+                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
+                                        updateInputSessionStates()
+                                }
                         }
                         else -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val keys = newValue.map { it.key }
@@ -870,7 +870,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 if (firstCandidate?.lexicon?.inputCount == text.length) {
                                                         firstCandidate.lexicon.mark
                                                 } else {
-                                                        text.toneConverted().markFormatted()
+                                                        val bestScheme = segmentation.firstOrNull()
+                                                        val leadingLength: Int = bestScheme?.schemeLength ?: 0
+                                                        val leadingMark: String = bestScheme?.mark ?: PresetString.EMPTY
+                                                        when (leadingLength) {
+                                                                0 -> text
+                                                                text.length -> leadingMark
+                                                                else -> (leadingMark + PresetString.SPACE + text.drop(leadingLength))
+                                                        }
                                                 }
                                         }
                                 }
