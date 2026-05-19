@@ -21,22 +21,22 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
-fun InputMethodModeSwitch() {
+fun CharacterSetSwitch() {
         val context = LocalContext.current as JyutpingInputMethodService
-        val inputMethodMode by context.inputMethodMode.collectAsState()
         val characterStandard by context.characterStandard.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val height: Dp = 25.dp
-        val partialWidth: Dp = 36.dp
-        val totalWidth: Dp = 60.dp
-        val largerFontSize = 17.dp
-        val miniFontSize = 14.dp
+        val partialWidth: Dp = 28.dp
+        val totalWidth: Dp = 48.dp
+        val largerFontSize = 16.dp
+        val miniFontSize = 12.dp
         val density = LocalDensity.current
         Box(
                 modifier = Modifier
@@ -61,11 +61,11 @@ fun InputMethodModeSwitch() {
                                 modifier = Modifier
                                         .border(
                                                 width = 1.dp,
-                                                color = optionBorderColor(inputMethodMode.isCantonese, isDarkMode, isHighContrastPreferred),
+                                                color = optionBorderColor(characterStandard.isMutilated.negative, isDarkMode, isHighContrastPreferred),
                                                 shape = CircleShape
                                         )
                                         .background(
-                                                color = optionBackgroundColor(inputMethodMode.isCantonese, isDarkMode, isHighContrastPreferred),
+                                                color = optionBackgroundColor(characterStandard.isMutilated.negative, isDarkMode, isHighContrastPreferred),
                                                 shape = CircleShape
                                         )
                                         .width(partialWidth)
@@ -73,10 +73,10 @@ fun InputMethodModeSwitch() {
                                 contentAlignment = Alignment.Center
                         ) {
                                 Text(
-                                        text = if (characterStandard.isMutilated) "粤" else "粵",
-                                        modifier = Modifier.padding(end = if (inputMethodMode.isCantonese) 0.dp else 6.dp),
+                                        text = "繁",
+                                        modifier = Modifier.padding(end = if (characterStandard.isMutilated.negative) 0.dp else 4.dp),
                                         color = if (isDarkMode) Color.White else Color.Black,
-                                        fontSize = with(density) { if (inputMethodMode.isCantonese) largerFontSize.toSp() else miniFontSize.toSp() }
+                                        fontSize = with(density) { if (characterStandard.isMutilated.negative) largerFontSize.toSp() else miniFontSize.toSp() }
                                 )
                         }
                 }
@@ -88,11 +88,11 @@ fun InputMethodModeSwitch() {
                                 modifier = Modifier
                                         .border(
                                                 width = 1.dp,
-                                                color = optionBorderColor(inputMethodMode.isABC, isDarkMode, isHighContrastPreferred),
+                                                color = optionBorderColor(characterStandard.isMutilated, isDarkMode, isHighContrastPreferred),
                                                 shape = CircleShape
                                         )
                                         .background(
-                                                color = optionBackgroundColor(inputMethodMode.isABC, isDarkMode, isHighContrastPreferred),
+                                                color = optionBackgroundColor(characterStandard.isMutilated, isDarkMode, isHighContrastPreferred),
                                                 shape = CircleShape
                                         )
                                         .width(partialWidth)
@@ -100,10 +100,10 @@ fun InputMethodModeSwitch() {
                                 contentAlignment = Alignment.Center
                         ) {
                                 Text(
-                                        text = "A",
-                                        modifier = Modifier.padding(start = if (inputMethodMode.isABC) 0.dp else 6.dp),
+                                        text = "简",
+                                        modifier = Modifier.padding(start = if (characterStandard.isMutilated) 0.dp else 4.dp),
                                         color = if (isDarkMode) Color.White else Color.Black,
-                                        fontSize = with(density) { if (inputMethodMode.isABC) largerFontSize.toSp() else miniFontSize.toSp() }
+                                        fontSize = with(density) { if (characterStandard.isMutilated) largerFontSize.toSp() else miniFontSize.toSp() }
                                 )
                         }
                 }

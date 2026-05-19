@@ -86,7 +86,7 @@ fun CandidateBoardPhysicalButtons() {
                 ) {
                         Text(
                                 text = if (inputMethodMode.isCantonese) {
-                                        if (characterStandard.isSimplified) "粤" else "粵"
+                                        if (characterStandard.isMutilated) "粤" else "粵"
                                 } else {
                                         "A"
                                 },

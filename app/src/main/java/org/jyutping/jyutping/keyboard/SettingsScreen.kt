@@ -69,7 +69,6 @@ import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.models.KeyboardForm
-import org.jyutping.jyutping.models.KeyboardLayout
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import java.util.Locale
@@ -81,10 +80,8 @@ fun SettingsScreen(height: Dp) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()
-        val characterStandard by context.characterStandard.collectAsState()
         val isAudioFeedbackOn by context.isAudioFeedbackOn.collectAsState()
         val isHapticFeedbackOn by context.isHapticFeedbackOn.collectAsState()
-        val keyboardLayout by context.keyboardLayout.collectAsState()
         val useNineKeyNumberPad by context.useNineKeyNumberPad.collectAsState()
         val useNineKeyStrokeLayout by context.useNineKeyStrokeLayout.collectAsState()
         val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
@@ -97,6 +94,7 @@ fun SettingsScreen(height: Dp) {
         var keyHeightSliderPosition by remember { mutableFloatStateOf(keyHeightOffset.toFloat()) }
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
         val commentStyle by context.commentStyle.collectAsState()
+        val preferredTraditionalStandard by context.preferredTraditionalStandard.collectAsState()
         val cangjieVariant by context.cangjieVariant.collectAsState()
         val isEmojiSuggestionsOn by context.isEmojiSuggestionsOn.collectAsState()
         val isEnglishSuggestionsOn by context.isEnglishSuggestionsOn.collectAsState()
@@ -186,115 +184,6 @@ fun SettingsScreen(height: Dp) {
                                         verticalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
                                         Text(
-                                                text = stringResource(id = R.string.keyboard_settings_character_standard_header),
-                                                modifier = Modifier.padding(horizontal = 8.dp),
-                                                color = tintColor,
-                                                style = MaterialTheme.typography.bodySmall
-                                        )
-                                        Column(
-                                                modifier = Modifier
-                                                        .background(color = backColor, shape = sectionShape)
-                                                        .fillMaxWidth()
-                                        ) {
-                                                Button(
-                                                        onClick = {
-                                                                context.audioFeedback(SoundEffect.Click)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                context.updateCharacterStandard(CharacterStandard.Traditional)
-                                                        },
-                                                        shape = CircleShape,
-                                                        colors = buttonColors,
-                                                        contentPadding = PaddingValues(horizontal = 8.dp)
-                                                ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_character_standard_traditional),
-                                                                fontWeight = FontWeight.Normal
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Icon(
-                                                                imageVector = Icons.Outlined.Check,
-                                                                contentDescription = null,
-                                                                modifier = Modifier.alpha(if (characterStandard == CharacterStandard.Traditional) 1f else 0f),
-                                                                tint = PresetColor.blue
-                                                        )
-                                                }
-                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
-                                                Button(
-                                                        onClick = {
-                                                                context.audioFeedback(SoundEffect.Click)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                context.updateCharacterStandard(CharacterStandard.HongKong)
-                                                        },
-                                                        shape = CircleShape,
-                                                        colors = buttonColors,
-                                                        contentPadding = PaddingValues(horizontal = 8.dp)
-                                                ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_character_standard_hongkong),
-                                                                fontWeight = FontWeight.Normal
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Icon(
-                                                                imageVector = Icons.Outlined.Check,
-                                                                contentDescription = null,
-                                                                modifier = Modifier.alpha(if (characterStandard == CharacterStandard.HongKong) 1f else 0f),
-                                                                tint = PresetColor.blue
-                                                        )
-                                                }
-                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
-                                                Button(
-                                                        onClick = {
-                                                                context.audioFeedback(SoundEffect.Click)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                context.updateCharacterStandard(CharacterStandard.Taiwan)
-                                                        },
-                                                        shape = CircleShape,
-                                                        colors = buttonColors,
-                                                        contentPadding = PaddingValues(horizontal = 8.dp)
-                                                ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_character_standard_taiwan),
-                                                                fontWeight = FontWeight.Normal
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Icon(
-                                                                imageVector = Icons.Outlined.Check,
-                                                                contentDescription = null,
-                                                                modifier = Modifier.alpha(if (characterStandard == CharacterStandard.Taiwan) 1f else 0f),
-                                                                tint = PresetColor.blue
-                                                        )
-                                                }
-                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
-                                                Button(
-                                                        onClick = {
-                                                                context.audioFeedback(SoundEffect.Click)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                context.updateCharacterStandard(CharacterStandard.Simplified)
-                                                        },
-                                                        shape = CircleShape,
-                                                        colors = buttonColors,
-                                                        contentPadding = PaddingValues(horizontal = 8.dp)
-                                                ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_character_standard_simplified),
-                                                                fontWeight = FontWeight.Normal
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Icon(
-                                                                imageVector = Icons.Outlined.Check,
-                                                                contentDescription = null,
-                                                                modifier = Modifier.alpha(if (characterStandard.isSimplified) 1f else 0f),
-                                                                tint = PresetColor.blue
-                                                        )
-                                                }
-                                        }
-                                }
-                        }
-                        item {
-                                Column(
-                                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                                ) {
-                                        Text(
                                                 text = stringResource(id = R.string.keyboard_settings_keyboard_feedback_header),
                                                 modifier = Modifier.padding(horizontal = 8.dp),
                                                 color = tintColor,
@@ -342,92 +231,6 @@ fun SettingsScreen(height: Dp) {
                                                                 },
                                                                 thumbContent = { SwitchThumbContent(isHapticFeedbackOn) },
                                                                 colors = switchColors
-                                                        )
-                                                }
-                                        }
-                                }
-                        }
-                        item {
-                                Column(
-                                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                                ) {
-                                        Text(
-                                                text = stringResource(id = R.string.keyboard_settings_keyboard_layout_header),
-                                                modifier = Modifier.padding(horizontal = 8.dp),
-                                                color = tintColor,
-                                                style = MaterialTheme.typography.bodySmall
-                                        )
-                                        Column(
-                                                modifier = Modifier
-                                                        .background(color = backColor, shape = sectionShape)
-                                                        .fillMaxWidth()
-                                        ) {
-                                                Button(
-                                                        onClick = {
-                                                                context.audioFeedback(SoundEffect.Click)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                context.updateKeyboardLayout(KeyboardLayout.Qwerty)
-                                                        },
-                                                        shape = CircleShape,
-                                                        colors = buttonColors,
-                                                        contentPadding = PaddingValues(horizontal = 8.dp)
-                                                ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_keyboard_layout_qwerty),
-                                                                fontWeight = FontWeight.Normal
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Icon(
-                                                                imageVector = Icons.Outlined.Check,
-                                                                contentDescription = null,
-                                                                modifier = Modifier.alpha(if (keyboardLayout.isQwerty) 1f else 0f),
-                                                                tint = PresetColor.blue
-                                                        )
-                                                }
-                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
-                                                Button(
-                                                        onClick = {
-                                                                context.audioFeedback(SoundEffect.Click)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                context.updateKeyboardLayout(KeyboardLayout.TripleStroke)
-                                                        },
-                                                        shape = CircleShape,
-                                                        colors = buttonColors,
-                                                        contentPadding = PaddingValues(horizontal = 8.dp)
-                                                ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_keyboard_layout_triple_stroke),
-                                                                fontWeight = FontWeight.Normal
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Icon(
-                                                                imageVector = Icons.Outlined.Check,
-                                                                contentDescription = null,
-                                                                modifier = Modifier.alpha(if (keyboardLayout.isTripleStroke) 1f else 0f),
-                                                                tint = PresetColor.blue
-                                                        )
-                                                }
-                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
-                                                Button(
-                                                        onClick = {
-                                                                context.audioFeedback(SoundEffect.Click)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                context.updateKeyboardLayout(KeyboardLayout.NineKey)
-                                                        },
-                                                        shape = CircleShape,
-                                                        colors = buttonColors,
-                                                        contentPadding = PaddingValues(horizontal = 8.dp)
-                                                ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_keyboard_layout_nine_key),
-                                                                fontWeight = FontWeight.Normal
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Icon(
-                                                                imageVector = Icons.Outlined.Check,
-                                                                contentDescription = null,
-                                                                modifier = Modifier.alpha(if (keyboardLayout.isNineKey) 1f else 0f),
-                                                                tint = PresetColor.blue
                                                         )
                                                 }
                                         }
@@ -824,6 +627,167 @@ fun SettingsScreen(height: Dp) {
                                         verticalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
                                         Text(
+                                                text = stringResource(id = R.string.keyboard_settings_traditional_character_standard_header),
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                color = tintColor,
+                                                style = MaterialTheme.typography.bodySmall
+                                        )
+                                        Column(
+                                                modifier = Modifier
+                                                        .background(color = backColor, shape = sectionShape)
+                                                        .fillMaxWidth()
+                                        ) {
+                                                Button(
+                                                        onClick = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updatePreferredTraditionalStandard(CharacterStandard.Preset)
+                                                        },
+                                                        shape = CircleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_traditional_character_standard_option1_preset),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.Preset) 1f else 0f),
+                                                                tint = PresetColor.blue
+                                                        )
+                                                }
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                                Button(
+                                                        onClick = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updatePreferredTraditionalStandard(CharacterStandard.HongKong)
+                                                        },
+                                                        shape = CircleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_traditional_character_standard_option6_hongkong),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.HongKong) 1f else 0f),
+                                                                tint = PresetColor.blue
+                                                        )
+                                                }
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                                Button(
+                                                        onClick = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updatePreferredTraditionalStandard(CharacterStandard.Taiwan)
+                                                        },
+                                                        shape = CircleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_traditional_character_standard_option7_taiwan),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.Taiwan) 1f else 0f),
+                                                                tint = PresetColor.blue
+                                                        )
+                                                }
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                                Button(
+                                                        onClick = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updatePreferredTraditionalStandard(CharacterStandard.PrcGeneral)
+                                                        },
+                                                        shape = CircleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_traditional_character_standard_option8_prc),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.PrcGeneral) 1f else 0f),
+                                                                tint = PresetColor.blue
+                                                        )
+                                                }
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                                Button(
+                                                        onClick = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updatePreferredTraditionalStandard(CharacterStandard.AncientBooksPublishing)
+                                                        },
+                                                        shape = CircleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_traditional_character_standard_option9_abp),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.AncientBooksPublishing) 1f else 0f),
+                                                                tint = PresetColor.blue
+                                                        )
+                                                }
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                                Button(
+                                                        onClick = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updatePreferredTraditionalStandard(CharacterStandard.Inherited)
+                                                        },
+                                                        shape = CircleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_traditional_character_standard_option3_inherited),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Outlined.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.Inherited) 1f else 0f),
+                                                                tint = PresetColor.blue
+                                                        )
+                                                }
+                                        }
+                                        Text(
+                                                text = stringResource(id = R.string.keyboard_settings_traditional_character_standard_footer),
+                                                modifier = Modifier.padding(horizontal = 8.dp).alpha(0.75f),
+                                                color = tintColor,
+                                                style = MaterialTheme.typography.bodySmall
+                                        )
+                                }
+                        }
+                        item {
+                                Column(
+                                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                                ) {
+                                        Text(
                                                 text = stringResource(id = R.string.keyboard_settings_cangjie_variant_header),
                                                 modifier = Modifier.padding(horizontal = 8.dp),
                                                 color = tintColor,
@@ -1101,7 +1065,7 @@ fun SettingsScreen(height: Dp) {
 @Composable
 private fun ResponsiveDivider(isDarkMode: Boolean, isHighContrastPreferred: Boolean) {
         HorizontalDivider(
-                modifier = Modifier.padding(horizontal = 8.dp),
+                modifier = Modifier.padding(horizontal = 8.dp).alpha(0.8f),
                 thickness = 1.dp,
                 color = if (isHighContrastPreferred) {
                         if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight

@@ -6,12 +6,13 @@ enum class KeyboardForm {
         DecimalPad,
         EditingPanel,
         EmojiBoard,
+        LayoutPicker,
+        NineKeyNumeric,
+        NineKeyStroke,
         NumberPad,
         Numeric,
         Settings,
-        Symbolic,
-        NineKeyNumeric,
-        NineKeyStroke;
+        Symbolic;
 
         val isBufferable: Boolean
                 get() = when (this) {

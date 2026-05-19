@@ -34,7 +34,6 @@ fun ToolBar() {
         val inputMethodModeSwitchWidth = 64.dp
         val buttonSize = 48.dp
         val iconSize = 24.dp
-        val editingIconSize = 28.dp
         val interactionSource = remember { MutableInteractionSource() }
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
@@ -58,6 +57,21 @@ fun ToolBar() {
                                 imageVector = ImageVector.vectorResource(id = R.drawable.button_settings),
                                 contentDescription = null,
                                 modifier = Modifier.size(iconSize),
+                                tint = if (isDarkMode) Color.White else Color.Black
+                        )
+                }
+                IconButton(
+                        onClick = {
+                                context.audioFeedback(SoundEffect.Click)
+                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                context.transformTo(KeyboardForm.LayoutPicker)
+                        },
+                        modifier = Modifier.size(buttonSize)
+                ) {
+                        Icon(
+                                imageVector = ImageVector.vectorResource(id = R.drawable.button_show_keyboard),
+                                contentDescription = null,
+                                modifier = Modifier.size(28.dp),
                                 tint = if (isDarkMode) Color.White else Color.Black
                         )
                 }
@@ -100,9 +114,22 @@ fun ToolBar() {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.button_editing),
                                 contentDescription = null,
-                                modifier = Modifier.size(editingIconSize),
+                                modifier = Modifier.size(28.dp),
                                 tint = if (isDarkMode) Color.White else Color.Black
                         )
+                }
+                Box (
+                        modifier = Modifier
+                                .clickable(interactionSource = interactionSource, indication = null) {
+                                        context.audioFeedback(SoundEffect.Click)
+                                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                        context.toggleCharacterScriptVariant()
+                                }
+                                .width(buttonSize)
+                                .fillMaxHeight(),
+                        contentAlignment = Alignment.Center
+                ) {
+                        CharacterSetSwitch()
                 }
                 IconButton(
                         onClick = {
@@ -115,7 +142,7 @@ fun ToolBar() {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.button_dismiss_keyboard),
                                 contentDescription = null,
-                                modifier = Modifier.size(iconSize),
+                                modifier = Modifier.size(26.dp),
                                 tint = if (isDarkMode) Color.White else Color.Black
                         )
                 }

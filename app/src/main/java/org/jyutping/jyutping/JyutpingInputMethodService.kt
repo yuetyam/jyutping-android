@@ -293,7 +293,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         val spaceKeyForm: MutableStateFlow<SpaceKeyForm> by lazy { MutableStateFlow(SpaceKeyForm.Fallback) }
         private fun updateSpaceKeyForm() {
-                val isSimplified: Boolean = characterStandard.value.isSimplified
+                val isSimplified: Boolean = characterStandard.value.isMutilated
                 val newForm: SpaceKeyForm = when {
                         inputMethodMode.value.isABC -> SpaceKeyForm.English
                         keyboardForm.value.isNineKeyNumeric -> SpaceKeyForm.Fallback
@@ -322,9 +322,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         InputMethodMode.ABC -> ReturnKeyForm.StandbyABC
                         InputMethodMode.Cantonese -> {
                                 if (isBuffering.value) {
-                                        if (characterStandard.value.isSimplified) ReturnKeyForm.BufferingSimplified else ReturnKeyForm.BufferingTraditional
+                                        if (characterStandard.value.isMutilated) ReturnKeyForm.BufferingSimplified else ReturnKeyForm.BufferingTraditional
                                 } else {
-                                        if (characterStandard.value.isSimplified) ReturnKeyForm.StandbySimplified else ReturnKeyForm.StandbyTraditional
+                                        if (characterStandard.value.isMutilated) ReturnKeyForm.StandbySimplified else ReturnKeyForm.StandbyTraditional
                                 }
                         }
                 }
@@ -416,19 +416,49 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
-        val characterStandard: MutableStateFlow<CharacterStandard> by lazy {
-                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CharacterStandard, CharacterStandard.Traditional.identifier)
-                val standard: CharacterStandard = CharacterStandard.standardOf(savedValue)
-                MutableStateFlow(standard)
-        }
-        fun updateCharacterStandard(standard: CharacterStandard) {
-                characterStandard.value = standard
-                updateSpaceKeyForm()
-                updateReturnKeyForm()
-                sharedPreferences.edit {
-                        putInt(UserSettingsKey.CharacterStandard, standard.identifier)
+        val preferredTraditionalStandard: MutableStateFlow<CharacterStandard> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.TraditionalCharacterStandard, 0)
+                if (savedValue == 0) {
+                        val legacySavedValue: Int = sharedPreferences.getInt(UserSettingsKey.LegacyCharacterStandard, CharacterStandard.Preset.identifier)
+                        val standard: CharacterStandard = when (legacySavedValue) {
+                                2 -> CharacterStandard.HongKong
+                                3 -> CharacterStandard.Taiwan
+                                else -> CharacterStandard.Preset
+                        }
+                        sharedPreferences.edit {
+                                putInt(UserSettingsKey.TraditionalCharacterStandard, standard.identifier)
+                        }
+                        MutableStateFlow(standard)
+                } else {
+                        val standard: CharacterStandard = CharacterStandard.standardOf(savedValue)
+                        MutableStateFlow(standard)
                 }
         }
+        fun updatePreferredTraditionalStandard(standard: CharacterStandard) {
+                preferredTraditionalStandard.value = standard
+                if (characterStandard.value.isTraditional) {
+                        characterStandard.value = standard
+                }
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.TraditionalCharacterStandard, standard.identifier)
+                }
+        }
+        val characterStandard: MutableStateFlow<CharacterStandard> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.CharacterScriptVariant, 1)
+                val standard: CharacterStandard = if (savedValue == 2) CharacterStandard.Mutilated else preferredTraditionalStandard.value
+                MutableStateFlow(standard)
+        }
+        fun toggleCharacterScriptVariant() {
+                val newStandard: CharacterStandard = if (characterStandard.value.isMutilated) preferredTraditionalStandard.value else CharacterStandard.Mutilated
+                characterStandard.value = newStandard
+                updateSpaceKeyForm()
+                updateReturnKeyForm()
+                val value: Int = if (newStandard.isMutilated) 2 else 1
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.CharacterScriptVariant, value)
+                }
+        }
+
         val isAudioFeedbackOn: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.AudioFeedback, 101)
                 val isOn: Boolean = (savedValue == 101)
@@ -738,7 +768,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 val segmentation = PinyinSegmenter.segment(keys, db)
                                 val queriedDeferred = async { PinyinResearcher.reverseLookup(keys, segmentation, db) }
                                 val queried = queriedDeferred.await()
-                                val suggestions = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
+                                val suggestions = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isMutilated) db else null, sessionState = sessionState) }.distinct()
                                 val bufferText = joinedBufferTexts()
                                 val tailMark: String = if (keys.isEmpty()) PresetString.EMPTY else run {
                                         val firstLexicon = queried.firstOrNull()
@@ -779,7 +809,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 withContext(Dispatchers.Main) {
                                         updateQwertyForm(QwertyForm.Cangjie)
                                         currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
+                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isMutilated) db else null, sessionState = sessionState) }.distinct()
                                         updateInputSessionStates()
                                 }
                         }
@@ -801,7 +831,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 updateQwertyForm(QwertyForm.Stroke)
                                         }
                                         currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
+                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isMutilated) db else null, sessionState = sessionState) }.distinct()
                                         updateInputSessionStates()
                                 }
                         }
@@ -834,7 +864,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 val mark: String = if (keys.isEmpty()) bufferText.take(1) else (bufferText.take(1) + PresetString.SPACE + tailMark)
                                 withContext(Dispatchers.Main) {
                                         currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
+                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isMutilated) db else null, sessionState = sessionState) }.distinct()
                                         updateInputSessionStates()
                                 }
                         }
@@ -858,7 +888,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         queried = queried,
                                         commentForm = RomanizationForm.Full,
                                         charset = characterStandard.value,
-                                        db = if (characterStandard.value.isSimplified) db else null,
+                                        db = if (characterStandard.value.isMutilated) db else null,
                                         sessionState = sessionState
                                 )
                                 val mark: String = run {
@@ -974,7 +1004,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val keys = newValue.drop(1)
                                         val queriedDeferred = async { PinyinResearcher.nineKeyReverseLookup(keys, db) }
                                         val queried = queriedDeferred.await()
-                                        val suggestions = queried.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isSimplified) db else null, sessionState = sessionState) }.distinct()
+                                        val suggestions = queried.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isMutilated) db else null, sessionState = sessionState) }.distinct()
                                         val tailMark: String = run {
                                                 val firstCandidate = suggestions.firstOrNull()
                                                 if (firstCandidate?.lexicon?.inputCount == keys.size) {
@@ -1008,7 +1038,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         queried = queried,
                                         commentForm = RomanizationForm.Full,
                                         charset = characterStandard.value,
-                                        db = if (characterStandard.value.isSimplified) db else null,
+                                        db = if (characterStandard.value.isMutilated) db else null,
                                         sessionState = sessionState
                                 )
                                 val mark: String = run {

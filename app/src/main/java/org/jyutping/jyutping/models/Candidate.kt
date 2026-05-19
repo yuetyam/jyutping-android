@@ -49,15 +49,16 @@ data class Candidate(
         constructor(
                 lexicon: Lexicon,
                 commentForm: RomanizationForm,
-                charset: CharacterStandard = CharacterStandard.Traditional,
+                charset: CharacterStandard = CharacterStandard.Preset,
                 db: DatabaseHelper? = null,
                 sessionState: Long
         ) : this(
                 text = if (lexicon.isNotCantonese) lexicon.text else when (charset) {
-                        CharacterStandard.Traditional -> lexicon.text
+                        CharacterStandard.Preset -> lexicon.text
                         CharacterStandard.HongKong -> HongKongVariant.convert(lexicon.text)
                         CharacterStandard.Taiwan -> TaiwanVariant.convert(lexicon.text)
-                        CharacterStandard.Simplified -> if (db != null) Simplifier.convert(lexicon.text, db) else lexicon.text
+                        CharacterStandard.Mutilated -> if (db != null) Simplifier.convert(lexicon.text, db) else lexicon.text
+                        else -> lexicon.text
                 },
                 comment = if (lexicon.isNotCantonese) null else when (commentForm) {
                         RomanizationForm.Full -> lexicon.romanization
