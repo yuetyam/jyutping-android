@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowDownward
+import androidx.compose.material.icons.rounded.ArrowDownward
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -61,7 +61,7 @@ fun EditingPanelMoveDownwardKey(modifier: Modifier) {
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
                 Icon(
-                        imageVector = Icons.Outlined.ArrowDownward,
+                        imageVector = Icons.Rounded.ArrowDownward,
                         contentDescription = null,
                         modifier = Modifier.size(22.dp),
                         tint = if (isDarkMode) Color.White else Color.Black
