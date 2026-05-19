@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,16 +26,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
-import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.models.Candidate
 import org.jyutping.jyutping.models.KeyboardForm
@@ -181,7 +180,7 @@ fun CandidateBoard(height: Dp, isPhysicalKeyboard: Boolean = false) {
                         CandidateBoardPhysicalButtons()
                 } else {
                         AdvancedIconButton(
-                                icon = ImageVector.vectorResource(id = R.drawable.chevron_up)
+                                icon = Icons.Rounded.ArrowUpward
                         ) {
                                 context.audioFeedback(SoundEffect.Back)
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)

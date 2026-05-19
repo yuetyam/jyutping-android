@@ -1,6 +1,7 @@
 package org.jyutping.jyutping.keyboard
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -23,7 +24,7 @@ import org.jyutping.jyutping.presets.PresetColor
 fun AdvancedIconButton(
         modifier: Modifier = Modifier,
         icon: ImageVector,
-        iconSize: Dp = 20.dp,
+        iconSize: Dp = 26.dp,
         size: Dp = 44.dp,
         action: () -> Unit
 ) {
@@ -42,12 +43,13 @@ fun AdvancedIconButton(
                                         Color.Transparent
                                 },
                                 shape = CircleShape
-                        ),
+                        )
+                        .padding(1.dp),
                 colors = IconButtonDefaults.iconButtonColors(
                         containerColor = if (isHighContrastPreferred) {
-                                if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
+                                if (isDarkMode) AltPresetColor.shallowDark else AltPresetColor.shallowLight
                         } else {
-                                if (isDarkMode) PresetColor.solidEmphaticDark else PresetColor.solidEmphaticLight
+                                if (isDarkMode) PresetColor.solidShallowDark else PresetColor.solidShallowLight
                         },
                         contentColor = if (isDarkMode) Color.White else Color.Black
                 ),

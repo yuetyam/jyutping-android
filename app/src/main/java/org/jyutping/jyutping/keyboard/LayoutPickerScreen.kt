@@ -19,6 +19,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -87,7 +89,7 @@ fun LayoutPickerScreen(height: Dp) {
                 ) {
                         Spacer(modifier = Modifier.width(4.dp))
                         AdvancedIconButton(
-                                icon = ImageVector.vectorResource(id = R.drawable.chevron_up)
+                                icon = Icons.Rounded.ArrowUpward
                         ) {
                                 context.audioFeedback(SoundEffect.Back)
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
@@ -102,7 +104,8 @@ fun LayoutPickerScreen(height: Dp) {
                         Spacer(modifier = Modifier.weight(1f))
                         AdvancedIconButton(
                                 modifier = Modifier.alpha(0f),
-                                icon = ImageVector.vectorResource(id = R.drawable.button_expand)
+                                icon = ImageVector.vectorResource(id = R.drawable.button_expand),
+                                iconSize = 20.dp
                         ) {
                                 context.audioFeedback(SoundEffect.Click)
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)

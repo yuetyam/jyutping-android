@@ -21,8 +21,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.rounded.ArrowUpward
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -152,7 +153,7 @@ fun SettingsScreen(height: Dp) {
                 ) {
                         Spacer(modifier = Modifier.width(4.dp))
                         AdvancedIconButton(
-                                icon = ImageVector.vectorResource(id = R.drawable.chevron_up)
+                                icon = Icons.Rounded.ArrowUpward
                         ) {
                                 context.audioFeedback(SoundEffect.Back)
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
@@ -167,7 +168,8 @@ fun SettingsScreen(height: Dp) {
                         Spacer(modifier = Modifier.weight(1f))
                         AdvancedIconButton(
                                 modifier = Modifier.alpha(0f),
-                                icon = ImageVector.vectorResource(id = R.drawable.button_expand)
+                                icon = ImageVector.vectorResource(id = R.drawable.button_expand),
+                                iconSize = 20.dp
                         ) {
                                 context.audioFeedback(SoundEffect.Click)
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
@@ -567,7 +569,7 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
-                                                                imageVector = Icons.Outlined.Check,
+                                                                imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (commentStyle.isAbove()) 1f else 0f),
                                                                 tint = PresetColor.blue
@@ -590,7 +592,7 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
-                                                                imageVector = Icons.Outlined.Check,
+                                                                imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (commentStyle.isBelow()) 1f else 0f),
                                                                 tint = PresetColor.blue
@@ -613,7 +615,7 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
-                                                                imageVector = Icons.Outlined.Check,
+                                                                imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (commentStyle.isNone()) 1f else 0f),
                                                                 tint = PresetColor.blue
@@ -653,7 +655,7 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
-                                                                imageVector = Icons.Outlined.Check,
+                                                                imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.Preset) 1f else 0f),
                                                                 tint = PresetColor.blue
@@ -676,7 +678,7 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
-                                                                imageVector = Icons.Outlined.Check,
+                                                                imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.HongKong) 1f else 0f),
                                                                 tint = PresetColor.blue
@@ -699,7 +701,7 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
-                                                                imageVector = Icons.Outlined.Check,
+                                                                imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.Taiwan) 1f else 0f),
                                                                 tint = PresetColor.blue
@@ -722,7 +724,7 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
-                                                                imageVector = Icons.Outlined.Check,
+                                                                imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.PrcGeneral) 1f else 0f),
                                                                 tint = PresetColor.blue
@@ -745,7 +747,7 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
-                                                                imageVector = Icons.Outlined.Check,
+                                                                imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.AncientBooksPublishing) 1f else 0f),
                                                                 tint = PresetColor.blue
@@ -768,7 +770,7 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
-                                                                imageVector = Icons.Outlined.Check,
+                                                                imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.Inherited) 1f else 0f),
                                                                 tint = PresetColor.blue
@@ -814,7 +816,7 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
-                                                                imageVector = Icons.Outlined.Check,
+                                                                imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (cangjieVariant == CangjieVariant.Cangjie5) 1f else 0f),
                                                                 tint = PresetColor.blue
@@ -837,7 +839,7 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
-                                                                imageVector = Icons.Outlined.Check,
+                                                                imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (cangjieVariant == CangjieVariant.Cangjie3) 1f else 0f),
                                                                 tint = PresetColor.blue
@@ -860,7 +862,7 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
-                                                                imageVector = Icons.Outlined.Check,
+                                                                imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (cangjieVariant == CangjieVariant.Quick5) 1f else 0f),
                                                                 tint = PresetColor.blue
@@ -883,7 +885,7 @@ fun SettingsScreen(height: Dp) {
                                                         )
                                                         Spacer(modifier = Modifier.weight(1f))
                                                         Icon(
-                                                                imageVector = Icons.Outlined.Check,
+                                                                imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (cangjieVariant == CangjieVariant.Quick3) 1f else 0f),
                                                                 tint = PresetColor.blue
@@ -1078,7 +1080,7 @@ private fun ResponsiveDivider(isDarkMode: Boolean, isHighContrastPreferred: Bool
 @Composable
 private fun SwitchThumbContent(isOn: Boolean) {
         Icon(
-                imageVector = if (isOn) Icons.Outlined.Check else Icons.Outlined.Close,
+                imageVector = if (isOn) Icons.Rounded.Check else Icons.Rounded.Close,
                 contentDescription = null,
                 modifier = Modifier.size(SwitchDefaults.IconSize),
                 tint = if (isOn) PresetColor.green else Color.Gray

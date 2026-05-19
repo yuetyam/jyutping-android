@@ -12,10 +12,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Cancel
-import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.rounded.Cancel
+import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -252,9 +252,9 @@ private fun Expression(heading: String, labels: List<LabelEntry>) {
 @Composable
 private fun IconLabel(entry: LabelEntry) {
         val image: ImageVector = when (entry.type) {
-                LabelType.CHECKED -> Icons.Outlined.CheckCircle
+                LabelType.CHECKED -> Icons.Rounded.CheckCircle
                 LabelType.INFO -> Icons.Outlined.Info
-                LabelType.MISTAKE -> Icons.Outlined.Cancel
+                LabelType.MISTAKE -> Icons.Rounded.Cancel
                 LabelType.WARNING -> Icons.Outlined.ErrorOutline
         }
         val color: Color = when (entry.type) {
@@ -270,7 +270,7 @@ private fun IconLabel(entry: LabelEntry) {
                 Icon(
                         imageVector = image,
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp),
+                        modifier = Modifier.size(20.dp),
                         tint = color
                 )
                 SelectionContainer {
