@@ -49,16 +49,17 @@ android {
                         )
                 }
         }
-        compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_21
-                targetCompatibility = JavaVersion.VERSION_21
-        }
         buildFeatures {
                 compose = true
                 buildConfig = true
         }
-        packaging {
-                resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        compileOptions {
+                sourceCompatibility = JavaVersion.VERSION_21
+                targetCompatibility = JavaVersion.VERSION_21
+        }
+        androidResources {
+                @Suppress("UnstableApiUsage")
+                generateLocaleConfig = true
         }
 }
 
@@ -71,22 +72,24 @@ kotlin {
         jvmToolchain(21)
 }
 
-val composeVersion = "1.11.1"
+val composeVersion = "1.11.2"
 dependencies {
         implementation("androidx.activity:activity-compose:1.13.0")
         implementation("androidx.activity:activity-ktx:1.13.0")
+        implementation("androidx.compose.material:material:$composeVersion")
         implementation("androidx.compose.material:material-icons-extended:1.7.8")
-        implementation("androidx.compose.material3:material3:1.4.0")
+        implementation("androidx.compose.material3:material3:1.5.0-alpha20")
         implementation("androidx.compose.ui:ui:$composeVersion")
         implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
         implementation("androidx.core:core-ktx:1.18.0")
         implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
         implementation("androidx.lifecycle:lifecycle-service:2.10.0")
         implementation("androidx.navigation:navigation-compose:2.9.8")
+        implementation("com.google.android.material:material:1.14.0")
         implementation("com.louiscad.splitties:splitties-systemservices:3.0.0")
         implementation("com.louiscad.splitties:splitties-views:3.0.0")
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
-        testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.3")
+        testImplementation("org.junit.jupiter:junit-jupiter-api:6.1.0")
         androidTestImplementation("androidx.test.ext:junit:1.3.0")
         androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
         androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")

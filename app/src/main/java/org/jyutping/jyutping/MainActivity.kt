@@ -27,7 +27,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.speech.TTSProvider
-import org.jyutping.jyutping.ui.theme.JyutpingTheme
 import org.jyutping.jyutping.utilities.DatabasePreparer
 
 val LocalTTSProvider = staticCompositionLocalOf<TTSProvider?> { null }
@@ -48,7 +47,7 @@ class MainActivity : ComponentActivity() {
                         val topTitle: String = stringResource(id = titleOf(route = route))
                         val canNavigateUp: Boolean = canNavigateUp(route = route)
                         CompositionLocalProvider(LocalTTSProvider provides ttsProvider) {
-                                JyutpingTheme {
+                                AppTheme {
                                         Scaffold(
                                                 topBar = {
                                                         TopAppBar(
