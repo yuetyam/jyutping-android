@@ -75,10 +75,7 @@ fun ConfusionScreen(navController: NavHostController) {
 private fun ConfusionElementView(element: ConfusionElement) {
         Row(
                 modifier = Modifier
-                        .background(
-                                color = colorScheme.background,
-                                shape = RoundedCornerShape(12.dp)
-                        )
+                        .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                         .fillMaxWidth()
                         .padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(14.dp),

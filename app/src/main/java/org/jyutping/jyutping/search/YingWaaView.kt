@@ -35,7 +35,7 @@ fun YingWaaView(entries: List<YingWaaFanWan>) {
                 Column(
                         modifier = Modifier
                                 .fillMaxWidth()
-                                .background(color = colorScheme.background, shape = RoundedCornerShape(12.dp))
+                                .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                 .padding(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -46,7 +46,7 @@ fun YingWaaView(entries: List<YingWaaFanWan>) {
                                 Column(
                                         verticalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
-                                        HorizontalDivider()
+                                        HorizontalDivider(modifier = Modifier.alpha(0.66f))
                                         YingWaaPronunciationView(it)
                                 }
                         }

@@ -6,8 +6,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,13 +43,13 @@ fun SearchField(
                         .fillMaxWidth()
                         .padding(horizontal = horizontalPadding, vertical = verticalPadding),
                 placeholder = { Text(text = stringResource(id = R.string.search_field_placeholder), color = Color.Gray) },
-                leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = null) },
+                leadingIcon = { Icon(imageVector = Icons.Rounded.Search, contentDescription = null) },
                 trailingIcon = {
                         if (textState.value.isNotEmpty()) {
                                 IconButton(
                                         onClick = { textState.value = PresetString.EMPTY }
                                 ) {
-                                        Icon(Icons.Outlined.Close, contentDescription = null)
+                                        Icon(imageVector = Icons.Rounded.Close, contentDescription = null)
                                 }
                         }
                 },

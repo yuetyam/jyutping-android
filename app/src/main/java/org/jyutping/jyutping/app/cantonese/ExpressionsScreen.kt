@@ -198,10 +198,7 @@ private fun DifferentView(heading: String, lines: List<String>) {
         SelectionContainer {
                 Column(
                         modifier = Modifier
-                                .background(
-                                        color = colorScheme.background,
-                                        shape = RoundedCornerShape(12.dp)
-                                )
+                                .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                 .fillMaxWidth()
                                 .padding(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -228,10 +225,7 @@ private class LabelEntry(val type: LabelType, val text: String)
 private fun Expression(heading: String, labels: List<LabelEntry>) {
         Column(
                 modifier = Modifier
-                        .background(
-                                color = colorScheme.background,
-                                shape = RoundedCornerShape(12.dp)
-                        )
+                        .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                         .fillMaxWidth()
                         .padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)

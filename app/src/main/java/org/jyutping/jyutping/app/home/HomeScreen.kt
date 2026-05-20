@@ -37,7 +37,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -239,8 +238,7 @@ fun HomeScreen(navController: NavHostController) {
                                 DisableSelection {
                                         Column(
                                                 modifier = Modifier
-                                                        .clip(CircleShape)
-                                                        .background(colorScheme.background)
+                                                        .background(color = colorScheme.background, shape = CircleShape)
                                                         .fillMaxWidth()
                                         ) {
                                                 NavigationLabel(
@@ -317,8 +315,7 @@ fun HomeScreen(navController: NavHostController) {
                                 DisableSelection {
                                         Column(
                                                 modifier = Modifier
-                                                        .clip(RoundedCornerShape(12.dp))
-                                                        .background(colorScheme.background)
+                                                        .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                                         .fillMaxWidth()
                                         ) {
                                                 NavigationLabel(

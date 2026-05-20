@@ -6,7 +6,6 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,11 +15,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
-import androidx.compose.material.icons.outlined.AlternateEmail
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.CenterFocusStrong
 import androidx.compose.material.icons.outlined.CheckCircle
@@ -31,7 +30,11 @@ import androidx.compose.material.icons.outlined.Group
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Public
+import androidx.compose.material.icons.rounded.AlternateEmail
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
@@ -39,7 +42,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -64,8 +67,7 @@ fun AboutScreen() {
                 item {
                         Column(
                                 modifier = Modifier
-                                        .clip(RoundedCornerShape(12.dp))
-                                        .background(colorScheme.background)
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                         .fillMaxWidth()
                         ) {
                                 WebLinkLabel(icon = Icons.Outlined.Public, text = stringResource(id = R.string.about_label_website), uri = AppMaster.websiteAddress)
@@ -80,8 +82,7 @@ fun AboutScreen() {
                 item {
                         Column(
                                 modifier = Modifier
-                                        .clip(RoundedCornerShape(12.dp))
-                                        .background(colorScheme.background)
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                         .fillMaxWidth()
                         ) {
                                 AppLinkLabel(icon = Icons.Outlined.Group, text = stringResource(id = R.string.about_label_telegram), uri = AppMaster.TelegramWebAddress)
@@ -92,16 +93,15 @@ fun AboutScreen() {
                                 EnhancedHorizontalDivider()
                                 AppLinkLabel(icon = Icons.Outlined.CenterFocusStrong, text = stringResource(id = R.string.about_label_instagram), uri = AppMaster.InstagramWebAddress)
                                 EnhancedHorizontalDivider()
-                                AppLinkLabel(icon = Icons.Outlined.AlternateEmail, text = stringResource(id = R.string.about_label_threads), uri = AppMaster.ThreadsAddress)
+                                AppLinkLabel(icon = Icons.Rounded.AlternateEmail, text = stringResource(id = R.string.about_label_threads), uri = AppMaster.ThreadsAddress)
                                 EnhancedHorizontalDivider()
-                                AppLinkLabel(icon = Icons.Outlined.AlternateEmail, text = stringResource(id = R.string.about_label_twitter), uri = AppMaster.TwitterWebAddress)
+                                AppLinkLabel(icon = Icons.Rounded.AlternateEmail, text = stringResource(id = R.string.about_label_twitter), uri = AppMaster.TwitterWebAddress)
                         }
                 }
                 item {
                         Column(
                                 modifier = Modifier
-                                        .clip(RoundedCornerShape(12.dp))
-                                        .background(colorScheme.background)
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                         .fillMaxWidth()
                         ) {
                                 WebLinkLabel(icon = Icons.Outlined.CheckCircle, text = stringResource(id = R.string.about_label_google_forms), uri = AppMaster.GoogleFormsAddress)
@@ -119,10 +119,9 @@ private fun VersionLabel() {
         val version: String by lazy { BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")" }
         Row(
                 modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(colorScheme.background)
+                        .background(color = colorScheme.background, shape = CircleShape)
                         .fillMaxWidth()
-                        .padding(start = 10.dp, top = 10.dp, end = 12.dp, bottom = 10.dp),
+                        .padding(start = 10.dp, top = 10.dp, end = 14.dp, bottom = 10.dp),
                 horizontalArrangement = Arrangement.spacedBy(14.dp),
                 verticalAlignment = Alignment.CenterVertically
         ) {
@@ -147,60 +146,64 @@ private fun VersionLabel() {
 }
 
 @Composable
-private fun EmailFeedbackButton() {
+fun EmailFeedbackButton() {
         val context = LocalContext.current
-
-        // TODO: Use Button instead
-        Row(
-                modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = colorScheme.background)
-                        .clickable {
-                                val appVersion: String = BuildConfig.VERSION_NAME // 0.1.0
-                                val appBuildNumber: Int = BuildConfig.VERSION_CODE // 23
-                                val androidVersion: String = Build.VERSION.RELEASE // 15
-                                val sdkVersion: Int = Build.VERSION.SDK_INT // 35
-                                val deviceModel: String = Build.MODEL // Pixel 9 Pro XL
-                                val manufacturer: String = Build.MANUFACTURER // Google
-                                val information: String = """
-                                        App Version: $appVersion ($appBuildNumber)
-                                        Android Version: $androidVersion (API ${sdkVersion})
-                                        Device: $manufacturer $deviceModel
-                                """.trimIndent()
-                                val intent = Intent(Intent.ACTION_SENDTO).apply {
-                                        data = "mailto:".toUri()
-                                        putExtra(Intent.EXTRA_EMAIL, arrayOf(AppMaster.EmailAddress))
-                                        putExtra(Intent.EXTRA_SUBJECT, "Jyutping Feedback")
-                                        putExtra(Intent.EXTRA_TEXT, "\n\n${information}")
-                                }
-                                try {
-                                        context.startActivity(intent)
-                                } catch (e: ActivityNotFoundException) {
-                                        val logTag = "org.jyutping.jyutping.about"
-                                        e.message?.let { Log.i(logTag, it) }
-                                        Toast.makeText(context, "Email Unavailable", Toast.LENGTH_LONG).show()
-                                }
+        Button(
+                onClick = {
+                        val appVersion: String = BuildConfig.VERSION_NAME // 0.1.0
+                        val appBuildNumber: Int = BuildConfig.VERSION_CODE // 23
+                        val androidVersion: String = Build.VERSION.RELEASE // 15
+                        val sdkVersion: Int = Build.VERSION.SDK_INT // 35
+                        val deviceModel: String = Build.MODEL // Pixel 9 Pro XL
+                        val manufacturer: String = Build.MANUFACTURER // Google
+                        val information: String = """
+                                App Version: $appVersion ($appBuildNumber)
+                                Android Version: $androidVersion (API ${sdkVersion})
+                                Device: $manufacturer $deviceModel
+                        """.trimIndent()
+                        val intent = Intent(Intent.ACTION_SENDTO).apply {
+                                data = "mailto:".toUri()
+                                putExtra(Intent.EXTRA_EMAIL, arrayOf(AppMaster.EmailAddress))
+                                putExtra(Intent.EXTRA_SUBJECT, "Jyutping Feedback")
+                                putExtra(Intent.EXTRA_TEXT, "\n\n${information}")
                         }
-                        .padding(horizontal = 10.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(14.dp),
-                verticalAlignment = Alignment.CenterVertically
+                        try {
+                                context.startActivity(intent)
+                        } catch (e: ActivityNotFoundException) {
+                                val logTag = "org.jyutping.jyutping.about"
+                                e.message?.let { Log.i(logTag, it) }
+                                Toast.makeText(context, "Email Unavailable", Toast.LENGTH_LONG).show()
+                        }
+                },
+                shape = CircleShape,
+                colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = LocalContentColor.current
+                ),
+                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 8.dp)
         ) {
-                Icon(
-                        imageVector = Icons.Outlined.Email,
-                        contentDescription = null,
-                        tint = PresetColor.blue
-                )
-                Text(
-                        text = stringResource(id = R.string.about_label_email),
-                        color = colorScheme.onBackground,
-                        style = MaterialTheme.typography.bodyLarge
-                )
-                Spacer(modifier = Modifier.weight(1.0f))
-                Icon(
-                        imageVector = Icons.Outlined.Edit,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp).alpha(0.66f),
-                        tint = colorScheme.onBackground
-                )
+                Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(14.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                ) {
+                        Icon(
+                                imageVector = Icons.Outlined.Email,
+                                contentDescription = null,
+                                tint = PresetColor.blue
+                        )
+                        Text(
+                                text = stringResource(id = R.string.about_label_email),
+                                color = colorScheme.onBackground,
+                                style = MaterialTheme.typography.bodyLarge
+                        )
+                        Spacer(modifier = Modifier.weight(1.0f))
+                        Icon(
+                                imageVector = Icons.Outlined.Edit,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp).alpha(0.66f),
+                                tint = colorScheme.onBackground
+                        )
+                }
         }
 }

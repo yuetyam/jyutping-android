@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.ui.common.SeparatorMark
@@ -28,7 +29,7 @@ fun GwongWanView(entries: List<GwongWanCharacter>) {
                 Column(
                         modifier = Modifier
                                 .fillMaxWidth()
-                                .background(color = colorScheme.background, shape = RoundedCornerShape(12.dp))
+                                .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                 .padding(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -39,7 +40,7 @@ fun GwongWanView(entries: List<GwongWanCharacter>) {
                                 Column(
                                         verticalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
-                                        HorizontalDivider()
+                                        HorizontalDivider(modifier = Modifier.alpha(0.66f))
                                         GwongWanPronunciationView(it)
                                 }
                         }

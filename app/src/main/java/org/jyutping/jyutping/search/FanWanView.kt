@@ -34,7 +34,7 @@ fun FanWanView(entries: List<FanWanCuetYiu>) {
                 Column(
                         modifier = Modifier
                                 .fillMaxWidth()
-                                .background(color = colorScheme.background, shape = RoundedCornerShape(12.dp))
+                                .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                 .padding(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -45,7 +45,7 @@ fun FanWanView(entries: List<FanWanCuetYiu>) {
                                 Column(
                                         verticalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
-                                        HorizontalDivider()
+                                        HorizontalDivider(modifier = Modifier.alpha(0.66f))
                                         FanWanPronunciationView(it)
                                 }
                         }

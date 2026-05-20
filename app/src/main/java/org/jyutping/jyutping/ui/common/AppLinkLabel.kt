@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowOutward
+import androidx.compose.material.icons.rounded.ArrowOutward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -62,7 +62,7 @@ fun AppLinkLabel(
                         )
                         Spacer(modifier = Modifier.weight(1.0f))
                         Icon(
-                                imageVector = Icons.Outlined.ArrowOutward,
+                                imageVector = Icons.Rounded.ArrowOutward,
                                 contentDescription = null,
                                 modifier = Modifier.size(20.dp).alpha(0.66f),
                                 tint = colorScheme.onBackground

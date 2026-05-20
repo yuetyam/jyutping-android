@@ -102,7 +102,7 @@ fun SettingsScreen(height: Dp) {
         val isInputMemoryOn by context.isInputMemoryOn.collectAsState()
         var isTryingToClearInputMemory by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()
-        val sectionShape = RoundedCornerShape(12.dp)
+        val sectionShape = RoundedCornerShape(16.dp)
         val tintColor: Color = if (isDarkMode) Color.White else Color.Black
         val backColor: Color = if (isDarkMode) Color.Black else Color.White
         val buttonColors: ButtonColors = if (isDarkMode) {
@@ -1043,8 +1043,8 @@ fun SettingsScreen(height: Dp) {
                                 Row(
                                         modifier = Modifier
                                                 .fillMaxWidth()
-                                                .background(color = backColor, shape = sectionShape)
-                                                .padding(horizontal = 8.dp, vertical = 12.dp),
+                                                .background(color = backColor, shape = CircleShape)
+                                                .padding(horizontal = 10.dp, vertical = 12.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
                                         Text(
@@ -1067,7 +1067,7 @@ fun SettingsScreen(height: Dp) {
 @Composable
 private fun ResponsiveDivider(isDarkMode: Boolean, isHighContrastPreferred: Boolean) {
         HorizontalDivider(
-                modifier = Modifier.padding(horizontal = 8.dp).alpha(0.8f),
+                modifier = Modifier.padding(horizontal = 8.dp).alpha(0.75f),
                 thickness = 1.dp,
                 color = if (isHighContrastPreferred) {
                         if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight

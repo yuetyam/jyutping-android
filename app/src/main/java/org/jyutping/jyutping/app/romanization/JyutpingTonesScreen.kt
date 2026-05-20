@@ -45,7 +45,7 @@ fun JyutpingTonesScreen() {
                                 Column(
                                         modifier = Modifier
                                                 .fillMaxWidth()
-                                                .background(color = colorScheme.background, shape = RoundedCornerShape(12.dp))
+                                                .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                                 .padding(horizontal = 8.dp, vertical = 4.dp),
                                         verticalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
@@ -66,7 +66,7 @@ fun JyutpingTonesScreen() {
                                 modifier = Modifier
                                         .height(234.dp)
                                         .fillMaxWidth()
-                                        .background(color = colorScheme.background, shape = RoundedCornerShape(12.dp))
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                         .padding(horizontal = 8.dp, vertical = 12.dp),
                                 textColor = colorScheme.onBackground
                         )

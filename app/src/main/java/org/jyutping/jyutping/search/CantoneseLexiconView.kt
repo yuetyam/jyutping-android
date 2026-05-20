@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.ui.common.SeparatorMark
 
@@ -20,7 +21,7 @@ fun CantoneseLexiconView(lexicon: CantoneseLexicon) {
         Column(
                 modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = colorScheme.background, shape = RoundedCornerShape(12.dp))
+                        .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                         .padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -29,7 +30,7 @@ fun CantoneseLexiconView(lexicon: CantoneseLexicon) {
                         Column(
                                 verticalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
-                                HorizontalDivider()
+                                HorizontalDivider(modifier = Modifier.alpha(0.66f))
                                 PronunciationLabel(pronunciation = it, word = lexicon.text)
                         }
                 }
@@ -37,7 +38,7 @@ fun CantoneseLexiconView(lexicon: CantoneseLexicon) {
                         Column(
                                 verticalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
-                                HorizontalDivider()
+                                HorizontalDivider(modifier = Modifier.alpha(0.66f))
                                 Row {
                                         Text(
                                                 text = "英語",

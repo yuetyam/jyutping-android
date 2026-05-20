@@ -8,14 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.FormatListBulleted
+import androidx.compose.material.icons.automirrored.rounded.FormatListBulleted
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Public
-import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -34,15 +33,14 @@ fun JyutpingScreen(navController: NavHostController) {
                 item {
                         Column(
                                 modifier = Modifier
-                                        .clip(RoundedCornerShape(12.dp))
-                                        .background(colorScheme.background)
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                         .fillMaxWidth()
                         ) {
-                                NavigationLabel(icon = Icons.AutoMirrored.Outlined.FormatListBulleted, text = stringResource(id = R.string.jyutping_label_initials)) {
+                                NavigationLabel(icon = Icons.AutoMirrored.Rounded.FormatListBulleted, text = stringResource(id = R.string.jyutping_label_initials)) {
                                         navController.navigate(route = Screen.JyutpingInitials.route)
                                 }
                                 EnhancedHorizontalDivider()
-                                NavigationLabel(icon = Icons.AutoMirrored.Outlined.FormatListBulleted, text = stringResource(id = R.string.jyutping_label_finals)) {
+                                NavigationLabel(icon = Icons.AutoMirrored.Rounded.FormatListBulleted, text = stringResource(id = R.string.jyutping_label_finals)) {
                                         navController.navigate(route = Screen.JyutpingFinals.route)
                                 }
                                 EnhancedHorizontalDivider()
@@ -54,26 +52,24 @@ fun JyutpingScreen(navController: NavHostController) {
                 item {
                         Column(
                                 modifier = Modifier
-                                        .clip(RoundedCornerShape(12.dp))
-                                        .background(colorScheme.background)
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                         .fillMaxWidth()
                         ) {
-                                WebLinkLabel(icon = Icons.Outlined.Search, text = "粵音資料集叢", uri = "https://jyut.net")
+                                WebLinkLabel(icon = Icons.Rounded.Search, text = "粵音資料集叢", uri = "https://jyut.net")
                                 EnhancedHorizontalDivider()
-                                WebLinkLabel(icon = Icons.Outlined.Search, text = "粵典", uri = "https://words.hk")
+                                WebLinkLabel(icon = Icons.Rounded.Search, text = "粵典", uri = "https://words.hk")
                                 EnhancedHorizontalDivider()
-                                WebLinkLabel(icon = Icons.Outlined.Search, text = "粵語審音配詞字庫", uri = "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-can")
+                                WebLinkLabel(icon = Icons.Rounded.Search, text = "粵語審音配詞字庫", uri = "https://humanum.arts.cuhk.edu.hk/Lexis/lexi-can")
                                 EnhancedHorizontalDivider()
-                                WebLinkLabel(icon = Icons.Outlined.Search, text = "羊羊粵語", uri = "https://shyyp.net/hant")
+                                WebLinkLabel(icon = Icons.Rounded.Search, text = "羊羊粵語", uri = "https://shyyp.net/hant")
                                 EnhancedHorizontalDivider()
-                                WebLinkLabel(icon = Icons.Outlined.Search, text = "粵語辭叢", uri = "https://www.jyutjyu.com")
+                                WebLinkLabel(icon = Icons.Rounded.Search, text = "粵語辭叢", uri = "https://www.jyutjyu.com")
                         }
                 }
                 item {
                         Column(
                                 modifier = Modifier
-                                        .clip(RoundedCornerShape(12.dp))
-                                        .background(colorScheme.background)
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                         .fillMaxWidth()
                         ) {
                                 WebLinkLabel(icon = Icons.Outlined.Public, text = "粵拼 Jyutping", uri = "https://jyutping.org")

@@ -42,7 +42,7 @@ fun TextCard(
                         .fillMaxWidth()
                         .background(
                                 color = colorScheme.background,
-                                shape = RoundedCornerShape(12.dp)
+                                shape = RoundedCornerShape(16.dp)
                         )
                         .padding(horizontal = 10.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)

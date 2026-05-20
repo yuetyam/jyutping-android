@@ -14,7 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.OpenInNew
+import androidx.compose.material.icons.automirrored.rounded.OpenInNew
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DividerDefaults
@@ -27,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
@@ -47,38 +46,34 @@ fun TextToSpeechScreen() {
                         item {
                                 Text(
                                         text = stringResource(id = R.string.tts_notice_row1),
-                                        color = colorScheme.onBackground,
-                                        modifier = Modifier.fillMaxWidth()
-                                                .background(
-                                                        color = colorScheme.background,
-                                                        shape = RoundedCornerShape(12.dp)
-                                                )
+                                        modifier = Modifier
+                                                .fillMaxWidth()
+                                                .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                                 .padding(horizontal = 12.dp, vertical = 8.dp),
+                                        color = colorScheme.onBackground
                                 )
                         }
                         item {
                                 Text(
                                         text = stringResource(id = R.string.tts_notice_row2),
-                                        color = colorScheme.onBackground,
-                                        modifier = Modifier.fillMaxWidth()
-                                                .background(
-                                                        color = colorScheme.background,
-                                                        shape = RoundedCornerShape(12.dp)
-                                                )
+                                        modifier = Modifier
+                                                .fillMaxWidth()
+                                                .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                                 .padding(horizontal = 12.dp, vertical = 8.dp),
+                                        color = colorScheme.onBackground
                                 )
                         }
                         item {
                                 Column(
                                         modifier = Modifier
-                                                .clip(RoundedCornerShape(12.dp))
-                                                .background(colorScheme.background)
+                                                .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                                 .fillMaxWidth()
                                 ) {
                                         Text(
                                                 text = stringResource(id = R.string.tts_notice_row3),
                                                 color = colorScheme.onBackground,
-                                                modifier = Modifier.fillMaxWidth()
+                                                modifier = Modifier
+                                                        .fillMaxWidth()
                                                         .padding(horizontal = 12.dp, vertical = 8.dp),
                                         )
                                         HorizontalDivider(color = DividerDefaults.color.copy(alpha = 0.66f))
@@ -117,7 +112,7 @@ private fun TTSLinkButton() {
                         )
                         Spacer(modifier = Modifier.weight(1.0f))
                         Icon(
-                                imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
+                                imageVector = Icons.AutoMirrored.Rounded.OpenInNew,
                                 contentDescription = null,
                                 modifier = Modifier.size(18.dp).alpha(0.66f),
                                 tint = colorScheme.onBackground

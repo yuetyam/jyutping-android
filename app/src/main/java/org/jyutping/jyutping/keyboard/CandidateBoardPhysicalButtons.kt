@@ -50,7 +50,8 @@ fun CandidateBoardPhysicalButtons() {
                 verticalAlignment = Alignment.CenterVertically
         ) {
                 AdvancedIconButton(
-                        icon = ImageVector.vectorResource(id = if (isExpanded) R.drawable.button_collapse else R.drawable.button_expand)
+                        icon = ImageVector.vectorResource(id = if (isExpanded) R.drawable.button_collapse else R.drawable.button_expand),
+                        iconSize = 20.dp
                 ) {
                         context.audioFeedback(SoundEffect.Click)
                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
@@ -73,25 +74,18 @@ fun CandidateBoardPhysicalButtons() {
                                         width = 1.dp,
                                         color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
                                         shape = CircleShape
-                                ),
+                                )
+                                .padding(1.dp),
                         colors = IconButtonDefaults.iconButtonColors(
-                                containerColor = if (isHighContrastPreferred) {
-                                        if (isDarkMode) AltPresetColor.emphaticDark else AltPresetColor.emphaticLight
-                                } else {
-                                        if (isDarkMode) PresetColor.solidEmphaticDark else PresetColor.solidEmphaticLight
-                                },
+                                containerColor = ToolBox.inputKeyBackColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey = false, isPressing = false),
                                 contentColor = if (isDarkMode) Color.White else Color.Black
                         ),
                         shape = CircleShape
                 ) {
                         Text(
-                                text = if (inputMethodMode.isCantonese) {
-                                        if (characterStandard.isMutilated) "粤" else "粵"
-                                } else {
-                                        "A"
-                                },
+                                text = if (inputMethodMode.isABC) "A" else if (characterStandard.isMutilated) "粤" else "粵",
                                 color = if (isDarkMode) Color.White else Color.Black,
-                                fontSize = 18.sp
+                                fontSize = 20.sp
                         )
                 }
                 AdvancedIconButton(

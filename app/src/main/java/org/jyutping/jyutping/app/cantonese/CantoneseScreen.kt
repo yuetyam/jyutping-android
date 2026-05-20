@@ -8,13 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.FormatListBulleted
+import androidx.compose.material.icons.automirrored.rounded.FormatListBulleted
 import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -33,15 +32,14 @@ fun CantoneseScreen(navController: NavHostController) {
                 item {
                         Column(
                                 modifier = Modifier
-                                        .clip(RoundedCornerShape(12.dp))
-                                        .background(colorScheme.background)
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                         .fillMaxWidth()
                         ) {
                                 NavigationLabel(icon = Icons.Outlined.Verified, text = stringResource(id = R.string.cantonese_label_expressions)) {
                                         navController.navigate(route = Screen.Expressions.route)
                                 }
                                 EnhancedHorizontalDivider()
-                                NavigationLabel(icon = Icons.AutoMirrored.Outlined.FormatListBulleted, text = stringResource(id = R.string.cantonese_label_confusion)) {
+                                NavigationLabel(icon = Icons.AutoMirrored.Rounded.FormatListBulleted, text = stringResource(id = R.string.cantonese_label_confusion)) {
                                         navController.navigate(route = Screen.Confusion.route)
                                 }
                         }
@@ -49,8 +47,7 @@ fun CantoneseScreen(navController: NavHostController) {
                 item {
                         Column(
                                 modifier = Modifier
-                                        .clip(RoundedCornerShape(12.dp))
-                                        .background(colorScheme.background)
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
                                         .fillMaxWidth()
                         ) {
                                 WebLinkLabel(icon = Icons.Outlined.Public, text = "懶音診療室 - PolyU", uri = "https://www.polyu.edu.hk/clc/pronunciation")
