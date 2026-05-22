@@ -30,9 +30,9 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.app.common.TextCard
 import org.jyutping.jyutping.presets.AppleColor
 import org.jyutping.jyutping.presets.PresetColor
-import org.jyutping.jyutping.ui.common.TextCard
 
 @Composable
 fun DisplayLanguagesScreen() {

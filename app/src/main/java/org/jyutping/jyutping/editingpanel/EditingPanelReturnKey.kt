@@ -74,7 +74,7 @@ fun EditingPanelReturnKey(modifier: Modifier) {
                 Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.key_return),
                         contentDescription = null,
-                        modifier = Modifier.size(22.dp),
+                        modifier = Modifier.size(20.dp),
                         tint = if (isDarkMode) Color.White else Color.Black
                 )
                 Text(

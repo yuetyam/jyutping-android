@@ -104,7 +104,7 @@ fun EditingPanelForwardDeleteKey(modifier: Modifier) {
                 Icon(
                         imageVector = ImageVector.vectorResource(id = if (isPressing) R.drawable.key_forward_deleting else R.drawable.key_forward_delete),
                         contentDescription = null,
-                        modifier = Modifier.size(22.dp),
+                        modifier = Modifier.size(20.dp),
                         tint = if (isDarkMode) Color.White else Color.Black
                 )
                 Text(

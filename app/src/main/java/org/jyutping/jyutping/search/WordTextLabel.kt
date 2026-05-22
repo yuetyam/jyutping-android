@@ -11,10 +11,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jyutping.jyutping.app.common.SeparatorMark
 import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.codePointsText
 import org.jyutping.jyutping.speech.Speaker
-import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
 fun WordTextLabel(word: String, isSpeakable: Boolean = true) {

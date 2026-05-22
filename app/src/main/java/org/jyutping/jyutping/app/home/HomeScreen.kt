@@ -50,6 +50,10 @@ import androidx.navigation.NavHostController
 import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.Screen
+import org.jyutping.jyutping.app.common.EnhancedHorizontalDivider
+import org.jyutping.jyutping.app.common.NavigationLabel
+import org.jyutping.jyutping.app.common.SearchField
+import org.jyutping.jyutping.app.common.TextCard
 import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.isIdeographicCodePoint
 import org.jyutping.jyutping.presets.AppleColor
@@ -65,10 +69,6 @@ import org.jyutping.jyutping.search.GwongWanCharacter
 import org.jyutping.jyutping.search.GwongWanView
 import org.jyutping.jyutping.search.YingWaaFanWan
 import org.jyutping.jyutping.search.YingWaaView
-import org.jyutping.jyutping.ui.common.EnhancedHorizontalDivider
-import org.jyutping.jyutping.ui.common.NavigationLabel
-import org.jyutping.jyutping.ui.common.SearchField
-import org.jyutping.jyutping.ui.common.TextCard
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
 

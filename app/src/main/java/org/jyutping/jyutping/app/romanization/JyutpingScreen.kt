@@ -20,9 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.Screen
-import org.jyutping.jyutping.ui.common.EnhancedHorizontalDivider
-import org.jyutping.jyutping.ui.common.NavigationLabel
-import org.jyutping.jyutping.ui.common.WebLinkLabel
+import org.jyutping.jyutping.app.common.EnhancedHorizontalDivider
+import org.jyutping.jyutping.app.common.NavigationLabel
+import org.jyutping.jyutping.app.common.WebLinkLabel
 
 @Composable
 fun JyutpingScreen(navController: NavHostController) {

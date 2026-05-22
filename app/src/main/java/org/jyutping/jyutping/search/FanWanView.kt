@@ -17,10 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jyutping.jyutping.app.common.SeparatorMark
 import org.jyutping.jyutping.linguistics.OldCantonese
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.speech.Speaker
-import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
 fun FanWanView(entries: List<FanWanCuetYiu>) {

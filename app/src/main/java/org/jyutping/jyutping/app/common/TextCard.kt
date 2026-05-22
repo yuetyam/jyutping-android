@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.ui.common
+package org.jyutping.jyutping.app.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

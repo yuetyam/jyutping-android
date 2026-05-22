@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.jyutping.jyutping.ui.common.SeparatorMark
+import org.jyutping.jyutping.app.common.SeparatorMark
 
 @Composable
 fun GwongWanView(entries: List<GwongWanCharacter>) {

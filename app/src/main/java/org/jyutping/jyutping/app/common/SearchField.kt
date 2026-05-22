@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.ui.common
+package org.jyutping.jyutping.app.common
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

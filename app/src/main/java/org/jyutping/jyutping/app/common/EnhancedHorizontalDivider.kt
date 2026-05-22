@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.ui.common
+package org.jyutping.jyutping.app.common
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DividerDefaults

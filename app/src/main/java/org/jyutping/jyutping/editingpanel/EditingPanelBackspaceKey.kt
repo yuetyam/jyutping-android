@@ -104,7 +104,7 @@ fun EditingPanelBackspaceKey(modifier: Modifier) {
                 Icon(
                         imageVector = ImageVector.vectorResource(id = if (isPressing) R.drawable.key_backspacing else R.drawable.key_backspace),
                         contentDescription = null,
-                        modifier = Modifier.size(22.dp),
+                        modifier = Modifier.size(20.dp),
                         tint = if (isDarkMode) Color.White else Color.Black
                 )
                 Text(

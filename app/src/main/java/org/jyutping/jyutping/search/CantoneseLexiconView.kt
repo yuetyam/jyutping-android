@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
-import org.jyutping.jyutping.ui.common.SeparatorMark
+import org.jyutping.jyutping.app.common.SeparatorMark
 
 @Composable
 fun CantoneseLexiconView(lexicon: CantoneseLexicon) {

@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.ui.common
+package org.jyutping.jyutping.app.common
 
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.material3.MaterialTheme.colorScheme

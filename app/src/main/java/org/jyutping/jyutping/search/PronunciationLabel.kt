@@ -11,10 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
+import org.jyutping.jyutping.app.common.SeparatorMark
 import org.jyutping.jyutping.linguistics.Jyutping2IPA
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.speech.Speaker
-import org.jyutping.jyutping.ui.common.SeparatorMark
 
 @Composable
 fun PronunciationLabel(pronunciation: Pronunciation, word: String? = null) {
