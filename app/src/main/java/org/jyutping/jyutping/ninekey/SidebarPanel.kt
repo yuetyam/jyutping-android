@@ -110,7 +110,7 @@ fun SidebarPanel(unitHeight: Dp, modifier: Modifier) {
                                 contentAlignment = Alignment.Center
                         ) {
                                 Text(
-                                        text = entry.text,
+                                        text = if (entry.isSymbol) centerFormed(entry.text) else entry.text,
                                         color = if (isDarkMode) Color.White else Color.Black,
                                         autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = if (entry.isSymbol) 20.sp else 16.sp),
                                         fontSize = if (entry.isSymbol) 20.sp else 16.sp,
@@ -124,5 +124,14 @@ fun SidebarPanel(unitHeight: Dp, modifier: Modifier) {
                                 color = Color.Gray
                         )
                 }
+        }
+}
+
+/** Apply Variation Selector to the punctuation mark */
+private fun centerFormed(text: String): String {
+        if (text.length > 1) return text
+        return buildString {
+                appendCodePoint(text.codePointAt(0))
+                appendCodePoint(65025) // U+FE01
         }
 }
