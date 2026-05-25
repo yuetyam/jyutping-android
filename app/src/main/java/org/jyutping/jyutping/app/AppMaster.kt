@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.utilities
+package org.jyutping.jyutping.app
 
 @Suppress("ConstPropertyName")
 object AppMaster {
@@ -17,4 +17,6 @@ object AppMaster {
         const val GoogleFormsAddress: String = "https://forms.gle/4N9zwpL7KwnfaeXu6"
         const val TencentSurveyAddress: String = "https://wj.qq.com/s2/14037245/fe08"
         const val EmailAddress: String = "support@jyutping.app"
+
+        const val AndroidText2Speech: String = "https://jyutping.app/android/tts"
 }

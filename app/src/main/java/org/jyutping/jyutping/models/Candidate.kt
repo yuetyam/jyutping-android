@@ -1,11 +1,6 @@
 package org.jyutping.jyutping.models
 
-import org.jyutping.jyutping.CharacterStandard
 import org.jyutping.jyutping.extensions.isCantoneseToneDigit
-import org.jyutping.jyutping.utilities.DatabaseHelper
-import org.jyutping.jyutping.utilities.HongKongVariant
-import org.jyutping.jyutping.utilities.Simplifier
-import org.jyutping.jyutping.utilities.TaiwanVariant
 
 /** Display Candidate */
 data class Candidate(
@@ -39,27 +34,19 @@ data class Candidate(
 
         /**
          * Create a Candidate from the given text and Lexicon.
+         * @param text Candidate display text.
          * @param lexicon Internal candidate lexicon.
          * @param commentForm Romanization display form.
-         * @param charset CharacterStandard for Lexicon text conversion.
-         * @param db DatabaseHelper to simplify Lexicon text.
          * @param sessionState Unique number to differentiate every key event
          * @return Candidate
          */
         constructor(
+                text: String? = null,
                 lexicon: Lexicon,
                 commentForm: RomanizationForm,
-                charset: CharacterStandard = CharacterStandard.Preset,
-                db: DatabaseHelper? = null,
                 sessionState: Long
         ) : this(
-                text = if (lexicon.isNotCantonese) lexicon.text else when (charset) {
-                        CharacterStandard.Preset -> lexicon.text
-                        CharacterStandard.HongKong -> HongKongVariant.convert(lexicon.text)
-                        CharacterStandard.Taiwan -> TaiwanVariant.convert(lexicon.text)
-                        CharacterStandard.Mutilated -> if (db != null) Simplifier.convert(lexicon.text, db) else lexicon.text
-                        else -> lexicon.text
-                },
+                text = text ?: lexicon.text,
                 comment = if (lexicon.isNotCantonese) null else when (commentForm) {
                         RomanizationForm.Full -> lexicon.romanization
                         RomanizationForm.Toneless -> lexicon.romanization.filterNot { it.isCantoneseToneDigit }

@@ -1,36 +1,44 @@
-package org.jyutping.jyutping.utilities
+package org.jyutping.jyutping.models
 
+import android.database.sqlite.SQLiteStatement
 import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.isIdeographicCodePoint
 import org.jyutping.jyutping.extensions.negative
-
-private fun DatabaseHelper.t2s(code: Int): Int {
-        val query = "SELECT right FROM variant_sim WHERE left = $code LIMIT 1;"
-        val cursor = this.readableDatabase.rawQuery(query, null)
-        if (cursor.moveToFirst()) {
-                val matchedCode = cursor.getInt(0)
-                cursor.close()
-                return matchedCode
-        } else {
-                cursor.close()
-                return code
-        }
-}
+import org.jyutping.jyutping.utilities.DatabaseHelper
 
 object Simplifier {
+        private fun char2char(code: Int, statement: SQLiteStatement): Int {
+                statement.clearBindings()
+                statement.bindLong(1, code.toLong())
+                val target = statement.simpleQueryForLong()
+                return if (target < 1) code else target.toInt()
+        }
+        fun transformed(lexicons: List<Lexicon>, commentForm: RomanizationForm, sessionState: Long, statement: SQLiteStatement): List<Candidate> {
+                return lexicons.map { lexicon ->
+                        if (lexicon.isNotCantonese) return@map Candidate(lexicon = lexicon, commentForm = commentForm, sessionState = sessionState)
+                        val convertedText = perform(lexicon.text, statement)
+                        return@map Candidate(text = convertedText, lexicon = lexicon, commentForm = commentForm, sessionState = sessionState)
+                }.distinct()
+        }
         fun convert(text: String, db: DatabaseHelper): String {
-                return when (text.length) {
+                val command = "SELECT IFNULL((SELECT target FROM variant_sim WHERE source = ? LIMIT 1), 0) AS code_point;"
+                val statement = db.readableDatabase.compileStatement(command)
+                val converted = perform(text, statement)
+                statement.close()
+                return converted
+        }
+        private fun perform(text: String, statement: SQLiteStatement): String {
+                return when (text.characterCount) {
                         0 -> text
-                        1 -> buildString {
-                                appendCodePoint(db.t2s(text.codePointAt(0)))
+                        1 -> char2char(text.codePointAt(0), statement).let { buildString { appendCodePoint(it) } }
+                        2 -> phrases[text] ?: run {
+                                val codes = text.codePoints().map { char2char(it, statement) }
+                                buildString { codes.forEachOrdered { appendCodePoint(it) } }
                         }
-                        2 -> phrases[text] ?: buildString {
-                                text.codePoints().forEachOrdered { appendCodePoint(db.t2s(it)) }
-                        }
-                        else -> phrases[text] ?: transform(text, db)
+                        else -> phrases[text] ?: transform(text, statement)
                 }
         }
-        private fun transform(text: String, db: DatabaseHelper): String {
+        private fun transform(text: String, statement: SQLiteStatement): String {
                 val codePoints = text.codePoints().toArray()
                 val charCount = codePoints.size
                 val result = StringBuilder(charCount)
@@ -50,7 +58,7 @@ object Simplifier {
                         }
                         if (matched.negative) {
                                 val codePoint = codePoints[index]
-                                val convertedCodePoint: Int = if (codePoint.isIdeographicCodePoint) db.t2s(codePoint) else codePoint
+                                val convertedCodePoint: Int = if (codePoint.isIdeographicCodePoint) char2char(codePoint, statement) else codePoint
                                 result.append(Character.toString(convertedCodePoint))
                                 index += 1
                         }

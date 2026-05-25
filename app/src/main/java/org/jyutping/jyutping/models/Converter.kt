@@ -1,5 +1,6 @@
 package org.jyutping.jyutping.models
 
+import android.database.sqlite.SQLiteStatement
 import org.jyutping.jyutping.CharacterStandard
 import org.jyutping.jyutping.utilities.DatabaseHelper
 
@@ -12,7 +13,7 @@ object Converter {
                 queried: List<Lexicon>,
                 commentForm: RomanizationForm,
                 charset: CharacterStandard,
-                db: DatabaseHelper? = null,
+                db: DatabaseHelper,
                 sessionState: Long
         ): List<Candidate> {
                 val idealMemory = memory.filter { it.isIdealInputMemory }
@@ -33,6 +34,57 @@ object Converter {
                                 chained.add(index = index + 1, element = symbol)
                         }
                 }
-                return chained.map { Candidate(lexicon = it, commentForm = commentForm, charset = charset, db = db, sessionState = sessionState) }.distinct()
+                return transformed(lexicons = chained, commentForm = commentForm, charset = charset, db = db, sessionState = sessionState)
+        }
+
+        fun transformed(lexicons: List<Lexicon>, commentForm: RomanizationForm, charset: CharacterStandard, db: DatabaseHelper, sessionState: Long): List<Candidate> {
+                when (charset) {
+                        CharacterStandard.Preset, CharacterStandard.Custom, CharacterStandard.Etymology, CharacterStandard.OpenCC -> {
+                                return lexicons.map { Candidate(lexicon = it, commentForm = commentForm, sessionState = sessionState) }.distinct()
+                        }
+                        CharacterStandard.Inherited, CharacterStandard.HongKong, CharacterStandard.Taiwan, CharacterStandard.AncientBooksPublishing -> {
+                                val command = "SELECT IFNULL((SELECT target FROM ${charset.variantTableName} WHERE source = ? LIMIT 1), 0) AS code_point;"
+                                val statement = db.readableDatabase.compileStatement(command)
+                                val entries = lexicons.map { lexicon ->
+                                        if (lexicon.isNotCantonese) return@map Candidate(lexicon = lexicon, commentForm = commentForm, sessionState = sessionState)
+                                        val codes = lexicon.text.codePoints().map { variantMatch(it, statement) }
+                                        val convertedText = buildString { codes.forEachOrdered { appendCodePoint(it) } }
+                                        return@map Candidate(text = convertedText, lexicon = lexicon, commentForm = commentForm, sessionState = sessionState)
+                                }.distinct()
+                                statement.close()
+                                return entries
+                        }
+                        CharacterStandard.PrcGeneral -> {
+                                val command = "SELECT IFNULL((SELECT target FROM ${charset.variantTableName} WHERE source = ? LIMIT 1), 0) AS code_point;"
+                                val statement = db.readableDatabase.compileStatement(command)
+                                val entries = TailoredConverter.transformed(lexicons = lexicons, commentForm = commentForm, sessionState = sessionState, statement = statement)
+                                statement.close()
+                                return entries
+                        }
+                        CharacterStandard.Mutilated -> {
+                                val command = "SELECT IFNULL((SELECT target FROM ${charset.variantTableName} WHERE source = ? LIMIT 1), 0) AS code_point;"
+                                val statement = db.readableDatabase.compileStatement(command)
+                                val entries = Simplifier.transformed(lexicons = lexicons, commentForm = commentForm, sessionState = sessionState, statement = statement)
+                                statement.close()
+                                return entries
+                        }
+                }
+        }
+        private fun variantMatch(code: Int, statement: SQLiteStatement): Int {
+                statement.clearBindings()
+                statement.bindLong(1, code.toLong())
+                val target = statement.simpleQueryForLong()
+                return if (target < 1) code else target.toInt()
         }
 }
+
+private val CharacterStandard.variantTableName: String
+        get() = when (this) {
+                CharacterStandard.Inherited -> "variant_old"
+                CharacterStandard.HongKong -> "variant_hk"
+                CharacterStandard.Taiwan -> "variant_tw"
+                CharacterStandard.PrcGeneral -> "variant_prc"
+                CharacterStandard.AncientBooksPublishing -> "variant_abp"
+                CharacterStandard.Mutilated -> "variant_sim"
+                else -> "variant_hk"
+        }

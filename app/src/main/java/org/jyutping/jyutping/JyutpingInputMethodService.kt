@@ -71,6 +71,7 @@ import org.jyutping.jyutping.models.PinyinSegmenter
 import org.jyutping.jyutping.models.Researcher
 import org.jyutping.jyutping.models.RomanizationForm
 import org.jyutping.jyutping.models.Segmenter
+import org.jyutping.jyutping.models.Simplifier
 import org.jyutping.jyutping.models.Structure
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.mark
@@ -91,7 +92,6 @@ import org.jyutping.jyutping.stroke.StrokeLayout
 import org.jyutping.jyutping.stroke.StrokeVirtualKey
 import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
-import org.jyutping.jyutping.utilities.Simplifier
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 import kotlin.time.Duration.Companion.milliseconds
@@ -768,7 +768,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 val segmentation = PinyinSegmenter.segment(keys, db)
                                 val queriedDeferred = async { PinyinResearcher.reverseLookup(keys, segmentation, db) }
                                 val queried = queriedDeferred.await()
-                                val suggestions = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isMutilated) db else null, sessionState = sessionState) }.distinct()
+                                val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, db = db, sessionState = sessionState)
                                 val bufferText = joinedBufferTexts()
                                 val tailMark: String = if (keys.isEmpty()) PresetString.EMPTY else run {
                                         val firstLexicon = queried.firstOrNull()
@@ -806,10 +806,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val queriedDeferred = async { Cangjie.reverseLookup(text, cangjieVariant.value, db) }
                                         queriedDeferred.await()
                                 }
+                                val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, db = db, sessionState = sessionState)
                                 withContext(Dispatchers.Main) {
                                         updateQwertyForm(QwertyForm.Cangjie)
                                         currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isMutilated) db else null, sessionState = sessionState) }.distinct()
+                                        candidates.value = suggestions
                                         updateInputSessionStates()
                                 }
                         }
@@ -824,6 +825,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val queriedDeferred = async { Stroke.reverseLookup(keys, db) }
                                         queriedDeferred.await()
                                 }
+                                val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, db = db, sessionState = sessionState)
                                 withContext(Dispatchers.Main) {
                                         if (useNineKeyStrokeLayout.value && keyboardForm.value.isNineKeyStroke.negative) {
                                                 transformTo(KeyboardForm.NineKeyStroke)
@@ -831,7 +833,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 updateQwertyForm(QwertyForm.Stroke)
                                         }
                                         currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isMutilated) db else null, sessionState = sessionState) }.distinct()
+                                        candidates.value = suggestions
                                         updateInputSessionStates()
                                 }
                         }
@@ -845,6 +847,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val queriedDeferred = async { Structure.reverseLookup(keys, segmentation, db) }
                                         queriedDeferred.await()
                                 }
+                                val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, db = db, sessionState = sessionState)
                                 val bufferText = joinedBufferTexts()
                                 val tailMark: String = if (keys.isEmpty()) PresetString.EMPTY else run {
                                         val isPeculiar = keys.any { it.isSyllableLetter.negative }
@@ -864,7 +867,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 val mark: String = if (keys.isEmpty()) bufferText.take(1) else (bufferText.take(1) + PresetString.SPACE + tailMark)
                                 withContext(Dispatchers.Main) {
                                         currentInputConnection.setComposingText(mark, 1)
-                                        candidates.value = (textMarks + queried).map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isMutilated) db else null, sessionState = sessionState) }.distinct()
+                                        candidates.value = suggestions
                                         updateInputSessionStates()
                                 }
                         }
@@ -888,7 +891,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         queried = queried,
                                         commentForm = RomanizationForm.Full,
                                         charset = characterStandard.value,
-                                        db = if (characterStandard.value.isMutilated) db else null,
+                                        db = db,
                                         sessionState = sessionState
                                 )
                                 val mark: String = run {
@@ -1004,7 +1007,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val keys = newValue.drop(1)
                                         val queriedDeferred = async { PinyinResearcher.nineKeyReverseLookup(keys, db) }
                                         val queried = queriedDeferred.await()
-                                        val suggestions = queried.map { Candidate(lexicon = it, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = if (characterStandard.value.isMutilated) db else null, sessionState = sessionState) }.distinct()
+                                        val suggestions = Converter.transformed(lexicons = queried, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = db, sessionState = sessionState)
                                         val tailMark: String = run {
                                                 val firstCandidate = suggestions.firstOrNull()
                                                 if (firstCandidate?.lexicon?.inputCount == keys.size) {
@@ -1038,7 +1041,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         queried = queried,
                                         commentForm = RomanizationForm.Full,
                                         charset = characterStandard.value,
-                                        db = if (characterStandard.value.isMutilated) db else null,
+                                        db = db,
                                         sessionState = sessionState
                                 )
                                 val mark: String = run {

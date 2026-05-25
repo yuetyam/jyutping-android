@@ -34,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.app.AppMaster
 import org.jyutping.jyutping.presets.PresetColor
 
 @Composable
@@ -87,10 +88,9 @@ fun TextToSpeechScreen() {
 @Composable
 private fun TTSLinkButton() {
         val uriHandler = LocalUriHandler.current
-        val webAddress = "https://jyutping.app/android/tts"
         Button(
                 onClick = {
-                        uriHandler.openUri(webAddress)
+                        uriHandler.openUri(AppMaster.AndroidText2Speech)
                 },
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(
@@ -105,7 +105,7 @@ private fun TTSLinkButton() {
                         verticalAlignment = Alignment.CenterVertically
                 ) {
                         Text(
-                                text = webAddress,
+                                text = AppMaster.AndroidText2Speech,
                                 color = PresetColor.blue,
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.Normal

@@ -53,7 +53,7 @@ import org.jyutping.jyutping.app.common.AppLinkLabel
 import org.jyutping.jyutping.app.common.EnhancedHorizontalDivider
 import org.jyutping.jyutping.app.common.WebLinkLabel
 import org.jyutping.jyutping.presets.PresetColor
-import org.jyutping.jyutping.utilities.AppMaster
+import org.jyutping.jyutping.app.AppMaster
 
 @Composable
 fun AboutScreen() {
