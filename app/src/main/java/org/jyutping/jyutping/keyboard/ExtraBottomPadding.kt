@@ -17,6 +17,18 @@ enum class ExtraBottomPadding(val identifier: Int) {
                         High -> 48
                 }
 
+        val isNone: Boolean
+                get() = (this == None)
+
+        val isLow: Boolean
+                get() = (this == Low)
+
+        val isMedium: Boolean
+                get() = (this == Medium)
+
+        val isHigh: Boolean
+                get() = (this == High)
+
         companion object {
                 fun paddingLevelOf(identifier: Int): ExtraBottomPadding = entries.find { it.identifier == identifier } ?: None
         }

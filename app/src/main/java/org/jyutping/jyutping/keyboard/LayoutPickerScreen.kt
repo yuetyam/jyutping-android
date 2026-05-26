@@ -24,6 +24,7 @@ import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -147,6 +148,7 @@ fun LayoutPickerScreen(height: Dp) {
 
 @Composable
 private fun LayoutOptionButton(layout: KeyboardLayout, isSelected: Boolean, isDarkMode: Boolean, onClick: () -> Unit) {
+        val accentColor = MaterialTheme.colorScheme.primary
         Column(
                 modifier = Modifier.width(64.dp),
                 verticalArrangement = Arrangement.spacedBy(3.dp),
@@ -157,13 +159,13 @@ private fun LayoutOptionButton(layout: KeyboardLayout, isSelected: Boolean, isDa
                         modifier = Modifier
                                 .size(44.dp)
                                 .border(
-                                        width = 1.dp,
-                                        color = if (isSelected) PresetColor.blue else Color.Transparent,
+                                        width = 2.dp,
+                                        color = if (isSelected) accentColor else Color.Transparent,
                                         shape = CircleShape
                                 ),
                         colors = IconButtonDefaults.iconButtonColors(
                                 containerColor = if (isDarkMode) PresetColor.solidShallowDark else PresetColor.solidShallowLight,
-                                contentColor = if (isSelected) PresetColor.blue else if (isDarkMode) Color.White else Color.Black
+                                contentColor = if (isSelected) accentColor else if (isDarkMode) Color.White else Color.Black
                         ),
                         shape = CircleShape
                 ) {

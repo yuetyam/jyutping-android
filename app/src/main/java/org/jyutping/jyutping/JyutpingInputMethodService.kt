@@ -68,6 +68,7 @@ import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.models.NineKeyResearcher
 import org.jyutping.jyutping.models.PinyinResearcher
 import org.jyutping.jyutping.models.PinyinSegmenter
+import org.jyutping.jyutping.models.PreferredInputMode
 import org.jyutping.jyutping.models.Researcher
 import org.jyutping.jyutping.models.RomanizationForm
 import org.jyutping.jyutping.models.Segmenter
@@ -198,7 +199,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         win.navigationBarColor = barColor.toArgb()
                 }
                 isDarkMode.value = isNightMode
-                inputMethodMode.value = InputMethodMode.Cantonese
+                inputMethodMode.value = fetchedInputMethodMode()
                 keyboardForm.value = KeyboardForm.Alphabetic
                 qwertyForm.value = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Primary
                 updateSpaceKeyForm()
@@ -339,14 +340,27 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
 
         val inputMethodMode: MutableStateFlow<InputMethodMode> by lazy { MutableStateFlow(InputMethodMode.Cantonese) }
-        fun toggleInputMethodMode() {
-                val newMode: InputMethodMode = when (inputMethodMode.value) {
-                        InputMethodMode.Cantonese -> InputMethodMode.ABC
-                        InputMethodMode.ABC -> InputMethodMode.Cantonese
+        private fun fetchedInputMethodMode(): InputMethodMode = when (preferredInputMode.value) {
+                PreferredInputMode.Cantonese -> InputMethodMode.Cantonese
+                PreferredInputMode.ABC -> InputMethodMode.ABC
+                PreferredInputMode.Previous -> {
+                        val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.LatestInputMethodMode, InputMethodMode.Cantonese.identifier)
+                        InputMethodMode.modeOf(savedValue)
                 }
+        }
+        fun toggleInputMethodMode() {
+                if (inputMethodMode.value.isCantonese && isBuffering.value) {
+                        val text = joinedBufferTexts()
+                        currentInputConnection.commitText(text, 1)
+                        clearBuffer()
+                }
+                val newMode: InputMethodMode = if (inputMethodMode.value.isABC) InputMethodMode.Cantonese else InputMethodMode.ABC
                 inputMethodMode.value = newMode
                 updateSpaceKeyForm()
                 updateReturnKeyForm()
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.LatestInputMethodMode, newMode.identifier)
+                }
         }
 
         val keyboardInterface: MutableStateFlow<KeyboardInterface> by lazy { MutableStateFlow(KeyboardInterface.PhonePortrait) }
@@ -481,6 +495,17 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 val value: Int = if (isOn) 101 else 102
                 sharedPreferences.edit {
                         putInt(UserSettingsKey.HapticFeedback, value)
+                }
+        }
+        val preferredInputMode: MutableStateFlow<PreferredInputMode> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.PreferredInputMethodMode, PreferredInputMode.Cantonese.identifier)
+                val mode = PreferredInputMode.modeOf(savedValue)
+                MutableStateFlow(mode)
+        }
+        fun updatePreferredInputMode(mode: PreferredInputMode) {
+                preferredInputMode.value = mode
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.PreferredInputMethodMode, mode.identifier)
                 }
         }
         val keyboardLayout: MutableStateFlow<KeyboardLayout> by lazy {

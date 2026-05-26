@@ -10,6 +10,8 @@ object UserSettingsKey {
         const val CharacterScriptVariant: String = "character_script_variant"
         const val AudioFeedback: String = "audio_feedback"
         const val HapticFeedback: String = "haptic_feedback"
+        const val PreferredInputMethodMode: String = "preferred_input_method_mode"
+        const val LatestInputMethodMode: String = "latest_input_method_mode"
         const val KeyboardLayout: String = "keyboard_layout"
         const val NumericLayout: String = "numeric_layout"
         const val StrokeLayout: String = "stroke_layout"

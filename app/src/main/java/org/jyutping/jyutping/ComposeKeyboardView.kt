@@ -125,8 +125,8 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                         KeyboardForm.NineKeyNumeric -> TailoredNumericKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                         KeyboardForm.NineKeyStroke -> TailoredStrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                         KeyboardForm.CandidateBoard -> CandidateBoard(height = keyboardHeight(keyOffset))
-                        KeyboardForm.Settings -> SettingsScreen(height = keyboardHeight(keyOffset))
-                        KeyboardForm.LayoutPicker -> LayoutPickerScreen(height = keyboardHeight(keyOffset))
+                        KeyboardForm.Settings -> CompactTheme { SettingsScreen(height = keyboardHeight(keyOffset)) }
+                        KeyboardForm.LayoutPicker -> CompactTheme { LayoutPickerScreen(height = keyboardHeight(keyOffset)) }
                         KeyboardForm.EmojiBoard -> EmojiBoard(height = keyboardHeight(keyOffset))
                         KeyboardForm.EditingPanel -> EditingPanel(height = keyboardHeight(keyOffset))
                         KeyboardForm.NumberPad,

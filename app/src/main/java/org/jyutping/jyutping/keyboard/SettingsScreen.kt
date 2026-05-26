@@ -27,15 +27,13 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonGroup
+import androidx.compose.material3.ButtonGroupDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonColors
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
@@ -70,12 +68,14 @@ import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.models.KeyboardForm
+import org.jyutping.jyutping.models.PreferredInputMode
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import java.util.Locale
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.milliseconds
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsScreen(height: Dp) {
         val view = LocalView.current
@@ -94,6 +94,7 @@ fun SettingsScreen(height: Dp) {
         val keyHeightOffset by context.keyHeightOffset.collectAsState()
         var keyHeightSliderPosition by remember { mutableFloatStateOf(keyHeightOffset.toFloat()) }
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
+        val preferredInputMode by context.preferredInputMode.collectAsState()
         val commentStyle by context.commentStyle.collectAsState()
         val preferredTraditionalStandard by context.preferredTraditionalStandard.collectAsState()
         val cangjieVariant by context.cangjieVariant.collectAsState()
@@ -105,6 +106,7 @@ fun SettingsScreen(height: Dp) {
         val sectionShape = RoundedCornerShape(16.dp)
         val tintColor: Color = if (isDarkMode) Color.White else Color.Black
         val backColor: Color = if (isDarkMode) Color.Black else Color.White
+        val accentColor: Color = MaterialTheme.colorScheme.primary
         val buttonColors: ButtonColors = if (isDarkMode) {
                 ButtonDefaults.buttonColors(containerColor = Color.Black, contentColor = Color.White)
         } else {
@@ -115,16 +117,14 @@ fun SettingsScreen(height: Dp) {
         } else {
                 ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Red)
         }
+        val switchColors: SwitchColors = SwitchDefaults.colors()
+        /*
         val switchColors: SwitchColors = if (isDarkMode) {
                 SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = PresetColor.green, uncheckedThumbColor = Color.LightGray, uncheckedTrackColor = Color.DarkGray, uncheckedBorderColor = Color.Gray)
         } else {
                 SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = PresetColor.green, uncheckedThumbColor = Color.DarkGray, uncheckedTrackColor = Color.LightGray, uncheckedBorderColor = Color.Gray)
         }
-        val segmentedButtonColors: SegmentedButtonColors = if (isDarkMode) {
-                SegmentedButtonDefaults.colors(activeContainerColor = PresetColor.blue, activeContentColor = Color.White, activeBorderColor = Color.DarkGray, inactiveContainerColor = Color.Black, inactiveContentColor = Color.White, inactiveBorderColor = Color.DarkGray)
-        } else {
-                SegmentedButtonDefaults.colors(activeContainerColor = PresetColor.blue, activeContentColor = Color.White, activeBorderColor = Color.LightGray, inactiveContainerColor = Color.White, inactiveContentColor = Color.Black, inactiveBorderColor = Color.LightGray)
-        }
+        */
         val onHaptic: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) HapticFeedbackConstants.TOGGLE_ON else HapticFeedbackConstants.VIRTUAL_KEY
         val offHaptic: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) HapticFeedbackConstants.TOGGLE_OFF else HapticFeedbackConstants.VIRTUAL_KEY
         val version: String by lazy { BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")" }
@@ -444,6 +444,10 @@ fun SettingsScreen(height: Dp) {
                                                         text = String.format(Locale.US, "%+d", keyHeightOffset),
                                                         color = tintColor
                                                 )
+                                                Text(
+                                                        text = "pt",
+                                                        color = tintColor
+                                                )
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                         Box(
@@ -457,7 +461,7 @@ fun SettingsScreen(height: Dp) {
                                                                 .padding(top = 32.dp, start = 1.dp, end = 5.dp),
                                                         horizontalArrangement = Arrangement.SpaceBetween
                                                 ) {
-                                                        for (number in -7..7) {
+                                                        for (number in (-7..7)) {
                                                                 Text(
                                                                         text = String.format(Locale.US, "%+d", number),
                                                                         color = tintColor,
@@ -481,14 +485,7 @@ fun SettingsScreen(height: Dp) {
                                                                 context.updateKeyHeightOffset(keyHeightSliderPosition.roundToInt())
                                                         },
                                                         steps = 13,
-                                                        valueRange = -7f..7f,
-                                                        colors = SliderDefaults.colors(
-                                                                thumbColor = PresetColor.blue,
-                                                                activeTrackColor = PresetColor.blue.copy(alpha = 0.8f),
-                                                                inactiveTrackColor = PresetColor.green.copy(alpha = 0.75f),
-                                                                activeTickColor = Color.White,
-                                                                inactiveTickColor = Color.White
-                                                        )
+                                                        valueRange = (-7f..7f)
                                                 )
                                         }
                                 }
@@ -496,8 +493,8 @@ fun SettingsScreen(height: Dp) {
                         item {
                                 Row(
                                         modifier = Modifier
-                                                .background(color = backColor, shape = sectionShape)
-                                                .padding(start = 8.dp, end = 4.dp)
+                                                .background(color = backColor, shape = CircleShape)
+                                                .padding(start = 4.dp, end = 4.dp)
                                                 .fillMaxWidth(),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -506,34 +503,135 @@ fun SettingsScreen(height: Dp) {
                                                 color = tintColor
                                         )
                                         Spacer(modifier = Modifier.weight(1f))
-                                        SingleChoiceSegmentedButtonRow {
-                                                ExtraBottomPadding.entries.forEachIndexed { index, level ->
-                                                        SegmentedButton(
-                                                                selected = extraBottomPadding == level,
-                                                                onClick = {
-                                                                        context.audioFeedback(SoundEffect.Click)
-                                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                                                                                view.performHapticFeedback(HapticFeedbackConstants.SEGMENT_TICK)
-                                                                        } else {
-                                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                        }
-                                                                        context.updateExtraBottomPadding(level)
-                                                                },
-                                                                shape = SegmentedButtonDefaults.itemShape(index, ExtraBottomPadding.entries.count()),
-                                                                colors = segmentedButtonColors,
-                                                                icon = {}
-                                                        ) {
-                                                                Text(
-                                                                        text = stringResource(id = when (level) {
-                                                                                ExtraBottomPadding.None -> R.string.keyboard_settings_bottom_padding_none
-                                                                                ExtraBottomPadding.Low -> R.string.keyboard_settings_bottom_padding_low
-                                                                                ExtraBottomPadding.Medium -> R.string.keyboard_settings_bottom_padding_medium
-                                                                                ExtraBottomPadding.High -> R.string.keyboard_settings_bottom_padding_high
-                                                                        }),
-                                                                        color = if (extraBottomPadding == level) Color.White else tintColor,
-                                                                        fontWeight = FontWeight.Normal
-                                                                )
+                                        ButtonGroup(
+                                                overflowIndicator = { menuState ->
+                                                        ButtonGroupDefaults.OverflowIndicator(menuState = menuState)
+                                                },
+                                                expandedRatio = 0f,
+                                                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                toggleableItem(
+                                                        checked = extraBottomPadding.isNone,
+                                                        label = context.applicationContext.getString(R.string.keyboard_settings_bottom_padding_none),
+                                                        onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateExtraBottomPadding(ExtraBottomPadding.None)
                                                         }
+                                                )
+                                                toggleableItem(
+                                                        checked = extraBottomPadding.isLow,
+                                                        label = context.applicationContext.getString(R.string.keyboard_settings_bottom_padding_low),
+                                                        onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateExtraBottomPadding(ExtraBottomPadding.Low)
+                                                        }
+                                                )
+                                                toggleableItem(
+                                                        checked = extraBottomPadding.isMedium,
+                                                        label = context.applicationContext.getString(R.string.keyboard_settings_bottom_padding_medium),
+                                                        onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateExtraBottomPadding(ExtraBottomPadding.Medium)
+                                                        }
+                                                )
+                                                toggleableItem(
+                                                        checked = extraBottomPadding.isHigh,
+                                                        label = context.applicationContext.getString(R.string.keyboard_settings_bottom_padding_high),
+                                                        onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateExtraBottomPadding(ExtraBottomPadding.High)
+                                                        }
+                                                )
+                                        }
+                                }
+                        }
+                        item {
+                                Column(
+                                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                                ) {
+                                        Text(
+                                                text = stringResource(id = R.string.keyboard_settings_preferred_input_mode_title),
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                color = tintColor,
+                                                style = MaterialTheme.typography.bodySmall
+                                        )
+                                        Column(
+                                                modifier = Modifier
+                                                        .background(color = backColor, shape = sectionShape)
+                                                        .fillMaxWidth()
+                                        ) {
+                                                Button(
+                                                        onClick = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updatePreferredInputMode(PreferredInputMode.Cantonese)
+                                                        },
+                                                        shape = CircleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_preferred_input_mode_cantonese),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Rounded.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (preferredInputMode.isCantonese) 1f else 0f),
+                                                                tint = accentColor
+                                                        )
+                                                }
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                                Button(
+                                                        onClick = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updatePreferredInputMode(PreferredInputMode.ABC)
+                                                        },
+                                                        shape = CircleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_preferred_input_mode_abc),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Rounded.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (preferredInputMode.isABC) 1f else 0f),
+                                                                tint = accentColor
+                                                        )
+                                                }
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                                Button(
+                                                        onClick = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updatePreferredInputMode(PreferredInputMode.Previous)
+                                                        },
+                                                        shape = CircleShape,
+                                                        colors = buttonColors,
+                                                        contentPadding = PaddingValues(horizontal = 8.dp)
+                                                ) {
+                                                        Text(
+                                                                text = stringResource(id = R.string.keyboard_settings_preferred_input_mode_previous),
+                                                                fontWeight = FontWeight.Normal
+                                                        )
+                                                        Spacer(modifier = Modifier.weight(1f))
+                                                        Icon(
+                                                                imageVector = Icons.Rounded.Check,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.alpha(if (preferredInputMode.isPrevious) 1f else 0f),
+                                                                tint = accentColor
+                                                        )
                                                 }
                                         }
                                 }
@@ -572,7 +670,7 @@ fun SettingsScreen(height: Dp) {
                                                                 imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (commentStyle.isAbove()) 1f else 0f),
-                                                                tint = PresetColor.blue
+                                                                tint = accentColor
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -595,7 +693,7 @@ fun SettingsScreen(height: Dp) {
                                                                 imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (commentStyle.isBelow()) 1f else 0f),
-                                                                tint = PresetColor.blue
+                                                                tint = accentColor
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -618,7 +716,7 @@ fun SettingsScreen(height: Dp) {
                                                                 imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (commentStyle.isNone()) 1f else 0f),
-                                                                tint = PresetColor.blue
+                                                                tint = accentColor
                                                         )
                                                 }
                                         }
@@ -658,7 +756,7 @@ fun SettingsScreen(height: Dp) {
                                                                 imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.Preset) 1f else 0f),
-                                                                tint = PresetColor.blue
+                                                                tint = accentColor
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -681,7 +779,7 @@ fun SettingsScreen(height: Dp) {
                                                                 imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.HongKong) 1f else 0f),
-                                                                tint = PresetColor.blue
+                                                                tint = accentColor
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -704,7 +802,7 @@ fun SettingsScreen(height: Dp) {
                                                                 imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.Taiwan) 1f else 0f),
-                                                                tint = PresetColor.blue
+                                                                tint = accentColor
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -727,7 +825,7 @@ fun SettingsScreen(height: Dp) {
                                                                 imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.PrcGeneral) 1f else 0f),
-                                                                tint = PresetColor.blue
+                                                                tint = accentColor
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -750,7 +848,7 @@ fun SettingsScreen(height: Dp) {
                                                                 imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.AncientBooksPublishing) 1f else 0f),
-                                                                tint = PresetColor.blue
+                                                                tint = accentColor
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -773,7 +871,7 @@ fun SettingsScreen(height: Dp) {
                                                                 imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (preferredTraditionalStandard == CharacterStandard.Inherited) 1f else 0f),
-                                                                tint = PresetColor.blue
+                                                                tint = accentColor
                                                         )
                                                 }
                                         }
@@ -819,7 +917,7 @@ fun SettingsScreen(height: Dp) {
                                                                 imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (cangjieVariant == CangjieVariant.Cangjie5) 1f else 0f),
-                                                                tint = PresetColor.blue
+                                                                tint = accentColor
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -842,7 +940,7 @@ fun SettingsScreen(height: Dp) {
                                                                 imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (cangjieVariant == CangjieVariant.Cangjie3) 1f else 0f),
-                                                                tint = PresetColor.blue
+                                                                tint = accentColor
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -865,7 +963,7 @@ fun SettingsScreen(height: Dp) {
                                                                 imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (cangjieVariant == CangjieVariant.Quick5) 1f else 0f),
-                                                                tint = PresetColor.blue
+                                                                tint = accentColor
                                                         )
                                                 }
                                                 ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -888,7 +986,7 @@ fun SettingsScreen(height: Dp) {
                                                                 imageVector = Icons.Rounded.Check,
                                                                 contentDescription = null,
                                                                 modifier = Modifier.alpha(if (cangjieVariant == CangjieVariant.Quick3) 1f else 0f),
-                                                                tint = PresetColor.blue
+                                                                tint = accentColor
                                                         )
                                                 }
                                         }
@@ -1082,7 +1180,6 @@ private fun SwitchThumbContent(isOn: Boolean) {
         Icon(
                 imageVector = if (isOn) Icons.Rounded.Check else Icons.Rounded.Close,
                 contentDescription = null,
-                modifier = Modifier.size(SwitchDefaults.IconSize),
-                tint = if (isOn) PresetColor.green else Color.Gray
+                modifier = Modifier.size(SwitchDefaults.IconSize)
         )
 }
