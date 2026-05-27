@@ -6,16 +6,14 @@ enum class CommentStyle(val identifier: Int) {
         BelowCandidates(2),
         NoComments(3);
 
-        fun isAbove(): Boolean = (this == AboveCandidates)
-        fun isBelow(): Boolean = (this == BelowCandidates)
-        fun isNone(): Boolean = (this == NoComments)
+        val isAbove: Boolean
+                get() = (this == AboveCandidates)
+        val isBelow: Boolean
+                get() = (this == BelowCandidates)
+        val isNone: Boolean
+                get() = (this == NoComments)
 
         companion object {
-                fun styleOf(value: Int): CommentStyle = when (value) {
-                        AboveCandidates.identifier -> AboveCandidates
-                        BelowCandidates.identifier -> BelowCandidates
-                        NoComments.identifier -> NoComments
-                        else -> AboveCandidates
-                }
+                fun styleOf(value: Int): CommentStyle = entries.find { it.identifier == value } ?: AboveCandidates
         }
 }

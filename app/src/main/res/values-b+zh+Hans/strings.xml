@@ -69,7 +69,6 @@
     <string name="about_label_tencent_survey">騰訊問卷反饋</string>
     <string name="about_label_email">電郵反饋</string>
     <string name="keyboard_settings_navigation_hint">可以上下滑動</string>
-    <string name="keyboard_settings_keyboard_feedback_header">鍵盤回應</string>
     <string name="keyboard_settings_keyboard_feedback_audio_switch_title">聲音</string>
     <string name="keyboard_settings_keyboard_feedback_haptic_switch_title">觸感</string>
     <string name="keyboard_settings_numeric_layout_switch_title">使用九宮格數字鍵盤</string>
@@ -86,13 +85,13 @@
     <string name="keyboard_settings_bottom_padding_low">低</string>
     <string name="keyboard_settings_bottom_padding_medium">中</string>
     <string name="keyboard_settings_bottom_padding_high">高</string>
-    <string name="keyboard_settings_preferred_input_mode_title">鍵盤彈出時初始輸入模式</string>
+    <string name="keyboard_settings_preferred_input_mode_title">輸入模式</string>
     <string name="keyboard_settings_preferred_input_mode_cantonese">粵拼</string>
     <string name="keyboard_settings_preferred_input_mode_abc">ABC</string>
-    <string name="keyboard_settings_preferred_input_mode_previous">上一次輸入模式</string>
-    <string name="keyboard_settings_comment_style_header">粵拼標示</string>
-    <string name="keyboard_settings_comment_style_above">候選詞上邊</string>
-    <string name="keyboard_settings_comment_style_below">候選詞下邊</string>
+    <string name="keyboard_settings_preferred_input_mode_previous">最近</string>
+    <string name="keyboard_settings_comment_style_title">粵拼標示</string>
+    <string name="keyboard_settings_comment_style_above">上邊</string>
+    <string name="keyboard_settings_comment_style_below">下邊</string>
     <string name="keyboard_settings_comment_style_none">無</string>
     <string name="keyboard_settings_traditional_character_standard_header">傳統漢字（繁體字）字符集</string>
     <string name="keyboard_settings_traditional_character_standard_option1_preset">預設</string>

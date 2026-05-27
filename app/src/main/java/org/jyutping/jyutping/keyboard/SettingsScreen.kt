@@ -35,7 +35,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -117,7 +116,6 @@ fun SettingsScreen(height: Dp) {
         } else {
                 ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Red)
         }
-        val switchColors: SwitchColors = SwitchDefaults.colors()
         /*
         val switchColors: SwitchColors = if (isDarkMode) {
                 SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = PresetColor.green, uncheckedThumbColor = Color.LightGray, uncheckedTrackColor = Color.DarkGray, uncheckedBorderColor = Color.Gray)
@@ -183,58 +181,46 @@ fun SettingsScreen(height: Dp) {
                 ) {
                         item {
                                 Column(
-                                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                                        modifier = Modifier
+                                                .background(color = backColor, shape = sectionShape)
+                                                .fillMaxWidth()
                                 ) {
-                                        Text(
-                                                text = stringResource(id = R.string.keyboard_settings_keyboard_feedback_header),
+                                        Row(
                                                 modifier = Modifier.padding(horizontal = 8.dp),
-                                                color = tintColor,
-                                                style = MaterialTheme.typography.bodySmall
-                                        )
-                                        Column(
-                                                modifier = Modifier
-                                                        .background(color = backColor, shape = sectionShape)
-                                                        .fillMaxWidth()
+                                                verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                                Row(
-                                                        modifier = Modifier.padding(horizontal = 8.dp),
-                                                        verticalAlignment = Alignment.CenterVertically
-                                                ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_keyboard_feedback_audio_switch_title),
-                                                                color = tintColor
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Switch(
-                                                                checked = isAudioFeedbackOn,
-                                                                onCheckedChange = {
-                                                                        view.performHapticFeedback(if (it) onHaptic else offHaptic)
-                                                                        context.updateAudioFeedback(it)
-                                                                },
-                                                                thumbContent = { SwitchThumbContent(isAudioFeedbackOn) },
-                                                                colors = switchColors
-                                                        )
-                                                }
-                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
-                                                Row(
-                                                        modifier = Modifier.padding(horizontal = 8.dp),
-                                                        verticalAlignment = Alignment.CenterVertically
-                                                ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_keyboard_feedback_haptic_switch_title),
-                                                                color = tintColor
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Switch(
-                                                                checked = isHapticFeedbackOn,
-                                                                onCheckedChange = {
-                                                                        context.audioFeedback(SoundEffect.Click)
-                                                                        context.updateHapticFeedback(it)
-                                                                },
-                                                                thumbContent = { SwitchThumbContent(isHapticFeedbackOn) },
-                                                                colors = switchColors
-                                                        )
-                                                }
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_keyboard_feedback_audio_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = isAudioFeedbackOn,
+                                                        onCheckedChange = {
+                                                                view.performHapticFeedback(if (it) onHaptic else offHaptic)
+                                                                context.updateAudioFeedback(it)
+                                                        },
+                                                        thumbContent = { SwitchThumbContent(isAudioFeedbackOn) }
+                                                )
+                                        }
+                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                        Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_keyboard_feedback_haptic_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = isHapticFeedbackOn,
+                                                        onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                context.updateHapticFeedback(it)
+                                                        },
+                                                        thumbContent = { SwitchThumbContent(isHapticFeedbackOn) }
+                                                )
                                         }
                                 }
                         }
@@ -260,8 +246,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateUseNineKeyNumberPad(it)
                                                         },
-                                                        thumbContent = { SwitchThumbContent(useNineKeyNumberPad) },
-                                                        colors = switchColors
+                                                        thumbContent = { SwitchThumbContent(useNineKeyNumberPad) }
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -281,8 +266,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateUseNineKeyStrokeLayout(it)
                                                         },
-                                                        thumbContent = { SwitchThumbContent(useNineKeyStrokeLayout) },
-                                                        colors = switchColors
+                                                        thumbContent = { SwitchThumbContent(useNineKeyStrokeLayout) }
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -302,8 +286,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateShowLowercaseKeys(it)
                                                         },
-                                                        thumbContent = { SwitchThumbContent(showLowercaseKeys) },
-                                                        colors = switchColors
+                                                        thumbContent = { SwitchThumbContent(showLowercaseKeys) }
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -323,8 +306,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updatePreviewKeyText(it)
                                                         },
-                                                        thumbContent = { SwitchThumbContent(previewKeyText) },
-                                                        colors = switchColors
+                                                        thumbContent = { SwitchThumbContent(previewKeyText) }
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -344,8 +326,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateHighContrast(it)
                                                         },
-                                                        thumbContent = { SwitchThumbContent(isHighContrastPreferred) },
-                                                        colors = switchColors
+                                                        thumbContent = { SwitchThumbContent(isHighContrastPreferred) }
                                                 )
                                         }
                                 }
@@ -372,8 +353,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateNeedsInputModeSwitchKey(it)
                                                         },
-                                                        thumbContent = { SwitchThumbContent(needsInputModeSwitchKey) },
-                                                        colors = switchColors
+                                                        thumbContent = { SwitchThumbContent(needsInputModeSwitchKey) }
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -393,8 +373,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateNeedsLeftKey(it)
                                                         },
-                                                        thumbContent = { SwitchThumbContent(needsLeftKey) },
-                                                        colors = switchColors
+                                                        thumbContent = { SwitchThumbContent(needsLeftKey) }
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -414,51 +393,52 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateNeedsRightKey(it)
                                                         },
-                                                        thumbContent = { SwitchThumbContent(needsRightKey) },
-                                                        colors = switchColors
+                                                        thumbContent = { SwitchThumbContent(needsRightKey) }
                                                 )
                                         }
                                 }
                         }
                         item {
                                 Column(
-                                        modifier = Modifier
-                                                .background(color = backColor, shape = sectionShape)
-                                                .fillMaxWidth()
+                                        verticalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
                                         Row(
-                                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 10.dp),
-                                                horizontalArrangement = Arrangement.spacedBy(3.dp),
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                horizontalArrangement = Arrangement.spacedBy(2.dp),
                                                 verticalAlignment = Alignment.CenterVertically
                                         ) {
                                                 Text(
                                                         text = stringResource(id = R.string.keyboard_settings_key_height_offset_title),
-                                                        color = tintColor
+                                                        color = tintColor,
+                                                        style = MaterialTheme.typography.bodySmall
                                                 )
                                                 Text(
                                                         text = ": ",
                                                         modifier = Modifier.alpha(0.66f),
-                                                        color = tintColor
+                                                        color = tintColor,
+                                                        style = MaterialTheme.typography.bodySmall
                                                 )
                                                 Text(
                                                         text = String.format(Locale.US, "%+d", keyHeightOffset),
-                                                        color = tintColor
+                                                        color = tintColor,
+                                                        style = MaterialTheme.typography.bodySmall
                                                 )
                                                 Text(
                                                         text = "pt",
-                                                        color = tintColor
+                                                        color = tintColor,
+                                                        style = MaterialTheme.typography.bodySmall
                                                 )
                                         }
-                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                         Box(
                                                 modifier = Modifier
-                                                        .padding(start = 2.dp, top = 4.dp, end = 2.dp, bottom = 6.dp)
                                                         .fillMaxWidth()
+                                                        .background(color = backColor, shape = CircleShape)
+                                                        .padding(horizontal = 8.dp, vertical = 2.dp)
                                         ) {
                                                 Row(
                                                         modifier = Modifier
                                                                 .matchParentSize()
-                                                                .padding(top = 32.dp, start = 1.dp, end = 5.dp),
+                                                                .padding(top = 34.dp, start = 1.dp, end = 5.dp),
                                                         horizontalArrangement = Arrangement.SpaceBetween
                                                 ) {
                                                         for (number in (-7..7)) {
@@ -494,7 +474,7 @@ fun SettingsScreen(height: Dp) {
                                 Row(
                                         modifier = Modifier
                                                 .background(color = backColor, shape = CircleShape)
-                                                .padding(start = 4.dp, end = 4.dp)
+                                                .padding(horizontal = 8.dp)
                                                 .fillMaxWidth(),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -551,174 +531,104 @@ fun SettingsScreen(height: Dp) {
                                 }
                         }
                         item {
-                                Column(
-                                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                                Row(
+                                        modifier = Modifier
+                                                .background(color = backColor, shape = CircleShape)
+                                                .padding(horizontal = 8.dp)
+                                                .fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically
                                 ) {
                                         Text(
                                                 text = stringResource(id = R.string.keyboard_settings_preferred_input_mode_title),
-                                                modifier = Modifier.padding(horizontal = 8.dp),
-                                                color = tintColor,
-                                                style = MaterialTheme.typography.bodySmall
+                                                color = tintColor
                                         )
-                                        Column(
-                                                modifier = Modifier
-                                                        .background(color = backColor, shape = sectionShape)
-                                                        .fillMaxWidth()
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        ButtonGroup(
+                                                overflowIndicator = { menuState ->
+                                                        ButtonGroupDefaults.OverflowIndicator(menuState = menuState)
+                                                },
+                                                expandedRatio = 0f,
+                                                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                                verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                                Button(
-                                                        onClick = {
+                                                toggleableItem(
+                                                        checked = preferredInputMode.isCantonese,
+                                                        label = context.applicationContext.getString(R.string.keyboard_settings_preferred_input_mode_cantonese),
+                                                        onCheckedChange = {
                                                                 context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updatePreferredInputMode(PreferredInputMode.Cantonese)
-                                                        },
-                                                        shape = CircleShape,
-                                                        colors = buttonColors,
-                                                        contentPadding = PaddingValues(horizontal = 8.dp)
-                                                ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_preferred_input_mode_cantonese),
-                                                                fontWeight = FontWeight.Normal
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Icon(
-                                                                imageVector = Icons.Rounded.Check,
-                                                                contentDescription = null,
-                                                                modifier = Modifier.alpha(if (preferredInputMode.isCantonese) 1f else 0f),
-                                                                tint = accentColor
-                                                        )
-                                                }
-                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
-                                                Button(
-                                                        onClick = {
+                                                        }
+                                                )
+                                                toggleableItem(
+                                                        checked = preferredInputMode.isABC,
+                                                        label = context.applicationContext.getString(R.string.keyboard_settings_preferred_input_mode_abc),
+                                                        onCheckedChange = {
                                                                 context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updatePreferredInputMode(PreferredInputMode.ABC)
-                                                        },
-                                                        shape = CircleShape,
-                                                        colors = buttonColors,
-                                                        contentPadding = PaddingValues(horizontal = 8.dp)
-                                                ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_preferred_input_mode_abc),
-                                                                fontWeight = FontWeight.Normal
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Icon(
-                                                                imageVector = Icons.Rounded.Check,
-                                                                contentDescription = null,
-                                                                modifier = Modifier.alpha(if (preferredInputMode.isABC) 1f else 0f),
-                                                                tint = accentColor
-                                                        )
-                                                }
-                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
-                                                Button(
-                                                        onClick = {
+                                                        }
+                                                )
+                                                toggleableItem(
+                                                        checked = preferredInputMode.isPrevious,
+                                                        label = context.applicationContext.getString(R.string.keyboard_settings_preferred_input_mode_previous),
+                                                        onCheckedChange = {
                                                                 context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updatePreferredInputMode(PreferredInputMode.Previous)
-                                                        },
-                                                        shape = CircleShape,
-                                                        colors = buttonColors,
-                                                        contentPadding = PaddingValues(horizontal = 8.dp)
-                                                ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_preferred_input_mode_previous),
-                                                                fontWeight = FontWeight.Normal
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Icon(
-                                                                imageVector = Icons.Rounded.Check,
-                                                                contentDescription = null,
-                                                                modifier = Modifier.alpha(if (preferredInputMode.isPrevious) 1f else 0f),
-                                                                tint = accentColor
-                                                        )
-                                                }
+                                                        }
+                                                )
                                         }
                                 }
                         }
                         item {
-                                Column(
-                                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                                Row(
+                                        modifier = Modifier
+                                                .background(color = backColor, shape = CircleShape)
+                                                .padding(horizontal = 8.dp)
+                                                .fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically
                                 ) {
                                         Text(
-                                                text = stringResource(id = R.string.keyboard_settings_comment_style_header),
-                                                modifier = Modifier.padding(horizontal = 8.dp),
-                                                color = tintColor,
-                                                style = MaterialTheme.typography.bodySmall
+                                                text = stringResource(id = R.string.keyboard_settings_comment_style_title),
+                                                color = tintColor
                                         )
-                                        Column(
-                                                modifier = Modifier
-                                                        .background(color = backColor, shape = sectionShape)
-                                                        .fillMaxWidth()
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        ButtonGroup(
+                                                overflowIndicator = { menuState ->
+                                                        ButtonGroupDefaults.OverflowIndicator(menuState = menuState)
+                                                },
+                                                expandedRatio = 0f,
+                                                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                                verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                                Button(
-                                                        onClick = {
+                                                toggleableItem(
+                                                        checked = commentStyle.isAbove,
+                                                        label = context.applicationContext.getString(R.string.keyboard_settings_comment_style_above),
+                                                        onCheckedChange = {
                                                                 context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCommentStyle(CommentStyle.AboveCandidates)
-                                                        },
-                                                        shape = CircleShape,
-                                                        colors = buttonColors,
-                                                        contentPadding = PaddingValues(horizontal = 8.dp)
-                                                ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_comment_style_above),
-                                                                fontWeight = FontWeight.Normal
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Icon(
-                                                                imageVector = Icons.Rounded.Check,
-                                                                contentDescription = null,
-                                                                modifier = Modifier.alpha(if (commentStyle.isAbove()) 1f else 0f),
-                                                                tint = accentColor
-                                                        )
-                                                }
-                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
-                                                Button(
-                                                        onClick = {
+                                                        }
+                                                )
+                                                toggleableItem(
+                                                        checked = commentStyle.isBelow,
+                                                        label = context.applicationContext.getString(R.string.keyboard_settings_comment_style_below),
+                                                        onCheckedChange = {
                                                                 context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCommentStyle(CommentStyle.BelowCandidates)
-                                                        },
-                                                        shape = CircleShape,
-                                                        colors = buttonColors,
-                                                        contentPadding = PaddingValues(horizontal = 8.dp)
-                                                ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_comment_style_below),
-                                                                fontWeight = FontWeight.Normal
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Icon(
-                                                                imageVector = Icons.Rounded.Check,
-                                                                contentDescription = null,
-                                                                modifier = Modifier.alpha(if (commentStyle.isBelow()) 1f else 0f),
-                                                                tint = accentColor
-                                                        )
-                                                }
-                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
-                                                Button(
-                                                        onClick = {
+                                                        }
+                                                )
+                                                toggleableItem(
+                                                        checked = commentStyle.isNone,
+                                                        label = context.applicationContext.getString(R.string.keyboard_settings_comment_style_none),
+                                                        onCheckedChange = {
                                                                 context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateCommentStyle(CommentStyle.NoComments)
-                                                        },
-                                                        shape = CircleShape,
-                                                        colors = buttonColors,
-                                                        contentPadding = PaddingValues(horizontal = 8.dp)
-                                                ) {
-                                                        Text(
-                                                                text = stringResource(id = R.string.keyboard_settings_comment_style_none),
-                                                                fontWeight = FontWeight.Normal
-                                                        )
-                                                        Spacer(modifier = Modifier.weight(1f))
-                                                        Icon(
-                                                                imageVector = Icons.Rounded.Check,
-                                                                contentDescription = null,
-                                                                modifier = Modifier.alpha(if (commentStyle.isNone()) 1f else 0f),
-                                                                tint = accentColor
-                                                        )
-                                                }
+                                                        }
+                                                )
                                         }
                                 }
                         }
@@ -1014,8 +924,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateEmojiSuggestionsState(it)
                                                         },
-                                                        thumbContent = { SwitchThumbContent(isEmojiSuggestionsOn) },
-                                                        colors = switchColors
+                                                        thumbContent = { SwitchThumbContent(isEmojiSuggestionsOn) }
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -1035,8 +944,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateEnglishSuggestionsState(it)
                                                         },
-                                                        thumbContent = { SwitchThumbContent(isEnglishSuggestionsOn) },
-                                                        colors = switchColors
+                                                        thumbContent = { SwitchThumbContent(isEnglishSuggestionsOn) }
                                                 )
                                         }
                                 }
@@ -1063,8 +971,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(if (it) onHaptic else offHaptic)
                                                                 context.updateInputMemoryState(it)
                                                         },
-                                                        thumbContent = { SwitchThumbContent(isInputMemoryOn) },
-                                                        colors = switchColors
+                                                        thumbContent = { SwitchThumbContent(isInputMemoryOn) }
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)

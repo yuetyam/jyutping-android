@@ -55,9 +55,9 @@ fun CandidateView(
                 Color.Transparent
                 Box(
                         modifier = Modifier
-                                .alpha(if (commentStyle.isNone()) 0f else 1f)
+                                .alpha(if (commentStyle.isNone) 0f else 1f)
                                 .fillMaxHeight(),
-                        contentAlignment = if (commentStyle.isBelow()) Alignment.BottomCenter else Alignment.TopCenter
+                        contentAlignment = if (commentStyle.isBelow) Alignment.BottomCenter else Alignment.TopCenter
                 ) {
                         Color.Transparent
                         Text(
@@ -85,7 +85,7 @@ fun CandidateView(
                         Text(
                                 text = candidate.text,
                                 modifier = Modifier
-                                        .padding(bottom = if (commentStyle.isBelow()) 16.dp else 0.dp),
+                                        .padding(bottom = if (commentStyle.isBelow) 16.dp else 0.dp),
                                 color = textColor,
                                 fontSize = with(density) { 20.dp.toSp() },
                                 overflow = TextOverflow.Ellipsis,
@@ -122,7 +122,7 @@ fun AltCandidateView(
                 verticalArrangement = Arrangement.spacedBy((-2).dp),
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
-                if (candidate.isCantonese && commentStyle.isAbove()) {
+                if (candidate.isCantonese && commentStyle.isAbove) {
                         Text(
                                 text = candidate.comment ?: PresetString.SPACE,
                                 color = textColor,
@@ -140,7 +140,7 @@ fun AltCandidateView(
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
                 )
-                if (candidate.isCantonese && commentStyle.isBelow()) {
+                if (candidate.isCantonese && commentStyle.isBelow) {
                         Text(
                                 text = candidate.comment ?: PresetString.SPACE,
                                 color = textColor,
