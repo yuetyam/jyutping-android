@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<input-method xmlns:android="http://schemas.android.com/apk/res/android"
+    android:settingsActivity="org.jyutping.jyutping.MainActivity"
+    android:supportsInlineSuggestions="false"
+    android:supportsSwitchingToNextInputMethod="true">
+    <subtype
+        android:icon="@mipmap/ic_launcher"
+        android:imeSubtypeMode="keyboard"
+        android:isAsciiCapable="true"
+        android:label="@string/keyboard_name"
+        android:overridesImplicitlyEnabledSubtype="true"
+        android:shortLabel="粵拼" />
+</input-method>

@@ -26,7 +26,6 @@ import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -56,6 +56,7 @@ import org.jyutping.jyutping.app.common.SearchField
 import org.jyutping.jyutping.app.common.TextCard
 import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.isIdeographicCodePoint
+import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.presets.AppleColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetString
@@ -170,7 +171,7 @@ fun HomeScreen(navController: NavHostController) {
                                         GwongWanView(it)
                                 }
                         }
-                        if (isKeyboardEnabled.value.not()) {
+                        if (isKeyboardEnabled.value.negative) {
                                 item {
                                         DisableSelection {
                                                 Button(
@@ -184,29 +185,29 @@ fun HomeScreen(navController: NavHostController) {
                                                 ) {
                                                         Row(
                                                                 modifier = Modifier.fillMaxWidth(),
-                                                                horizontalArrangement = Arrangement.spacedBy(space = 12.dp, alignment = Alignment.CenterHorizontally),
+                                                                horizontalArrangement = Arrangement.spacedBy(space = 14.dp, alignment = Alignment.CenterHorizontally),
                                                                 verticalAlignment = Alignment.CenterVertically
                                                         ) {
                                                                 Icon(
                                                                         imageVector = ImageVector.vectorResource(id = R.drawable.button_settings),
                                                                         contentDescription = null,
-                                                                        modifier = Modifier.size(20.dp)
+                                                                        modifier = Modifier.size(22.dp)
                                                                 )
                                                                 Text(
                                                                         text = stringResource(id = R.string.home_button_enable_keyboard),
-                                                                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                                                        fontSize = 18.sp,
                                                                         fontWeight = FontWeight.Medium
                                                                 )
                                                                 Icon(
                                                                         imageVector = ImageVector.vectorResource(id = R.drawable.button_settings),
                                                                         contentDescription = null,
-                                                                        modifier = Modifier.size(20.dp).alpha(0f)
+                                                                        modifier = Modifier.size(22.dp).alpha(0f)
                                                                 )
                                                         }
                                                 }
                                         }
                                 }
-                        } else if (isKeyboardSelected.value.not()) {
+                        } else if (isKeyboardSelected.value.negative) {
                                 item {
                                         DisableSelection {
                                                 Button(
@@ -219,16 +220,24 @@ fun HomeScreen(navController: NavHostController) {
                                                 ) {
                                                         Row(
                                                                 modifier = Modifier.fillMaxWidth(),
-                                                                horizontalArrangement = Arrangement.spacedBy(space = 12.dp, alignment = Alignment.CenterHorizontally),
+                                                                horizontalArrangement = Arrangement.spacedBy(space = 14.dp, alignment = Alignment.CenterHorizontally),
                                                                 verticalAlignment = Alignment.CenterVertically
                                                         ) {
-                                                                Icon(imageVector = Icons.Outlined.Keyboard, contentDescription = null)
+                                                                Icon(
+                                                                        imageVector = Icons.Outlined.Keyboard,
+                                                                        contentDescription = null,
+                                                                        modifier = Modifier.size(26.dp)
+                                                                )
                                                                 Text(
                                                                         text = stringResource(id = R.string.home_button_select_keyboard),
-                                                                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                                                                        fontSize = 18.sp,
                                                                         fontWeight = FontWeight.Medium
                                                                 )
-                                                                Icon(imageVector = Icons.Outlined.Keyboard, contentDescription = null, modifier = Modifier.alpha(0f))
+                                                                Icon(
+                                                                        imageVector = Icons.Outlined.Keyboard,
+                                                                        contentDescription = null,
+                                                                        modifier = Modifier.size(26.dp).alpha(0f)
+                                                                )
                                                         }
                                                 }
                                         }
