@@ -25,4 +25,6 @@ data class Syllable(
                         return if (originQuotient > 0L) -1 else 1
                 }
         }
+
+        override fun toString(): String = "Syllable(alias=${aliasText},origin=${originText})"
 }

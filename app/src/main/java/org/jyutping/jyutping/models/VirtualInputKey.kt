@@ -132,9 +132,7 @@ data class VirtualInputKey(
                 )
 
                 // Cantonese tone digits [1-6]
-                val toneSet: Set<VirtualInputKey> = setOf(
-                        number1, number2, number3, number4, number5, number6
-                )
+                val toneSet: Set<VirtualInputKey> = setOf(number1, number2, number3, number4, number5, number6)
 
                 // Letters [a-z]
                 val alphabetSet: Set<VirtualInputKey> = setOf(

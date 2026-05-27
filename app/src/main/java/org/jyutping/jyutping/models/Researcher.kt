@@ -326,19 +326,17 @@ private fun Researcher.query(inputLength: Int, segmentation: Segmentation, limit
                 return segmentation.flatMap { performQuery(scheme = it, limit = limit, db = db) }
         } else {
                 return idealSchemes.flatMap { scheme ->
-                        return when (scheme.size) {
+                        return@flatMap when (scheme.size) {
                                 0 -> emptyList()
                                 1 -> performQuery(scheme = scheme, limit = limit, db = db)
-                                else -> {
-                                        scheme.size.downTo(1).map { scheme.take(it) }.flatMap { performQuery(scheme = it, limit = limit, db = db) }
-                                }
+                                else -> scheme.size.downTo(1).map { scheme.take(it) }.flatMap { performQuery(scheme = it, limit = limit, db = db) }
                         }
                 }
         }
 }
 private fun Researcher.performQuery(scheme: Scheme, limit: Int? = null, db: DatabaseHelper): List<Lexicon> {
-        val anchorsCode = scheme.aliasAnchors.anchorsCode()
-        if (anchorsCode < 1) return emptyList()
+        val anchorsCode = scheme.originAnchors.combinedCode()
+        if (anchorsCode < 1L) return emptyList()
         val spellCode = scheme.originText.hashCode()
         return db.strictMatch(anchors = anchorsCode, spell = spellCode, input = scheme.aliasText, mark = scheme.mark, limit = limit)
 }
@@ -378,7 +376,7 @@ private fun Researcher.modify(item: Lexicon, keys: List<VirtualInputKey>, text: 
 
 private fun DatabaseHelper.anchorsMatch(keys: List<VirtualInputKey>, input: String? = null, limit: Int? = null): List<Lexicon> {
         val code = keys.anchorsCode()
-        if (code == 0L) return emptyList()
+        if (code < 1L) return emptyList()
         val inputText: String = input ?: keys.joinToString(PresetString.EMPTY) { it.text }
         val instances: MutableList<Lexicon> = mutableListOf()
         val limitValue: Int = limit ?: 100
@@ -413,7 +411,7 @@ private fun DatabaseHelper.spellMatch(text: String, input: String, mark: String?
         return instances
 }
 private fun DatabaseHelper.strictMatch(anchors: Long, spell: Int, input: String, mark: String? = null, limit: Int? = null): List<Lexicon> {
-        if (anchors == 0L) return emptyList()
+        if (anchors < 1L) return emptyList()
         val instances: MutableList<Lexicon> = mutableListOf()
         val limitValue: Int = limit ?: -1
         val command = "SELECT rowid, word, romanization FROM core_lexicon WHERE spell = $spell AND anchors = $anchors LIMIT ${limitValue};"
