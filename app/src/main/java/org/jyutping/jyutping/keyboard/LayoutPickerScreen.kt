@@ -157,7 +157,7 @@ private fun LayoutOptionButton(layout: KeyboardLayout, isSelected: Boolean, isDa
                 IconButton(
                         onClick = onClick,
                         modifier = Modifier
-                                .size(44.dp)
+                                .size(45.dp)
                                 .border(
                                         width = 2.dp,
                                         color = if (isSelected) accentColor else Color.Transparent,
@@ -170,9 +170,9 @@ private fun LayoutOptionButton(layout: KeyboardLayout, isSelected: Boolean, isDa
                         shape = CircleShape
                 ) {
                         Icon(
-                                imageVector = ImageVector.vectorResource(id = R.drawable.button_show_keyboard),
+                                imageVector = ImageVector.vectorResource(id = if (isSelected) R.drawable.icon_keyboard_checked else R.drawable.icon_keyboard),
                                 contentDescription = null,
-                                modifier = Modifier.size(32.dp),
+                                modifier = Modifier.size(if (isSelected) 41.dp else 28.dp),
                         )
                 }
                 Text(

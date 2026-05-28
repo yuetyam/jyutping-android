@@ -69,7 +69,7 @@ fun ToolBar() {
                         modifier = Modifier.size(buttonSize)
                 ) {
                         Icon(
-                                imageVector = ImageVector.vectorResource(id = R.drawable.button_show_keyboard),
+                                imageVector = ImageVector.vectorResource(id = R.drawable.icon_keyboard),
                                 contentDescription = null,
                                 modifier = Modifier.size(28.dp),
                                 tint = if (isDarkMode) Color.White else Color.Black

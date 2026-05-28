@@ -87,7 +87,7 @@ fun CandidateBoardPhysicalButtons() {
                         )
                 }
                 AdvancedIconButton(
-                        icon = ImageVector.vectorResource(id = R.drawable.button_show_keyboard)
+                        icon = ImageVector.vectorResource(id = R.drawable.icon_keyboard)
                 ) {
                         context.audioFeedback(SoundEffect.Click)
                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
