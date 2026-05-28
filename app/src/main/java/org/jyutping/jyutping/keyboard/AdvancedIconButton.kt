@@ -17,6 +17,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.presets.AltPresetColor
+import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
@@ -25,6 +27,7 @@ fun AdvancedIconButton(
         icon: ImageVector,
         iconSize: Dp = 26.dp,
         size: Dp = 44.dp,
+        alternative: Boolean = false,
         action: () -> Unit
 ) {
         val context = LocalContext.current as JyutpingInputMethodService
@@ -41,7 +44,11 @@ fun AdvancedIconButton(
                         )
                         .padding(1.dp),
                 colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = ToolBox.inputKeyBackColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey = false, isPressing = false),
+                        containerColor = if (isHighContrastPreferred) {
+                                if (isDarkMode) AltPresetColor.emphaticDark else if (alternative) AltPresetColor.emphaticLight else AltPresetColor.shallowLight
+                        } else {
+                                if (isDarkMode) PresetColor.solidShallowDark else PresetColor.solidShallowLight
+                        },
                         contentColor = if (isDarkMode) Color.White else Color.Black
                 ),
                 shape = CircleShape

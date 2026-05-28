@@ -180,7 +180,8 @@ fun CandidateBoard(height: Dp, isPhysicalKeyboard: Boolean = false) {
                         CandidateBoardPhysicalButtons()
                 } else {
                         AdvancedIconButton(
-                                icon = Icons.Rounded.ArrowUpward
+                                icon = Icons.Rounded.ArrowUpward,
+                                alternative = true
                         ) {
                                 context.audioFeedback(SoundEffect.Back)
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
