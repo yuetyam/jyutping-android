@@ -1,5 +1,6 @@
 package org.jyutping.jyutping.models
 
+import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.isSpace
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.ninekey.Combo
@@ -278,7 +279,7 @@ private fun DatabaseHelper.pinyinNineKeyCodeMatch(code: Long, limit: Int? = null
 private fun DatabaseHelper.lookupRomanization(text: String): List<String> {
         val matched = reverseLookup(text)
         if (matched.isNotEmpty()) return matched
-        if (text.length == 1) return emptyList()
+        if (text.characterCount <= 1) return emptyList()
         fun fetchLeading(word: String): Pair<String?, Int> {
                 var chars = word
                 var romanization: String? = null

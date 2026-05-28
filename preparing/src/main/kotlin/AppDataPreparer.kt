@@ -17,6 +17,8 @@ object AppDataPreparer {
         }
         private fun createIndexes(url: String) {
                 val commands: List<String> = listOf(
+                        "CREATE INDEX ix_collocation_word_romanization ON collocation_table (word, romanization);",
+
                         "CREATE INDEX ix_dictionary_word_romanization ON dictionary_table (word, romanization);",
 
                         "CREATE INDEX ix_yingwaa_code ON yingwaa_table(code);",

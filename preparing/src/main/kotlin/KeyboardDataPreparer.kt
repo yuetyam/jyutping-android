@@ -99,7 +99,7 @@ object KeyboardDataPreparer {
         }
 
         private fun createLexiconTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE core_lexicon (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, romanization TEXT NOT NULL, anchors INTEGER NOT NULL, spell INTEGER NOT NULL, nine_key_anchors INTEGER NOT NULL, nine_key_code INTEGER NOT NULL);"
+                val createTableCommand: String = "CREATE TABLE core_lexicon (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, romanization TEXT NOT NULL, anchors INTEGER NOT NULL, spell INTEGER NOT NULL, nine_key_anchors INTEGER NOT NULL, nine_key_code INTEGER NOT NULL, UNIQUE (word, romanization));"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)

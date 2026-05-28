@@ -59,7 +59,7 @@ fun String.formattedCodePointsText(): String = codePoints().toArray().joinToStri
 fun String.generateSymbol(): String {
         val text = this
         return buildString {
-                text.split(".").map { it.toInt(radix = 16) }.forEach { appendCodePoint(it) }
+                text.split(".").forEach { appendCodePoint(it.toInt(radix = 16)) }
         }
 }
 

@@ -9,7 +9,7 @@ data class Pronunciation(
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true
                 if (other !is Pronunciation) return false
-                return this.romanization == other.romanization
+                return romanization == other.romanization
         }
         override fun hashCode(): Int {
                 return romanization.hashCode()
@@ -21,4 +21,13 @@ data class CantoneseLexicon(
         val pronunciations: List<Pronunciation> = listOf(),
         val note: String? = null,
         val unihanDefinition: String? = null
-)
+) {
+        override fun equals(other: Any?): Boolean {
+                if (this === other) return true
+                if (other !is CantoneseLexicon) return false
+                return text == other.text
+        }
+        override fun hashCode(): Int {
+                return text.hashCode()
+        }
+}
