@@ -24,8 +24,8 @@
 啲	di1
 啲	dit1
 同	tung4
-㗎	ga3
 㗎	gaa3
+㗎	ga3
 幾	gei2
 講	gong2
 咗	zo2
@@ -74,7 +74,6 @@
 食	sik6
 都係	dou1 hai6
 過	gwo3
-嘞	la3
 隻	zek3
 知	zi1
 但	daan6
@@ -788,7 +787,7 @@
 解釋	gaai2 sik1
 女朋友	neoi5 pang4 jau5
 同一	tung4 jat1
-套	tou3
+圖	tou4
 原因	jyun4 jan1
 上次	soeng6 ci3
 路	lou6
@@ -1830,7 +1829,7 @@
 當中	dong1 zung1
 目的	muk6 dik1
 眼睛	ngaan5 zing1
-肚	tou5
+套	tou3
 梳化	so1 faa2
 梳化	so1 faa3
 基	gei1
@@ -2388,7 +2387,7 @@
 收埋	sau1 maai4
 森林	sam1 lam4
 廣告	gwong2 gou3
-圖	tou4
+肚	tou5
 請問	cing2 man6
 請問	ceng2 man6
 擒	kam4
@@ -3191,7 +3190,7 @@
 死亡	sei2 mong4
 寂寞	zik6 mok6
 一睇	jat1 tai2
-茵	jan1
+欣	jan1
 怕醜	paa3 cau2
 晏	aan3
 搓	co1
@@ -3269,7 +3268,7 @@
 一入	jat1 jap6
 鳳	fung6
 泳衣	wing6 ji1
-吐	tou3
+兔	tou3
 總會	zung2 wui2
 古	gu2
 類似	leoi6 ci5
@@ -4678,7 +4677,7 @@
 曚	mung4
 日食	jat6 sik6
 博物	bok3 mat6
-笨	ban6
+品	ban2
 人才	jan4 coi4
 汽水	hei3 seoi2
 流行	lau4 hang4
@@ -4771,7 +4770,7 @@
 枉	wong2
 漢	hon3
 穩	wan2
-品	ban2
+笨	ban6
 必	bit1
 根	gan1
 視	si6
@@ -5119,14 +5118,14 @@
 健	gin6
 攝	sip3
 鼓	gu2
-逃	tou4
+土	tou2
 置	zi3
 義	ji6
 登	dang1
 尋	cam4
 做運動	zou6 wan6 dung6
 做女	zou6 neoi2
-𠺝	gaak3
+革	gaak3
 收音	sau1 jam1
 阿誰	aa3 seoi2
 阿誰	aa3 seoi4
@@ -5439,7 +5438,7 @@
 電報	din6 bou3
 靈丹	ling4 daan1
 前夫	cin4 fu1
-弊嘞	bai6 laak3
+弊嘞	bai6 la3
 踏	daap6
 史	si2
 陽	joeng4
@@ -5634,7 +5633,7 @@
 充	cung1
 戰	zin3
 膽	daam2
-途	tou4
+桃	tou4
 詠	wing6
 棄	hei3
 毒	duk6
@@ -6109,7 +6108,6 @@
 適宜	sik1 ji4
 實力	sat6 lik6
 返鄉	faan2 hoeng1
-畢業生	bat1 jip6 sang1
 畢業生	bat1 jip6 saang1
 節奏	zit3 zau3
 風氣	fung1 hei3
@@ -6359,7 +6357,6 @@
 冇法	mou5 faat3
 近日	gan6 jat6
 用語	jung6 jyu5
-徒	tou4
 衆	zung3
 熨	wan6
 熨	tong3
@@ -7869,7 +7866,7 @@
 咒	zau3
 蟬	sim4
 系	hai6
-兔	tou3
+吐	tou3
 三角形	saam1 gok3 jing4
 衝紅燈	cung1 hung4 dang1
 事故	si6 gu3
@@ -9696,7 +9693,7 @@
 哮	haau1
 甥	saang1
 督	duk1
-檳	ban1
+奔	ban1
 遍	pin3
 單單打打	daan1 daan1 daa2 daa2
 以身相許	ji5 san1 soeng1 heoi2
@@ -9794,7 +9791,7 @@
 錘	ceoi4
 崔	ceoi1
 催	ceoi1
-土	tou2
+塗	tou4
 你眼望我眼	nei5 ngaan5 mong6 ngo5 ngaan5
 無關痛癢	mou4 gwaan1 tung3 joeng5
 勢色唔對	sai3 sik1 m4 deoi3
@@ -9997,6 +9994,8 @@
 轉車	zyun2 ce1
 轉車	zyun3 ce1
 大路	daai6 lou6
+嘞	laak3
+嘞	la3
 議席	ji5 zik6
 牌照	paai4 ziu3
 加速	gaa1 cuk1
@@ -10663,7 +10662,6 @@
 攞命	lo2 meng6
 攞景	lo2 ging2
 㗎	gaa2
-㗎話	gaa4 waa2
 誘人	jau5 jan4
 奇想	kei4 soeng2
 送花	sung3 faa1
@@ -12235,7 +12233,7 @@
 獸	sau3
 敝	bai6
 諷	fung3
-塗	tou4
+逃	tou4
 區	au1
 憶	jik1
 裂	lit6
@@ -13899,7 +13897,7 @@
 伍	ng5
 喻	jyu6
 哀	oi1
-繽	ban1
+檳	ban1
 央	joeng1
 憔	ciu4
 悴	seoi6
@@ -14011,7 +14009,7 @@
 變數	bin3 sou3
 慰藉	wai3 zik6
 波友	bo1 jau5
-迴避	wui4 bei6
+回避	wui4 bei6
 帝后	dai3 hau6
 工頭	gung1 tau2
 工頭	gung1 tau4
@@ -14109,7 +14107,7 @@
 階	gaai1
 宵	siu1
 瞭	liu5
-革	gaak3
+𠺝	gaak3
 缸	gong1
 啡	fe1
 啡	fei1
@@ -14120,7 +14118,7 @@
 默	mak6
 魏	ngai6
 普	pou2
-討	tou2
+途	tou4
 術	seot6
 議	ji5
 產	caan2
@@ -19016,7 +19014,7 @@
 太好	taai3 hou2
 八點	baat3 dim2
 幾靚	gei2 leng3
-欣	jan1
+茵	jan1
 包包	baau1 baau1
 星月	sing1 jyut6
 繞過	jiu5 gwo3
@@ -19421,7 +19419,7 @@
 嗶	bat1
 偷襲	tau1 zaap6
 瞳孔	tung4 hung2
-奔	ban1
+繽	ban1
 擲	zaak6
 砵	but3
 肉麻	juk6 maa4
@@ -20388,7 +20386,7 @@
 正大	zing3 daai6
 一廂情願	jat1 soeng1 cing4 jyun6
 迷戀	mai4 lyun2
-桃	tou4
+討	tou2
 三叔	saam1 suk1
 詛咒	zo3 zau3
 教下	gaau3 haa5
@@ -20403,8 +20401,7 @@
 青龍	ceng1 lung4
 青龍	cing1 lung4
 工場	gung1 coeng4
-稟	ban2
-稟	lam5
+濱	ban1
 紫菜	zi2 coi3
 擦紙膠	caat3 zi2 gaau1
 雪梨	syut3 lei2
@@ -20523,7 +20520,7 @@
 交接	gaau1 zip3
 而言	ji4 jin4
 懿	ji3
-淘	tou4
+徒	tou4
 從新	cung4 san1
 鬼臉	gwai2 lim5
 手銬	sau2 kaau3
@@ -20821,7 +20818,7 @@
 投影	tau4 jing2
 紅顏	hung4 ngaan4
 戴上	daai3 soeng5
-滔	tou1
+淘	tou4
 身位	san1 wai2
 晢	zai3
 晢	zit3
@@ -21870,7 +21867,7 @@
 改口	goi2 hau2
 罅隙	laa3 kwik1
 一閃而過	jat1 sim2 ji4 gwo3
-躺下	tong2 haa6
+躺下	tong2 haa5
 化驗	faa3 jim6
 脫俗	tyut3 zuk6
 張圖	zoeng1 tou4
@@ -23986,8 +23983,8 @@
 業務員	jip6 mou6 jyun4
 現貨	jin6 fo3
 外企	ngoi6 kei5
-口袋	hau2 doi2
 口袋	hau2 doi6
+口袋	hau2 doi2
 穆	muk6
 寬屏	fun1 ping4
 可靠性	ho2 kaau3 sing3
@@ -25087,7 +25084,7 @@
 所得稅	so2 dak1 seoi3
 直接影響	zik6 zip3 jing2 hoeng2
 固定資產	gu3 ding6 zi1 caan2
-濱	ban1
+稟	ban2
 排毒	paai4 duk6
 擠壓	zai1 aat3
 精油	zing1 jau4
@@ -25574,7 +25571,6 @@
 𡃶	sek3
 惜	sek3
 錫	sik1
-錫	sik3
 錫	sek3
 防汛	fong4 seon3
 風險投資	fung1 him2 tau4 zi1
@@ -26870,7 +26866,7 @@
 宏大	wang4 daai6
 招來	ziu1 loi4
 污垢	wu1 gau3
-涂	tou4
+滔	tou1
 發病率	faat3 beng6 leot2
 踏板	daap6 baan2
 開庭	hoi1 ting4
@@ -28568,6 +28564,8 @@
 刷屏	caat3 ping4
 下一站天后	haa6 jat1 zaam6 tin1 hau6
 燕國地圖	jin1 gwok3 dei6 tou4
+白媽	baak6 maa1
+白妹	baak6 mui1
 簽走	cim1 zau2
 潮汕佬	ciu4 saan3 lou2
 潮州府	ciu4 zau1 fu2
@@ -33503,6 +33501,39 @@
 刀工	dou1 gung1
 力工	lik6 gung1
 銷號	siu1 hou6
+簡體中文	gaan2 tai2 zung1 man2
+簡體中文	gaan2 tai2 zung1 man4
+繁體中文	faan4 tai2 zung1 man2
+繁體中文	faan4 tai2 zung1 man4
+被認爲	bei6 jing6 wai4
+被認爲係	bei6 jing6 wai4 hai6
+照收	ziu3 sau1
+無知者	mou4 zi1 ze2
+無知者無畏	mou4 zi1 ze2 mou4 wai3
+牛腩麪	ngau4 naam5 min6
+互換	wu6 wun6
+執念	zap1 nim6
+人文氣息	jan4 man4 hei3 sik1
+最有	zeoi3 jau5
+最冇	zeoi3 mou5
+新品	san1 ban2
+好笨	hou2 ban6
+好笨柒	hou2 ban6 cat6
+引喻失義	jan5 jyu6 sat1 ji6
+我講	ngo5 gong2
+你講	nei5 gong2
+佢講	keoi5 gong2
+面若	min6 joek6
+面若桃花	min6 joek6 tou4 faa1
+面若銀盤	min6 joek6 ngan4 pun4
+修飾符	sau1 sik1 fu4
+利益申明	lei6 jik1 san1 ming4
+利益申報	lei6 jik1 san1 bou3
+返咗	faan1 zo2
+返咗鄉下	faan1 zo2 hoeng1 haa2
+返咗未	faan1 zo2 mei6
+返咗未啊	faan1 zo2 mei6 aa3
+返未返	faan1 mei6 faan1
 頭頂光環	tau4 deng2 gwong1 waan4
 得意洋洋	dak1 ji3 joeng4 joeng4
 閃閃心	sim2 sim2 sam1
@@ -33631,6 +33662,8 @@
 死鬼咁凍	sei2 gwai2 gam3 dung3
 鬼死咁凍	gwai2 sei2 gam3 dung3
 迷霧	mai4 mou6
+一嚿雲	jat1 gau6 wan4
+雲裏霧裏	wan4 leoi5 mou6 leoi5
 驚	geng1
 驚怕	ging1 paa3
 膽怯	daam2 hip3
@@ -33817,7 +33850,6 @@
 金髮妹	gam1 faat3 mui1
 白女	baak6 neoi5
 白人女	baak6 jan4 neoi5
-白妹	baak6 mui1
 中性金髮人	zung1 sing3 gam1 faat3 jan4
 金髮男	gam1 faat3 naam4
 白髮女	baak6 faat3 neoi5
@@ -34571,11 +34603,13 @@
 下弦月	haa6 jin4 jyut6
 朔月	sok3 jyut6
 晦月	fui3 jyut6
+圓月	jyut6 jyun4
 月圓	jyut6 jyun4
 蟾宮	sim4 gung1
 嬋娟	sim4 gyun1
 白玉盤	baak6 juk6 pun4
-圓月	jyut6 jyun4
+玉盤	juk6 pun4
+銀盤	ngan4 pun4
 下凸月	haa6 dat6 jyut6
 虧凸月	kwai1 dat6 jyut6
 凸月	dat6 jyut6
@@ -34663,8 +34697,8 @@
 椰青	je4 ceng1
 椰青	je4 cing1
 奇異果	kei4 ji6 gwo2
+獼猴桃	mei4 hau4 tou4
 獼猴桃	nei4 hau4 tou4
-獼猴桃	nei4 hau4 tou2
 矮瓜	ai2 gwaa1
 茄瓜	ke2 gwaa1
 茄子	ke2 zi2
@@ -34734,10 +34768,10 @@
 蛋餅	daan6 beng2
 蛋餅	daan2 beng2
 鬆餅	sung1 beng2
-熱香餅	jit6 hoeng1 beng2
 班戟	baan1 gik1
 班戟	baan1 kik1
 米餅	mai5 beng2
+香餅	hoeng1 beng2
 華夫餅	waa4 fu1 beng2
 華夫	waa4 fu1
 格仔餅	gaak3 zai2 beng2
@@ -34758,7 +34792,9 @@
 比薩	bei2 saat3
 麪餅	min6 beng2
 三明治	saam1 ming4 zi6
-阿拉伯薄麪包三明治	aa3 laai1 baak3 bok6 min6 baau1 saam1 ming4 zi6
+口袋麪包	hau2 doi6 min6 baau1
+阿拉伯薄麪包	aa3 laai1 baak3 bok6 min6 baau1
+皮塔餅	pei4 taap3 beng2
 鷹嘴豆餅	jing1 zeoi2 dau2 beng2
 三角豆餅	saam1 gok3 dau6 beng2
 墨西哥夾餅	mak6 sai1 go1 gaap3 beng2
@@ -34873,7 +34909,6 @@
 茶壺	caa4 wu4
 熱咖啡	jit6 gaa3 fe1
 杯茶	bui1 caa4
-吸管	kap1 gun2
 日本清酒	jat6 bun2 cing1 zau2
 清酒	ceng1 zau2
 飲	jam2
@@ -34897,6 +34932,8 @@
 外賣盒	ngoi6 maai6 hap6
 外賣盒	ngoi6 maai6 hap2
 鹽樽	jim4 zeon1
+落鹽	lok6 jim4
+放鹽	fong3 jim4
 蹴鞠	cuk1 guk1
 踢球	tek3 kau4
 美式橄欖球	mei5 sik1 gam2 laam5 kau4
@@ -35107,6 +35144,7 @@
 中肯	zung3 hang2
 遊戲手柄	jau4 hei3 sau2 beng3
 老虎機	lou5 fu2 gei1
+砌圖	cai3 tou4
 轎車	kiu2 ce1
 小轎車	siu2 giu2 ce1
 計程車	gai3 cing4 ce1
@@ -36945,8 +36983,6 @@
 蟄	zat6
 蟄	zap6
 驚蟄	ging1 zap6
-牛腩麪	ngau4 naam5 min6
-互換	wu6 wun6
 于	jyu1
 倡	coeng3
 倡	coeng1
@@ -36957,6 +36993,11 @@
 周召	zau1 siu6
 周召共和	zau1 siu6 gung6 wo4
 抓	zaau2
+丼	dam2
+丼	zing2
+丼	zeng2
+𨂽	dam6
+㗎	gaa4
 亞麻色	aa3 maa4 sik1
 鴨綠色	aap3 luk6 sik1
 暗灰	am3 fui1
@@ -37112,7 +37153,6 @@
 搣	mit1
 叻	lak6
 成爲	sing4 wai4
-嘞	laak3
 和	wo6
 錯	cok3
 離	lei6
@@ -37137,7 +37177,6 @@
 難	naan6
 難	no4
 奶奶	naai1 naai1
-你講	nei5 gong2
 意思	ji3 si3
 哩	le5
 哩	lei1
@@ -37220,8 +37259,6 @@
 誰	seoi2
 平	peng4
 條友	tiu4 jau2
-嗄	aa2
-嗄	saa3
 們	mun4
 帖子	tip3 zi2
 樂	ngaau6
@@ -37395,6 +37432,7 @@
 一大堆	jat1 daai6 deoi1
 總是	zung2 si6
 改爲	goi2 wai4
+應付	jing1 fu6
 圖畫	tou4 waa6
 論	leon4
 墊	din6
@@ -37810,6 +37848,7 @@
 從沒	cung4 mut6
 一斤	jat1 gan1
 覈准	hat6 zeon2
+科學發展	fo1 hok6 faat3 zin2
 人與人	jan4 jyu5 jan4
 大力支持	daai6 lik6 zi1 ci4
 赫赫	hak1 hak1
@@ -37989,9 +38028,11 @@
 嚇人	haak3 jan4
 出錢	ceot1 cin4
 不止	bat1 zi2
+稟	lam5
 漲	zoeng2
 渾	wan6
 婕	zit6
+涂	tou4
 自治州	zi6 zi6 zau1
 聽證會	ting1 zing3 wui2
 第一階段	dai6 jat1 gaai1 dyun6
@@ -38501,7 +38542,6 @@
 果園	gwo2 jyun4
 提請	tai4 cing2
 應收	jing1 sau1
-應收	jing3 sau1
 審閱	sam2 jyut6
 複印機	fuk1 jan3 gei1
 行銷	hang4 siu1
@@ -38993,7 +39033,6 @@
 右路	jau6 lou6
 備件	bei6 gin2
 淤	jyu1
-淤	jyu2
 國家利益	gwok3 gaa1 lei6 jik1
 各行各業	gok3 hong4 gok3 jip6
 高效率	gou1 haau6 leot2
@@ -39884,6 +39923,7 @@
 馬賽克	maa5 coi3 hak1
 經得起	ging1 dak1 hei2
 斯諾克	si1 nok6 hak1
+應屆生	jing3 gaai3 saang1
 保稅區	bou2 seoi3 keoi1
 黃牌	wong4 paai2
 黃牌	wong4 paai4
@@ -42855,6 +42895,7 @@
 西門慶	sai1 mun4 hing3
 西北部	sai1 bak1 bou6
 理髮師	lei5 faat3 si1
+獼猴桃	nei4 hau4 tou2
 東南部	dung1 naam4 bou6
 戶口本	wu6 hau2 bun2
 性高潮	sing3 gou1 ciu4
@@ -43300,7 +43341,6 @@
 獎章	zoeng2 zoeng1
 滌綸	dik6 leon4
 淤泥	jyu1 nai4
-淤泥	jyu2 nai4
 民房	man4 fong4
 標兵	biu1 bing1
 枇杷	pei4 paa4
@@ -44729,6 +44769,7 @@
 契丹	kit3 daan1
 夾具	gaap3 geoi6
 墓葬	mou6 zong3
+吸管	kap1 gun2
 例題	lai6 tai4
 醚	mai4
 璞	pok3
@@ -45551,7 +45592,6 @@
 爆炒	baau3 caau2
 油鍋	jau4 wo1
 權當	kyun4 dong1
-杆子	gon1 zi2
 教法	gaau3 faat3
 探班	taam3 baan1
 慢速	maan6 cuk1
@@ -46854,7 +46894,6 @@
 黃土高原	wong4 tou2 gou1 jyun4
 舉世矚目	geoi2 sai3 zuk1 muk6
 翩翩起舞	pin1 pin1 hei2 mou5
-繁體中文	faan4 tai2 zung1 man2
 男女平等	naam4 neoi5 ping4 dang2
 本來面目	bun2 loi4 min6 muk6
 接踵而至	zip3 zung2 ji4 zi3
@@ -47925,7 +47964,7 @@
 驊	waa4
 頡	kit3
 煽	sin3
-應屆畢業生	jing3 gaai3 bat1 jip6 sang1
+應屆畢業生	jing3 gaai3 bat1 jip6 saang1
 心驚肉跳	sam1 geng1 juk6 tiu3
 心驚肉跳	sam1 ging1 juk6 tiu3
 呼倫貝爾	fu1 leon4 bui3 ji5
@@ -47966,7 +48005,6 @@
 伸張	san1 zoeng1
 連鎖反應	lin4 so2 faan2 jing3
 赫赫有名	hak1 hak1 jau5 ming4
-科特布斯	fo1 dak6 bou3 si1
 武警部隊	mou5 ging2 bou6 deoi2
 政治生活	zing3 zi6 sang1 wut6
 如此一來	jyu4 ci2 jat1 loi4
@@ -51016,7 +51054,6 @@
 恣	zi3
 呿	keoi1
 俚	lei5
-發展研究中心	faat3 zin2 jin4 gau3 zung1 sam1
 大連理工大學	daai6 lin4 lei5 gung1 daai6 hok6
 中國地質大學	zung1 gwok3 dei6 zat1 daai6 hok6
 中小型企業	zung1 siu2 jing4 kei5 jip6
@@ -52014,6 +52051,7 @@
 嚷	joeng5
 嚷	joeng6
 咧	lit6
+呻	san3
 卟	buk1
 卟	gei1
 創	cong1
@@ -54565,7 +54603,6 @@
 棗樹	zou2 syu6
 條形	tiu4 jing4
 桁架	hang4 gaa3
-新派	san1 paai1
 新派	san1 paai3
 料想	liu6 soeng2
 敢爲	gam2 wai4
@@ -55129,7 +55166,6 @@
 星星點點	sing1 sing1 dim2 dim2
 教職員工	gaau3 zik1 jyun4 gung1
 戛然而止	gaat3 jin4 ji4 zi2
-應收帳款	jing3 sau1 zoeng3 fun2
 必和必拓	bit1 wo4 bit1 tok3
 將計就計	zoeng1 gai3 zau6 gai3
 失魂落魄	sat1 wan4 lok6 paak3
@@ -60537,7 +60573,6 @@
 會商	wui6 soeng1
 晃眼	fong2 ngaan5
 敵營	dik6 jing4
-放鹽	fong3 jim4
 插足	caap3 zuk1
 推搡	teoi1 song2
 才貌	coi4 maau6
@@ -64447,7 +64482,6 @@
 生疑	sang1 ji4
 瓦楞	ngaa5 ling4
 理當	lei5 dong1
-玉盤	juk6 pun4
 煮蛋	zyu2 daan2
 烏桓	wu1 wun4
 灼痛	zoek3 tung3
@@ -65266,7 +65300,6 @@
 違法亂紀	wai4 faat3 lyun6 gei2
 連根拔起	lin4 gan1 bat6 hei2
 逃離現場	tou4 lei4 jin6 coeng4
-迴光返照	wui4 gwong1 faan2 ziu3
 跌打損傷	dit3 daa2 syun2 soeng1
 讀者文摘	duk6 ze2 man4 zaak6
 調虎離山	diu6 fu2 lei4 saan1
@@ -71069,7 +71102,6 @@
 陣式	zan6 sik1
 阿訇	aa3 gwang1
 間奏	gaan3 zau3
-銀盤	ngan4 pun4
 金錶	gam1 biu1
 遊湖	jau4 wu4
 速射	cuk1 se6
@@ -72023,7 +72055,6 @@
 重晶石	cung5 zing1 sek6
 軍火商	gwan1 fo2 soeng1
 身後事	san1 hau6 si6
-賴聲川	laai6 sing1 cyun1
 蘭花指	laan4 faa1 zi2
 葵花籽	kwai4 faa1 zi2
 英吉沙	jing1 gat1 saa1
@@ -73259,7 +73290,6 @@
 白芝麻	baak6 zi1 maa4
 瘙癢症	sou3 joeng5 zing3
 男中音	naam4 zung1 jam1
-王義夫	wong4 ji6 fu1
 特斯拉	dak6 si1 laai1
 烏龍球	wu1 lung2 kau4
 漢旺鎮	hon3 wong6 zan3
@@ -74328,7 +74358,7 @@
 舊宅	gau6 zaak6
 背鰭	bui3 kei4
 老驥	lou5 kei3
-老派	lou5 paai1
+老派	lou5 paai3
 老客	lou5 haak3
 總譜	zung2 pou2
 糞尿	fan3 niu6
@@ -74595,7 +74625,6 @@
 子規	zi2 kwai1
 奸佞	gaan1 ning6
 套紅	tou3 hung4
-坯子	pui1 zi2
 困守	kwan3 sau2
 回門	wui4 mun4
 回函	wui4 haam4
@@ -74774,6 +74803,7 @@
 積弊	zik1 bai6
 種籽	zung2 zi2
 禽鳥	kam4 niu5
+神品	san4 ban2
 硬逼	ngaang6 bik1
 硬核	ngaang6 hat6
 砸破	zaap3 po3
@@ -75348,7 +75378,6 @@
 斷壁殘垣	dyun6 bik1 caan4 wun4
 放浪形骸	fong3 long6 jing4 hoi4
 才高八斗	coi4 gou1 baat3 dau2
-應付帳款	jing3 fu6 zoeng3 fun2
 意見不合	ji3 gin3 bat1 hap6
 意興闌珊	ji3 hing3 laan4 saan1
 心無雜念	sam1 mou4 zaap6 nim6
@@ -76028,6 +76057,7 @@
 爲富不仁	wai4 fu3 bat1 jan4
 沾花惹草	zim1 faa1 je5 cou2
 油料作物	jau4 liu2 zok3 mat6
+江山易改	gong1 saan1 ji6 goi2
 氣象萬千	hei3 zoeng6 maan6 cin1
 殘酷無情	caan4 huk6 mou4 cing4
 止咳糖漿	zi2 kat1 tong4 zoeng1
@@ -76392,7 +76422,7 @@
 燈草	dang1 cou2
 演活	jin5 wut6
 渡頭	dou6 tau4
-淌下	tong2 haa6
+淌下	tong2 haa5
 海涅	hoi2 nip6
 海法	hoi2 faat3
 浮淺	fau4 cin2
@@ -83147,6 +83177,7 @@
 掩面而泣	jim2 min6 ji4 jap1
 推三阻四	teoi1 saam1 zo2 sei3
 手抓羊肉	sau2 zaau2 joeng4 juk6
+惡語相向	ok3 jyu5 soeng1 hoeng3
 恩斷義絕	jan1 dyun6 ji6 zyut6
 後悔不迭	hau6 fui3 bat1 dit6
 年逾古稀	nin4 jyu4 gu2 hei1
@@ -85833,7 +85864,6 @@
 鹽滷	jim4 lou5
 鰥夫	gwaan1 fu1
 體書	tai2 syu1
-香餅	hoeng1 beng2
 餘毒	jyu4 duk6
 頂班	ding2 baan1
 電門	din6 mun4
@@ -86301,6 +86331,7 @@
 全熟	cyun4 suk6
 側根	zak1 gan1
 修齊	sau1 cai4
+中派	zung1 paai3
 覦	jyu4
 蒕	wan1
 茺	cung1
@@ -88266,7 +88297,6 @@
 缺陷美	kyut3 haam6 mei5
 生態系	sang1 taai3 hai6
 溮河區	si1 ho4 keoi1
-涂爾干	tou4 ji5 gon1
 江州區	gong1 zau1 keoi1
 梅里美	mui4 lei5 mei5
 星宿海	sing1 sau3 hoi2
@@ -90049,7 +90079,6 @@
 找錢	zaau2 cin2
 找錢	zaau2 cin4
 扣扣	kau3 kau3
-打壞	daa2 waai2
 打壞	daa2 waai6
 手式	sau2 sik1
 戰書	zin3 syu1
@@ -90919,7 +90948,6 @@
 蝴蝶酥	wu4 dip6 sou1
 茄克衫	ke2 hak1 saam1
 航海者	hong4 hoi2 ze2
-腰桿子	jiu1 gon1 zi2
 粗體字	cou1 tai2 zi6
 章炳麟	zoeng1 bing2 leon4
 發射井	faat3 se6 zeng2
@@ -91254,7 +91282,6 @@
 排泄系統	paai4 sit3 hai6 tung2
 手疾眼快	sau2 zat6 ngaan5 faai3
 微細加工	mei4 sai3 gaa1 gung1
-尼科西亞	nei4 fo1 sai1 aa3
 尸位素餐	si1 wai6 sou3 caan1
 小手小腳	siu2 sau2 siu2 goek3
 孔雀王朝	hung2 zoek3 wong4 ciu4
@@ -93094,7 +93121,6 @@
 狸子	lei4 zi2
 熱昏	jit6 fan1
 湯盤	tong1 pun4
-淤傷	jyu2 soeng1
 水肺	seoi2 fai3
 水刑	seoi2 jing4
 氣閘	hei3 zaap6
@@ -93277,7 +93303,6 @@
 手交	sau2 gaau1
 戒懼	gaai3 geoi6
 弘願	wang4 jyun6
-崴子	waai2 zi2
 尿泡	niu6 paau1
 妄說	mong5 syut3
 奉召	fung6 ziu6
@@ -96551,7 +96576,6 @@
 如臂使指	jyu4 bei3 si2 zi2
 奮勇當先	fan5 jung5 dong1 sin1
 天命難違	tin1 ming6 naan4 wai4
-回光反照	wui4 gwong1 faan2 ziu3
 向後翻騰	hoeng3 hau6 faan1 tang4
 古今小說	gu2 gam1 siu2 syut3
 利字當頭	lei6 zi6 dong1 tau4
@@ -97556,8 +97580,6 @@
 恓	sai1
 够	gau3
 坏	pui1
-坏	waai2
-坏	waai6
 佫	hok6
 䴉	syun4
 䴉	waan4
@@ -97647,7 +97669,6 @@
 綠礬	luk6 faan4
 綠區	luk6 keoi1
 筵上	jin4 soeng6
-祛淤	keoi1 jyu1
 異卵	ji6 leon2
 玉里	juk6 lei5
 牝牡	pan5 maau5
@@ -99378,7 +99399,6 @@
 肅反運動	suk1 faan2 wan6 dung6
 筆墨官司	bat1 mak6 gun1 si1
 立委選舉	laap6 wai2 syun2 geoi2
-科迪勒拉	fo1 dik6 lak6 laai1
 禍福無門	wo6 fuk1 mou4 mun4
 督察小組	duk1 caat3 siu2 zou2
 相機行事	soeng3 gei1 hang4 si6
@@ -102777,7 +102797,6 @@
 節候	zit3 hau6
 笙管	sang1 gun2
 竹東	zuk1 dung1
-科斗	fo1 dau2
 監犯	gaam1 faan2
 甕棺	ung3 gun1
 牽記	hin1 gei3
@@ -103951,7 +103970,6 @@
 超乎	ciu1 fu4
 起事	hei2 si6
 贖金	suk6 gam1
-賴尿	laai6 niu6
 賴婚	laai6 fan1
 賞賜	soeng2 ci3
 賀年	ho6 nin4
@@ -105073,7 +105091,6 @@
 悲不自勝	bei1 bat1 zi6 sing3
 心廣體胖	sam1 gwong2 tai2 pun4
 往來帳戶	wong5 loi4 zoeng3 wu6
-尼哥底母	nei4 go1 dai2 mou5
 奪門而入	dyut6 mun4 ji4 jap6
 奈及利亞	noi6 kap6 lei6 aa3
 大比目魚	daai6 bei2 muk6 jyu2
@@ -105448,7 +105465,6 @@
 廷巴克圖	ting4 baa1 hak1 tou4
 廢寢忘餐	fai3 cam2 mong4 caan1
 左箭頭鍵	zo2 zin3 tau4 gin6
-姆拉迪奇	mou5 laai1 dik6 kei4
 天然毒素	tin1 jin4 duk6 sou3
 天下爲家	tin1 haa6 wai4 gaa1
 同工異曲	tung4 gung1 ji6 kuk1
@@ -107118,7 +107134,6 @@
 嗈	jung1
 點擊付費廣告	dim2 gik1 fu6 fai3 gwong2 gou3
 貝婭特麗克絲	bui3 aa3 dak6 lai6 hak1 si1
-科迪勒拉山系	fo1 dik6 lak6 laai1 saan1 hai6
 高濃縮鈾	gou1 nung4 suk1 jau4
 顯微鏡座	hin2 mei4 geng3 zo6
 長夜難明	coeng4 je6 naan4 ming4
@@ -109301,6 +109316,7 @@
 納匝肋	naap6 zaap3 lak6
 眼中刺	ngaan5 zung1 ci3
 皮革商	pei4 gaak3 soeng1
+熱香餅	jit6 hoeng1 beng2
 梵諦岡	faan4 dai3 gong1
 擦網球	caat3 mong5 kau4
 恐嚇罪	hung2 haak3 zeoi6
@@ -110384,7 +110400,6 @@
 呇	hei2
 呇	kai2
 呇	man3
-科特迪瓦共和國	fo1 dak6 dik6 ngaa5 gung6 wo4 gwok3
 非歐幾何學	fei1 au1 gei2 ho4 hok6
 賓夕凡尼亞	ban1 zik6 faan4 nei4 aa3
 東方三博士	dung1 fong1 saam1 bok3 si6
@@ -112410,7 +112425,6 @@
 移民工	ji4 man4 gung1
 眺望塔	tiu3 mong6 taap3
 燃油艙	jin4 jau4 cong1
-涂謹申	tou4 gan2 san1
 洗臉盤	sai2 lim5 pun4
 氧化鈾	joeng5 faa3 jau4
 旗津區	kei4 zeon1 keoi1
@@ -112499,7 +112513,6 @@
 預防器	jyu6 fong4 hei3
 長角羊	coeng4 gok3 joeng4
 釣魚竿	diu3 jyu4 gon1
-賴索托	laai6 sok3 tok3
 血中毒	hyut3 zung3 duk6
 絲瓜布	si1 gwaa1 bou3
 禿寶蓋	tuk1 bou2 goi3
@@ -113355,7 +113368,6 @@
 青檸色	cing1 ning4 sik1
 銓敘部	cyun4 zeoi6 bou6
 西螺鎮	sai1 lo4 zan3
-羅世昌	lo4 sai3 coeng1
 粲夸克	caan3 kwaa1 hak1
 砌磚工	cai3 zyun1 gung1
 特護區	dak6 wu6 keoi1
@@ -114155,7 +114167,6 @@
 番路鄉	faan1 lou6 hoeng1
 甜糕點	tim4 gou1 dim2
 潭子鄉	taam4 zi2 hoeng1
-淤血斑	jyu2 hyut3 baan1
 明古魯	ming4 gu2 lou5
 後置詞	hau6 zi3 ci4
 共謀罪	gung6 mau4 zeoi6
@@ -114355,6 +114366,7 @@
 發高燒	faat3 gou1 siu1
 登機樓	dang1 gei1 lau4
 癡癡地	ci1 ci1 dei2
+畢業生	bat1 jip6 sang1
 生得靚	saang1 dak1 leng3
 瑪麗亞	maa5 lai6 aa3
 瑜伽宗	jyu4 gaa1 zung1
@@ -115301,7 +115313,6 @@
 圍圈	wai4 hyun1
 固網	gu3 mong5
 囡囡	naam4 naam4
-回避	wui4 bei6
 回條	wui4 tiu4
 四角	sei3 gok3
 嚇暈	haak3 wan4
@@ -115912,7 +115923,6 @@
 叜	sau2
 傽	zoeng1
 普氏立克次體	pou2 si6 laap6 hak1 ci3 tai2
-揮發性存儲器	fai1 faat3 sing3 cyun4 cyu5 hei3
 非洲錐蟲病	fei1 zau1 zeoi1 cung4 beng6
 核威懾政策	hat6 wai1 sip3 zing3 caak3
 鼎鐺玉石	ding2 caang1 juk6 sek6
@@ -116573,7 +116583,6 @@
 通信鴿	tung1 seon3 gaap3
 軋道機	zaat3 dou6 gei1
 踢馬刺	tek3 maa5 ci3
-皮塔餅	pei4 taap3 beng2
 歸仁鄉	gwai1 jan4 hoeng1
 正誤表	zing3 ng6 biu2
 授權令	sau6 kyun4 ling6
@@ -117290,7 +117299,6 @@
 補闕拾遺	bou2 kyut3 sap6 wai4
 衆目昭彰	zung3 muk6 ciu1 zoeng1
 蠕形動物	jyu4 jing4 dung6 mat6
-科技驚悚	fo1 gei6 ging1 sung2
 百端待舉	baak3 dyun1 doi6 geoi2
 玉成其事	juk6 sing4 kei4 si6
 獨膽英雄	duk6 daam2 jing1 hung4
@@ -118582,7 +118590,6 @@
 捦	kam4
 抸	zaap3
 婝	din6
-科技驚悚小說	fo1 gei6 ging1 sung2 siu2 syut3
 雷克斯暴龍	leoi4 hak1 si1 bou6 lung4
 塔加路族語	taap3 gaa1 lou6 zuk6 jyu5
 詞彙判斷	ci4 wui6 pun3 dyun6
@@ -121258,7 +121265,6 @@
 赫然	hak1 jin4
 赤痛	cek3 tung3
 賽果	coi3 gwo2
-賴屎	laai6 si2
 質數	zat1 sou3
 賣成	maai6 sing4
 買花	maai5 faa1
@@ -122860,7 +122866,6 @@
 亅	kyut3
 么	jiu1
 么	mo1
-丼	dam2
 可望取勝者	ho2 mong6 ceoi2 sing3 ze2
 加里肋亞海	gaa1 lei5 lak6 aa3 hoi2
 骺軟骨板	hau4 jyun5 gwat1 baan2
@@ -124139,7 +124144,6 @@
 羣島弧	kwan4 dou2 wu4
 羅曼使	lo4 maan6 si2
 筵席捐	jin4 zik6 gyun1
-硬幣坯	ngaang6 bai6 pui1
 洋琵琶	joeng4 pei4 paa4
 歸位鍵	gwai1 wai6 gin6
 朔望潮	sok3 mong6 ciu4
@@ -124197,7 +124201,6 @@
 低階語言	dai1 gaai1 jyu5 jin4
 伊科病毒	ji1 fo1 beng6 duk6
 點字機	dim2 zi6 gei1
-黃以靜	wong4 ji5 zing6
 顱測量	lou4 cak1 loeng4
 起撲桿	hei2 pok3 gon1
 滿州話	mun5 zau1 waa2
@@ -127097,6 +127100,7 @@
 宛	jyun2
 孱	saan4
 孚	fu1
+嬤	maa1
 嬤	mo1
 嬈	jiu4
 嫣	jin1
@@ -127367,7 +127371,6 @@
 高能烈性炸藥	gou1 nang4 lit6 sing3 zaa3 joek6
 電腦輔助教材	din6 nou5 fu6 zo6 gaau3 coi4
 皮層下失語症	pei4 cang4 haa6 sat1 jyu5 zing3
-巡迴分析端口	ceon4 wui4 fan1 sik1 dyun1 hau2
 單方過失碰撞	daan1 fong1 gwo3 sat1 pung3 zong6
 切特豪斯學校	cit3 dak6 hou4 si1 hok6 haau6
 言語失常症	jin4 jyu5 sat1 soeng4 zing3
@@ -128678,6 +128681,7 @@
 回屋	wui4 uk1
 噴油	pan3 jau2
 嗯哼	ng6 hang1
+嗜睡	si3 seoi6
 嗔詬	can1 gau3
 啃老	hang2 lou5
 哧哧	ci1 ci1
@@ -128804,7 +128808,6 @@
 㐅	ng5
 㐁	dou6
 黃鐘毀棄瓦釜雷鳴	wong4 zung1 wai2 hei3 ngaa5 fu2 leoi4 ming4
-面心立方最密堆積	min6 sam1 laap6 fong1 zeoi3 mat6 deoi1 zik1
 耕當問奴織當訪婢	gaang1 dong1 man6 nou4 zik1 dong1 fong2 pei5
 眼色素層黑色素瘤	ngaan5 sik1 sou3 cang4 hak1 sik1 sou3 lau4
 狗嘴裏吐不出象牙	gau2 zeoi2 leoi5 tou3 bat1 ceot1 zoeng6 ngaa4
@@ -129220,6 +129223,7 @@
 站穩腳跟	zaam6 wan2 goek3 gan1
 空中花園	hung1 zung1 faa1 jyun2
 積水成淵	zik1 seoi2 sing4 jyun1
+稟性難移	ban2 sing3 naan4 ji4
 秦鏡高懸	ceon4 geng3 gou1 jyun4
 私謀叛國	si1 mau4 bun6 gwok3
 秀色孫鰈	sau3 sik1 syun1 dip6
@@ -132662,7 +132666,6 @@
 揼	dam2
 𦂥	dam3
 𧿒	dam6
-𨂽	dam6
 𣎴	dan2
 𧄌	dan2
 㩐	dan3
@@ -140112,6 +140115,7 @@
 敝校	bai6 haau6
 弊喇	bai6 laa3
 𡃇喇	bai6 laa3
+弊嘞	bai6 laak3
 敝司	bai6 si1
 弊就弊在	bai6 zau6 bai6 zoi6
 弊在	bai6 zoi6
@@ -140468,7 +140472,6 @@
 病向淺中醫	beng6 hoeng3 cin2 zung1 ji1
 病人衫	beng6 jan4 saam1
 病秧	beng6 joeng1
-病壞	beng6 waai2
 啤哩叭啦	bi1 li1 baa1 laa1
 啤仔	bi1 zai2
 啤啤叭叭	bi4 bi1 baa4 baa4
@@ -141496,7 +141499,6 @@
 砌幾圍	cai3 gei2 wai4
 砌生豬肉	cai3 saang1 zyu1 juk6
 砌十鑊八鑊	cai3 sap6 wok6 baat3 wok6
-砌圖	cai3 tou4
 砌積木	cai3 zik1 muk6
 瘛瘲	cai3 zung3
 齊葺葺	cai4 cap1 cap1
@@ -143908,7 +143910,6 @@
 抵錢	dai2 cin2
 抵打	dai2 daa2
 抵得頸	dai2 dak1 geng2
-抵得淤	dai2 dak1 jyu2
 抵得痛	dai2 dak1 tung3
 抵到飛起	dai2 dou3 fei1 hei2
 抵頸唔住	dai2 geng2 m4 zyu6
@@ -145482,8 +145483,6 @@
 返屋企咬蔗	faan1 uk1 kei2 ngaau5 ze3
 翻渣	faan1 zaa1
 番枝	faan1 zi1
-返咗	faan1 zo2
-返咗鄉下	faan1 zo2 hoeng1 haa2
 反查粵拼	faan2 caa4 jyut6 ping3
 反鏟	faan2 caan2
 反斜杠	faan2 ce4 gong3
@@ -145695,7 +145694,6 @@
 法證	faat3 zing3
 發咗	faat3 zo2
 發咗一個夢	faat3 zo2 jat1 go3 mung6
-發作性嗜睡病	faat3 zok3 sing3 si3 seoi6 beng6
 揮不到	fai1 bat1 dou3
 揮春	fai1 ceon1
 揮春紙	fai1 ceon1 zi2
@@ -151549,7 +151547,6 @@
 一嚿溜	jat1 gau6 lau6
 一嚿木	jat1 gau6 muk6
 一嚿水	jat1 gau6 seoi2
-一嚿雲	jat1 gau6 wan4
 一技傍身	jat1 gei6 bong6 san1
 一技旁身	jat1 gei6 pong4 san1
 一句講晒	jat1 geoi3 gong2 saai3
@@ -152478,7 +152475,6 @@
 二偈	ji6 gai6
 易激惹	ji6 gik1 je5
 易潔鑊	ji6 git3 wok6
-二杆子	ji6 gon1 zi2
 易過食豆腐	ji6 gwo3 sik6 dau6 fu6
 易過食生菜	ji6 gwo3 sik6 saang1 coi3
 二孩	ji6 haai4
@@ -153111,7 +153107,7 @@
 瘀斑	jyu2 baan1
 瘀點	jyu2 dim2
 瘀黑	jyu2 hak1
-魚唔過塘唔肥	jyu2 m4 gwo3 tong4 m4 fei4
+瘀血斑	jyu2 hyut3 baan1
 瘀皮	jyu2 pei4
 瘀晒	jyu2 saai3
 魚治	jyu2 zi6
@@ -153748,12 +153744,12 @@
 佢個人	keoi5 go3 jan4
 佢個樣	keoi5 go3 joeng2
 距角	keoi5 gok3
-佢講	keoi5 gong2
 佢喺	keoi5 hai2
 佢係咪	keoi5 hai6 mai6
 佢可以	keoi5 ho2 ji5
 拒人千里之外	keoi5 jan4 cin1 lei5 zi1 ngoi6
 佢要	keoi5 jiu3
+佢老豆	keoi5 lou5 dau6
 佢老母	keoi5 lou5 mou2
 佢買	keoi5 maai5
 佢問	keoi5 man6
@@ -154076,10 +154072,7 @@
 賴低	laai6 dai1
 賴地硬	laai6 dei6 ngaang6
 瀨粉	laai6 fan2
-拉尿蝦	laai6 niu6 haa1
-攋尿蝦	laai6 niu6 haa1
 瀨尿蝦	laai6 niu6 haa1
-賴尿蝦	laai6 niu6 haa1
 賴溼	laai6 sap1
 瀨屎窟	laai6 si2 fat1
 瀨屎褲	laai6 si2 fu3
@@ -157029,7 +157022,6 @@
 尾後	mei5 hau6
 美人啄	mei5 jan4 doeng1
 美人肩	mei5 jan4 gin1
-美人坯子	mei5 jan4 pui1 zi2
 美人照鏡	mei5 jan4 ziu3 geng3
 尾二	mei5 ji6
 美容業	mei5 jung4 jip6
@@ -157220,7 +157212,6 @@
 面凹	min6 nap1
 面燶	min6 nung1
 面燶燶	min6 nung1 nung1
-面坯	min6 pui1
 面豉	min6 si2
 麪豉	min6 si2
 麪豉	min6 si6
@@ -157662,8 +157653,10 @@
 冇喇	mou5 laa3
 冇甩拖	mou5 lat1 to1
 冇厘搭霎	mou5 lei4 daap3 saap3
+冇厘光彩	mou5 lei4 gwong1 coi2
 冇厘癮	mou5 lei4 jan5
 冇厘癮頭	mou5 lei4 jan5 tau4
+冇厘心機	mou5 lei4 sam1 gei1
 冇厘神氣	mou5 lei4 san4 hei3
 冇厘精神	mou5 lei4 zing1 san4
 冇厘正經	mou5 lei4 zing3 ging1
@@ -158224,7 +158217,6 @@
 凹咗	nap1 zo2
 𥹉黐黐	nap6 ci3 ci3
 𥹉口	nap6 hau2
-𥹉𥹉令	nap6 nap6 ling3
 𥹉𥹉糯糯	nap6 nap6 no6 no6
 𥹉糯	nap6 no6
 𥹉糯糯	nap6 no6 no6
@@ -158307,7 +158299,6 @@
 呢隻	nei1 zek3
 呢張	nei1 zoeng1
 尼採	nei4 coi2
-尼古西亞	nei4 gu2 sai1 aa3
 尼龍絲襪	nei4 lung4 si1 mat6
 彌蒙	nei4 mung4
 尼安德特人	nei4 on1 dak1 dak6 jan4
@@ -159049,6 +159040,7 @@
 我勒個去	ngo5 lak6 go3 heoi3
 我來自潮州	ngo5 loi4 zi6 ciu4 zau1
 我老豆	ngo5 lou5 dau6
+我老母	ngo5 lou5 mou2
 我唔係	ngo5 m4 hai6
 我咪	ngo5 mai6
 我諗你	ngo5 nam2 nei5
@@ -159592,7 +159584,6 @@
 拍拍囉柚	paak3 paak3 lo1 jau2
 拍拍屁股	paak3 paak3 pei3 gu2
 拍拍屁股走人	paak3 paak3 pei3 gu2 zau2 jan4
-帕皮提	paak3 pei4 tai4
 拍婆子	paak3 po4 zi2
 拍晒烏蠅	paak3 saai3 wu1 jing1
 拍心口	paak3 sam1 hau2
@@ -160156,8 +160147,6 @@
 嘥料	saai1 liu2
 嘥心機	saai1 sam1 gei1
 嘥心機捱眼瞓	saai1 sam1 gei1 ngaai4 ngaan5 fan3
-嘥聲壞氣	saai1 seng1 waai2 hei3
-嘥聲壞氣	saai1 seng1 waai6 hei6
 嘥聲壞氣	saai1 sing1 waai6 hei3
 嘥撻	saai1 taat3
 嘥紙	saai1 zi2
@@ -161888,7 +161877,6 @@
 水甴曱	seoi2 gaat6 zaat6
 水鉸剪	seoi2 gaau3 zin2
 水緊	seoi2 gan2
-水乾至見塘底凸	seoi2 gon1 zi3 gin3 tong4 dai2 dat6
 水瓜	seoi2 gwaa1
 水瓜打狗	seoi2 gwaa1 daa2 gau2
 水刮	seoi2 gwaat3
@@ -162212,6 +162200,7 @@
 試水溫	si3 seoi2 wan1
 試試下	si3 si3 haa5
 試乘	si3 sing4
+嗜糖	si3 tong4
 試玩碟	si3 waan2 dip6
 四圍捐	si3 wai4 gyun1
 四圍走	si3 wai4 zau2
@@ -165011,7 +165000,6 @@
 歪身歪勢	waai1 san1 waai1 sai3
 歪烏連	waai1 wu1 lin1
 歪烏連	waai1 wu1 lin4
-壞鬼	waai3 gwai2
 淮海地區	waai4 hoi2 dei6 keoi1
 懷緬	waai4 min5
 淮山	waai4 saan1
@@ -165403,7 +165391,6 @@
 雲卡	wan4 kaa1
 雲溪	wan4 kai1
 雲溪區	wan4 kai1 keoi1
-雲裏霧裏	wan4 leoi5 mou6 leoi5
 暈浪丸	wan4 long6 jyun2
 雲尼斯達萊	wan4 nei4 si1 daat6 loi4
 魂魄唔齊	wan4 paak3 m4 cai4
@@ -165633,9 +165620,7 @@
 皇氣	wong4 hei3
 黃凱芹	wong4 hoi2 kan4
 黃犬	wong4 hyun2
-黃伊汶	wong4 ji1 man4
 黃藥水	wong4 joek6 seoi2
-王悅	wong4 jyut6
 黃噙噙	wong4 kam4 kam4
 蟥蜞	wong4 kei2
 黃蜞	wong4 kei4
@@ -168408,7 +168393,6 @@
 撥	put3
 索	saak3
 烚	saap3
-呻	san3
 脤	san6
 搜	sau1
 瀉	se2
@@ -168530,7 +168514,6 @@
 抄	caau3
 薺	cai5
 鱭	cai5
-廁	cak1
 棽	cam1
 浸	cam1
 篸	cam1
@@ -168561,7 +168544,6 @@
 璀	ceoi2
 吹	ceoi3
 崔	ceoi4
-涂	ceoi4
 鉏	ceoi4
 皴	ceon1
 徇	ceon4
@@ -169324,7 +169306,7 @@
 汙	waa1
 污	waa1
 絓	waa6
-崴	waai2
+崴	waai1
 獲	waai4
 轘	waan4
 郇	waan4
@@ -169476,7 +169458,6 @@
 娭	aai1
 毐	aai2
 伌	aai3
-嗄	aai3
 塧	aai3
 砨	aai3
 阸	aai3
@@ -170185,6 +170166,7 @@
 槯	ceoi4
 櫉	ceoi4
 沝	ceoi4
+涂	ceoi4
 瓍	ceoi4
 磪	ceoi4
 蒣	ceoi4
@@ -170782,7 +170764,6 @@
 棏	dak6
 鴏	dak6
 瓭	dam2
-氹	dam4
 墪	dan1
 墩	dan2
 墪	dan2
@@ -175915,7 +175896,6 @@
 蓜	pui3
 馷	pui3
 䣙	pui4
-坏	pui4
 裵	pui4
 輫	pui4
 阫	pui4
@@ -177085,7 +177065,6 @@
 諙	waa6
 譮	waa6
 黊	waa6
-崴	waai1
 懐	waai4
 櫰	waai4
 褢	waai4
@@ -177585,7 +177564,6 @@
 踅	zai6
 齊	zai6
 庂	zak1
-廁	zak1
 昗	zak1
 汄	zak1
 䘲	zam1
@@ -177732,7 +177710,6 @@
 績	zek3
 膌	zek3
 跡	zek3
-丼	zeng2
 阱	zeng2
 凈	zeng6
 浄	zeng6
@@ -178045,7 +178022,6 @@
 聙	zing1
 赬	zing1
 遉	zing1
-丼	zing2
 愸	zing2
 㱐	zing3
 癥	zing3
@@ -178993,10 +178969,6 @@
 咩來	me1 loi4
 咩來㗎	me1 loi4 gaa3
 咩來先	me1 loi4 sin1
-冇來光彩	mou5 loi4 gwong1 coi2
-冇來心機	mou5 loi4 sam1 gei1
-冇來神氣	mou5 loi4 san4 hei3
-冇來正經	mou5 loi4 zing3 ging1
 吟來吟去	ngam4 loi4 ngam4 heoi3
 呢幾年來	ni1 gei2 nin4 loi4
 搦過來	nik1 gwo3 loi4
@@ -179214,10 +179186,6 @@
 咩來	me1 lai4
 咩來㗎	me1 lai4 gaa3
 咩來先	me1 lai4 sin1
-冇來光彩	mou5 lai4 gwong1 coi2
-冇來心機	mou5 lai4 sam1 gei1
-冇來神氣	mou5 lai4 san4 hei3
-冇來正經	mou5 lai4 zing3 ging1
 慕名而來	mou6 ming4 ji4 lai4
 諗來度去	nam2 lai4 dok6 heoi3
 吟來吟去	ngam4 lai4 ngam4 heoi3
@@ -179449,10 +179417,6 @@
 咩來	me1 lei4
 咩來㗎	me1 lei4 gaa3
 咩來先	me1 lei4 sin1
-冇來光彩	mou5 lei4 gwong1 coi2
-冇來心機	mou5 lei4 sam1 gei1
-冇來神氣	mou5 lei4 san4 hei3
-冇來正經	mou5 lei4 zing3 ging1
 慕名而來	mou6 ming4 ji4 lei4
 諗來度去	nam2 lei4 dok6 heoi3
 吟來吟去	ngam4 lei4 ngam4 heoi3
@@ -179689,10 +179653,6 @@
 咩嚟	me1 lai4
 咩嚟㗎	me1 lai4 gaa3
 咩嚟先	me1 lai4 sin1
-冇嚟光彩	mou5 lai4 gwong1 coi2
-冇嚟心機	mou5 lai4 sam1 gei1
-冇嚟神氣	mou5 lai4 san4 hei3
-冇嚟正經	mou5 lai4 zing3 ging1
 慕名而嚟	mou6 ming4 ji4 lai4
 諗嚟度去	nam2 lai4 dok6 heoi3
 吟嚟吟去	ngam4 lai4 ngam4 heoi3
@@ -179930,10 +179890,6 @@
 咩嚟	me1 lei4
 咩嚟㗎	me1 lei4 gaa3
 咩嚟先	me1 lei4 sin1
-冇嚟光彩	mou5 lei4 gwong1 coi2
-冇嚟心機	mou5 lei4 sam1 gei1
-冇嚟神氣	mou5 lei4 san4 hei3
-冇嚟正經	mou5 lei4 zing3 ging1
 慕名而嚟	mou6 ming4 ji4 lei4
 諗嚟度去	nam2 lei4 dok6 heoi3
 吟嚟吟去	ngam4 lei4 ngam4 heoi3
@@ -182759,8 +182715,10 @@
 不會	bat1 wui5
 不怎麼	bat1 zam2 mo1
 不怎麼樣	bat1 zam2 mo1 joeng6
+不就	bat1 zau6
 拔涼拔涼	bat6 loeng4 bat6 loeng4
 拔腿就跑	bat6 teoi2 zau6 paau2
+被認爲是	bei6 jing6 wai4 si6
 病嬌	beng6 giu1
 病秧子	beng6 joeng1 zi2
 並不	bing6 bat1
@@ -182827,6 +182785,7 @@
 戳你	coek3 nei5
 戳你媽	coek3 nei5 maa1
 桌子	coek3 zi2
+槍桿子	coeng1 gon1 zi2
 菜包子	coi3 baau1 zi2
 菜籃子	coi3 laam4 zi2
 才是	coi4 si6
@@ -182871,6 +182830,7 @@
 㨃臉	deoi2 lim5
 㨃我	deoi2 ngo5
 對勁	deoi3 ging6
+的是	dik1 si6
 電腦桌	din6 nou5 coek3
 電腦桌	din6 nou5 zoek3
 丟掉	diu1 diu6
@@ -182944,6 +182904,7 @@
 肩扛	gin1 kong1
 結梁子	git3 loeng4 zi2
 歌子	go1 zi2
+桿子	gon1 zi2
 趕得上	gon2 dak1 soeng5
 幹嘛	gon3 maa3
 幹甚麼	gon3 sam6 mo1
@@ -183091,6 +183052,7 @@
 扔掉	jing4 diu6
 扔棄	jing4 hei3
 扔垃圾	jing4 laap6 saap3
+腰桿子	jiu1 gon1 zi2
 要不	jiu3 bat1
 要不是	jiu3 bat1 si6
 要謊	jiu3 fong1
@@ -183109,6 +183071,11 @@
 原來是她	jyun4 loi4 si6 ngo5
 原來是我	jyun4 loi4 si6 ngo5
 卡脖子	kaa1 but6 zi2
+給到	kap1 dou3
+給到你	kap1 dou3 nei5
+給到我	kap1 dou3 ngo5
+給到他	kap1 dou3 taa1
+給到她	kap1 dou3 taa1
 扣帽子	kau3 mou2 zi2
 翹拇指	kiu4 mou5 zi2
 恪盡職守	kok3 zeon6 zik1 sau2
@@ -183128,6 +183095,7 @@
 裏子	leoi5 zi2
 連奔帶跑	lin4 ban1 daai3 paau2
 了吧	liu5 baa1
+了嗎	liu5 maa1
 了麼	liu5 mo1
 來了	loi4 liu5
 老毛子	lou5 mou4 zi2
@@ -183380,6 +183348,8 @@
 聽起來	ting3 hei2 loi4
 停不下來	ting4 bat1 haa5 loi4
 挺好	ting5 hou2
+躺贏	tong2 jeng4
+躺贏狗	tong2 jeng4 gau2
 土包子	tou2 baau1 zi2
 吐舌頭	tou3 sit6 tau4
 套子	tou3 zi2
@@ -183920,6 +183890,8 @@
 王岐山	wong4 kei4 saan1
 王敏奕	wong4 man5 jik6
 王楠	wong4 naam4
+黃錫凌	wong4 sek3 ling4
+黃錫凌	wong4 sik1 ling4
 王小波	wong4 siu2 bo1
 皇太極	wong4 taai3 gik6
 王永民	wong4 wing5 man4
@@ -185506,6 +185478,9 @@
 口水𣳼𣳼	hau2 seoi2 doe4 doe4
 口水𣳼𣳼流	hau2 seoi2 doe4 doe4 lau4
 漝漝碎	sap1 sap1 seoi3
+即刻	zik1 kak1
+嬷	maa1
+嬷	mo1
 阝	fau6
 𡧢	juk6
 𢆻	gei2

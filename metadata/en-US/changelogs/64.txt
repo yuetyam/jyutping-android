@@ -1,0 +1,4 @@
+1. Enhanced the design of the keyboard top toolbar.
+2. Enhanced the design of the keyboard settings page.
+3. Added a setting for the default input mode, with options for Jyutping, ABC, and Recent.
+4. Improved the input method engine for a smoother typing experience.

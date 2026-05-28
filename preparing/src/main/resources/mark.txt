@@ -90,6 +90,7 @@ cmake	CMake
 code	code
 codex	codex
 coloros	ColorOS
+compose	Compose
 copilot	Copilot
 coretext	Core Text
 costco	Costco
@@ -254,6 +255,7 @@ javafx	JavaFX
 javascript	JavaScript
 jdk	JDK
 jetbrains	JetBrains
+jetpack	Jetpack
 jpeg	JPEG
 jpegxl	JPEG XL
 jpg	JPG
@@ -450,6 +452,7 @@ spotify	Spotify
 sql	SQL
 sqlite	SQLite
 ssd	SSD
+starlink	Starlink
 steam	Steam
 steamos	SteamOS
 storekit	StoreKit
@@ -616,6 +619,7 @@ lgbtqia	LGBTQIA
 momo	momo
 ootd	ootd
 pinkman	Pinkman
+qwerty	qwerty
 saul	Saul
 skyler	Skyler
 tint	tint
@@ -8865,14 +8869,12 @@ lauderdale	lauderdale
 scenarios	scenarios
 gazette	gazette
 hitachi	hitachi
-divx	divx
 extraction	extraction
 batman	batman
 elevation	elevation
 hearings	hearings
 coleman	coleman
 hugh	hugh
-lap	lap
 utilization	utilization
 beverages	beverages
 calibration	calibration
