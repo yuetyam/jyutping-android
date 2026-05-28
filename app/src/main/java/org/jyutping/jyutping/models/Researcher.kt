@@ -2,10 +2,10 @@ package org.jyutping.jyutping.models
 
 import org.jyutping.jyutping.extensions.isApostrophe
 import org.jyutping.jyutping.extensions.isCantoneseToneDigit
-import org.jyutping.jyutping.extensions.isLowercaseBasicLatinLetter
-import org.jyutping.jyutping.extensions.isSpace
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.extensions.toneConverted
+import org.jyutping.jyutping.extensions.top
+import org.jyutping.jyutping.extensions.topBy
 import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabaseHelper
@@ -23,8 +23,7 @@ object Researcher {
                                 }
                                 VirtualInputKey.letterO, VirtualInputKey.letterM -> {
                                         val text = keys.first().text
-                                        return db.spellMatch(text = text, input = text, mark = text) +
-                                                db.anchorsMatch(keys = keys, input = text)
+                                        return db.spellMatch(text = text, input = text, mark = text) + db.anchorsMatch(keys = keys, input = text)
                                 }
                                 else -> return db.anchorsMatch(keys = keys)
                         }
@@ -35,36 +34,29 @@ object Researcher {
 private fun Researcher.dispatch(keys: List<VirtualInputKey>, segmentation: Segmentation, db: DatabaseHelper): List<Lexicon> {
         val syllableKeys = keys.filter { it.isSyllableLetter }
         val firstSyllableLength: Int = segmentation.firstOrNull()?.firstOrNull()?.alias?.size ?: 0
+        val syllableText: String by lazy(LazyThreadSafetyMode.NONE) {
+                syllableKeys.joinToString(separator = PresetString.EMPTY) { it.text }
+        }
         val lexicons: List<Lexicon> = when {
-                (firstSyllableLength == 0) -> {
-                        val text = syllableKeys.joinToString(separator = PresetString.EMPTY) { it.text }
-                        processSlices(keys = syllableKeys, text = text, db = db)
-                }
+                (firstSyllableLength == 0) -> processSlices(keys = syllableKeys, text = syllableText, db = db)
                 (firstSyllableLength == 1 && syllableKeys.size > 1) || (syllableKeys.size != keys.size) -> {
-                        val text = syllableKeys.joinToString(separator = PresetString.EMPTY) { it.text }
-                        search(keys = syllableKeys, segmentation = segmentation, db = db) + processSlices(keys = syllableKeys, text = text, db = db)
+                        search(keys = syllableKeys, text = syllableText, segmentation = segmentation, db = db) + processSlices(keys = syllableKeys, text = syllableText, db = db)
                 }
-                else -> search(keys = syllableKeys, segmentation = segmentation, db = db)
+                else -> search(keys = syllableKeys, text = syllableText, segmentation = segmentation, db = db)
         }
         val hasApostrophes = keys.any { it.isApostrophe }
         val hasTones = keys.any { it.isToneInputKey }
+        if (hasApostrophes.negative && hasTones.negative) return lexicons
+        val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
         return when {
                 hasApostrophes && hasTones -> {
-                        val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
                         val convertedText = text.toneConverted()
                         lexicons.mapNotNull {
                                 if (convertedText.startsWith(it.romanization)) Lexicon(text = it.text, romanization = it.romanization, input = text) else null
                         }
                 }
-                !hasApostrophes && hasTones -> {
-                        val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
-                        oldProcessWithTones(text = text.toneConverted(), lexicons = lexicons)
-                }
-                hasApostrophes && !hasTones -> {
-                        val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
-                        oldProcessWithSeparators(text = text, lexicons = lexicons, db = db)
-                }
-                else -> lexicons
+                hasTones -> oldProcessWithTones(text = text.toneConverted(), lexicons = lexicons)
+                else -> oldProcessWithSeparators(text = text, lexicons = lexicons, db = db)
         }
 }
 
@@ -73,7 +65,7 @@ private fun Researcher.oldProcessWithTones(text: String, lexicons: List<Lexicon>
         val textToneCount = textTones.length
         val qualified: MutableList<Lexicon> = mutableListOf()
         for (item in lexicons) {
-                val continuous = item.romanization.filterNot { it.isSpace }
+                val continuous = item.spaceFreeRomanization
                 val continuousTones = continuous.filter { it.isCantoneseToneDigit }
                 val continuousToneCount = continuousTones.length
                 when {
@@ -146,7 +138,7 @@ private fun Researcher.oldProcessWithSeparators(text: String, lexicons: List<Lex
         val isTrailingSeparator: Boolean = text.lastOrNull()?.isApostrophe ?: false
         val qualified: MutableList<Lexicon> = mutableListOf()
         for (item in lexicons) {
-                val syllables = item.romanization.filterNot { it.isCantoneseToneDigit }.split(PresetString.SPACE)
+                val syllables = item.syllables
                 if (syllables == textParts) {
                         val newItem = Lexicon(text = item.text, romanization = item.romanization, input = text)
                         qualified.add(newItem)
@@ -198,8 +190,7 @@ private fun Researcher.oldProcessWithSeparators(text: String, lexicons: List<Lex
                         }
                         else -> {
                                 if (syllables.size >= textParts.size) continue
-                                val checks = syllables.indices.map { syllables[it] == textParts[it] }
-                                val isMatched = checks.fold(true) { acc, b -> acc && b }
+                                val isMatched = syllables.indices.all { syllables[it] == textParts[it] }
                                 if (!isMatched) continue
                                 val separatorNumber = syllables.size - 1
                                 val tail = CharArray(separatorNumber) { 'i' }.concatToString()
@@ -214,16 +205,13 @@ private fun Researcher.oldProcessWithSeparators(text: String, lexicons: List<Lex
         val anchorKeys = anchors.mapNotNull { VirtualInputKey.matchVirtualInputKey(it) }
         return db.anchorsMatch(keys = anchorKeys)
                 .filter { item ->
-                        val syllables = item.romanization.filterNot { it.isCantoneseToneDigit }.split(PresetString.SPACE)
-                        if (syllables.size != anchors.size) {
-                                false
-                        } else {
-                                val checks = anchors.indices.map { index ->
+                        val syllables = item.syllables
+                        if (syllables.size != anchors.size) false else {
+                                anchors.indices.all { index ->
                                         val part = textParts[index]
                                         val isAnchorOnly = (part.length == 1)
                                         if (isAnchorOnly) syllables[index].startsWith(part) else syllables[index] == part
                                 }
-                                checks.fold(true) { acc, b -> acc && b }
                         }
                 }
                 .map {
@@ -231,9 +219,8 @@ private fun Researcher.oldProcessWithSeparators(text: String, lexicons: List<Lex
                 }
 }
 
-private fun Researcher.search(keys: List<VirtualInputKey>, segmentation: Segmentation, limit: Int? = null, db: DatabaseHelper): List<Lexicon> {
+private fun Researcher.search(keys: List<VirtualInputKey>, text: String, segmentation: Segmentation, limit: Int? = null, db: DatabaseHelper): List<Lexicon> {
         val inputLength = keys.size
-        val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
         val spellMatched = db.spellMatch(text = text, input = text, limit = limit)
         val anchorsMatched = db.anchorsMatch(keys = keys, limit = limit)
         val queried = query(inputLength = inputLength, segmentation = segmentation, limit = limit, db = db)
@@ -261,7 +248,7 @@ private fun Researcher.search(keys: List<VirtualInputKey>, segmentation: Segment
                 val tailAsAnchorText = tail.mapNotNull { if (it == VirtualInputKey.letterY) VirtualInputKey.letterJ.text.firstOrNull() else it.text.firstOrNull() }
                 val conjoinedMatched = db.anchorsMatch(keys = conjoined, limit = prefixesLimit)
                         .mapNotNull { item ->
-                                val toneFreeRomanization = item.romanization.filterNot { it.isCantoneseToneDigit }
+                                val toneFreeRomanization = item.toneFreeRomanization
                                 if (toneFreeRomanization.startsWith(schemeSyllableText).negative) return@mapNotNull null
                                 val suffixAnchorText = toneFreeRomanization.drop(schemeSyllableText.length).split(PresetString.SPACE).mapNotNull { it.firstOrNull() }
                                 if (suffixAnchorText != tailAsAnchorText) return@mapNotNull null
@@ -272,8 +259,7 @@ private fun Researcher.search(keys: List<VirtualInputKey>, segmentation: Segment
                 val syllables: String = schemeSyllableText + PresetString.SPACE + transformedTailText
                 val anchorsMatched = db.anchorsMatch(keys = anchors, limit = prefixesLimit)
                         .mapNotNull { item ->
-                                val toneFreeRomanization = item.romanization.filterNot { it.isCantoneseToneDigit }
-                                if (toneFreeRomanization.startsWith(syllables).negative) return@mapNotNull null
+                                if (item.toneFreeRomanization.startsWith(syllables).negative) return@mapNotNull null
                                 return@mapNotNull Lexicon(text = item.text, romanization = item.romanization, input = text, mark = mark, number = item.number)
                         }
                 return@flatMap conjoinedMatched + anchorsMatched
@@ -286,9 +272,8 @@ private fun Researcher.search(keys: List<VirtualInputKey>, segmentation: Segment
                 val tail = keys.drop(item.inputCount - 1)
                 if (tail.size > 6) return@mapNotNull null
                 val converted by lazy { Lexicon(text = item.text, romanization = item.romanization, input = text, mark = text, number = item.number) }
-                val rawSyllable = item.romanization.filter { it.isLowercaseBasicLatinLetter }
-                if (rawSyllable.startsWith(text)) return@mapNotNull converted
-                val lastSyllable = item.romanization.split(PresetString.SPACE).lastOrNull()?.filterNot { it.isCantoneseToneDigit } ?: return@mapNotNull null
+                if (item.syllableLetters.startsWith(text)) return@mapNotNull converted
+                val lastSyllable = item.syllables.lastOrNull() ?: return@mapNotNull null
                 val tailSyllable = Segmenter.syllableText(keys = tail, db = db)
                 if (tailSyllable != null) {
                         return@mapNotNull if (lastSyllable == tailSyllable) converted else null
@@ -298,25 +283,26 @@ private fun Researcher.search(keys: List<VirtualInputKey>, segmentation: Segment
                 }
         }
         val fetched: List<Lexicon> = run {
-                val idealQueried = queried.filter { it.inputCount == inputLength }.sortedBy { it.number }.distinct()
-                val notIdealQueried = queried.filter { it.inputCount < inputLength }.sorted().distinct()
+                val idealQueried = queried.filter { it.inputCount == inputLength }.distinct().sortedBy { it.number }
+                val notIdealQueried = queried.filter { it.inputCount < inputLength }.distinct().sorted()
                 val fullInput = (spellMatched + idealQueried + anchorsMatched + prefixMatched + gainedMatched).distinct()
                 val primary = fullInput.take(10)
-                val secondary = fullInput.sorted().take(10)
+                val secondary = fullInput.top(10)
                 val tertiary = notIdealQueried.take(10)
-                val quaternary = notIdealQueried.sortedBy { it.number }.take(10)
-                (primary + secondary + tertiary + quaternary + fullInput + notIdealQueried).distinct()
+                val quaternary = notIdealQueried.topBy(10) { it.number }
+                return@run (primary + secondary + tertiary + quaternary + fullInput + notIdealQueried).distinct()
         }
         val firstInputCount = fetched.firstOrNull()?.inputCount ?: return processSlices(keys = keys, text = text, limit = limit, db = db)
         if (firstInputCount == inputLength) return fetched
         val headInputLengths = fetched.map { it.inputCount }.distinct()
         val concatenated: List<Lexicon> = headInputLengths.mapNotNull { headLength ->
                 val tailKeys = keys.drop(headLength)
+                val tailText = tailKeys.joinToString(separator = PresetString.EMPTY) { it.text }
                 val tailSegmentation = Segmenter.segment(tailKeys, db)
-                val tailLexicon = search(keys = tailKeys, segmentation = tailSegmentation, limit = 50, db = db).firstOrNull() ?: return@mapNotNull null
+                val tailLexicon = search(keys = tailKeys, text = tailText, segmentation = tailSegmentation, limit = 50, db = db).firstOrNull() ?: return@mapNotNull null
                 val headLexicon = fetched.find { it.inputCount == headLength } ?: return@mapNotNull null
                 return@mapNotNull headLexicon + tailLexicon
-        }.sorted().take(1)
+        }.top()
         return concatenated + fetched
 }
 
@@ -351,8 +337,7 @@ private fun Researcher.processSlices(keys: List<VirtualInputKey>, text: String, 
                         .map { modify(item = it, keys = keys, text = text, inputLength = inputLength, db = db) }
                 val anchorsMatched = db.anchorsMatch(keys = leadingKeys, input = leadingText, limit = adjustedLimit)
                         .map { modify(item = it, keys = keys, text = text, inputLength = inputLength, db = db) }
-                        .sorted()
-                        .take(72)
+                        .top(72)
                 return@flatMap spellMatched + anchorsMatched
         }
         return entries.sorted().distinct()
@@ -361,8 +346,8 @@ private fun Researcher.modify(item: Lexicon, keys: List<VirtualInputKey>, text: 
         if (inputLength <= 1) return item
         if (item.inputCount == inputLength) return item
         val converted = Lexicon(text = item.text, romanization = item.romanization, input = text, mark = text, number = item.number)
-        if (item.romanization.filter { it.isLowercaseBasicLatinLetter }.startsWith(text)) return converted
-        val lastSyllable = item.romanization.split(PresetString.SPACE).lastOrNull()?.filterNot { it.isCantoneseToneDigit } ?: return item
+        if (item.syllableLetters.startsWith(text)) return converted
+        val lastSyllable = item.syllables.lastOrNull() ?: return item
         val tail = keys.drop(item.inputCount - 1)
         if (tail.size > 6) return item
         val tailSyllable = Segmenter.syllableText(keys = tail, db = db)

@@ -1,5 +1,8 @@
 package org.jyutping.jyutping.models
 
+import org.jyutping.jyutping.extensions.isCantoneseToneDigit
+import org.jyutping.jyutping.extensions.isLowercaseBasicLatinLetter
+import org.jyutping.jyutping.extensions.isSpace
 import org.jyutping.jyutping.presets.PresetString
 
 /** Internal candidate lexicon */
@@ -34,6 +37,26 @@ data class Lexicon(
 
         val isNotCantonese: Boolean
                 get() = type.isNotCantonese
+
+        /** romanization with tone digits stripped */
+        val toneFreeRomanization: String by lazy(LazyThreadSafetyMode.PUBLICATION) {
+                romanization.filterNot { it.isCantoneseToneDigit }
+        }
+
+        /** romanization with spaces stripped */
+        val spaceFreeRomanization: String by lazy(LazyThreadSafetyMode.PUBLICATION) {
+                romanization.filterNot { it.isSpace }
+        }
+
+        /** romanization reduced to a-z letters only */
+        val syllableLetters: String by lazy(LazyThreadSafetyMode.PUBLICATION) {
+                romanization.filter { it.isLowercaseBasicLatinLetter }
+        }
+
+        /** Phones, tone-free romanization split by space */
+        val syllables: List<String> by lazy(LazyThreadSafetyMode.PUBLICATION) {
+                toneFreeRomanization.split(PresetString.SPACE)
+        }
 
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true
