@@ -15,8 +15,8 @@ object KeyboardDataPreparer {
                 createCharacterVariantTable(fileName = "CharacterVariant.Taiwan.txt", tableName = "variant_tw", url = url)
                 createStructureTable(url)
                 createPinyinTable(url)
-                createSyllablesTable(url)
-                createPinyinSyllablesTable(url)
+                createCoreSyllableTable(url)
+                createPinyinSyllableTable(url)
                 createTextMarkTable(url)
                 createSymbolTable(url)
                 createEmojiSkinMapTable(url)
@@ -52,7 +52,7 @@ object KeyboardDataPreparer {
                         "CREATE INDEX ix_mark_spell ON mark_table (spell);",
                         "CREATE INDEX ix_mark_nine_key_code ON mark_table (nine_key_code);",
 
-                        "CREATE INDEX ix_syllable_nine_key_alias_code ON syllable_table (nine_key_alias_code);",
+                        "CREATE INDEX ix_core_syllable_nine_key_alias_code ON core_syllable_table (nine_key_alias_code);",
                         "CREATE INDEX ix_pinyin_syllable_nine_key_code ON pinyin_syllable_table (nine_key_code);",
 
                         "CREATE INDEX ix_stroke_stroke ON stroke_table (stroke);",
@@ -170,15 +170,15 @@ object KeyboardDataPreparer {
                 println("Inserted pinyin entries successfully: $insertedCount")
         }
 
-        private fun createSyllablesTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE syllable_table (alias_code INTEGER PRIMARY KEY, origin_code INTEGER NOT NULL, nine_key_alias_code INTEGER NOT NULL, nine_key_origin_code INTEGER NOT NULL, alias TEXT NOT NULL, origin TEXT NOT NULL);"
+        private fun createCoreSyllableTable(url: String) {
+                val createTableCommand: String = "CREATE TABLE core_syllable_table (alias_code INTEGER PRIMARY KEY, origin_code INTEGER NOT NULL, nine_key_alias_code INTEGER NOT NULL, nine_key_origin_code INTEGER NOT NULL, alias TEXT NOT NULL, origin TEXT NOT NULL);"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
                 }
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("syllable.txt") ?: error("Can not load syllable.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val insertEntryCommand: String = "INSERT INTO syllable_table (alias_code, origin_code, nine_key_alias_code, nine_key_origin_code, alias, origin) VALUES (?, ?, ?, ?, ?, ?);"
+                val insertEntryCommand: String = "INSERT INTO core_syllable_table (alias_code, origin_code, nine_key_alias_code, nine_key_origin_code, alias, origin) VALUES (?, ?, ?, ?, ?, ?);"
                 val insertedCount = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(PresetString.TAB)
@@ -204,7 +204,7 @@ object KeyboardDataPreparer {
                 println("Inserted syllable entries successfully: $insertedCount")
         }
 
-        private fun createPinyinSyllablesTable(url: String) {
+        private fun createPinyinSyllableTable(url: String) {
                 val createTableCommand: String = "CREATE TABLE pinyin_syllable_table (code INTEGER PRIMARY KEY, nine_key_code INTEGER NOT NULL, syllable TEXT NOT NULL);"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->

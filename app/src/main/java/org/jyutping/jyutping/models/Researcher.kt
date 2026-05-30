@@ -224,17 +224,11 @@ private fun Researcher.search(keys: List<VirtualInputKey>, text: String, segment
         val spellMatched = db.spellMatch(text = text, input = text, limit = limit)
         val anchorsMatched = db.anchorsMatch(keys = keys, limit = limit)
         val queried = query(inputLength = inputLength, segmentation = segmentation, limit = limit, db = db)
-        val shouldMatchPrefixes: Boolean = if (inputLength <= 2) {
-                false
-        } else if (spellMatched.isNotEmpty()) {
-                false
-        } else if (queried.any { it.inputCount == inputLength }) {
-                false
-        } else if (keys.firstOrNull() == VirtualInputKey.letterM || keys.lastOrNull() == VirtualInputKey.letterM) {
-                true
-        } else {
-                segmentation.any { it.schemeLength == inputLength }.negative
-        }
+        val shouldMatchPrefixes: Boolean = if (inputLength !in 3..<25) false
+                else if (keys.firstOrNull() == VirtualInputKey.letterM || keys.lastOrNull() == VirtualInputKey.letterM) true
+                else if (spellMatched.isNotEmpty()) false
+                else if (queried.any { it.inputCount == inputLength }) false
+                else segmentation.any { it.schemeLength == inputLength }.negative
         val prefixesLimit: Int = if (limit == null) 500 else 200
         val prefixMatched: List<Lexicon> = if (shouldMatchPrefixes.negative) emptyList() else segmentation.flatMap { scheme ->
                 if (scheme.isEmpty()) return@flatMap emptyList()
@@ -274,7 +268,7 @@ private fun Researcher.search(keys: List<VirtualInputKey>, text: String, segment
                 val converted by lazy { Lexicon(text = item.text, romanization = item.romanization, input = text, mark = text, number = item.number) }
                 if (item.syllableLetters.startsWith(text)) return@mapNotNull converted
                 val lastSyllable = item.syllables.lastOrNull() ?: return@mapNotNull null
-                val tailSyllable = Segmenter.syllableText(keys = tail, db = db)
+                val tailSyllable = Segmenter.syllableText(keys = tail)
                 if (tailSyllable != null) {
                         return@mapNotNull if (lastSyllable == tailSyllable) converted else null
                 } else {
@@ -298,7 +292,7 @@ private fun Researcher.search(keys: List<VirtualInputKey>, text: String, segment
         val concatenated: List<Lexicon> = headInputLengths.mapNotNull { headLength ->
                 val tailKeys = keys.drop(headLength)
                 val tailText = tailKeys.joinToString(separator = PresetString.EMPTY) { it.text }
-                val tailSegmentation = Segmenter.segment(tailKeys, db)
+                val tailSegmentation = Segmenter.segment(tailKeys)
                 val tailLexicon = search(keys = tailKeys, text = tailText, segmentation = tailSegmentation, limit = 50, db = db).firstOrNull() ?: return@mapNotNull null
                 val headLexicon = fetched.find { it.inputCount == headLength } ?: return@mapNotNull null
                 return@mapNotNull headLexicon + tailLexicon
@@ -334,15 +328,15 @@ private fun Researcher.processSlices(keys: List<VirtualInputKey>, text: String, 
                 val leadingKeys = keys.dropLast(number)
                 val leadingText = leadingKeys.joinToString(separator =  PresetString.EMPTY) { it.text }
                 val spellMatched = db.spellMatch(text = leadingText, input = leadingText, limit = limit)
-                        .map { modify(item = it, keys = keys, text = text, inputLength = inputLength, db = db) }
+                        .map { modify(item = it, keys = keys, text = text, inputLength = inputLength) }
                 val anchorsMatched = db.anchorsMatch(keys = leadingKeys, input = leadingText, limit = adjustedLimit)
-                        .map { modify(item = it, keys = keys, text = text, inputLength = inputLength, db = db) }
+                        .map { modify(item = it, keys = keys, text = text, inputLength = inputLength) }
                         .top(72)
                 return@flatMap spellMatched + anchorsMatched
         }
         return entries.sorted().distinct()
 }
-private fun Researcher.modify(item: Lexicon, keys: List<VirtualInputKey>, text: String, inputLength: Int, db: DatabaseHelper): Lexicon {
+private fun Researcher.modify(item: Lexicon, keys: List<VirtualInputKey>, text: String, inputLength: Int): Lexicon {
         if (inputLength <= 1) return item
         if (item.inputCount == inputLength) return item
         val converted = Lexicon(text = item.text, romanization = item.romanization, input = text, mark = text, number = item.number)
@@ -350,7 +344,7 @@ private fun Researcher.modify(item: Lexicon, keys: List<VirtualInputKey>, text: 
         val lastSyllable = item.syllables.lastOrNull() ?: return item
         val tail = keys.drop(item.inputCount - 1)
         if (tail.size > 6) return item
-        val tailSyllable = Segmenter.syllableText(keys = tail, db = db)
+        val tailSyllable = Segmenter.syllableText(keys = tail)
         if (tailSyllable != null) {
                 return if (lastSyllable == tailSyllable) converted else item
         } else {

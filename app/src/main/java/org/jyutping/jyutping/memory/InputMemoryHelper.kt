@@ -25,7 +25,6 @@ import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.models.syllableText
 import org.jyutping.jyutping.ninekey.Combo
 import org.jyutping.jyutping.presets.PresetString
-import org.jyutping.jyutping.utilities.DatabaseHelper
 
 class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 3) {
 
@@ -215,7 +214,7 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
         }
 }
 
-fun InputMemoryHelper.searchMemory(keys: List<VirtualInputKey>, text: String, segmentation: Segmentation, db: DatabaseHelper): List<Lexicon> {
+fun InputMemoryHelper.searchMemory(keys: List<VirtualInputKey>, text: String, segmentation: Segmentation): List<Lexicon> {
         if (keys.any { it.isSyllableLetter.negative }) return emptyList()
         val inputLength = keys.size
         // val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
@@ -235,6 +234,7 @@ fun InputMemoryHelper.searchMemory(keys: List<VirtualInputKey>, text: String, se
         if (shortcuts.isNotEmpty()) {
                 return shortcuts.regularSorted(isOrdered = true).map { Lexicon(text = it.word, romanization = it.romanization, input = text, mark = it.mark, number = -1) } + queried
         }
+        if (inputLength !in 3..<25) return queried
         val shouldPartiallyMatch: Boolean = idealSchemes.isEmpty() || (keys.lastOrNull() == VirtualInputKey.letterM) || (keys.firstOrNull() == VirtualInputKey.letterM)
         if (shouldPartiallyMatch.negative) return queried
         val prefixMatched: List<InternalLexicon> = segmentation.flatMap { scheme ->
@@ -301,7 +301,7 @@ fun InputMemoryHelper.searchMemory(keys: List<VirtualInputKey>, text: String, se
                         val rawSyllable = item.romanization.filter { it.isLowercaseBasicLatinLetter }
                         if (rawSyllable.startsWith(text)) return@mapNotNull converted
                         val lastSyllable = item.romanization.split(PresetString.SPACE).lastOrNull()?.filterNot { it.isCantoneseToneDigit } ?: return@mapNotNull null
-                        val tailSyllable = Segmenter.syllableText(keys = tail, db = db)
+                        val tailSyllable = Segmenter.syllableText(keys = tail)
                         if (tailSyllable != null) {
                                 return@mapNotNull if (lastSyllable == tailSyllable) converted else null
                         } else {

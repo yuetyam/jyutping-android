@@ -8,29 +8,42 @@ typealias Segmentation = List<Scheme>
 fun Segmentation.descended(): Segmentation = this.sortedWith(compareBy({it.schemeLength.unaryMinus()}, {it.size}))
 
 object Segmenter {
-        private fun splitLeading(keys: List<VirtualInputKey>, db: DatabaseHelper): List<Syllable> {
+        fun prepare(db: DatabaseHelper) {
+                val command = "SELECT alias_code, origin_code FROM core_syllable_table;"
+                val cursor = db.readableDatabase.rawQuery(command, null)
+                while (cursor.moveToNext()) {
+                        val aliasCode = cursor.getLong(0)
+                        val originCode = cursor.getLong(1)
+                        syllableCodeMap[aliasCode] = Syllable(aliasCode = aliasCode, originCode = originCode)
+                }
+                cursor.close()
+        }
+        fun needsPreparation(): Boolean = syllableCodeMap.isEmpty()
+        private val syllableCodeMap: HashMap<Long, Syllable> = hashMapOf()
+        private fun lookup(code: Long): Syllable? = syllableCodeMap[code]
+        private fun splitLeading(keys: List<VirtualInputKey>): List<Syllable> {
                 val maxLength = min(keys.size, 6)
                 if (maxLength < 1) return emptyList()
-                return (maxLength downTo 1).mapNotNull { db.syllableMatch(keys.take(it).combinedCode()) }
+                return (maxLength downTo 1).mapNotNull { lookup(code = keys.take(it).combinedCode()) }
         }
-        private fun split(keys: List<VirtualInputKey>, db: DatabaseHelper): Segmentation {
-                val headSyllables = splitLeading(keys, db)
+        private fun split(keys: List<VirtualInputKey>): Segmentation {
+                val headSyllables = splitLeading(keys)
                 if (headSyllables.isEmpty()) return emptyList()
                 val inputLength = keys.size
                 val segmentation: HashSet<Scheme> = headSyllables.map { listOf(it) }.toHashSet()
-                var previousSyllableCount = segmentation.map { it.size }.fold(0) { acc, i -> acc + i}
+                var previousSyllableCount = segmentation.map { it.size }.fold(0) { acc, i -> acc + i }
                 var shouldContinue = true
                 while (shouldContinue) {
                         for (scheme in segmentation.toList()) {
                                 val schemeLength = scheme.schemeLength
                                 if (schemeLength >= inputLength) continue
                                 val tailKeys = keys.drop(schemeLength)
-                                val tailSyllables = splitLeading(tailKeys, db)
+                                val tailSyllables = splitLeading(tailKeys)
                                 if (tailSyllables.isEmpty()) continue
                                 val newSegmentation = tailSyllables.map { scheme + it }
                                 segmentation += newSegmentation
                         }
-                        val currentSyllableCount = segmentation.map { it.size }.fold(0) { acc, i -> acc + i}
+                        val currentSyllableCount = segmentation.map { it.size }.fold(0) { acc, i -> acc + i }
                         if (currentSyllableCount != previousSyllableCount) {
                                 previousSyllableCount = currentSyllableCount
                         } else {
@@ -39,7 +52,7 @@ object Segmenter {
                 }
                 return segmentation.filter { it.isValid() }.descended()
         }
-        fun segment(keys: List<VirtualInputKey>, db: DatabaseHelper): Segmentation {
+        fun segment(keys: List<VirtualInputKey>): Segmentation {
                 return when (keys.size) {
                         0 -> emptyList()
                         1 -> when (keys.first()) {
@@ -55,7 +68,7 @@ object Segmenter {
                                         val syllableKeys = keys.filter { it.isSyllableLetter }
                                         val code = syllableKeys.combinedCode()
                                         cachedSegmentations[code]
-                                        val segmented = split(syllableKeys, db)
+                                        val segmented = split(syllableKeys)
                                         if (code > 0L) {
                                                 cache(code, segmented)
                                         }
@@ -66,7 +79,7 @@ object Segmenter {
                                 val syllableKeys = keys.filter { it.isSyllableLetter }
                                 val code = syllableKeys.combinedCode()
                                 cachedSegmentations[code]
-                                val segmented = split(syllableKeys, db)
+                                val segmented = split(syllableKeys)
                                 if (code > 0L) {
                                         cache(code, segmented)
                                 }
@@ -99,23 +112,9 @@ object Segmenter {
                         Syllable(aliasCode = 3228, originCode = 3228)
                 )
         )
-}
 
-private fun DatabaseHelper.syllableMatch(code: Long): Syllable? {
-        val command = "SELECT origin_code FROM syllable_table WHERE alias_code = $code LIMIT 1;"
-        val cursor = this.readableDatabase.rawQuery(command, null)
-        if (cursor.moveToFirst()) {
-                val originCode = cursor.getLong(0)
-                val syllable = Syllable(aliasCode = code, originCode = originCode)
-                cursor.close()
-                return syllable
-        } else {
-                cursor.close()
-                return null
+        fun syllableText(keys: List<VirtualInputKey>): String? {
+                if (keys.size > 6) return null
+                return lookup(code = keys.combinedCode())?.originText
         }
-}
-
-fun Segmenter.syllableText(keys: List<VirtualInputKey>, db: DatabaseHelper): String? {
-        if (keys.size > 6) return null
-        return db.syllableMatch(code = keys.combinedCode())?.originText
 }

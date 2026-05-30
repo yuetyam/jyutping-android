@@ -86,7 +86,7 @@
     <string name="keyboard_settings_bottom_padding_medium">M</string>
     <string name="keyboard_settings_bottom_padding_high">H</string>
     <string name="keyboard_settings_preferred_input_mode_title">Input Mode</string>
-    <string name="keyboard_settings_preferred_input_mode_cantonese">Jyutping</string>
+    <string name="keyboard_settings_preferred_input_mode_cantonese">Chinese</string>
     <string name="keyboard_settings_preferred_input_mode_abc">ABC</string>
     <string name="keyboard_settings_preferred_input_mode_previous">Recent</string>
     <string name="keyboard_settings_comment_style_title">Jyutping Hints</string>

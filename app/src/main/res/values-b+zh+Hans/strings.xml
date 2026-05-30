@@ -86,7 +86,7 @@
     <string name="keyboard_settings_bottom_padding_medium">中</string>
     <string name="keyboard_settings_bottom_padding_high">高</string>
     <string name="keyboard_settings_preferred_input_mode_title">輸入模式</string>
-    <string name="keyboard_settings_preferred_input_mode_cantonese">粵拼</string>
+    <string name="keyboard_settings_preferred_input_mode_cantonese">中文</string>
     <string name="keyboard_settings_preferred_input_mode_abc">ABC</string>
     <string name="keyboard_settings_preferred_input_mode_previous">最近</string>
     <string name="keyboard_settings_comment_style_title">粵拼標示</string>

@@ -204,6 +204,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 qwertyForm.value = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Primary
                 updateSpaceKeyForm()
                 updateReturnKeyForm(attribute)
+                if (Segmenter.needsPreparation()) {
+                        Segmenter.prepare(db = db)
+                }
                 inputClientMonitorJob = CoroutineScope(Dispatchers.Main).launch {
                         while (isActive) {
                                 delay(500L.milliseconds) // 0.5s
@@ -867,7 +870,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) db.searchTextMarks(allKeys) else emptyList() }
                                 val textMarks = textMarksDeferred.await()
                                 val keys = allKeys.drop(1)
-                                val segmentation = Segmenter.segment(keys, db)
+                                val segmentation = Segmenter.segment(keys)
                                 val queried: List<Lexicon> = if (keys.isEmpty()) emptyList() else run {
                                         val queriedDeferred = async { Structure.reverseLookup(keys, segmentation, db) }
                                         queriedDeferred.await()
@@ -875,7 +878,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, db = db, sessionState = sessionState)
                                 val bufferText = joinedBufferTexts()
                                 val tailMark: String = if (keys.isEmpty()) PresetString.EMPTY else run {
-                                        val isPeculiar = keys.any { it.isSyllableLetter.negative }
+                                        val isPeculiar = newValue.any { it.case.isCapitalized } || keys.any { it.isSyllableLetter.negative }
                                         if (isPeculiar) {
                                                 bufferText.drop(1).toneConverted().markFormatted()
                                         } else {
@@ -901,8 +904,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) db.searchTextMarks(keys) else emptyList() }
                                 val textMarks = textMarksDeferred.await()
                                 val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
-                                val segmentation = Segmenter.segment(keys, db)
-                                val memoryDeferred = async { if (isInputMemoryOn.value) memoryHelper.searchMemory(keys = keys, text = text, segmentation = segmentation, db = db) else emptyList() }
+                                val segmentation = Segmenter.segment(keys)
+                                val memoryDeferred = async { if (isInputMemoryOn.value) memoryHelper.searchMemory(keys = keys, text = text, segmentation = segmentation) else emptyList() }
                                 val symbolsDeferred = async { if (isEmojiSuggestionsOn.value) db.searchSymbols(text = text, segmentation = segmentation) else emptyList() }
                                 val queriedDeferred = async { Researcher.suggest(keys = keys, segmentation = segmentation, db = db) }
                                 val memory = memoryDeferred.await()
@@ -920,23 +923,17 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         sessionState = sessionState
                                 )
                                 val mark: String = run {
-                                        val isPeculiar = keys.any { it.isSyllableLetter.negative }
-                                        if (isPeculiar) {
-                                                text.toneConverted().markFormatted()
-                                        } else {
-                                                val firstCandidate = suggestions.firstOrNull()
-                                                if (firstCandidate?.lexicon?.inputCount == text.length) {
-                                                        firstCandidate.lexicon.mark
-                                                } else {
-                                                        val bestScheme = segmentation.firstOrNull()
-                                                        val leadingLength: Int = bestScheme?.schemeLength ?: 0
-                                                        val leadingMark: String = bestScheme?.mark ?: PresetString.EMPTY
-                                                        when (leadingLength) {
-                                                                0 -> text
-                                                                text.length -> leadingMark
-                                                                else -> (leadingMark + PresetString.SPACE + text.drop(leadingLength))
-                                                        }
-                                                }
+                                        val isPeculiar = newValue.any { it.case.isCapitalized } || keys.any { it.isSyllableLetter.negative }
+                                        if (isPeculiar) return@run joinedBufferTexts().toneConverted().markFormatted()
+                                        val firstCandidate = suggestions.firstOrNull()
+                                        if (firstCandidate?.lexicon?.inputCount == keys.size) return@run firstCandidate.lexicon.mark
+                                        val bestScheme = segmentation.firstOrNull()
+                                        val leadingLength: Int = bestScheme?.schemeLength ?: 0
+                                        val leadingMark: String = bestScheme?.mark ?: PresetString.EMPTY
+                                        when (leadingLength) {
+                                                0 -> text
+                                                text.length -> leadingMark
+                                                else -> (leadingMark + PresetString.SPACE + text.drop(leadingLength))
                                         }
                                 }
                                 withContext(Dispatchers.Main) {
