@@ -159,7 +159,7 @@ val Long.matchedVirtualInputKeys: List<VirtualInputKey>
         get() {
                 var number = this
                 val codes = mutableListOf<Long>()
-                while (number > 0) {
+                while (number > 0L) {
                         codes.add(number % 100L)
                         number /= 100L
                 }

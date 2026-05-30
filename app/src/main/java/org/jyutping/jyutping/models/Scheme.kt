@@ -33,14 +33,43 @@ val Scheme.mark: String
 val Scheme.syllableText: String
         get() = this.joinToString(PresetString.SPACE) { it.originText }
 
+// REASON: *am => [*aa, m] => *aam
 fun Scheme.isValid(): Boolean {
         if (this.size < 2) return true
         val shouldContinue = this.dropLast(1).any { it.origin.lastOrNull() === VirtualInputKey.letterA }
         if (shouldContinue.negative) return true
-        val regex = Regex("aa(m|ng)")
-        val originNumber = regex.findAll(this.originText).count()
-        if (originNumber < 1) return true
-        val tokenNumber = regex.findAll(this.aliasText).count()
-        if (tokenNumber < 1) return false
-        return originNumber == tokenNumber
+        val originCount = this.longAEndingCount { it.originCode }
+        if (originCount < 1) return true
+        return originCount == this.longAEndingCount { it.aliasCode }
+}
+private fun Scheme.longAEndingCount(selector: (Syllable) -> Long): Int {
+        val letterACode = VirtualInputKey.letterA.code
+        val letterGCode = VirtualInputKey.letterG.code
+        val letterMCode = VirtualInputKey.letterM.code
+        val letterNCode = VirtualInputKey.letterN.code
+        var count = 0
+        var thirdLastCode = 0
+        var secondLastCode = 0
+        var lastCode = 0
+        for (syllable in this) {
+                var syllableCode = selector(syllable)
+                var divisor = 1L
+                while ((syllableCode / divisor) >= 100L) {
+                        divisor *= 100L
+                }
+                while (divisor > 0L) {
+                        val keyCode = (syllableCode / divisor).toInt()
+                        if (secondLastCode == letterACode && lastCode == letterACode && keyCode == letterMCode) {
+                                count += 1
+                        } else if (thirdLastCode == letterACode && secondLastCode == letterACode && lastCode == letterNCode && keyCode == letterGCode) {
+                                count += 1
+                        }
+                        syllableCode %= divisor
+                        divisor /= 100L
+                        thirdLastCode = secondLastCode
+                        secondLastCode = lastCode
+                        lastCode = keyCode
+                }
+        }
+        return count
 }

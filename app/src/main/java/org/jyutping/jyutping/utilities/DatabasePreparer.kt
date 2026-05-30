@@ -15,7 +15,7 @@ object DatabasePreparer {
         private const val SOURCE_DATABASE_NAME: String = "appdb.sqlite3"
 
         /** App working database file */
-        const val DATABASE_NAME: String = "appdb-v${BuildConfig.VERSION_NAME}-20260531B-tmp.sqlite3"
+        const val DATABASE_NAME: String = "appdb-v${BuildConfig.VERSION_NAME}-tmp.sqlite3"
 
         private const val DATABASES_DIR_NAME: String = "databases"
         private const val DATABASES_PATH_BLOCK: String = "/databases/"
