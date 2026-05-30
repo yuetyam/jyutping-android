@@ -800,17 +800,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 val bufferText = joinedBufferTexts()
                                 val tailMark: String = if (keys.isEmpty()) PresetString.EMPTY else run {
                                         val firstLexicon = queried.firstOrNull()
-                                        if (firstLexicon != null && firstLexicon.inputCount == keys.size) {
-                                                firstLexicon.mark
-                                        } else {
-                                                val bestScheme = segmentation.firstOrNull()
-                                                val leadingLength: Int = bestScheme?.pinyinSchemeLength ?: 0
-                                                val leadingText: String = bestScheme?.joinToString(separator = PresetString.SPACE) { it.text } ?: PresetString.EMPTY
-                                                when (leadingLength) {
-                                                        0 -> bufferText.drop(1)
-                                                        keys.size -> leadingText
-                                                        else -> (leadingText + PresetString.SPACE + bufferText.drop(leadingLength + 1))
-                                                }
+                                        if (firstLexicon != null && firstLexicon.inputCount == keys.size) return@run firstLexicon.mark
+                                        val bestScheme = segmentation.firstOrNull()
+                                        val leadingLength: Int = bestScheme?.pinyinSchemeLength ?: 0
+                                        val leadingText: String = bestScheme?.joinToString(separator = PresetString.SPACE) { it.text } ?: PresetString.EMPTY
+                                        when (leadingLength) {
+                                                0 -> bufferText.drop(1)
+                                                keys.size -> leadingText
+                                                else -> (leadingText + PresetString.SPACE + bufferText.drop(leadingLength + 1))
                                         }
                                 }
                                 val mark: String = if (keys.isEmpty()) bufferText.take(1) else (bufferText.take(1) + PresetString.SPACE + tailMark)
@@ -879,17 +876,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 val bufferText = joinedBufferTexts()
                                 val tailMark: String = if (keys.isEmpty()) PresetString.EMPTY else run {
                                         val isPeculiar = newValue.any { it.case.isCapitalized } || keys.any { it.isSyllableLetter.negative }
-                                        if (isPeculiar) {
-                                                bufferText.drop(1).toneConverted().markFormatted()
-                                        } else {
-                                                val bestScheme = segmentation.firstOrNull()
-                                                val leadingLength: Int = bestScheme?.schemeLength ?: 0
-                                                val leadingMark: String = bestScheme?.mark ?: PresetString.EMPTY
-                                                when (leadingLength) {
-                                                        0 -> bufferText.drop(1)
-                                                        keys.size -> leadingMark
-                                                        else -> (leadingMark + PresetString.SPACE + bufferText.drop(leadingLength + 1))
-                                                }
+                                        if (isPeculiar) return@run bufferText.drop(1).toneConverted().markFormatted()
+                                        val bestScheme = segmentation.firstOrNull()
+                                        val leadingLength: Int = bestScheme?.schemeLength ?: 0
+                                        val leadingMark: String = bestScheme?.mark ?: PresetString.EMPTY
+                                        when (leadingLength) {
+                                                0 -> bufferText.drop(1)
+                                                keys.size -> leadingMark
+                                                else -> (leadingMark + PresetString.SPACE + bufferText.drop(leadingLength + 1))
                                         }
                                 }
                                 val mark: String = if (keys.isEmpty()) bufferText.take(1) else (bufferText.take(1) + PresetString.SPACE + tailMark)

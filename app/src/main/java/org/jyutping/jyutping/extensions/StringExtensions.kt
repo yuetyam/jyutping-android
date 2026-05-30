@@ -5,23 +5,55 @@ import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetString
 
 fun String.convertedS2T(): String = Transliterator.getInstance("Simplified-Traditional").transliterate(this)
-fun String.convertedT2S(): String = Transliterator.getInstance("Traditional-Simplified").transliterate(this)
+// fun String.convertedT2S(): String = Transliterator.getInstance("Traditional-Simplified").transliterate(this)
 
 /**
- * Convert v/x/q to the tone digits
- * @return Converted text with digital tones
+ * Convert v/x/q to Cantonese tone digits
+ * @return Converted text with digit tones
  */
-fun String.toneConverted(): String = this
-        .replace("vv", "4")
-        .replace("xx", "5")
-        .replace("qq", "6")
-        .replace('v', '1')
-        .replace('x', '2')
-        .replace('q', '3')
+fun String.toneConverted(): String = buildString(length) {
+        val textLength = this@toneConverted.length
+        var index = 0
+        while (index < textLength) {
+                val char = this@toneConverted[index]
+                val isPaired = (index + 1 < textLength) && (char == this@toneConverted[index + 1])
+                if (isPaired) {
+                        val replacement = when (char) {
+                                ToneCharSet.LETTER_V -> ToneCharSet.DIGIT4
+                                ToneCharSet.LETTER_X -> ToneCharSet.DIGIT5
+                                ToneCharSet.LETTER_Q -> ToneCharSet.DIGIT6
+                                else -> null
+                        }
+                        if (replacement != null) {
+                                append(replacement)
+                                index += 2
+                                continue
+                        }
+                }
+                when (char) {
+                        ToneCharSet.LETTER_V -> append(ToneCharSet.DIGIT1)
+                        ToneCharSet.LETTER_X -> append(ToneCharSet.DIGIT2)
+                        ToneCharSet.LETTER_Q -> append(ToneCharSet.DIGIT3)
+                        else -> append(char)
+                }
+                index += 1
+        }
+}
+private object ToneCharSet {
+        const val LETTER_V: Char = 'v'
+        const val LETTER_X: Char = 'x'
+        const val LETTER_Q: Char = 'q'
+        const val DIGIT1  : Char = '1'
+        const val DIGIT2  : Char = '2'
+        const val DIGIT3  : Char = '3'
+        const val DIGIT4  : Char = '4'
+        const val DIGIT5  : Char = '5'
+        const val DIGIT6  : Char = '6'
+}
 
 /**
  * Inserts a space after any non-letter character
- * @return Formatted text for mark
+ * @return Formatted text for preview-mark
 */
 fun String.markFormatted(): String {
         var result: String = PresetString.EMPTY
