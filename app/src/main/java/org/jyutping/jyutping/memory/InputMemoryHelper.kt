@@ -126,18 +126,18 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
 
         // memory(id INTEGER PRIMARY KEY,word TEXT,romanization TEXT,shortcut INTEGER,ping INTEGER,frequency INTEGER,latest INTEGER)
         private fun fetchLegacyEntries(lower: Int, upper: Int): List<MemoryLexicon> {
-                val command: String = "SELECT word, romanization, frequency, latest FROM $LEGACY_TABLE_NAME WHERE frequency > $lower AND frequency <= ${upper};"
-                val cursor = this.readableDatabase.rawQuery(command, null)
                 val instances: MutableList<MemoryLexicon> = mutableListOf()
-                while (cursor.moveToNext()) {
-                        val word = cursor.getString(0)
-                        val romanization = cursor.getString(1)
-                        val frequency = cursor.getLong(2)
-                        val latest = cursor.getLong(3)
-                        val instance = MemoryLexicon.new(word = word, romanization = romanization, frequency = frequency, latest = latest)
-                        instances.add(instance)
+                val command: String = "SELECT word, romanization, frequency, latest FROM $LEGACY_TABLE_NAME WHERE frequency > $lower AND frequency <= ${upper};"
+                readableDatabase.rawQuery(command, null).use { cursor ->
+                        while (cursor.moveToNext()) {
+                                val word = cursor.getString(0)
+                                val romanization = cursor.getString(1)
+                                val frequency = cursor.getLong(2)
+                                val latest = cursor.getLong(3)
+                                val instance = MemoryLexicon.new(word = word, romanization = romanization, frequency = frequency, latest = latest)
+                                instances.add(instance)
+                        }
                 }
-                cursor.close()
                 return instances
         }
         private fun isLegacyDataPresent(): Boolean {
@@ -167,17 +167,16 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
                 }
         }
         private fun find(word: String, romanization: String): Pair<Long, Long>? {
+                var id: Long? = null
+                var frequency: Long? = null
                 val command: String = "SELECT id, frequency FROM core_memory WHERE word = ? AND romanization = ? LIMIT 1;"
-                val cursor = this.readableDatabase.rawQuery(command, arrayOf(word, romanization))
-                if (cursor.moveToFirst()) {
-                        val id = cursor.getLong(0)
-                        val frequency = cursor.getLong(1)
-                        cursor.close()
-                        return Pair(id, frequency)
-                } else {
-                        cursor.close()
-                        return null
+                readableDatabase.rawQuery(command, arrayOf(word, romanization)).use { cursor ->
+                        if (cursor.moveToFirst()) {
+                                id = cursor.getLong(0)
+                                frequency = cursor.getLong(1)
+                        }
                 }
+                return if (id != null && frequency != null) Pair(id, frequency) else null
         }
         private fun update(id: Long, frequency: Long) {
                 val latest: Long = System.currentTimeMillis()
@@ -186,8 +185,7 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
         }
         private fun insert(entry: MemoryLexicon) {
                 val command: String = "INSERT INTO core_memory (word, romanization, frequency, latest, shortcut, spell, nine_key_anchors, nine_key_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?);"
-                val statement = this.writableDatabase.compileStatement(command)
-                try {
+                writableDatabase.compileStatement(command).use { statement ->
                         statement.bindString(1, entry.word)
                         statement.bindString(2, entry.romanization)
                         statement.bindLong(3, entry.frequency)
@@ -197,21 +195,19 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
                         statement.bindLong(7, entry.nineKeyAnchors)
                         statement.bindLong(8, entry.nineKeyCode)
                         statement.executeInsert()
-                } finally {
-                        statement.close()
                 }
         }
 
         /** Delete the given Lexicon from the InputMemory */
         fun forget(lexicon: Lexicon) {
                 if (lexicon.isNotCantonese) return
-                this.writableDatabase.delete(TABLE_NAME, UNIQUE_WHERE, arrayOf(lexicon.text, lexicon.romanization))
+                writableDatabase.delete(TABLE_NAME, UNIQUE_WHERE, arrayOf(lexicon.text, lexicon.romanization))
         }
 
         /** Clear Input Memory */
         fun deleteAll() {
                 val command: String = "DELETE FROM core_memory;"
-                this.writableDatabase.execSQL(command)
+                writableDatabase.execSQL(command)
         }
 }
 
@@ -345,16 +341,16 @@ private fun InputMemoryHelper.shortcutMatch(text: String, input: String, limit: 
         val code = text.replace('y', 'j').hashCode()
         val limitValue: Int = limit ?: 100
         val command = "SELECT word, romanization, frequency, latest FROM core_memory WHERE shortcut = $code ORDER BY frequency DESC LIMIT ${limitValue};"
-        val cursor = this.readableDatabase.rawQuery(command, null)
-        while (cursor.moveToNext()) {
-                val word = cursor.getString(0)
-                val romanization = cursor.getString(1)
-                val frequency = cursor.getLong(2)
-                val latest = cursor.getLong(3)
-                val instance = InternalLexicon(word = word, romanization = romanization, frequency = frequency, latest = latest, input = input, mark = input)
-                instances.add(instance)
+        readableDatabase.rawQuery(command, null).use { cursor ->
+                while (cursor.moveToNext()) {
+                        val word = cursor.getString(0)
+                        val romanization = cursor.getString(1)
+                        val frequency = cursor.getLong(2)
+                        val latest = cursor.getLong(3)
+                        val instance = InternalLexicon(word = word, romanization = romanization, frequency = frequency, latest = latest, input = input, mark = input)
+                        instances.add(instance)
+                }
         }
-        cursor.close()
         return instances
 }
 private fun InputMemoryHelper.spellMatch(text: String, input: String, mark: String? = null, limit: Int? = null): List<InternalLexicon> {
@@ -362,34 +358,34 @@ private fun InputMemoryHelper.spellMatch(text: String, input: String, mark: Stri
         val code = text.hashCode()
         val limitValue: Int = limit ?: 100
         val command = "SELECT word, romanization, frequency, latest FROM core_memory WHERE spell = $code ORDER BY frequency DESC LIMIT ${limitValue};"
-        val cursor = this.readableDatabase.rawQuery(command, null)
-        while (cursor.moveToNext()) {
-                val word = cursor.getString(0)
-                val romanization = cursor.getString(1)
-                val frequency = cursor.getLong(2)
-                val latest = cursor.getLong(3)
-                val markText: String = mark ?: romanization.filterNot { it.isCantoneseToneDigit }
-                val instance = InternalLexicon(word = word, romanization = romanization, frequency = frequency, latest = latest, input = input, mark = markText)
-                instances.add(instance)
+        readableDatabase.rawQuery(command, null).use { cursor ->
+                while (cursor.moveToNext()) {
+                        val word = cursor.getString(0)
+                        val romanization = cursor.getString(1)
+                        val frequency = cursor.getLong(2)
+                        val latest = cursor.getLong(3)
+                        val markText: String = mark ?: romanization.filterNot { it.isCantoneseToneDigit }
+                        val instance = InternalLexicon(word = word, romanization = romanization, frequency = frequency, latest = latest, input = input, mark = markText)
+                        instances.add(instance)
+                }
         }
-        cursor.close()
         return instances
 }
 private fun InputMemoryHelper.strictMatch(spell: Int, shortcut: Int, input: String, mark: String? = null, limit: Int? = null): List<InternalLexicon> {
         val instances: MutableList<InternalLexicon> = mutableListOf()
         val limitValue: Int = limit ?: 100
         val command = "SELECT word, romanization, frequency, latest FROM core_memory WHERE spell = $spell AND shortcut = $shortcut ORDER BY frequency DESC LIMIT ${limitValue};"
-        val cursor = this.readableDatabase.rawQuery(command, null)
-        while (cursor.moveToNext()) {
-                val word = cursor.getString(0)
-                val romanization = cursor.getString(1)
-                val frequency = cursor.getLong(2)
-                val latest = cursor.getLong(3)
-                val markText: String = mark ?: romanization.filterNot { it.isCantoneseToneDigit }
-                val instance = InternalLexicon(word = word, romanization = romanization, frequency = frequency, latest = latest, input = input, mark = markText)
-                instances.add(instance)
+        readableDatabase.rawQuery(command, null).use { cursor ->
+                while (cursor.moveToNext()) {
+                        val word = cursor.getString(0)
+                        val romanization = cursor.getString(1)
+                        val frequency = cursor.getLong(2)
+                        val latest = cursor.getLong(3)
+                        val markText: String = mark ?: romanization.filterNot { it.isCantoneseToneDigit }
+                        val instance = InternalLexicon(word = word, romanization = romanization, frequency = frequency, latest = latest, input = input, mark = markText)
+                        instances.add(instance)
+                }
         }
-        cursor.close()
         return instances
 }
 
@@ -417,17 +413,17 @@ private fun InputMemoryHelper.nineKeyAnchorsMatch(code: Long, limit: Int? = null
         val items: MutableList<InternalLexicon> = mutableListOf()
         val limitValue: Int = limit ?: 30
         val command = "SELECT word, romanization, frequency, latest FROM core_memory WHERE nine_key_anchors = $code LIMIT ${limitValue};"
-        val cursor = this.readableDatabase.rawQuery(command, null)
-        while (cursor.moveToNext()) {
-                val word = cursor.getString(0)
-                val romanization = cursor.getString(1)
-                val frequency = cursor.getLong(2)
-                val latest = cursor.getLong(3)
-                val anchors = romanization.split(PresetString.SPACE).mapNotNull { it.firstOrNull() }.joinToString(separator = PresetString.EMPTY)
-                val instance = InternalLexicon(word = word, romanization = romanization, input = anchors, frequency = frequency, latest = latest, mark = anchors)
-                items.add(instance)
+        readableDatabase.rawQuery(command, null).use { cursor ->
+                while (cursor.moveToNext()) {
+                        val word = cursor.getString(0)
+                        val romanization = cursor.getString(1)
+                        val frequency = cursor.getLong(2)
+                        val latest = cursor.getLong(3)
+                        val anchors = romanization.split(PresetString.SPACE).mapNotNull { it.firstOrNull() }.joinToString(separator = PresetString.EMPTY)
+                        val instance = InternalLexicon(word = word, romanization = romanization, input = anchors, frequency = frequency, latest = latest, mark = anchors)
+                        items.add(instance)
+                }
         }
-        cursor.close()
         return items
 }
 private fun InputMemoryHelper.nineKeyCodeMatch(code: Long, limit: Int? = null): List<InternalLexicon> {
@@ -435,18 +431,18 @@ private fun InputMemoryHelper.nineKeyCodeMatch(code: Long, limit: Int? = null): 
         val items: MutableList<InternalLexicon> = mutableListOf()
         val limitValue: Int = limit ?: -1
         val command = "SELECT word, romanization, frequency, latest FROM core_memory WHERE nine_key_code = $code LIMIT ${limitValue};"
-        val cursor = this.readableDatabase.rawQuery(command, null)
-        while (cursor.moveToNext()) {
-                val word = cursor.getString(0)
-                val romanization = cursor.getString(1)
-                val frequency = cursor.getLong(2)
-                val latest = cursor.getLong(3)
-                val mark = romanization.filterNot { it.isCantoneseToneDigit }
-                val input = mark.filterNot { it.isSpace }
-                val instance = InternalLexicon(word = word, romanization = romanization, input = input, frequency = frequency, latest = latest, mark = mark)
-                items.add(instance)
+        readableDatabase.rawQuery(command, null).use { cursor ->
+                while (cursor.moveToNext()) {
+                        val word = cursor.getString(0)
+                        val romanization = cursor.getString(1)
+                        val frequency = cursor.getLong(2)
+                        val latest = cursor.getLong(3)
+                        val mark = romanization.filterNot { it.isCantoneseToneDigit }
+                        val input = mark.filterNot { it.isSpace }
+                        val instance = InternalLexicon(word = word, romanization = romanization, input = input, frequency = frequency, latest = latest, mark = mark)
+                        items.add(instance)
+                }
         }
-        cursor.close()
         return items
 }
 
