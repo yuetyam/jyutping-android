@@ -32,7 +32,7 @@ fun CharacterSetSwitch() {
         val characterStandard by context.characterStandard.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
-        val height: Dp = 25.dp
+        val height: Dp = 24.dp
         val partialWidth: Dp = 28.dp
         val totalWidth: Dp = 48.dp
         val largerFontSize = 16.dp

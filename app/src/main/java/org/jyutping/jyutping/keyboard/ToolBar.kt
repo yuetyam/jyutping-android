@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
@@ -33,7 +34,7 @@ import org.jyutping.jyutping.models.KeyboardForm
 fun ToolBar() {
         val inputMethodModeSwitchWidth = 64.dp
         val buttonSize = 48.dp
-        val iconSize = 24.dp
+        val iconSize = 22.dp
         val interactionSource = remember { MutableInteractionSource() }
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
@@ -71,7 +72,7 @@ fun ToolBar() {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.icon_keyboard),
                                 contentDescription = null,
-                                modifier = Modifier.size(28.dp),
+                                modifier = Modifier.size(26.dp),
                                 tint = if (isDarkMode) Color.White else Color.Black
                         )
                 }
@@ -114,7 +115,7 @@ fun ToolBar() {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.button_editing),
                                 contentDescription = null,
-                                modifier = Modifier.size(28.dp),
+                                modifier = Modifier.size(26.dp),
                                 tint = if (isDarkMode) Color.White else Color.Black
                         )
                 }
@@ -142,7 +143,7 @@ fun ToolBar() {
                         Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.button_dismiss_keyboard),
                                 contentDescription = null,
-                                modifier = Modifier.size(26.dp),
+                                modifier = Modifier.padding(bottom = 1.dp).size(23.dp),
                                 tint = if (isDarkMode) Color.White else Color.Black
                         )
                 }
