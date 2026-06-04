@@ -53,7 +53,7 @@ fun EditingPanelForwardDeleteKey(modifier: Modifier) {
         var isLongPressing by remember { mutableStateOf(false) }
         var longPressJob: Job? by remember { mutableStateOf(null) }
         val longPressCoroutineScope = rememberCoroutineScope()
-        val keyShape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+        val keyShape = RoundedCornerShape(PresetConstant.ultraKeyCornerRadius.dp)
         Column(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -87,7 +87,8 @@ fun EditingPanelForwardDeleteKey(modifier: Modifier) {
                                         }
                                 )
                         }
-                        .padding(4.dp)
+                        .fillMaxSize()
+                        .padding(if (isPressing) 1.dp else 3.dp)
                         .border(
                                 width = 1.dp,
                                 color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
@@ -96,8 +97,7 @@ fun EditingPanelForwardDeleteKey(modifier: Modifier) {
                         .background(
                                 color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressing),
                                 shape = keyShape
-                        )
-                        .fillMaxSize(),
+                        ),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {

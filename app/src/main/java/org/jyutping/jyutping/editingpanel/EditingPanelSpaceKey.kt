@@ -42,7 +42,7 @@ fun EditingPanelSpaceKey(modifier: Modifier) {
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
         var isDragging by remember { mutableStateOf(false) }
-        val keyShape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+        val keyShape = RoundedCornerShape(PresetConstant.ultraKeyCornerRadius.dp)
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
@@ -90,7 +90,8 @@ fun EditingPanelSpaceKey(modifier: Modifier) {
                                         }
                                 )
                         }
-                        .padding(4.dp)
+                        .fillMaxSize()
+                        .padding(if (isPressing) 1.dp else 3.dp)
                         .border(
                                 width = 1.dp,
                                 color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
@@ -99,8 +100,7 @@ fun EditingPanelSpaceKey(modifier: Modifier) {
                         .background(
                                 color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressing),
                                 shape = keyShape
-                        )
-                        .fillMaxSize(),
+                        ),
                 contentAlignment = Alignment.Center
         ) {
                 Text(

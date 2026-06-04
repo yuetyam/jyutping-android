@@ -46,7 +46,7 @@ fun EditingPanelPasteKey(modifier: Modifier) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val isClipboardEmpty by context.isClipboardEmpty.collectAsState()
-        val keyShape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)
+        val keyShape = RoundedCornerShape(PresetConstant.ultraKeyCornerRadius.dp)
         Column(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
@@ -54,7 +54,8 @@ fun EditingPanelPasteKey(modifier: Modifier) {
                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                                 context.paste()
                         }
-                        .padding(4.dp)
+                        .fillMaxSize()
+                        .padding(if (isPressed) 1.dp else 3.dp)
                         .border(
                                 width = 1.dp,
                                 color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
@@ -63,8 +64,7 @@ fun EditingPanelPasteKey(modifier: Modifier) {
                         .background(
                                 color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressed),
                                 shape = keyShape
-                        )
-                        .fillMaxSize(),
+                        ),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
