@@ -76,11 +76,8 @@ import org.jyutping.jyutping.models.Simplifier
 import org.jyutping.jyutping.models.Structure
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.mark
-import org.jyutping.jyutping.models.nineKeySearchSymbols
 import org.jyutping.jyutping.models.pinyinSchemeLength
-import org.jyutping.jyutping.models.queryTextMarks
 import org.jyutping.jyutping.models.schemeLength
-import org.jyutping.jyutping.models.searchSymbols
 import org.jyutping.jyutping.ninekey.Combo
 import org.jyutping.jyutping.ninekey.SidebarEntry
 import org.jyutping.jyutping.numeric.NumericLayout
@@ -91,7 +88,6 @@ import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.stroke.Stroke
 import org.jyutping.jyutping.stroke.StrokeLayout
 import org.jyutping.jyutping.stroke.StrokeVirtualKey
-import org.jyutping.jyutping.utilities.DatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
@@ -120,7 +116,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         override fun onCreate() {
                 super.onCreate()
                 savedStateRegistryController.performRestore(null)
-                DatabasePreparer.prepare(this)
+                lifecycleScope.launch(Dispatchers.IO) {
+                        DatabasePreparer.prepare(applicationContext)
+                        memoryHelper.performMemoryMigration()
+                }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         val manufacturer = Build.MANUFACTURER.lowercase()
                         val brand = Build.BRAND.lowercase()
@@ -139,9 +138,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 } else {
                         canBlurWindow = false
                         PresetColor.attach(canBlur = false)
-                }
-                lifecycleScope.launch(Dispatchers.IO) {
-                        memoryHelper.performMemoryMigration()
                 }
         }
         override fun onConfigurationChanged(newConfig: Configuration) {
@@ -182,10 +178,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         override fun onStartInput(attribute: EditorInfo?, restarting: Boolean) {
                 super.onStartInput(attribute, restarting)
                 inputClientMonitorJob?.cancel()
-
-                // Update the flag for hardware keyboard state
                 isPhysicalKeyboardActive.value = hasHardwareKeyboard()
-
                 val isNightMode: Boolean = (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
                 window?.window?.let { win ->
                         WindowCompat.getInsetsController(win, win.decorView).isAppearanceLightNavigationBars = isNightMode.negative
@@ -204,9 +197,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 qwertyForm.value = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Primary
                 updateSpaceKeyForm()
                 updateReturnKeyForm(attribute)
-                if (Segmenter.needsPreparation()) {
-                        Segmenter.prepare(db = db)
-                }
                 inputClientMonitorJob = CoroutineScope(Dispatchers.Main).launch {
                         while (isActive) {
                                 delay(500L.milliseconds) // 0.5s
@@ -703,7 +693,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
 
         private val selectedLexicons: MutableList<Lexicon> by lazy { mutableListOf() }
-        private val memoryHelper by lazy { InputMemoryHelper(this) }
+        private val memoryHelper by lazy { InputMemoryHelper(applicationContext) }
         fun forgetCandidate(candidate: Candidate? = null, index: Int? = null) = when {
                 candidate != null -> memoryHelper.forget(candidate.lexicon)
                 index != null -> candidates.value.getOrNull(index)?.let { memoryHelper.forget(it.lexicon) }
@@ -715,8 +705,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
 
         //region EmojiBoard
-        private val defaultFrequentEmojis: List<Emoji> by lazy { db.fetchDefaultFrequentEmojis() }
-        private val emojiSequence: List<Emoji> by lazy { db.fetchEmojiSequence() }
+        private val defaultFrequentEmojis: List<Emoji> by lazy { Elephant.fetchDefaultFrequentEmojis() }
+        private val emojiSequence: List<Emoji> by lazy { Elephant.fetchEmojiSequence() }
         val categoryStartIndexMap: MutableStateFlow<Map<EmojiCategory, Int>> by lazy {
                 MutableStateFlow(Emoji.categoryStartIndexMap(emojiSequence))
         }
@@ -757,9 +747,12 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         //endregion
 
-        val candidateState: MutableStateFlow<Long> by lazy { MutableStateFlow(1L) }
+        val candidateState: MutableStateFlow<Long> by lazy {
+                Elephant.connectDatabase(applicationContext)
+                if (Segmenter.needsPreparation()) { Segmenter.prepare() }
+                MutableStateFlow(1L)
+        }
         val candidates: MutableStateFlow<List<Candidate>> by lazy { MutableStateFlow(emptyList()) }
-        private val db by lazy { DatabaseHelper(this, DatabasePreparer.DATABASE_NAME) }
         private var suggestionJob: Job? = null
         private var bufferEvents: List<BasicInputEvent> by Delegates.observable(emptyList()) { _, _, newValue ->
                 suggestionJob?.cancel()
@@ -790,13 +783,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         VirtualInputKey.letterR -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val allKeys = bufferEvents.map { it.key }
-                                val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) db.searchTextMarks(allKeys) else emptyList() }
+                                val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) Elephant.searchTextMarks(allKeys) else emptyList() }
                                 val textMarks = textMarksDeferred.await()
                                 val keys = allKeys.drop(1)
-                                val segmentation = PinyinSegmenter.segment(keys, db)
-                                val queriedDeferred = async { PinyinResearcher.reverseLookup(keys, segmentation, db) }
+                                val segmentation = PinyinSegmenter.segment(keys)
+                                val queriedDeferred = async { PinyinResearcher.reverseLookup(keys, segmentation) }
                                 val queried = queriedDeferred.await()
-                                val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, db = db, sessionState = sessionState)
+                                val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, sessionState = sessionState)
                                 val bufferText = joinedBufferTexts()
                                 val tailMark: String = if (keys.isEmpty()) PresetString.EMPTY else run {
                                         val firstLexicon = queried.firstOrNull()
@@ -820,7 +813,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         VirtualInputKey.letterV -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val allKeys = bufferEvents.map { it.key }
-                                val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) db.searchTextMarks(allKeys) else emptyList() }
+                                val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) Elephant.searchTextMarks(allKeys) else emptyList() }
                                 val textMarks = textMarksDeferred.await()
                                 val keys = allKeys.drop(1)
                                 val cangjieRadicals = keys.mapNotNull { CangjieConverter.cangjieOf(it) }
@@ -828,10 +821,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 val mark: String = if (isValidSequence) cangjieRadicals.joinToString(separator = PresetString.EMPTY) else joinedBufferTexts()
                                 val queried: List<Lexicon> = if (isValidSequence.negative) emptyList() else run {
                                         val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
-                                        val queriedDeferred = async { Cangjie.reverseLookup(text, cangjieVariant.value, db) }
+                                        val queriedDeferred = async { Cangjie.reverseLookup(text, cangjieVariant.value) }
                                         queriedDeferred.await()
                                 }
-                                val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, db = db, sessionState = sessionState)
+                                val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, sessionState = sessionState)
                                 withContext(Dispatchers.Main) {
                                         updateQwertyForm(QwertyForm.Cangjie)
                                         currentInputConnection.setComposingText(mark, 1)
@@ -841,16 +834,16 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         VirtualInputKey.letterX -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val allKeys = bufferEvents.map { it.key }
-                                val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) db.searchTextMarks(allKeys) else emptyList() }
+                                val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) Elephant.searchTextMarks(allKeys) else emptyList() }
                                 val textMarks = textMarksDeferred.await()
                                 val keys = allKeys.drop(1)
                                 val isValidSequence: Boolean = keys.isNotEmpty() && StrokeVirtualKey.isValidStrokes(keys)
                                 val mark: String = if (isValidSequence) StrokeVirtualKey.displayStrokesOf(keys) else joinedBufferTexts()
                                 val queried: List<Lexicon> = if (isValidSequence.negative) emptyList() else run {
-                                        val queriedDeferred = async { Stroke.reverseLookup(keys, db) }
+                                        val queriedDeferred = async { Stroke.reverseLookup(keys) }
                                         queriedDeferred.await()
                                 }
-                                val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, db = db, sessionState = sessionState)
+                                val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, sessionState = sessionState)
                                 withContext(Dispatchers.Main) {
                                         if (useNineKeyStrokeLayout.value && keyboardForm.value.isNineKeyStroke.negative) {
                                                 transformTo(KeyboardForm.NineKeyStroke)
@@ -864,18 +857,18 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         VirtualInputKey.letterQ -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val allKeys = bufferEvents.map { it.key }
-                                val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) db.searchTextMarks(allKeys) else emptyList() }
+                                val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) Elephant.searchTextMarks(allKeys) else emptyList() }
                                 val textMarks = textMarksDeferred.await()
                                 val keys = allKeys.drop(1)
                                 val segmentation = Segmenter.segment(keys)
                                 val queried: List<Lexicon> = if (keys.isEmpty()) emptyList() else run {
-                                        val queriedDeferred = async { Structure.reverseLookup(keys, segmentation, db) }
+                                        val queriedDeferred = async { Structure.reverseLookup(keys, segmentation) }
                                         queriedDeferred.await()
                                 }
-                                val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, db = db, sessionState = sessionState)
+                                val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, sessionState = sessionState)
                                 val bufferText = joinedBufferTexts()
                                 val tailMark: String = if (keys.isEmpty()) PresetString.EMPTY else run {
-                                        val isPeculiar = newValue.any { it.case.isCapitalized } || keys.any { it.isSyllableLetter.negative }
+                                        val isPeculiar = newValue.any { it.isCapitalized } || keys.any { it.isSyllableLetter.negative }
                                         if (isPeculiar) return@run bufferText.drop(1).toneConverted().markFormatted()
                                         val bestScheme = segmentation.firstOrNull()
                                         val leadingLength: Int = bestScheme?.schemeLength ?: 0
@@ -895,13 +888,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         else -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val keys = newValue.map { it.key }
-                                val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) db.searchTextMarks(keys) else emptyList() }
+                                val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) Elephant.searchTextMarks(keys) else emptyList() }
                                 val textMarks = textMarksDeferred.await()
                                 val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
                                 val segmentation = Segmenter.segment(keys)
                                 val memoryDeferred = async { if (isInputMemoryOn.value) memoryHelper.searchMemory(keys = keys, text = text, segmentation = segmentation) else emptyList() }
-                                val symbolsDeferred = async { if (isEmojiSuggestionsOn.value) db.searchSymbols(text = text, segmentation = segmentation) else emptyList() }
-                                val queriedDeferred = async { Researcher.suggest(keys = keys, segmentation = segmentation, db = db) }
+                                val symbolsDeferred = async { if (isEmojiSuggestionsOn.value) Researcher.searchSymbols(text = text, segmentation = segmentation) else emptyList() }
+                                val queriedDeferred = async { Researcher.suggest(keys = keys, segmentation = segmentation) }
                                 val memory = memoryDeferred.await()
                                 val symbols = symbolsDeferred.await()
                                 val queried = queriedDeferred.await()
@@ -913,7 +906,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         queried = queried,
                                         commentForm = RomanizationForm.Full,
                                         charset = characterStandard.value,
-                                        db = db,
                                         sessionState = sessionState
                                 )
                                 val mark: String = run {
@@ -1021,9 +1013,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         }
                                 } else {
                                         val keys = newValue.drop(1)
-                                        val queriedDeferred = async { PinyinResearcher.nineKeyReverseLookup(keys, db) }
+                                        val queriedDeferred = async { PinyinResearcher.nineKeyReverseLookup(keys) }
                                         val queried = queriedDeferred.await()
-                                        val suggestions = Converter.transformed(lexicons = queried, commentForm = RomanizationForm.Full, charset = characterStandard.value, db = db, sessionState = sessionState)
+                                        val suggestions = Converter.transformed(lexicons = queried, commentForm = RomanizationForm.Full, charset = characterStandard.value, sessionState = sessionState)
                                         val tailMark: String = run {
                                                 val firstCandidate = suggestions.firstOrNull()
                                                 if (firstCandidate?.lexicon?.inputCount == keys.size) {
@@ -1042,9 +1034,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         else -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val memoryDeferred = async { if (isInputMemoryOn.value) memoryHelper.nineKeyMemorySearch(newValue) else emptyList() }
-                                val textMarksDeprecated = async { if (isEnglishSuggestionsOn.value) db.queryTextMarks(newValue) else emptyList() }
-                                val symbolsDeferred = async { if (isEmojiSuggestionsOn.value) db.nineKeySearchSymbols(newValue) else emptyList() }
-                                val queriedDeferred = async { NineKeyResearcher.nineKeySearch(combos = newValue, db = db) }
+                                val textMarksDeprecated = async { if (isEnglishSuggestionsOn.value) NineKeyResearcher.queryTextMarks(newValue) else emptyList() }
+                                val symbolsDeferred = async { if (isEmojiSuggestionsOn.value) NineKeyResearcher.nineKeySearchSymbols(newValue) else emptyList() }
+                                val queriedDeferred = async { NineKeyResearcher.nineKeySearch(combos = newValue) }
                                 val memory = memoryDeferred.await()
                                 val textMarks = textMarksDeprecated.await()
                                 val symbols = symbolsDeferred.await()
@@ -1057,7 +1049,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         queried = queried,
                                         commentForm = RomanizationForm.Full,
                                         charset = characterStandard.value,
-                                        db = db,
                                         sessionState = sessionState
                                 )
                                 val mark: String = run {
@@ -1531,7 +1522,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 selectedText?.let {
                         if (it.isEmpty()) return
                         val origin: String = it.toString()
-                        val mutilated: String = Simplifier.convert(text = origin, db = db)
+                        val mutilated: String = Simplifier.convert(text = origin)
                         val converted: String = if (mutilated == origin) origin.convertedS2T() else mutilated
                         currentInputConnection.commitText(converted, 1)
                 }

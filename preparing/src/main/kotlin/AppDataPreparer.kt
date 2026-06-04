@@ -32,14 +32,14 @@ object AppDataPreparer {
 
                         "CREATE INDEX ix_gwongwan_code ON gwongwan_table(code);",
                 )
-                val connection = DriverManager.getConnection(url)
-                connection.createStatement().use { statement ->
-                        for (command in commands) {
-                                statement.executeUpdate(command)
+                DriverManager.getConnection(url).use { connection ->
+                        connection.createStatement().use { statement ->
+                                for (command in commands) {
+                                        statement.executeUpdate(command)
+                                }
                         }
                 }
-                connection.close()
-                println("Successfully created app data indexes.")
+                println("Created app data indexes.")
         }
 
         @Deprecated(message = "Use core_lexicon table instead")
@@ -66,7 +66,7 @@ object AppDataPreparer {
                         statement.setString(3, collocation)
                 }
                 connection.close()
-                println("Inserted collocation entries successfully: $insertedCount")
+                println("Inserted collocation entries: $insertedCount")
         }
 
         private fun createDictionaryTable(url: String) {
@@ -90,7 +90,7 @@ object AppDataPreparer {
                         statement.setString(3, description)
                 }
                 connection.close()
-                println("Inserted dictionary entries successfully: $insertedCount")
+                println("Inserted dictionary entries: $insertedCount")
         }
 
         private fun createDefinitionTable(url: String) {
@@ -106,7 +106,7 @@ object AppDataPreparer {
                         statement.setString(2, entry.second)
                 }
                 connection.close()
-                println("Inserted definition entries successfully: $insertedCount")
+                println("Inserted definition entries: $insertedCount")
         }
 
         private fun createYingWaaTable(url: String) {
@@ -136,7 +136,7 @@ object AppDataPreparer {
                         statement.setString(6, interpretation)
                 }
                 connection.close()
-                println("Inserted yingwaa entries successfully: $insertedCount")
+                println("Inserted yingwaa entries: $insertedCount")
         }
 
         private fun createChoHokTable(url: String) {
@@ -168,7 +168,7 @@ object AppDataPreparer {
                         statement.setString(7, faancit)
                 }
                 connection.close()
-                println("Inserted chohok entries successfully: $insertedCount")
+                println("Inserted chohok entries: $insertedCount")
         }
 
         private fun createFanWanTable(url: String) {
@@ -204,7 +204,7 @@ object AppDataPreparer {
                         statement.setString(9, interpretation)
                 }
                 connection.close()
-                println("Inserted fanwan entries successfully: $insertedCount")
+                println("Inserted fanwan entries: $insertedCount")
         }
 
         private fun createGwongWanTable(url: String) {
@@ -252,6 +252,6 @@ object AppDataPreparer {
                         statement.setString(15, interpretation)
                 }
                 connection.close()
-                println("Inserted gwongwan entries successfully: $insertedCount")
+                println("Inserted gwongwan entries: $insertedCount")
         }
 }

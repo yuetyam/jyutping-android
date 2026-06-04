@@ -70,8 +70,7 @@ import org.jyutping.jyutping.search.GwongWanCharacter
 import org.jyutping.jyutping.search.GwongWanView
 import org.jyutping.jyutping.search.YingWaaFanWan
 import org.jyutping.jyutping.search.YingWaaView
-import org.jyutping.jyutping.utilities.DatabaseHelper
-import org.jyutping.jyutping.utilities.DatabasePreparer
+import org.jyutping.jyutping.utilities.SearchHelper
 
 private typealias YingWaaLexicon = List<YingWaaFanWan>
 private typealias ChoHokLexicon = List<ChoHokYuetYamCitYiu>
@@ -86,14 +85,13 @@ fun HomeScreen(navController: NavHostController) {
         val choHokLexicons = remember { mutableStateOf<List<ChoHokLexicon>>(listOf()) }
         val fanWanLexicons = remember { mutableStateOf<List<FanWanLexicon>>(listOf()) }
         val gwongWanLexicons = remember { mutableStateOf<List<GwongWanLexicon>>(listOf()) }
-        val helper: DatabaseHelper by lazy { DatabaseHelper(navController.context, DatabasePreparer.DATABASE_NAME) }
         fun searchCantoneseLexicons(text: String): List<CantoneseLexicon> {
                 val ideographicCodePoints = text.codePoints().toArray().filter { it.isIdeographicCodePoint }.distinct()
                 if (ideographicCodePoints.isEmpty()) return listOf(CantoneseLexicon(text))
-                val primary = helper.searchCantoneseLexicon(text)
+                val primary = SearchHelper.searchCantoneseLexicon(text)
                 val shouldReturnEarly: Boolean = text.characterCount < 2 || ideographicCodePoints.size > 9
                 if (shouldReturnEarly) return listOf(primary)
-                val subLexicons = ideographicCodePoints.map { helper.searchCantoneseLexicon(Character.toString(it)) }
+                val subLexicons = ideographicCodePoints.map { SearchHelper.searchCantoneseLexicon(Character.toString(it)) }
                 return listOf(primary) + subLexicons
         }
         val isKeyboardEnabled: MutableState<Boolean> = remember { mutableStateOf(false) }
@@ -139,10 +137,10 @@ fun HomeScreen(navController: NavHostController) {
                                                 gwongWanLexicons.value = emptyList()
                                         } else {
                                                 val characters = codePoints.map { Character.toString(it) }
-                                                yingWaaLexicons.value = characters.map { helper.searchYingWaaFanWan(it) }.map { YingWaaFanWan.process(it) }.filter { it.isNotEmpty() }
-                                                choHokLexicons.value = characters.map { helper.searchChoHokYuetYamCitYiu(it) }.filter { it.isNotEmpty() }
-                                                fanWanLexicons.value = characters.map { helper.searchFanWanCuetYiu(it) }.filter { it.isNotEmpty() }
-                                                gwongWanLexicons.value = characters.map { helper.searchGwongWan(it) }.filter { it.isNotEmpty() }
+                                                yingWaaLexicons.value = characters.map { SearchHelper.searchYingWaaFanWan(it) }.map { YingWaaFanWan.process(it) }.filter { it.isNotEmpty() }
+                                                choHokLexicons.value = characters.map { SearchHelper.searchChoHokYuetYamCitYiu(it) }.filter { it.isNotEmpty() }
+                                                fanWanLexicons.value = characters.map { SearchHelper.searchFanWanCuetYiu(it) }.filter { it.isNotEmpty() }
+                                                gwongWanLexicons.value = characters.map { SearchHelper.searchGwongWan(it) }.filter { it.isNotEmpty() }
                                         }
                                 }
                         }

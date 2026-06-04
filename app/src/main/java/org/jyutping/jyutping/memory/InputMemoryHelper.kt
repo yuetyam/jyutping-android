@@ -26,22 +26,22 @@ import org.jyutping.jyutping.models.syllableText
 import org.jyutping.jyutping.ninekey.Combo
 import org.jyutping.jyutping.presets.PresetString
 
-class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 3) {
+class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
         companion object {
-                const val DATABASE_NAME: String = UserSettingsKey.InputMemoryDatabaseFileName
+                private const val DATABASE_VERSION = 3
+                private const val DATABASE_NAME: String = UserSettingsKey.InputMemoryDatabaseFileName
 
-                const val TABLE_NAME: String = "core_memory"
-                const val UNIQUE_WHERE: String = "word = ? AND romanization = ?"
+                private const val TABLE_NAME: String = "core_memory"
+                private const val UNIQUE_WHERE: String = "word = ? AND romanization = ?"
 
-                const val LEGACY_TABLE_NAME: String = "memory"
+                private const val LEGACY_TABLE_NAME: String = "memory"
 
-                const val KEY_MIGRATION: String = UserSettingsKey.MemoryMigration2026
-                const val DEFINED_MIGRATION_VALUE: Int = 2026
+                private const val KEY_MIGRATION: String = UserSettingsKey.MemoryMigration2026
+                private const val DEFINED_MIGRATION_VALUE: Int = 2026
         }
 
         private val tableCreationCommand: String = "CREATE TABLE IF NOT EXISTS core_memory (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, romanization TEXT NOT NULL, frequency INTEGER NOT NULL, latest INTEGER NOT NULL, shortcut INTEGER NOT NULL, spell INTEGER NOT NULL, nine_key_anchors INTEGER NOT NULL, nine_key_code INTEGER NOT NULL, UNIQUE (word, romanization));"
-
         private val indexCreationCommands: List<String> = listOf(
                 "CREATE INDEX IF NOT EXISTS ix_core_memory_frequency ON core_memory (frequency);",
                 "CREATE INDEX IF NOT EXISTS ix_core_memory_shortcut ON core_memory (shortcut, frequency DESC);",
@@ -50,9 +50,12 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
                 "CREATE INDEX IF NOT EXISTS ix_core_memory_nine_key_anchors ON core_memory (nine_key_anchors, frequency DESC);",
                 "CREATE INDEX IF NOT EXISTS ix_core_memory_nine_key_code ON core_memory (nine_key_code, frequency DESC);",
         )
-
         private var isTableEnsured: Boolean = false
 
+        override fun onConfigure(db: SQLiteDatabase?) {
+                super.onConfigure(db)
+                db?.enableWriteAheadLogging()
+        }
         override fun onCreate(db: SQLiteDatabase?) {
                 db?.execSQL(tableCreationCommand)
                 for (command in indexCreationCommands) {
@@ -60,9 +63,7 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
                 }
                 isTableEnsured = true
         }
-
         override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
-
         override fun onOpen(db: SQLiteDatabase?) {
                 super.onOpen(db)
                 if (isTableEnsured.negative) {

@@ -1,93 +1,52 @@
 package org.jyutping.jyutping.utilities
 
 import android.content.Context
-import android.util.Log
+import androidx.annotation.WorkerThread
 import org.jyutping.jyutping.BuildConfig
+import org.jyutping.jyutping.Elephant
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 
 object DatabasePreparer {
 
-        /** App in-package file */
-        private const val SOURCE_DATABASE_NAME: String = "appdb.sqlite3"
-
-        /** App working database file */
-        const val DATABASE_NAME: String = "appdb-v${BuildConfig.VERSION_NAME}-tmp.sqlite3"
-
-        private const val DATABASES_DIR_NAME: String = "databases"
-        private const val DATABASES_PATH_BLOCK: String = "/databases/"
+        private const val SOURCE_FILENAME: String = "appdb.sqlite3"
+        const val DATABASE_NAME: String = "appdb-v${BuildConfig.VERSION_CODE}-using.sqlite3"
+        private const val TMP_FILENAME: String = "appdb-v${BuildConfig.VERSION_CODE}-tmp.sqlite3"
         private const val FILENAME_PREFIX: String = "appdb-v"
-        private const val LOG_TAG: String = "org.jyutping.jyutping.DatabasePreparer"
 
+        @Synchronized
+        @WorkerThread
         fun prepare(context: Context) {
-                val databaseExists: Boolean = doesDatabaseExist(context)
-                if (databaseExists.not()) {
+                val target = context.getDatabasePath(DATABASE_NAME)
+                if (target.exists().not()) {
+                        val temporary = context.getDatabasePath(TMP_FILENAME)
+                        copyDatabase(context, temporary, target)
                         deleteOldDatabases(context)
-                        copyDatabase(context)
                 }
+                 Elephant.connectDatabase(context)
         }
-
+        private fun copyDatabase(context: Context, temporary: File, target: File) {
+                target.parentFile?.mkdirs()
+                if (temporary.exists()) {
+                        temporary.delete()
+                }
+                context.assets.open(SOURCE_FILENAME).use { input ->
+                        FileOutputStream(temporary).use { output ->
+                                input.copyTo(output)
+                                output.fd.sync()
+                        }
+                }
+                temporary.renameTo(target)
+        }
         private fun deleteOldDatabases(context: Context) {
-                val dbDirectory = File(context.filesDir.parentFile, DATABASES_DIR_NAME)
-                performDeletion(context, dbDirectory)
-                val altPath = context.applicationInfo.dataDir + DATABASES_PATH_BLOCK
-                val altDirectory = File(altPath)
-                performDeletion(context, altDirectory)
-        }
-
-        private fun performDeletion(context: Context, directory : File) {
-                if (directory.exists() && directory.isDirectory) {
-                        directory.listFiles { dir, name ->
-                                name.startsWith(FILENAME_PREFIX) && name.startsWith(DATABASE_NAME).not()
-                        }?.forEach { file ->
-                                try {
-                                        if (file.exists() && file.isFile) {
-                                                file.delete()
-                                        }
-                                        val altFile = context.getDatabasePath(file.name)
-                                        if (altFile.exists() && altFile.isFile) {
-                                                altFile.delete()
-                                        }
-                                } catch (err: Exception) {
-                                        err.message?.let { Log.e(LOG_TAG, it) }
-                                }
+                val directory = context.getDatabasePath(DATABASE_NAME).parentFile ?: return
+                if (directory.exists().not() || directory.isDirectory.not()) return
+                directory.listFiles { _, name ->
+                        name.startsWith(FILENAME_PREFIX) && name.startsWith(DATABASE_NAME).not()
+                }?.forEach { file ->
+                        if (file.exists() && file.isFile) {
+                                file.delete()
                         }
-                }
-        }
-
-        private fun doesDatabaseExist(context: Context): Boolean {
-                val dbFile = context.getDatabasePath(DATABASE_NAME)
-                val path = context.applicationInfo.dataDir + DATABASES_PATH_BLOCK + DATABASE_NAME
-                val file = File(path)
-                return dbFile.exists() && file.exists()
-        }
-
-        @Throws(IOException::class)
-        private fun copyDatabase(context: Context) {
-                var inStream: InputStream? = null
-                var outStream: OutputStream? = null
-                val destinationPath = context.applicationInfo.dataDir + DATABASES_PATH_BLOCK + DATABASE_NAME
-                val destinationFile = File(destinationPath)
-                try {
-                        inStream = context.assets.open(SOURCE_DATABASE_NAME)
-                        outStream = FileOutputStream(destinationFile)
-                        val buffer = ByteArray(1024)
-                        var length: Int
-                        while (inStream.read(buffer).also { length = it } > 0) {
-                                outStream.write(buffer, 0, length)
-                        }
-                        outStream.flush()
-                } catch (err: Exception) {
-                        err.message?.let {
-                                Log.e(LOG_TAG, it)
-                                throw Error(it)
-                        }
-                } finally {
-                        inStream?.close()
-                        outStream?.close()
                 }
         }
 }

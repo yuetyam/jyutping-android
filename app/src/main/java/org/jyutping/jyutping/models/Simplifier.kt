@@ -1,10 +1,10 @@
 package org.jyutping.jyutping.models
 
 import android.database.sqlite.SQLiteStatement
+import org.jyutping.jyutping.Elephant
 import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.isIdeographicCodePoint
 import org.jyutping.jyutping.extensions.negative
-import org.jyutping.jyutping.utilities.DatabaseHelper
 
 object Simplifier {
         private fun char2char(code: Int, statement: SQLiteStatement): Int {
@@ -20,9 +20,9 @@ object Simplifier {
                         return@map Candidate(text = convertedText, lexicon = lexicon, commentForm = commentForm, sessionState = sessionState)
                 }.distinct()
         }
-        fun convert(text: String, db: DatabaseHelper): String {
+        fun convert(text: String): String {
                 val command = "SELECT IFNULL((SELECT target FROM variant_sim WHERE source = ? LIMIT 1), 0) AS code_point;"
-                val statement = db.readableDatabase.compileStatement(command)
+                val statement = Elephant.sharedDatabase.compileStatement(command)
                 val converted = perform(text, statement)
                 statement.close()
                 return converted

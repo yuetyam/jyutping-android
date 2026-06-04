@@ -1,6 +1,6 @@
 package org.jyutping.jyutping.models
 
-import org.jyutping.jyutping.utilities.DatabaseHelper
+import org.jyutping.jyutping.Elephant
 import kotlin.math.min
 
 typealias Segmentation = List<Scheme>
@@ -8,15 +8,15 @@ typealias Segmentation = List<Scheme>
 fun Segmentation.descended(): Segmentation = this.sortedWith(compareBy({it.schemeLength.unaryMinus()}, {it.size}))
 
 object Segmenter {
-        fun prepare(db: DatabaseHelper) {
+        fun prepare() {
                 val command = "SELECT alias_code, origin_code FROM core_syllable_table;"
-                val cursor = db.readableDatabase.rawQuery(command, null)
-                while (cursor.moveToNext()) {
-                        val aliasCode = cursor.getLong(0)
-                        val originCode = cursor.getLong(1)
-                        syllableCodeMap[aliasCode] = Syllable(aliasCode = aliasCode, originCode = originCode)
+                Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
+                        while (cursor.moveToNext()) {
+                                val aliasCode = cursor.getLong(0)
+                                val originCode = cursor.getLong(1)
+                                syllableCodeMap[aliasCode] = Syllable(aliasCode = aliasCode, originCode = originCode)
+                        }
                 }
-                cursor.close()
         }
         fun needsPreparation(): Boolean = syllableCodeMap.isEmpty()
         private val syllableCodeMap: HashMap<Long, Syllable> = hashMapOf()

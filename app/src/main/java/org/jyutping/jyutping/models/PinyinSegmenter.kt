@@ -1,6 +1,6 @@
 package org.jyutping.jyutping.models
 
-import org.jyutping.jyutping.utilities.DatabaseHelper
+import org.jyutping.jyutping.Elephant
 import kotlin.math.min
 
 data class PinyinSyllable(
@@ -24,57 +24,57 @@ val PinyinScheme.pinyinSchemeLength: Int
         get() = this.map { it.keys.size }.fold(0) { acc, i -> acc + i }
 
 object PinyinSegmenter {
-        fun segment(keys: List<VirtualInputKey>, db: DatabaseHelper): PinyinSegmentation {
+        fun segment(keys: List<VirtualInputKey>): PinyinSegmentation {
                 if (keys.isEmpty()) return emptyList()
-                val headSyllables = splitLeading(keys, db)
+                val headSyllables = splitLeading(keys)
                 if (headSyllables.isEmpty()) return emptyList()
                 val inputLength = keys.size
                 val segmentation: HashSet<PinyinScheme> = headSyllables.map { listOf(it) }.toHashSet()
-                var previousSyllableCount = segmentation.map { it.size }.fold(0) { acc, i -> acc + i}
+                var previousSyllableCount = segmentation.map { it.size }.fold(0) { acc, i -> acc + i }
                 var shouldContinue = true
                 while (shouldContinue) {
                         for (scheme in segmentation.toList()) {
                                 val schemeLength = scheme.pinyinSchemeLength
                                 if (schemeLength >= inputLength) continue
                                 val tailKeys = keys.drop(schemeLength)
-                                val tailSyllables = splitLeading(tailKeys, db)
+                                val tailSyllables = splitLeading(tailKeys)
                                 if (tailSyllables.isEmpty()) continue
                                 val newSegmentation = tailSyllables.map { scheme + it }
                                 segmentation += newSegmentation
                         }
-                        val currentSyllableCount = segmentation.map { it.size }.fold(0) { acc, i -> acc + i}
+                        val currentSyllableCount = segmentation.map { it.size }.fold(0) { acc, i -> acc + i }
                         if (currentSyllableCount != previousSyllableCount) {
                                 previousSyllableCount = currentSyllableCount
                         } else {
                                 shouldContinue = false
                         }
                 }
-                return segmentation.sortedWith(compareBy(
+                return segmentation.sortedWith(
+                        compareBy(
                         { -(it.pinyinSchemeLength) },
                         { -(it.size) }
                 ))
         }
-        private fun splitLeading(keys: List<VirtualInputKey>, db: DatabaseHelper): List<PinyinSyllable> {
+
+        private fun splitLeading(keys: List<VirtualInputKey>): List<PinyinSyllable> {
                 val maxLength = min(keys.size, 6)
                 if (maxLength < 1) return emptyList()
                 return (maxLength downTo 1).mapNotNull { number ->
                         val leadingKeys = keys.take(number)
                         val code = leadingKeys.combinedCode()
-                        val text = db.pinyinSyllableMatch(code = code)
+                        val text = pinyinSyllableMatch(code = code)
                         if (text == null) null else PinyinSyllable(code = code, keys = leadingKeys, text = text)
                 }
         }
-}
 
-private fun DatabaseHelper.pinyinSyllableMatch(code: Long): String? {
-        val command = "SELECT syllable FROM pinyin_syllable_table WHERE code = $code LIMIT 1;"
-        val cursor = this.readableDatabase.rawQuery(command, null)
-        if (cursor.moveToFirst()) {
-                val syllable = cursor.getString(0)
-                cursor.close()
+        private fun pinyinSyllableMatch(code: Long): String? {
+                val command = "SELECT syllable FROM pinyin_syllable_table WHERE code = $code LIMIT 1;"
+                var syllable: String? = null
+                Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
+                        if (cursor.moveToFirst()) {
+                                syllable = cursor.getString(0)
+                        }
+                }
                 return syllable
-        } else {
-                cursor.close()
-                return null
         }
 }

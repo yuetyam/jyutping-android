@@ -1,23 +1,21 @@
 package org.jyutping.jyutping.models
 
-import org.jyutping.jyutping.extensions.characterCount
+import org.jyutping.jyutping.Elephant
 import org.jyutping.jyutping.extensions.isSpace
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.ninekey.Combo
 import org.jyutping.jyutping.presets.PresetString
-import org.jyutping.jyutping.utilities.DatabaseHelper
-import kotlin.math.max
 
 object PinyinResearcher {
-        fun reverseLookup(keys: List<VirtualInputKey>, segmentation: PinyinSegmentation, db: DatabaseHelper): List<Lexicon> {
+        fun reverseLookup(keys: List<VirtualInputKey>, segmentation: PinyinSegmentation): List<Lexicon> {
                 val isLetterKeyOnly: Boolean = keys.none { it.isLetter.negative }
                 // TODO: Handle separators
                 if (isLetterKeyOnly.negative) return emptyList()
                 val canSegment: Boolean = segmentation.fold(0) { acc, scheme -> acc + scheme.size} > 0
                 return if (canSegment) {
-                        pinyinSearch(keys = keys, segmentation = segmentation, db = db)
+                        pinyinSearch(keys = keys, segmentation = segmentation)
                                 .flatMap { lexicon ->
-                                        db.lookupRomanization(lexicon.text)
+                                        Elephant.lookupRomanization(lexicon.text)
                                                 .map { romanization ->
                                                         Lexicon(
                                                                 text = lexicon.text,
@@ -29,9 +27,9 @@ object PinyinResearcher {
                                                 }
                                 }
                 } else {
-                        processPinyinSlices(keys = keys, text = keys.joinToString(separator = PresetString.EMPTY) { it.text }, db = db)
+                        processPinyinSlices(keys = keys, text = keys.joinToString(separator = PresetString.EMPTY) { it.text })
                                 .flatMap { lexicon ->
-                                        db.lookupRomanization(lexicon.text)
+                                        Elephant.lookupRomanization(lexicon.text)
                                                 .map { romanization ->
                                                         Lexicon(
                                                                 text = lexicon.text,
@@ -44,10 +42,10 @@ object PinyinResearcher {
                                 }
                 }
         }
-        fun nineKeyReverseLookup(combos: List<Combo>, db: DatabaseHelper): List<Lexicon> {
-                return db.pinyinNineKeySearch(combos)
+        fun nineKeyReverseLookup(combos: List<Combo>): List<Lexicon> {
+                return pinyinNineKeySearch(combos)
                         .flatMap { lexicon ->
-                                db.lookupRomanization(lexicon.text)
+                                Elephant.lookupRomanization(lexicon.text)
                                         .map { romanization ->
                                                 Lexicon(
                                                         text = lexicon.text,
@@ -61,15 +59,15 @@ object PinyinResearcher {
         }
 }
 
-private fun PinyinResearcher.processPinyinSlices(keys: List<VirtualInputKey>, text: String, limit: Int? = null, db: DatabaseHelper): List<PinyinLexicon> {
+private fun PinyinResearcher.processPinyinSlices(keys: List<VirtualInputKey>, text: String, limit: Int? = null): List<PinyinLexicon> {
         val adjustedLimit: Int = if (limit == null) 300 else 100
         val inputLength = keys.size
         return 0.rangeUntil(inputLength).flatMap<Int, PinyinLexicon> { number ->
                 val leadingKeys = keys.dropLast(number)
                 val leadingText = leadingKeys.joinToString(separator = PresetString.EMPTY) { it.text }
-                val spellMatched = db.pinyinSpellMatch(text = leadingText, limit = limit)
+                val spellMatched = pinyinSpellMatch(text = leadingText, limit = limit)
                         .map { modify(item = it, text = text, textLength = inputLength) }
-                val anchorsMatched = db.pinyinAnchorsMatch(keys = leadingKeys, input = leadingText, limit = adjustedLimit)
+                val anchorsMatched = pinyinAnchorsMatch(keys = leadingKeys, input = leadingText, limit = adjustedLimit)
                         .map { modify(item = it, text = text, textLength = inputLength) }
                         .sorted()
                         .take(72)
@@ -87,12 +85,12 @@ private fun PinyinResearcher.modify(item: PinyinLexicon, text: String, textLengt
         return PinyinLexicon(text = item.text, pinyin = item.pinyin, input = text, mark = text, number = item.number)
 }
 
-private fun PinyinResearcher.pinyinSearch(keys: List<VirtualInputKey>, segmentation: PinyinSegmentation, limit: Int? = null, db: DatabaseHelper): List<PinyinLexicon> {
+private fun PinyinResearcher.pinyinSearch(keys: List<VirtualInputKey>, segmentation: PinyinSegmentation, limit: Int? = null): List<PinyinLexicon> {
         val inputLength = keys.size
         val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
-        val spellMatched = db.pinyinSpellMatch(text = text, limit = limit)
-        val anchorsMatched = db.pinyinAnchorsMatch(keys = keys, input = text, limit = limit)
-        val queried = pinyinQuery(inputLength = inputLength, segmentation = segmentation, limit = limit, db = db)
+        val spellMatched = pinyinSpellMatch(text = text, limit = limit)
+        val anchorsMatched = pinyinAnchorsMatch(keys = keys, input = text, limit = limit)
+        val queried = pinyinQuery(inputLength = inputLength, segmentation = segmentation, limit = limit)
         val shouldMatchPrefixes: Boolean = when {
                 spellMatched.isNotEmpty() -> false
                 queried.any { it.inputCount == inputLength } -> false
@@ -107,14 +105,14 @@ private fun PinyinResearcher.pinyinSearch(keys: List<VirtualInputKey>, segmentat
                 val anchors = schemeAnchors + lastAnchor
                 val schemeMark: String = scheme.joinToString(separator = PresetString.SPACE) { it.text }
                 val mark: String = schemeMark + PresetString.SPACE + tail.joinToString(separator = PresetString.EMPTY) { it.text }
-                val conjoinedMatched: List<PinyinLexicon> = db.pinyinAnchorsMatch(keys = conjoined, limit = prefixesLimit)
+                val conjoinedMatched: List<PinyinLexicon> = pinyinAnchorsMatch(keys = conjoined, limit = prefixesLimit)
                         .mapNotNull { item ->
                                 if (item.pinyin.startsWith(schemeMark).negative) return@mapNotNull null
                                 val tailAnchors = item.pinyin.drop(schemeMark.length).split(PresetString.SPACE).mapNotNull { it.firstOrNull() }
                                 if (tailAnchors != tail.mapNotNull { it.text.firstOrNull() }) return@mapNotNull null
                                 return@mapNotNull PinyinLexicon(text = item.text, pinyin = item.pinyin, input = text, mark = mark, number = item.number)
                         }
-                val anchorsMatched: List<PinyinLexicon> = db.pinyinAnchorsMatch(keys = anchors, limit = prefixesLimit)
+                val anchorsMatched: List<PinyinLexicon> = pinyinAnchorsMatch(keys = anchors, limit = prefixesLimit)
                         .mapNotNull { item ->
                                 if (item.pinyin.startsWith(mark).negative) null else PinyinLexicon(text = item.text, pinyin = item.pinyin, input = text, mark = mark, number = item.number)
                         }
@@ -123,7 +121,7 @@ private fun PinyinResearcher.pinyinSearch(keys: List<VirtualInputKey>, segmentat
         val gainedMatched: List<PinyinLexicon> = if (shouldMatchPrefixes.negative) emptyList() else 1.rangeUntil(inputLength).reversed().flatMap { number ->
                 val leadingKeys = keys.dropLast(number)
                 val leadingText = leadingKeys.joinToString(separator = PresetString.EMPTY) { it.text }
-                return@flatMap db.pinyinAnchorsMatch(keys = leadingKeys, input = leadingText, limit = 300)
+                return@flatMap pinyinAnchorsMatch(keys = leadingKeys, input = leadingText, limit = 300)
         }.mapNotNull { item ->
                 if (item.pinyin.filterNot { it.isSpace }.startsWith(text)) {
                         return@mapNotNull PinyinLexicon(text = item.text, pinyin = item.pinyin, input = text, mark = text, number = item.number)
@@ -145,74 +143,74 @@ private fun PinyinResearcher.pinyinSearch(keys: List<VirtualInputKey>, segmentat
                 val quaternary = notIdealQueried.sortedBy { it.number }.take(10)
                 return@run (primary + secondary + tertiary + quaternary + fullInput + notIdealQueried).distinct()
         }
-        val firstInputCount = fetched.firstOrNull()?.inputCount ?: return processPinyinSlices(keys = keys, text = text, limit = limit, db = db)
+        val firstInputCount = fetched.firstOrNull()?.inputCount ?: return processPinyinSlices(keys = keys, text = text, limit = limit)
         if (firstInputCount >= inputLength) return fetched
         val headInputLengths = fetched.map { it.inputCount }.distinct()
         val concatenated: List<PinyinLexicon> = headInputLengths.mapNotNull { headLength ->
                 val tailKeys = keys.drop(headLength)
-                val tailSegmentation = PinyinSegmenter.segment(tailKeys, db)
-                val tailLexicon = pinyinSearch(keys = tailKeys, segmentation = tailSegmentation, limit = 50, db = db).firstOrNull() ?: return@mapNotNull null
+                val tailSegmentation = PinyinSegmenter.segment(tailKeys)
+                val tailLexicon = pinyinSearch(keys = tailKeys, segmentation = tailSegmentation, limit = 50).firstOrNull() ?: return@mapNotNull null
                 val headLexicon = fetched.firstOrNull { it.inputCount == headLength } ?: return@mapNotNull null
                 return@mapNotNull headLexicon + tailLexicon
         }.distinct().sorted().take(1)
         return concatenated + fetched
 }
 
-private fun PinyinResearcher.pinyinQuery(inputLength: Int, segmentation: PinyinSegmentation, limit: Int? = null, db: DatabaseHelper): List<PinyinLexicon> {
+private fun PinyinResearcher.pinyinQuery(inputLength: Int, segmentation: PinyinSegmentation, limit: Int? = null): List<PinyinLexicon> {
         val idealSchemes = segmentation.filter { it.pinyinSchemeLength == inputLength }
         if (idealSchemes.isEmpty()) {
                 return segmentation.flatMap { scheme ->
-                        return@flatMap db.pinyinSpellMatch(text = scheme.joinToString(separator = PresetString.EMPTY) { it.text }, limit = limit)
+                        return@flatMap pinyinSpellMatch(text = scheme.joinToString(separator = PresetString.EMPTY) { it.text }, limit = limit)
                 }
         } else {
                 return idealSchemes.flatMap { scheme ->
                         when (scheme.size) {
                                 0 -> return@flatMap emptyList<PinyinLexicon>()
-                                1 -> return@flatMap db.pinyinSpellMatch(text = scheme.joinToString(separator = PresetString.EMPTY) { it.text }, limit = limit)
+                                1 -> return@flatMap pinyinSpellMatch(text = scheme.joinToString(separator = PresetString.EMPTY) { it.text }, limit = limit)
                                 else -> return@flatMap scheme.size.downTo(1)
                                         .map { scheme.take(it) }
-                                        .flatMap { slice -> db.pinyinSpellMatch(text = slice.joinToString(separator = PresetString.EMPTY) { it.text }, limit = limit) }
+                                        .flatMap { slice -> pinyinSpellMatch(text = slice.joinToString(separator = PresetString.EMPTY) { it.text }, limit = limit) }
                         }
                 }
         }
 }
 
-private fun DatabaseHelper.pinyinAnchorsMatch(keys: List<VirtualInputKey>, input: String? = null, limit: Int? = null): List<PinyinLexicon> {
+private fun PinyinResearcher.pinyinAnchorsMatch(keys: List<VirtualInputKey>, input: String? = null, limit: Int? = null): List<PinyinLexicon> {
         val code = keys.combinedCode()
         if (code <= 0) return emptyList()
         val items: MutableList<PinyinLexicon> = mutableListOf()
         val inputText: String = input ?: keys.joinToString(separator = PresetString.EMPTY) { it.text }
         val limitValue: Int = limit ?: 100
         val command = "SELECT rowid, word, romanization FROM pinyin_lexicon WHERE anchors = $code LIMIT ${limitValue};"
-        val cursor = this.readableDatabase.rawQuery(command, null)
-        while (cursor.moveToNext()) {
-                val rowID = cursor.getInt(0)
-                val word = cursor.getString(1)
-                val pinyin = cursor.getString(2)
-                val instance = PinyinLexicon(text = word, pinyin = pinyin, input = inputText, mark = inputText, number = rowID)
-                items.add(instance)
+        Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
+                while (cursor.moveToNext()) {
+                        val rowID = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val pinyin = cursor.getString(2)
+                        val instance = PinyinLexicon(text = word, pinyin = pinyin, input = inputText, mark = inputText, number = rowID)
+                        items.add(instance)
+                }
         }
-        cursor.close()
         return items
 }
-private fun DatabaseHelper.pinyinSpellMatch(text: String, limit: Int? = null): List<PinyinLexicon> {
+private fun PinyinResearcher.pinyinSpellMatch(text: String, limit: Int? = null): List<PinyinLexicon> {
         val items: MutableList<PinyinLexicon> = mutableListOf()
         val code: Int = text.hashCode()
         val limitValue: Int = limit ?: -1
         val command = "SELECT rowid, word, romanization FROM pinyin_lexicon WHERE spell = $code LIMIT ${limitValue};"
-        val cursor = this.readableDatabase.rawQuery(command, null)
-        while (cursor.moveToNext()) {
-                val rowID = cursor.getInt(0)
-                val word = cursor.getString(1)
-                val pinyin = cursor.getString(2)
-                val instance = PinyinLexicon(text = word, pinyin = pinyin, input = text, mark = pinyin, number = rowID)
-                items.add(instance)
+        Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
+                while (cursor.moveToNext()) {
+                        val rowID = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val pinyin = cursor.getString(2)
+                        val instance = PinyinLexicon(text = word, pinyin = pinyin, input = text, mark = pinyin, number = rowID)
+                        items.add(instance)
+                }
         }
-        cursor.close()
         return items
 }
 
-private fun DatabaseHelper.pinyinNineKeySearch(combos: List<Combo>, limit: Int? = null): List<PinyinLexicon> {
+private fun PinyinResearcher.pinyinNineKeySearch(combos: List<Combo>, limit: Int? = null): List<PinyinLexicon> {
         val inputLength: Int = combos.size
         val fullCode: Long = combos.map { it.digit }.decimalCombined()
         when (inputLength) {
@@ -242,70 +240,36 @@ private fun DatabaseHelper.pinyinNineKeySearch(combos: List<Combo>, limit: Int? 
         val concatenated = tailLexicons.map { head + it }.sorted().take(1)
         return concatenated + queried
 }
-private fun DatabaseHelper.pinyinNineKeyAnchorsMatch(code: Long, limit: Int? = null): List<PinyinLexicon> {
+private fun PinyinResearcher.pinyinNineKeyAnchorsMatch(code: Long, limit: Int? = null): List<PinyinLexicon> {
         if (code < 1) return emptyList()
         val items: MutableList<PinyinLexicon> = mutableListOf()
         val limitValue: Int = limit ?: 30
         val command = "SELECT rowid, word, romanization FROM pinyin_lexicon WHERE nine_key_anchors = $code LIMIT ${limitValue};"
-        val cursor = this.readableDatabase.rawQuery(command, null)
-        while (cursor.moveToNext()) {
-                val rowID = cursor.getInt(0)
-                val word = cursor.getString(1)
-                val pinyin = cursor.getString(2)
-                val anchors = pinyin.split(PresetString.SPACE).mapNotNull { it.firstOrNull() }.joinToString(separator = PresetString.EMPTY)
-                val instance = PinyinLexicon(text = word, pinyin = pinyin, input = anchors, mark = anchors, number = rowID)
-                items.add(instance)
+        Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
+                while (cursor.moveToNext()) {
+                        val rowID = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val pinyin = cursor.getString(2)
+                        val anchors = pinyin.split(PresetString.SPACE).mapNotNull { it.firstOrNull() }.joinToString(separator = PresetString.EMPTY)
+                        val instance = PinyinLexicon(text = word, pinyin = pinyin, input = anchors, mark = anchors, number = rowID)
+                        items.add(instance)
+                }
         }
-        cursor.close()
         return items
 }
-private fun DatabaseHelper.pinyinNineKeyCodeMatch(code: Long, limit: Int? = null): List<PinyinLexicon> {
+private fun PinyinResearcher.pinyinNineKeyCodeMatch(code: Long, limit: Int? = null): List<PinyinLexicon> {
         if (code < 1) return emptyList()
         val items: MutableList<PinyinLexicon> = mutableListOf()
         val limitValue: Int = limit ?: -1
         val command = "SELECT rowid, word, romanization FROM pinyin_lexicon WHERE nine_key_code = $code LIMIT ${limitValue};"
-        val cursor = this.readableDatabase.rawQuery(command, null)
-        while (cursor.moveToNext()) {
-                val rowID = cursor.getInt(0)
-                val word = cursor.getString(1)
-                val pinyin = cursor.getString(2)
-                val instance = PinyinLexicon(text = word, pinyin = pinyin, input = pinyin.filterNot { it.isSpace }, mark = pinyin, number = rowID)
-                items.add(instance)
+        Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
+                while (cursor.moveToNext()) {
+                        val rowID = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val pinyin = cursor.getString(2)
+                        val instance = PinyinLexicon(text = word, pinyin = pinyin, input = pinyin.filterNot { it.isSpace }, mark = pinyin, number = rowID)
+                        items.add(instance)
+                }
         }
-        cursor.close()
         return items
-}
-
-private fun DatabaseHelper.lookupRomanization(text: String): List<String> {
-        val matched = reverseLookup(text)
-        if (matched.isNotEmpty()) return matched
-        if (text.characterCount <= 1) return emptyList()
-        fun fetchLeading(word: String): Pair<String?, Int> {
-                var chars = word
-                var romanization: String? = null
-                var matchedCount = 0
-                while (romanization == null && chars.isNotEmpty()) {
-                        romanization = reverseLookup(chars).firstOrNull()
-                        matchedCount = chars.length
-                        chars = chars.dropLast(1)
-                }
-                return romanization?.let { it to matchedCount } ?: (null to 0)
-        }
-        var chars = text
-        val fetches = mutableListOf<String>()
-        while (chars.isNotEmpty()) {
-                val leading = fetchLeading(chars)
-                val romanization = leading.first
-                if (romanization != null) {
-                        fetches.add(romanization)
-                        val length = max(1, leading.second)
-                        chars = chars.drop(length)
-                } else {
-                        fetches.add("?")
-                        chars = chars.drop(1)
-                }
-        }
-        if (fetches.isEmpty()) return emptyList()
-        val suggestion = fetches.joinToString(separator = PresetString.SPACE)
-        return listOf(suggestion)
 }

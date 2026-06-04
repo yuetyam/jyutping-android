@@ -2,7 +2,7 @@ package org.jyutping.jyutping.models
 
 import android.database.sqlite.SQLiteStatement
 import org.jyutping.jyutping.CharacterStandard
-import org.jyutping.jyutping.utilities.DatabaseHelper
+import org.jyutping.jyutping.Elephant
 
 object Converter {
         fun dispatch(
@@ -13,7 +13,6 @@ object Converter {
                 queried: List<Lexicon>,
                 commentForm: RomanizationForm,
                 charset: CharacterStandard,
-                db: DatabaseHelper,
                 sessionState: Long
         ): List<Candidate> {
                 val idealMemory = memory.filter { it.isIdealInputMemory }
@@ -34,17 +33,17 @@ object Converter {
                                 chained.add(index = index + 1, element = symbol)
                         }
                 }
-                return transformed(lexicons = chained, commentForm = commentForm, charset = charset, db = db, sessionState = sessionState)
+                return transformed(lexicons = chained, commentForm = commentForm, charset = charset, sessionState = sessionState)
         }
 
-        fun transformed(lexicons: List<Lexicon>, commentForm: RomanizationForm, charset: CharacterStandard, db: DatabaseHelper, sessionState: Long): List<Candidate> {
+        fun transformed(lexicons: List<Lexicon>, commentForm: RomanizationForm, charset: CharacterStandard, sessionState: Long): List<Candidate> {
                 when (charset) {
                         CharacterStandard.Preset, CharacterStandard.Custom, CharacterStandard.Etymology, CharacterStandard.OpenCC -> {
                                 return lexicons.map { Candidate(lexicon = it, commentForm = commentForm, sessionState = sessionState) }.distinct()
                         }
                         CharacterStandard.Inherited, CharacterStandard.HongKong, CharacterStandard.Taiwan, CharacterStandard.AncientBooksPublishing -> {
                                 val command = "SELECT IFNULL((SELECT target FROM ${charset.variantTableName} WHERE source = ? LIMIT 1), 0) AS code_point;"
-                                val statement = db.readableDatabase.compileStatement(command)
+                                val statement = Elephant.sharedDatabase.compileStatement(command)
                                 val entries = lexicons.map { lexicon ->
                                         if (lexicon.isNotCantonese) return@map Candidate(lexicon = lexicon, commentForm = commentForm, sessionState = sessionState)
                                         val codes = lexicon.text.codePoints().map { variantMatch(it, statement) }
@@ -56,14 +55,14 @@ object Converter {
                         }
                         CharacterStandard.PrcGeneral -> {
                                 val command = "SELECT IFNULL((SELECT target FROM ${charset.variantTableName} WHERE source = ? LIMIT 1), 0) AS code_point;"
-                                val statement = db.readableDatabase.compileStatement(command)
+                                val statement = Elephant.sharedDatabase.compileStatement(command)
                                 val entries = TailoredConverter.transformed(lexicons = lexicons, commentForm = commentForm, sessionState = sessionState, statement = statement)
                                 statement.close()
                                 return entries
                         }
                         CharacterStandard.Mutilated -> {
                                 val command = "SELECT IFNULL((SELECT target FROM ${charset.variantTableName} WHERE source = ? LIMIT 1), 0) AS code_point;"
-                                val statement = db.readableDatabase.compileStatement(command)
+                                val statement = Elephant.sharedDatabase.compileStatement(command)
                                 val entries = Simplifier.transformed(lexicons = lexicons, commentForm = commentForm, sessionState = sessionState, statement = statement)
                                 statement.close()
                                 return entries

@@ -88,14 +88,14 @@ object KeyboardDataPreparer {
                         "CREATE INDEX ix_variant_tw_source ON variant_tw (source);",
                         "CREATE INDEX ix_variant_tw_target ON variant_tw (target);",
                 )
-                val connection = DriverManager.getConnection(url)
-                connection.createStatement().use { statement ->
-                        for (command in commands) {
-                                statement.executeUpdate(command)
+                DriverManager.getConnection(url).use { connection ->
+                        connection.createStatement().use { statement ->
+                                for (command in commands) {
+                                        statement.executeUpdate(command)
+                                }
                         }
                 }
-                connection.close()
-                println("Successfully created keyboard data indexes.")
+                println("Created keyboard data indexes.")
         }
 
         private fun createLexiconTable(url: String) {
@@ -115,7 +115,7 @@ object KeyboardDataPreparer {
                         statement.setLong(6, entry.nineKeyCode)
                 }
                 connection.close()
-                println("Inserted lexicon entries successfully: $insertedCount")
+                println("Inserted lexicon entries: $insertedCount")
         }
         private fun createCharacterVariantTable(fileName: String, tableName: String, url: String) {
                 val createTableCommand: String = "CREATE TABLE $tableName (id INTEGER PRIMARY KEY AUTOINCREMENT, source INTEGER NOT NULL, target INTEGER NOT NULL);"
@@ -130,7 +130,7 @@ object KeyboardDataPreparer {
                         statement.setInt(2, entry.right)
                 }
                 connection.close()
-                println("Inserted $tableName entries successfully: $insertedCount")
+                println("Inserted $tableName entries: $insertedCount")
         }
         private fun createStructureTable(url: String) {
                 val createTableCommand: String = "CREATE TABLE structure_table (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, romanization TEXT NOT NULL, spell INTEGER NOT NULL, nine_key_code INTEGER NOT NULL);"
@@ -147,7 +147,7 @@ object KeyboardDataPreparer {
                         statement.setLong(4, entry.nineKeyCode)
                 }
                 connection.close()
-                println("Inserted structure entries successfully: $insertedCount")
+                println("Inserted structure entries: $insertedCount")
         }
 
         private fun createPinyinTable(url: String) {
@@ -167,7 +167,7 @@ object KeyboardDataPreparer {
                         statement.setLong(6, entry.nineKeyCode)
                 }
                 connection.close()
-                println("Inserted pinyin entries successfully: $insertedCount")
+                println("Inserted pinyin entries: $insertedCount")
         }
 
         private fun createCoreSyllableTable(url: String) {
@@ -201,7 +201,7 @@ object KeyboardDataPreparer {
                         statement.setString(6, origin)
                 }
                 connection.close()
-                println("Inserted syllable entries successfully: $insertedCount")
+                println("Inserted syllable entries: $insertedCount")
         }
 
         private fun createPinyinSyllableTable(url: String) {
@@ -224,7 +224,7 @@ object KeyboardDataPreparer {
                         statement.setString(3, line)
                 }
                 connection.close()
-                println("Inserted pinyin syllable entries successfully: $insertedCount")
+                println("Inserted pinyin syllable entries: $insertedCount")
         }
 
         private fun createTextMarkTable(url: String) {
@@ -242,7 +242,7 @@ object KeyboardDataPreparer {
                         statement.setLong(4, item.nineKeyCode)
                 }
                 connection.close()
-                println("Inserted text mark entries successfully: $insertedCount")
+                println("Inserted text mark entries: $insertedCount")
         }
 
         private fun createSymbolTable(url: String) {
@@ -275,7 +275,7 @@ object KeyboardDataPreparer {
                         statement.setLong(7, nineKeyCode)
                 }
                 connection.close()
-                println("Inserted symbol entries successfully: $insertedCount")
+                println("Inserted symbol entries: $insertedCount")
         }
         private fun createEmojiSkinMapTable(url: String) {
                 val createTableCommand: String = "CREATE TABLE emoji_skin_map (id INTEGER PRIMARY KEY AUTOINCREMENT, source TEXT NOT NULL, target TEXT NOT NULL);"
@@ -296,7 +296,7 @@ object KeyboardDataPreparer {
                         statement.setString(2, target)
                 }
                 connection.close()
-                println("Inserted emoji-skin-map entries successfully: $insertedCount")
+                println("Inserted emoji-skin-map entries: $insertedCount")
         }
 
         private fun createStrokeTable(url: String) {
@@ -315,7 +315,7 @@ object KeyboardDataPreparer {
                         statement.setLong(5, entry.code)
                 }
                 connection.close()
-                println("Inserted stroke entries successfully: $insertedCount")
+                println("Inserted stroke entries: $insertedCount")
         }
 
         private fun createCangjieTable(url: String) {
@@ -336,7 +336,7 @@ object KeyboardDataPreparer {
                         statement.setLong(7, entry.c3code)
                 }
                 connection.close()
-                println("Inserted cangjie entries successfully: $insertedCount")
+                println("Inserted cangjie entries: $insertedCount")
         }
 
         private fun createQuickTable(url: String) {
@@ -357,6 +357,6 @@ object KeyboardDataPreparer {
                         statement.setLong(7, entry.q3code)
                 }
                 connection.close()
-                println("Inserted quick entries successfully: $insertedCount")
+                println("Inserted quick entries: $insertedCount")
         }
 }

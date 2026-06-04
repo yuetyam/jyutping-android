@@ -23,8 +23,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.speech.TTSProvider
 import org.jyutping.jyutping.utilities.DatabasePreparer
@@ -39,7 +42,9 @@ class MainActivity : ComponentActivity() {
         override fun onCreate(savedInstanceState: Bundle?) {
                 enableEdgeToEdge()
                 super.onCreate(savedInstanceState)
-                DatabasePreparer.prepare(this)
+                lifecycleScope.launch(Dispatchers.IO) {
+                        DatabasePreparer.prepare(applicationContext)
+                }
                 setContent {
                         val navController = rememberNavController()
                         val entry by navController.currentBackStackEntryAsState()
@@ -77,7 +82,6 @@ class MainActivity : ComponentActivity() {
                         }
                 }
         }
-
         override fun onResume() {
                 super.onResume()
                 val isTTSReady: Boolean = ttsProvider?.isReady?.value ?: false
@@ -86,7 +90,6 @@ class MainActivity : ComponentActivity() {
                         ttsProvider?.initialize()
                 }
         }
-
         override fun onDestroy() {
                 ttsProvider?.shutdown()
                 super.onDestroy()

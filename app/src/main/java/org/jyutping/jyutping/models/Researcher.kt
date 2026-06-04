@@ -1,5 +1,6 @@
 package org.jyutping.jyutping.models
 
+import org.jyutping.jyutping.Elephant
 import org.jyutping.jyutping.extensions.isApostrophe
 import org.jyutping.jyutping.extensions.isCantoneseToneDigit
 import org.jyutping.jyutping.extensions.negative
@@ -8,41 +9,48 @@ import org.jyutping.jyutping.extensions.top
 import org.jyutping.jyutping.extensions.topBy
 import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetString
-import org.jyutping.jyutping.utilities.DatabaseHelper
 
 object Researcher {
-        fun suggest(keys: List<VirtualInputKey>, segmentation: Segmentation, db: DatabaseHelper): List<Lexicon> {
+        fun searchSymbols(text: String, segmentation: Segmentation): List<Lexicon> {
+                val fullMatched = Elephant.symbolMatch(text = text, input = text)
+                val textLength = text.length
+                val schemes = segmentation.filter { it.schemeLength == textLength }
+                if (schemes.isEmpty()) return fullMatched.distinct()
+                val matches = schemes.flatMap { Elephant.symbolMatch(text = it.originText, input = text) }
+                return (fullMatched + matches).distinct()
+        }
+        fun suggest(keys: List<VirtualInputKey>, segmentation: Segmentation): List<Lexicon> {
                 when (keys.size) {
                         0 -> return emptyList()
                         1 -> when (keys.first()) {
                                 VirtualInputKey.letterA -> {
                                         val text = VirtualInputKey.letterA.text
-                                        return db.spellMatch(text = text, input = text, mark = text) +
-                                                db.spellMatch(text = text + text, input = text, mark = text) +
-                                                db.anchorsMatch(keys = keys, input = text)
+                                        return spellMatch(text = text, input = text, mark = text) +
+                                                spellMatch(text = text + text, input = text, mark = text) +
+                                                anchorsMatch(keys = keys, input = text)
                                 }
                                 VirtualInputKey.letterO, VirtualInputKey.letterM -> {
                                         val text = keys.first().text
-                                        return db.spellMatch(text = text, input = text, mark = text) + db.anchorsMatch(keys = keys, input = text)
+                                        return spellMatch(text = text, input = text, mark = text) + anchorsMatch(keys = keys, input = text)
                                 }
-                                else -> return db.anchorsMatch(keys = keys)
+                                else -> return anchorsMatch(keys = keys)
                         }
-                        else -> return dispatch(keys = keys, segmentation = segmentation, db = db)
+                        else -> return dispatch(keys = keys, segmentation = segmentation)
                 }
         }
 }
-private fun Researcher.dispatch(keys: List<VirtualInputKey>, segmentation: Segmentation, db: DatabaseHelper): List<Lexicon> {
+private fun Researcher.dispatch(keys: List<VirtualInputKey>, segmentation: Segmentation): List<Lexicon> {
         val syllableKeys = keys.filter { it.isSyllableLetter }
         val firstSyllableLength: Int = segmentation.firstOrNull()?.firstOrNull()?.alias?.size ?: 0
         val syllableText: String by lazy(LazyThreadSafetyMode.NONE) {
                 syllableKeys.joinToString(separator = PresetString.EMPTY) { it.text }
         }
         val lexicons: List<Lexicon> = when {
-                (firstSyllableLength == 0) -> processSlices(keys = syllableKeys, text = syllableText, db = db)
+                (firstSyllableLength == 0) -> processSlices(keys = syllableKeys, text = syllableText)
                 (firstSyllableLength == 1 && syllableKeys.size > 1) || (syllableKeys.size != keys.size) -> {
-                        search(keys = syllableKeys, text = syllableText, segmentation = segmentation, db = db) + processSlices(keys = syllableKeys, text = syllableText, db = db)
+                        search(keys = syllableKeys, text = syllableText, segmentation = segmentation) + processSlices(keys = syllableKeys, text = syllableText)
                 }
-                else -> search(keys = syllableKeys, text = syllableText, segmentation = segmentation, db = db)
+                else -> search(keys = syllableKeys, text = syllableText, segmentation = segmentation)
         }
         val hasApostrophes = keys.any { it.isApostrophe }
         val hasTones = keys.any { it.isToneInputKey }
@@ -56,7 +64,7 @@ private fun Researcher.dispatch(keys: List<VirtualInputKey>, segmentation: Segme
                         }
                 }
                 hasTones -> oldProcessWithTones(text = text.toneConverted(), lexicons = lexicons)
-                else -> oldProcessWithSeparators(text = text, lexicons = lexicons, db = db)
+                else -> oldProcessWithSeparators(text = text, lexicons = lexicons)
         }
 }
 
@@ -131,7 +139,7 @@ private fun Researcher.oldProcessWithTones(text: String, lexicons: List<Lexicon>
         return qualified
 }
 
-private fun Researcher.oldProcessWithSeparators(text: String, lexicons: List<Lexicon>, db: DatabaseHelper): List<Lexicon> {
+private fun Researcher.oldProcessWithSeparators(text: String, lexicons: List<Lexicon>): List<Lexicon> {
         val separatorCount = text.count { it.isApostrophe }
         val textParts = text.split(PresetCharacter.APOSTROPHE).filter { it.isNotEmpty() }
         val isHeadingSeparator: Boolean = text.firstOrNull()?.isApostrophe ?: false
@@ -203,7 +211,7 @@ private fun Researcher.oldProcessWithSeparators(text: String, lexicons: List<Lex
         if (qualified.isNotEmpty()) return qualified
         val anchors = textParts.mapNotNull { it.firstOrNull() }
         val anchorKeys = anchors.mapNotNull { VirtualInputKey.matchVirtualInputKey(it) }
-        return db.anchorsMatch(keys = anchorKeys)
+        return anchorsMatch(keys = anchorKeys)
                 .filter { item ->
                         val syllables = item.syllables
                         if (syllables.size != anchors.size) false else {
@@ -219,11 +227,11 @@ private fun Researcher.oldProcessWithSeparators(text: String, lexicons: List<Lex
                 }
 }
 
-private fun Researcher.search(keys: List<VirtualInputKey>, text: String, segmentation: Segmentation, limit: Int? = null, db: DatabaseHelper): List<Lexicon> {
+private fun Researcher.search(keys: List<VirtualInputKey>, text: String, segmentation: Segmentation, limit: Int? = null): List<Lexicon> {
         val inputLength = keys.size
-        val spellMatched = db.spellMatch(text = text, input = text, limit = limit)
-        val anchorsMatched = db.anchorsMatch(keys = keys, limit = limit)
-        val queried = query(inputLength = inputLength, segmentation = segmentation, limit = limit, db = db)
+        val spellMatched = spellMatch(text = text, input = text, limit = limit)
+        val anchorsMatched = anchorsMatch(keys = keys, limit = limit)
+        val queried = query(inputLength = inputLength, segmentation = segmentation, limit = limit)
         val shouldMatchPrefixes: Boolean = if (inputLength !in 3..<25) false
                 else if (keys.firstOrNull() == VirtualInputKey.letterM || keys.lastOrNull() == VirtualInputKey.letterM) true
                 else if (spellMatched.isNotEmpty()) false
@@ -240,7 +248,7 @@ private fun Researcher.search(keys: List<VirtualInputKey>, text: String, segment
                 val schemeSyllableText = scheme.syllableText
                 val mark: String = scheme.mark + PresetString.SPACE + tail.joinToString(separator = PresetString.EMPTY) { it.text }
                 val tailAsAnchorText = tail.mapNotNull { if (it == VirtualInputKey.letterY) VirtualInputKey.letterJ.text.firstOrNull() else it.text.firstOrNull() }
-                val conjoinedMatched = db.anchorsMatch(keys = conjoined, limit = prefixesLimit)
+                val conjoinedMatched = anchorsMatch(keys = conjoined, limit = prefixesLimit)
                         .mapNotNull { item ->
                                 val toneFreeRomanization = item.toneFreeRomanization
                                 if (toneFreeRomanization.startsWith(schemeSyllableText).negative) return@mapNotNull null
@@ -251,7 +259,7 @@ private fun Researcher.search(keys: List<VirtualInputKey>, text: String, segment
                 val modifiedTail = if (tail.firstOrNull() == VirtualInputKey.letterY) (listOf(VirtualInputKey.letterJ) + tail.drop(1)) else tail
                 val transformedTailText: String = modifiedTail.joinToString(separator = PresetString.EMPTY) { it.text }
                 val syllables: String = schemeSyllableText + PresetString.SPACE + transformedTailText
-                val anchorsMatched = db.anchorsMatch(keys = anchors, limit = prefixesLimit)
+                val anchorsMatched = anchorsMatch(keys = anchors, limit = prefixesLimit)
                         .mapNotNull { item ->
                                 if (item.toneFreeRomanization.startsWith(syllables).negative) return@mapNotNull null
                                 return@mapNotNull Lexicon(text = item.text, romanization = item.romanization, input = text, mark = mark, number = item.number)
@@ -261,7 +269,7 @@ private fun Researcher.search(keys: List<VirtualInputKey>, text: String, segment
         val gainedMatched: List<Lexicon> = if (shouldMatchPrefixes.negative) emptyList() else 1.rangeUntil(inputLength).reversed().flatMap { number ->
                 val leadingKeys = keys.take(number)
                 val leadingText = leadingKeys.joinToString(separator = PresetString.EMPTY) { it.text }
-                return@flatMap db.anchorsMatch(keys = leadingKeys, input = leadingText, limit = 300)
+                return@flatMap anchorsMatch(keys = leadingKeys, input = leadingText, limit = 300)
         }.mapNotNull { item ->
                 val tail = keys.drop(item.inputCount - 1)
                 if (tail.size > 6) return@mapNotNull null
@@ -286,50 +294,50 @@ private fun Researcher.search(keys: List<VirtualInputKey>, text: String, segment
                 val quaternary = notIdealQueried.topBy(10) { it.number }
                 return@run (primary + secondary + tertiary + quaternary + fullInput + notIdealQueried).distinct()
         }
-        val firstInputCount = fetched.firstOrNull()?.inputCount ?: return processSlices(keys = keys, text = text, limit = limit, db = db)
+        val firstInputCount = fetched.firstOrNull()?.inputCount ?: return processSlices(keys = keys, text = text, limit = limit)
         if (firstInputCount == inputLength) return fetched
         val headInputLengths = fetched.map { it.inputCount }.distinct()
         val concatenated: List<Lexicon> = headInputLengths.mapNotNull { headLength ->
                 val tailKeys = keys.drop(headLength)
                 val tailText = tailKeys.joinToString(separator = PresetString.EMPTY) { it.text }
                 val tailSegmentation = Segmenter.segment(tailKeys)
-                val tailLexicon = search(keys = tailKeys, text = tailText, segmentation = tailSegmentation, limit = 50, db = db).firstOrNull() ?: return@mapNotNull null
+                val tailLexicon = search(keys = tailKeys, text = tailText, segmentation = tailSegmentation, limit = 50).firstOrNull() ?: return@mapNotNull null
                 val headLexicon = fetched.find { it.inputCount == headLength } ?: return@mapNotNull null
                 return@mapNotNull headLexicon + tailLexicon
         }.top()
         return concatenated + fetched
 }
 
-private fun Researcher.query(inputLength: Int, segmentation: Segmentation, limit: Int? = null, db: DatabaseHelper): List<Lexicon> {
+private fun Researcher.query(inputLength: Int, segmentation: Segmentation, limit: Int? = null): List<Lexicon> {
         val idealSchemes = segmentation.filter { it.schemeLength == inputLength }
         if (idealSchemes.isEmpty()) {
-                return segmentation.flatMap { performQuery(scheme = it, limit = limit, db = db) }
+                return segmentation.flatMap { performQuery(scheme = it, limit = limit) }
         } else {
                 return idealSchemes.flatMap { scheme ->
                         return@flatMap when (scheme.size) {
                                 0 -> emptyList()
-                                1 -> performQuery(scheme = scheme, limit = limit, db = db)
-                                else -> scheme.size.downTo(1).map { scheme.take(it) }.flatMap { performQuery(scheme = it, limit = limit, db = db) }
+                                1 -> performQuery(scheme = scheme, limit = limit)
+                                else -> scheme.size.downTo(1).map { scheme.take(it) }.flatMap { performQuery(scheme = it, limit = limit) }
                         }
                 }
         }
 }
-private fun Researcher.performQuery(scheme: Scheme, limit: Int? = null, db: DatabaseHelper): List<Lexicon> {
+private fun Researcher.performQuery(scheme: Scheme, limit: Int? = null): List<Lexicon> {
         val anchorsCode = scheme.originAnchors.combinedCode()
         if (anchorsCode < 1L) return emptyList()
         val spellCode = scheme.originText.hashCode()
-        return db.strictMatch(anchors = anchorsCode, spell = spellCode, input = scheme.aliasText, mark = scheme.mark, limit = limit)
+        return strictMatch(anchors = anchorsCode, spell = spellCode, input = scheme.aliasText, mark = scheme.mark, limit = limit)
 }
 
-private fun Researcher.processSlices(keys: List<VirtualInputKey>, text: String, limit: Int? = null, db: DatabaseHelper): List<Lexicon> {
+private fun Researcher.processSlices(keys: List<VirtualInputKey>, text: String, limit: Int? = null): List<Lexicon> {
         val adjustedLimit: Int = if (limit == null) 300 else 100
         val inputLength: Int = keys.size
         val entries: List<Lexicon> = 0.rangeUntil(inputLength).flatMap { number ->
                 val leadingKeys = keys.dropLast(number)
                 val leadingText = leadingKeys.joinToString(separator =  PresetString.EMPTY) { it.text }
-                val spellMatched = db.spellMatch(text = leadingText, input = leadingText, limit = limit)
+                val spellMatched = spellMatch(text = leadingText, input = leadingText, limit = limit)
                         .map { modify(item = it, keys = keys, text = text, inputLength = inputLength) }
-                val anchorsMatched = db.anchorsMatch(keys = leadingKeys, input = leadingText, limit = adjustedLimit)
+                val anchorsMatched = anchorsMatch(keys = leadingKeys, input = leadingText, limit = adjustedLimit)
                         .map { modify(item = it, keys = keys, text = text, inputLength = inputLength) }
                         .top(72)
                 return@flatMap spellMatched + anchorsMatched
@@ -353,65 +361,56 @@ private fun Researcher.modify(item: Lexicon, keys: List<VirtualInputKey>, text: 
         }
 }
 
-private fun DatabaseHelper.anchorsMatch(keys: List<VirtualInputKey>, input: String? = null, limit: Int? = null): List<Lexicon> {
+private fun Researcher.anchorsMatch(keys: List<VirtualInputKey>, input: String? = null, limit: Int? = null): List<Lexicon> {
         val code = keys.anchorsCode()
         if (code < 1L) return emptyList()
         val inputText: String = input ?: keys.joinToString(PresetString.EMPTY) { it.text }
         val instances: MutableList<Lexicon> = mutableListOf()
         val limitValue: Int = limit ?: 100
         val command = "SELECT rowid, word, romanization FROM core_lexicon WHERE anchors = $code LIMIT ${limitValue};"
-        val cursor = this.readableDatabase.rawQuery(command, null)
-        while (cursor.moveToNext()) {
-                val number = cursor.getInt(0)
-                val word = cursor.getString(1)
-                val romanization = cursor.getString(2)
-                val instance = Lexicon(text = word, romanization = romanization, input = inputText, mark = inputText, number = number)
-                instances.add(instance)
+        Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
+                while (cursor.moveToNext()) {
+                        val number = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val romanization = cursor.getString(2)
+                        val instance = Lexicon(text = word, romanization = romanization, input = inputText, mark = inputText, number = number)
+                        instances.add(instance)
+                }
         }
-        cursor.close()
         return instances
 }
-private fun DatabaseHelper.spellMatch(text: String, input: String, mark: String? = null, limit: Int? = null): List<Lexicon> {
+private fun Researcher.spellMatch(text: String, input: String, mark: String? = null, limit: Int? = null): List<Lexicon> {
         if (text.isBlank()) return emptyList()
         val spellCode: Int = text.hashCode()
         val instances: MutableList<Lexicon> = mutableListOf()
         val limitValue: Int = limit ?: -1
         val command = "SELECT rowid, word, romanization FROM core_lexicon WHERE spell = $spellCode LIMIT ${limitValue};"
-        val cursor = this.readableDatabase.rawQuery(command, null)
-        while (cursor.moveToNext()) {
-                val number = cursor.getInt(0)
-                val word = cursor.getString(1)
-                val romanization = cursor.getString(2)
-                val markText = mark ?: romanization.filterNot { it.isCantoneseToneDigit }
-                val instance = Lexicon(text = word, romanization = romanization, input = input, mark = markText, number = number)
-                instances.add(instance)
+        Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
+                while (cursor.moveToNext()) {
+                        val number = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val romanization = cursor.getString(2)
+                        val markText = mark ?: romanization.filterNot { it.isCantoneseToneDigit }
+                        val instance = Lexicon(text = word, romanization = romanization, input = input, mark = markText, number = number)
+                        instances.add(instance)
+                }
         }
-        cursor.close()
         return instances
 }
-private fun DatabaseHelper.strictMatch(anchors: Long, spell: Int, input: String, mark: String? = null, limit: Int? = null): List<Lexicon> {
+private fun Researcher.strictMatch(anchors: Long, spell: Int, input: String, mark: String? = null, limit: Int? = null): List<Lexicon> {
         if (anchors < 1L) return emptyList()
         val instances: MutableList<Lexicon> = mutableListOf()
         val limitValue: Int = limit ?: -1
         val command = "SELECT rowid, word, romanization FROM core_lexicon WHERE spell = $spell AND anchors = $anchors LIMIT ${limitValue};"
-        val cursor = this.readableDatabase.rawQuery(command, null)
-        while (cursor.moveToNext()) {
-                val number = cursor.getInt(0)
-                val word = cursor.getString(1)
-                val romanization = cursor.getString(2)
-                val markText = mark ?: romanization.filterNot { it.isCantoneseToneDigit }
-                val instance = Lexicon(text = word, romanization = romanization, input = input, mark = markText, number = number)
-                instances.add(instance)
+        Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
+                while (cursor.moveToNext()) {
+                        val number = cursor.getInt(0)
+                        val word = cursor.getString(1)
+                        val romanization = cursor.getString(2)
+                        val markText = mark ?: romanization.filterNot { it.isCantoneseToneDigit }
+                        val instance = Lexicon(text = word, romanization = romanization, input = input, mark = markText, number = number)
+                        instances.add(instance)
+                }
         }
-        cursor.close()
         return instances
-}
-
-fun DatabaseHelper.searchSymbols(text: String, segmentation: Segmentation): List<Lexicon> {
-        val fullMatched = symbolMatch(text = text, input = text)
-        val textLength = text.length
-        val schemes = segmentation.filter { it.schemeLength == textLength }
-        if (schemes.isEmpty()) return fullMatched.distinct()
-        val matches = schemes.flatMap { symbolMatch(text = it.originText, input = text) }
-        return (fullMatched + matches).distinct()
 }
