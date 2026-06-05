@@ -246,7 +246,7 @@ private fun Researcher.search(keys: List<VirtualInputKey>, text: String, segment
                 val conjoined = schemeAnchors + tail
                 val anchors = schemeAnchors + lastAnchor
                 val schemeSyllableText = scheme.syllableText
-                val mark: String = scheme.mark + PresetString.SPACE + tail.joinToString(separator = PresetString.EMPTY) { it.text }
+                val mark: String = scheme.previewMark + PresetString.SPACE + tail.joinToString(separator = PresetString.EMPTY) { it.text }
                 val tailAsAnchorText = tail.mapNotNull { if (it == VirtualInputKey.letterY) VirtualInputKey.letterJ.text.firstOrNull() else it.text.firstOrNull() }
                 val conjoinedMatched = anchorsMatch(keys = conjoined, limit = prefixesLimit)
                         .mapNotNull { item ->
@@ -326,7 +326,7 @@ private fun Researcher.performQuery(scheme: Scheme, limit: Int? = null): List<Le
         val anchorsCode = scheme.originAnchors.combinedCode()
         if (anchorsCode < 1L) return emptyList()
         val spellCode = scheme.originText.hashCode()
-        return strictMatch(anchors = anchorsCode, spell = spellCode, input = scheme.aliasText, mark = scheme.mark, limit = limit)
+        return strictMatch(anchors = anchorsCode, spell = spellCode, input = scheme.aliasText, mark = scheme.previewMark, limit = limit)
 }
 
 private fun Researcher.processSlices(keys: List<VirtualInputKey>, text: String, limit: Int? = null): List<Lexicon> {

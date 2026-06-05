@@ -18,9 +18,9 @@ import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.aliasAnchors
 import org.jyutping.jyutping.models.aliasText
 import org.jyutping.jyutping.models.decimalCombined
-import org.jyutping.jyutping.models.mark
 import org.jyutping.jyutping.models.originAnchorsText
 import org.jyutping.jyutping.models.originText
+import org.jyutping.jyutping.models.previewMark
 import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.models.syllableText
 import org.jyutping.jyutping.ninekey.Combo
@@ -220,7 +220,7 @@ fun InputMemoryHelper.searchMemory(keys: List<VirtualInputKey>, text: String, se
         val idealQueried: List<InternalLexicon> = idealSchemes.flatMap { scheme ->
                 val spellCode = scheme.originText.hashCode()
                 val shortcutCode = scheme.originAnchorsText.hashCode()
-                return@flatMap strictMatch(spell = spellCode, shortcut = shortcutCode, input = text, mark = scheme.mark)
+                return@flatMap strictMatch(spell = spellCode, shortcut = shortcutCode, input = text, mark = scheme.previewMark)
         }
         val queried = query(segmentation = segmentation, idealSchemes = idealSchemes)
         if (fullMatched.isNotEmpty() || idealQueried.isNotEmpty()) {
@@ -241,7 +241,7 @@ fun InputMemoryHelper.searchMemory(keys: List<VirtualInputKey>, text: String, se
                 val schemeAnchors = scheme.aliasAnchors
                 val conjoinedText = (schemeAnchors + tail).joinToString(separator = PresetString.EMPTY) { it.text }
                 val schemeSyllableText = scheme.syllableText
-                val mark: String = scheme.mark + PresetString.SPACE + tail.joinToString(separator = PresetString.EMPTY) { it.text }
+                val mark: String = scheme.previewMark + PresetString.SPACE + tail.joinToString(separator = PresetString.EMPTY) { it.text }
                 val tailAsAnchorText = tail.mapNotNull { if (it == VirtualInputKey.letterY) VirtualInputKey.letterJ.text.firstOrNull() else it.text.firstOrNull() }
                 val conjoinedMatched = shortcutMatch(text = conjoinedText, input = conjoinedText)
                         .mapNotNull { item ->
@@ -334,7 +334,7 @@ private fun InputMemoryHelper.query(segmentation: Segmentation, idealSchemes: Li
 private fun InputMemoryHelper.performQuery(scheme: Scheme): List<InternalLexicon> {
         val spellCode = scheme.originText.hashCode()
         val shortcutCode = scheme.originAnchorsText.hashCode()
-        return strictMatch(spell = spellCode, shortcut = shortcutCode, input = scheme.aliasText, mark = scheme.mark, limit = 5)
+        return strictMatch(spell = spellCode, shortcut = shortcutCode, input = scheme.aliasText, mark = scheme.previewMark, limit = 5)
 }
 private fun InputMemoryHelper.shortcutMatch(text: String, input: String, limit: Int? = null): List<InternalLexicon> {
         val instances: MutableList<InternalLexicon> = mutableListOf()

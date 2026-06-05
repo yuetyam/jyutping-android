@@ -27,7 +27,7 @@ val Scheme.aliasAnchorsText: String
 val Scheme.originAnchorsText: String
         get() = this.mapNotNull { it.origin.firstOrNull()?.text }.joinToString(PresetString.EMPTY)
 
-val Scheme.mark: String
+val Scheme.previewMark: String
         get() = this.joinToString(PresetString.SPACE) { it.aliasText }
 
 val Scheme.syllableText: String
