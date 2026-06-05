@@ -9,12 +9,12 @@ object PresetColor {
                 darkBackground  = if (canBlur) semiDark  else fullDark
         }
 
-        private val semiLight = Color(0xAAD0D4D8)
+        private val semiLight = Color(0xCCD0D4D8)
         private val fullLight = Color(0xFFD0D4D8)
         var lightBackground: Color = fullLight
                 private set
 
-        private val semiDark = Color(0xAA222222)
+        private val semiDark = Color(0xCC222222)
         private val fullDark = Color(0xFF222222)
         var darkBackground: Color = fullDark
                 private set

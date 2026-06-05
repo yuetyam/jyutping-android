@@ -5,11 +5,10 @@ import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
 import android.util.Log
+import java.util.Locale
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.util.Locale
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 class TTSProvider(private val context: Context?) : TextToSpeech.OnInitListener {
 
@@ -83,7 +82,6 @@ class TTSProvider(private val context: Context?) : TextToSpeech.OnInitListener {
                 }
         }
 
-        @OptIn(ExperimentalUuidApi::class)
         fun speak(text: String) {
                 if (_isReady.value && _isCantoneseSupported.value) {
                         val utteranceId = Uuid.random().toString()
@@ -94,7 +92,6 @@ class TTSProvider(private val context: Context?) : TextToSpeech.OnInitListener {
                 }
         }
 
-        @OptIn(ExperimentalUuidApi::class)
         fun ssmlSpeak(romanization: String, cantonese: String? = null) {
                 val fallback: String = cantonese ?: romanization
 
