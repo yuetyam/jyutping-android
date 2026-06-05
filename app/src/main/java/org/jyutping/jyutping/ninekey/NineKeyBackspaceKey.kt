@@ -131,7 +131,8 @@ fun NineKeyBackspaceKey(modifier: Modifier) {
                                         }
                                 )
                         }
-                        .padding(3.dp)
+                        .fillMaxSize()
+                        .padding(if (isPressing || isDragging) 1.dp else 3.dp)
                         .border(
                                 width = 1.dp,
                                 color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
@@ -140,8 +141,7 @@ fun NineKeyBackspaceKey(modifier: Modifier) {
                         .background(
                                 color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressing = (isPressing || isDragging)),
                                 shape = keyShape
-                        )
-                        .fillMaxSize(),
+                        ),
                 contentAlignment = Alignment.Center
         ) {
                 Icon(

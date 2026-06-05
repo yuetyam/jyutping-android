@@ -196,9 +196,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 qwertyForm.value = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Primary
                 updateSpaceKeyForm()
                 updateReturnKeyForm(attribute)
-                inputClientMonitorJob = CoroutineScope(Dispatchers.Main).launch {
+                inputClientMonitorJob = CoroutineScope(Dispatchers.Default).launch {
                         while (isActive) {
-                                delay(500L.milliseconds) // 0.5s
+                                delay(800L.milliseconds) // 0.8s
                                 monitorInputClient()
                         }
                 }
@@ -224,9 +224,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         private var inputClientMonitorJob: Job? = null
         private fun monitorInputClient() {
-                // TODO: Better way to monitor?
                 if (isBuffering.value) {
-                        val isTextEmpty = currentInputConnection?.getExtractedText(ExtractedTextRequest(), 0)?.text.isNullOrEmpty()
+                        val isTextEmpty = currentInputConnection.getTextBeforeCursor(1, 0).isNullOrEmpty()
                         if (isTextEmpty) {
                                 clearBuffer()
                         }

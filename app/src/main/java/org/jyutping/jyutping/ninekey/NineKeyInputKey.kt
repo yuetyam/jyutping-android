@@ -53,7 +53,8 @@ fun NineKeyInputKey(key: Combo, modifier: Modifier) {
                                         }
                                 )
                         }
-                        .padding(3.dp)
+                        .fillMaxSize()
+                        .padding(if (isPressing) 1.dp else 3.dp)
                         .border(
                                 width = 1.dp,
                                 color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
@@ -62,8 +63,7 @@ fun NineKeyInputKey(key: Combo, modifier: Modifier) {
                         .background(
                                 color = ToolBox.inputKeyBackColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey = false, isPressing = isPressing),
                                 shape = keyShape
-                        )
-                        .fillMaxSize(),
+                        ),
                 contentAlignment = Alignment.Center
         ) {
                 Text(

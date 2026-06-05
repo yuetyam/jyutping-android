@@ -91,14 +91,14 @@ fun EditingPanelSpaceKey(modifier: Modifier) {
                                 )
                         }
                         .fillMaxSize()
-                        .padding(if (isPressing) 1.dp else 3.dp)
+                        .padding(if (isPressing || isDragging) 1.dp else 3.dp)
                         .border(
                                 width = 1.dp,
                                 color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
                                 shape = keyShape
                         )
                         .background(
-                                color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressing),
+                                color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressing = (isPressing || isDragging)),
                                 shape = keyShape
                         ),
                 contentAlignment = Alignment.Center

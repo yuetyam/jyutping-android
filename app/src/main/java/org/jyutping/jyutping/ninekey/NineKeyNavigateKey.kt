@@ -63,7 +63,8 @@ fun NineKeyNavigateKey(destination: KeyboardForm, modifier: Modifier) {
                                         }
                                 )
                         }
-                        .padding(3.dp)
+                        .fillMaxSize()
+                        .padding(if (isPressing) 1.dp else 3.dp)
                         .border(
                                 width = 1.dp,
                                 color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
@@ -72,8 +73,7 @@ fun NineKeyNavigateKey(destination: KeyboardForm, modifier: Modifier) {
                         .background(
                                 color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressing),
                                 shape = keyShape
-                        )
-                        .fillMaxSize(),
+                        ),
                 contentAlignment = Alignment.Center
         ) {
                 Text(

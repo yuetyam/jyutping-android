@@ -65,7 +65,8 @@ fun NineKeyReturnKey(modifier: Modifier) {
                                         }
                                 )
                         }
-                        .padding(3.dp)
+                        .fillMaxSize()
+                        .padding(if (isPressing) 1.dp else 3.dp)
                         .border(
                                 width = 1.dp,
                                 color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
@@ -74,8 +75,7 @@ fun NineKeyReturnKey(modifier: Modifier) {
                         .background(
                                 color = ToolBox.actionKeyBackColor(isDarkMode, isHighContrastPreferred, isPressing),
                                 shape = keyShape
-                        )
-                        .fillMaxSize(),
+                        ),
                 contentAlignment = Alignment.Center
         ) {
                 if (keyText == null) {

@@ -88,7 +88,8 @@ fun NineKeySpaceKey(modifier: Modifier) {
                                         }
                                 )
                         }
-                        .padding(3.dp)
+                        .fillMaxSize()
+                        .padding(if (isPressing || isDragging) 1.dp else 3.dp)
                         .border(
                                 width = 1.dp,
                                 color = ToolBox.keyBorderColor(isDarkMode, isHighContrastPreferred),
@@ -97,8 +98,7 @@ fun NineKeySpaceKey(modifier: Modifier) {
                         .background(
                                 color = ToolBox.inputKeyBackColor(isDarkMode, isHighContrastPreferred, shouldPreviewKey = false, isPressing = (isPressing || isDragging)),
                                 shape = keyShape
-                        )
-                        .fillMaxSize(),
+                        ),
                 contentAlignment = Alignment.Center
         ) {
                 Text(
