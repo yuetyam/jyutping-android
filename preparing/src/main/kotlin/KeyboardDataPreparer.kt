@@ -70,22 +70,22 @@ object KeyboardDataPreparer {
                         "CREATE INDEX ix_quick_q3code ON quick_table (q3code);",
 
 
-                        "CREATE INDEX ix_variant_abp_source ON variant_abp (source);",
+                        // "CREATE INDEX ix_variant_abp_source ON variant_abp (source);",
                         "CREATE INDEX ix_variant_abp_target ON variant_abp (target);",
 
-                        "CREATE INDEX ix_variant_hk_source ON variant_hk (source);",
+                        // "CREATE INDEX ix_variant_hk_source ON variant_hk (source);",
                         "CREATE INDEX ix_variant_hk_target ON variant_hk (target);",
 
-                        "CREATE INDEX ix_variant_old_source ON variant_old (source);",
+                        // "CREATE INDEX ix_variant_old_source ON variant_old (source);",
                         "CREATE INDEX ix_variant_old_target ON variant_old (target);",
 
-                        "CREATE INDEX ix_variant_prc_source ON variant_prc (source);",
+                        // "CREATE INDEX ix_variant_prc_source ON variant_prc (source);",
                         "CREATE INDEX ix_variant_prc_target ON variant_prc (target);",
 
-                        "CREATE INDEX ix_variant_sim_source ON variant_sim (source);",
+                        // "CREATE INDEX ix_variant_sim_source ON variant_sim (source);",
                         "CREATE INDEX ix_variant_sim_target ON variant_sim (target);",
 
-                        "CREATE INDEX ix_variant_tw_source ON variant_tw (source);",
+                        // "CREATE INDEX ix_variant_tw_source ON variant_tw (source);",
                         "CREATE INDEX ix_variant_tw_target ON variant_tw (target);",
                 )
                 DriverManager.getConnection(url).use { connection ->
@@ -118,7 +118,7 @@ object KeyboardDataPreparer {
                 println("Inserted lexicon entries: $insertedCount")
         }
         private fun createCharacterVariantTable(fileName: String, tableName: String, url: String) {
-                val createTableCommand: String = "CREATE TABLE $tableName (id INTEGER PRIMARY KEY AUTOINCREMENT, source INTEGER NOT NULL, target INTEGER NOT NULL);"
+                val createTableCommand: String = "CREATE TABLE $tableName (source INTEGER PRIMARY KEY, target INTEGER NOT NULL);"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
