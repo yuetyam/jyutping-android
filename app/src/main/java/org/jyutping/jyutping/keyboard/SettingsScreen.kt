@@ -176,8 +176,8 @@ fun SettingsScreen(height: Dp) {
                 }
                 LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                        verticalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
                         item {
                                 Column(
@@ -433,7 +433,7 @@ fun SettingsScreen(height: Dp) {
                                                 modifier = Modifier
                                                         .fillMaxWidth()
                                                         .background(color = backColor, shape = CircleShape)
-                                                        .padding(horizontal = 8.dp, vertical = 2.dp)
+                                                        .padding(horizontal = 6.dp, vertical = 2.dp)
                                         ) {
                                                 Row(
                                                         modifier = Modifier
@@ -474,13 +474,14 @@ fun SettingsScreen(height: Dp) {
                                 Row(
                                         modifier = Modifier
                                                 .background(color = backColor, shape = CircleShape)
-                                                .padding(horizontal = 8.dp)
+                                                .padding(horizontal = 4.dp)
                                                 .fillMaxWidth(),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
                                         Text(
                                                 text = stringResource(id = R.string.keyboard_settings_bottom_padding_title),
-                                                color = tintColor
+                                                color = tintColor,
+                                                style = MaterialTheme.typography.bodyMedium
                                         )
                                         Spacer(modifier = Modifier.weight(1f))
                                         ButtonGroup(
@@ -534,13 +535,14 @@ fun SettingsScreen(height: Dp) {
                                 Row(
                                         modifier = Modifier
                                                 .background(color = backColor, shape = CircleShape)
-                                                .padding(horizontal = 8.dp)
+                                                .padding(horizontal = 4.dp)
                                                 .fillMaxWidth(),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
                                         Text(
                                                 text = stringResource(id = R.string.keyboard_settings_preferred_input_mode_title),
-                                                color = tintColor
+                                                color = tintColor,
+                                                style = MaterialTheme.typography.bodyMedium
                                         )
                                         Spacer(modifier = Modifier.weight(1f))
                                         ButtonGroup(
@@ -585,13 +587,14 @@ fun SettingsScreen(height: Dp) {
                                 Row(
                                         modifier = Modifier
                                                 .background(color = backColor, shape = CircleShape)
-                                                .padding(horizontal = 8.dp)
+                                                .padding(horizontal = 4.dp)
                                                 .fillMaxWidth(),
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
                                         Text(
                                                 text = stringResource(id = R.string.keyboard_settings_comment_style_title),
-                                                color = tintColor
+                                                color = tintColor,
+                                                style = MaterialTheme.typography.bodyMedium
                                         )
                                         Spacer(modifier = Modifier.weight(1f))
                                         ButtonGroup(
