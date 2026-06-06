@@ -68,7 +68,7 @@ fun NineKeyKeyboard(keyHeight: Dp) {
                         horizontalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
                         Column(
-                                modifier = Modifier.weight(0.188f)
+                                modifier = Modifier.weight(0.182f)
                         ) {
                                 SidebarPanel(
                                         unitHeight = sidebarUnitHeight,
@@ -80,7 +80,7 @@ fun NineKeyKeyboard(keyHeight: Dp) {
                                 )
                         }
                         Column(
-                                modifier = Modifier.weight(0.624f)
+                                modifier = Modifier.weight(0.636f)
                         ) {
                                 Row(
                                         modifier = Modifier.weight(0.25f)
@@ -115,7 +115,7 @@ fun NineKeyKeyboard(keyHeight: Dp) {
                                 }
                         }
                         Column(
-                                modifier = Modifier.weight(0.188f)
+                                modifier = Modifier.weight(0.182f)
                         ) {
                                 NineKeyBackspaceKey(modifier = Modifier.weight(0.25f))
                                 NineKeyNavigateKey(
