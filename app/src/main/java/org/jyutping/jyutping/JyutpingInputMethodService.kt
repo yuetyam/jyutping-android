@@ -49,7 +49,6 @@ import org.jyutping.jyutping.keyboard.Cangjie
 import org.jyutping.jyutping.keyboard.CangjieVariant
 import org.jyutping.jyutping.keyboard.CommentStyle
 import org.jyutping.jyutping.keyboard.ExtraBottomPadding
-import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.ReturnKeyForm
 import org.jyutping.jyutping.keyboard.SpaceKeyForm
 import org.jyutping.jyutping.memory.InputMemoryHelper
@@ -58,6 +57,7 @@ import org.jyutping.jyutping.memory.searchMemory
 import org.jyutping.jyutping.models.BasicInputEvent
 import org.jyutping.jyutping.models.Candidate
 import org.jyutping.jyutping.models.CangjieConverter
+import org.jyutping.jyutping.models.CompositionType
 import org.jyutping.jyutping.models.Converter
 import org.jyutping.jyutping.models.InputMethodMode
 import org.jyutping.jyutping.models.KeyboardCase
@@ -194,7 +194,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 isDarkMode.value = isNightMode
                 inputMethodMode.value = fetchedInputMethodMode()
                 keyboardForm.value = KeyboardForm.Primary
-                qwertyForm.value = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Primary
+                compositionType.value = CompositionType.Primary
                 updateSpaceKeyForm()
                 updateReturnKeyForm(attribute)
                 inputClientMonitorJob = CoroutineScope(Dispatchers.Default).launch {
@@ -362,13 +362,10 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
-        val qwertyForm: MutableStateFlow<QwertyForm> by lazy {
-                val form: QwertyForm = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Primary
-                MutableStateFlow(form)
-        }
-        private fun updateQwertyForm(form: QwertyForm) {
-                if (qwertyForm.value != form) {
-                        qwertyForm.value = form
+        val compositionType: MutableStateFlow<CompositionType> by lazy { MutableStateFlow(CompositionType.Primary) }
+        private fun updateCompositionType(type: CompositionType) {
+                if (compositionType.value != type) {
+                        compositionType.value = type
                 }
         }
 
@@ -507,8 +504,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun updateKeyboardLayout(layout: KeyboardLayout) {
                 keyboardLayout.value = layout
-                val newForm: QwertyForm = if (layout.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Primary
-                updateQwertyForm(newForm)
                 sharedPreferences.edit {
                         putInt(UserSettingsKey.KeyboardLayout, layout.identifier)
                 }
@@ -777,8 +772,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         KeyboardForm.TailoredStroke -> transformTo(KeyboardForm.Primary)
                                         else -> {}
                                 }
-                                val newForm: QwertyForm = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Primary
-                                updateQwertyForm(newForm)
+                                updateCompositionType(CompositionType.Primary)
                                 updateSpaceKeyForm()
                                 updateReturnKeyForm()
                                 candidates.value = emptyList()
@@ -808,7 +802,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                                 val mark: String = if (keys.isEmpty()) bufferText.take(1) else (bufferText.take(1) + PresetString.SPACE + tailMark)
                                 withContext(Dispatchers.Main) {
-                                        updateQwertyForm(QwertyForm.Pinyin)
+                                        updateCompositionType(CompositionType.Pinyin)
                                         currentInputConnection.setComposingText(mark, 1)
                                         candidates.value = suggestions
                                         updateInputSessionStates()
@@ -829,7 +823,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                                 val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, sessionState = sessionState)
                                 withContext(Dispatchers.Main) {
-                                        updateQwertyForm(QwertyForm.Cangjie)
+                                        updateCompositionType(CompositionType.Cangjie)
                                         currentInputConnection.setComposingText(mark, 1)
                                         candidates.value = suggestions
                                         updateInputSessionStates()
@@ -851,7 +845,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         if (useTailoredStrokeLayout.value && keyboardForm.value.isTailoredStroke.negative) {
                                                 transformTo(KeyboardForm.TailoredStroke)
                                         } else {
-                                                updateQwertyForm(QwertyForm.Stroke)
+                                                updateCompositionType(CompositionType.Stroke)
                                         }
                                         currentInputConnection.setComposingText(mark, 1)
                                         candidates.value = suggestions

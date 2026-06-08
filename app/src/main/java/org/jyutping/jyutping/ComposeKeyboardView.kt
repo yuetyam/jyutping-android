@@ -29,10 +29,10 @@ import org.jyutping.jyutping.keyboard.CommentStyle
 import org.jyutping.jyutping.keyboard.LayoutPickerScreen
 import org.jyutping.jyutping.keyboard.NumericKeyboard
 import org.jyutping.jyutping.keyboard.PhysicalKeyboardCandidateBar
-import org.jyutping.jyutping.keyboard.QwertyForm
 import org.jyutping.jyutping.keyboard.SettingsScreen
 import org.jyutping.jyutping.keyboard.SymbolicKeyboard
 import org.jyutping.jyutping.keyboard.TripleStrokeKeyboard
+import org.jyutping.jyutping.models.CompositionType
 import org.jyutping.jyutping.models.InputMethodMode
 import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.models.KeyboardInterface
@@ -95,23 +95,21 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
 
                 val keyboardLayout by ctx.keyboardLayout.collectAsState()
                 val keyboardForm by ctx.keyboardForm.collectAsState()
-                val qwertyForm by ctx.qwertyForm.collectAsState()
+                val compositionType by ctx.compositionType.collectAsState()
                 val inputMethodMode by ctx.inputMethodMode.collectAsState()
                 val keyOffset by ctx.keyHeightOffset.collectAsState()
                 when (keyboardForm) {
-                        KeyboardForm.Primary -> when (qwertyForm) {
-                                QwertyForm.Cangjie -> CangjieKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
-                                QwertyForm.Stroke -> StrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
-                                QwertyForm.TripleStroke -> when (inputMethodMode) {
-                                        InputMethodMode.ABC -> ABCKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
-                                        InputMethodMode.Cantonese -> TripleStrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
-                                }
-                                else -> when (inputMethodMode) {
-                                        InputMethodMode.ABC -> ABCKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
-                                        InputMethodMode.Cantonese -> when (keyboardLayout) {
+                        KeyboardForm.Primary -> when (inputMethodMode) {
+                                InputMethodMode.ABC -> ABCKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                                InputMethodMode.Cantonese -> when (compositionType) {
+                                        CompositionType.Primary -> when (keyboardLayout) {
+                                                KeyboardLayout.Qwerty -> CantoneseKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                                                KeyboardLayout.TripleStroke -> TripleStrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                                 KeyboardLayout.NineKey -> NineKeyKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
-                                                else -> CantoneseKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                         }
+                                        CompositionType.Pinyin -> CantoneseKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                                        CompositionType.Cangjie -> CangjieKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                                        CompositionType.Stroke -> StrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                 }
                         }
                         KeyboardForm.Numeric -> when (inputMethodMode) {
