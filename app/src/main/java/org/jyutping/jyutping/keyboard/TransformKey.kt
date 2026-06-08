@@ -38,8 +38,8 @@ fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
         val keyText: String = when (destination) {
-                KeyboardForm.Alphabetic -> "ABC"
-                KeyboardForm.NineKeyNumeric -> "123"
+                KeyboardForm.Primary -> "ABC"
+                KeyboardForm.TailoredNumbers -> "123"
                 KeyboardForm.Numeric -> "123"
                 KeyboardForm.Symbolic -> "#+="
                 else -> "???"

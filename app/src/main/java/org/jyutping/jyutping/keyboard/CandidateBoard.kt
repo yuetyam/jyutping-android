@@ -185,7 +185,7 @@ fun CandidateBoard(height: Dp, isPhysicalKeyboard: Boolean = false) {
                         ) {
                                 context.audioFeedback(SoundEffect.Back)
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                context.transformTo(KeyboardForm.Alphabetic)
+                                context.transformTo(KeyboardForm.Primary)
                         }
                 }
         }

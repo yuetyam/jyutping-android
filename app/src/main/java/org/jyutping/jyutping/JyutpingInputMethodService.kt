@@ -193,7 +193,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
                 isDarkMode.value = isNightMode
                 inputMethodMode.value = fetchedInputMethodMode()
-                keyboardForm.value = KeyboardForm.Alphabetic
+                keyboardForm.value = KeyboardForm.Primary
                 qwertyForm.value = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Primary
                 updateSpaceKeyForm()
                 updateReturnKeyForm(attribute)
@@ -289,7 +289,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 val isSimplified: Boolean = characterStandard.value.isMutilated
                 val newForm: SpaceKeyForm = when {
                         inputMethodMode.value.isABC -> SpaceKeyForm.English
-                        keyboardForm.value.isNineKeyNumeric -> SpaceKeyForm.Fallback
+                        keyboardForm.value.isTailoredNumbers -> SpaceKeyForm.Fallback
                         isBuffering.value -> {
                                 if (candidates.value.isEmpty()) {
                                         if (isSimplified) SpaceKeyForm.ConfirmSimplified else SpaceKeyForm.Confirm
@@ -372,13 +372,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
-        val keyboardForm: MutableStateFlow<KeyboardForm> by lazy { MutableStateFlow(KeyboardForm.Alphabetic) }
+        val keyboardForm: MutableStateFlow<KeyboardForm> by lazy { MutableStateFlow(KeyboardForm.Primary) }
         fun transformTo(destination: KeyboardForm) {
                 if (isBuffering.value) {
                         val shouldKeepBuffer: Boolean = when (destination) {
-                                KeyboardForm.Alphabetic,
+                                KeyboardForm.Primary,
                                 KeyboardForm.CandidateBoard,
-                                KeyboardForm.NineKeyStroke -> true
+                                KeyboardForm.TailoredStroke -> true
                                 else -> false
                         }
                         if (shouldKeepBuffer.negative) {
@@ -513,27 +513,31 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         putInt(UserSettingsKey.KeyboardLayout, layout.identifier)
                 }
         }
-        val useNineKeyNumberPad: MutableStateFlow<Boolean> by lazy {
+
+        /** Use 10-key digit keypad instead of normal numeric keyboard */
+        val useTailoredNumberPad: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.NumericLayout, NumericLayout.Default.identifier)
-                val isUsing: Boolean = (savedValue == NumericLayout.NumberKeyPad.identifier)
+                val isUsing: Boolean = (savedValue == NumericLayout.Tailored.identifier)
                 MutableStateFlow(isUsing)
         }
-        fun updateUseNineKeyNumberPad(isOn: Boolean) {
-                useNineKeyNumberPad.value = isOn
-                val value: Int = if (isOn) NumericLayout.NumberKeyPad.identifier else NumericLayout.Default.identifier
+        fun updateTailoredNumberPadUsage(isOn: Boolean) {
+                useTailoredNumberPad.value = isOn
+                val value: Int = if (isOn) NumericLayout.Tailored.identifier else NumericLayout.Default.identifier
                 sharedPreferences.edit {
                         putInt(UserSettingsKey.NumericLayout, value)
                 }
         }
 
-        val useNineKeyStrokeLayout: MutableStateFlow<Boolean> by lazy {
+        /** Use the 9-key (T9) layout for Stroke reverse lookup instead of the QWERTY layout */
+        val useTailoredStrokeLayout: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.StrokeLayout, StrokeLayout.Default.identifier)
-                val isUsing: Boolean = (savedValue == StrokeLayout.NineKey.identifier)
+                val isUsing: Boolean = (savedValue == StrokeLayout.Tailored.identifier)
                 MutableStateFlow(isUsing)
         }
-        fun updateUseNineKeyStrokeLayout(isOn: Boolean) {
-                useNineKeyStrokeLayout.value = isOn
-                val value: Int = if (isOn) StrokeLayout.NineKey.identifier else StrokeLayout.Default.identifier
+
+        fun updateTailoredStrokeLayoutUsage(isOn: Boolean) {
+                useTailoredStrokeLayout.value = isOn
+                val value: Int = if (isOn) StrokeLayout.Tailored.identifier else StrokeLayout.Default.identifier
                 sharedPreferences.edit {
                         putInt(UserSettingsKey.StrokeLayout, value)
                 }
@@ -770,7 +774,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                                 when (keyboardForm.value) {
                                         KeyboardForm.CandidateBoard,
-                                        KeyboardForm.NineKeyStroke -> transformTo(KeyboardForm.Alphabetic)
+                                        KeyboardForm.TailoredStroke -> transformTo(KeyboardForm.Primary)
                                         else -> {}
                                 }
                                 val newForm: QwertyForm = if (keyboardLayout.value.isTripleStroke) QwertyForm.TripleStroke else QwertyForm.Primary
@@ -844,8 +848,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                                 val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, sessionState = sessionState)
                                 withContext(Dispatchers.Main) {
-                                        if (useNineKeyStrokeLayout.value && keyboardForm.value.isNineKeyStroke.negative) {
-                                                transformTo(KeyboardForm.NineKeyStroke)
+                                        if (useTailoredStrokeLayout.value && keyboardForm.value.isTailoredStroke.negative) {
+                                                transformTo(KeyboardForm.TailoredStroke)
                                         } else {
                                                 updateQwertyForm(QwertyForm.Stroke)
                                         }
@@ -995,7 +999,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                                 when (keyboardForm.value) {
                                         KeyboardForm.CandidateBoard,
-                                        KeyboardForm.NineKeyStroke -> transformTo(KeyboardForm.Alphabetic)
+                                        KeyboardForm.TailoredStroke -> transformTo(KeyboardForm.Primary)
                                         else -> {}
                                 }
                                 updateSpaceKeyForm()
@@ -1191,7 +1195,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun performReturn() {
                 if (isBuffering.value) {
-                        if (keyboardForm.value.isNineKeyStroke && candidates.value.isNotEmpty()) {
+                        if (keyboardForm.value.isTailoredStroke && candidates.value.isNotEmpty()) {
                                 candidates.value.firstOrNull()?.let { selectCandidate(it) }
                         } else {
                                 val text = joinedBufferTexts()

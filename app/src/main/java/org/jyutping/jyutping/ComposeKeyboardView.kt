@@ -99,7 +99,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                 val inputMethodMode by ctx.inputMethodMode.collectAsState()
                 val keyOffset by ctx.keyHeightOffset.collectAsState()
                 when (keyboardForm) {
-                        KeyboardForm.Alphabetic -> when (qwertyForm) {
+                        KeyboardForm.Primary -> when (qwertyForm) {
                                 QwertyForm.Cangjie -> CangjieKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                 QwertyForm.Stroke -> StrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                 QwertyForm.TripleStroke -> when (inputMethodMode) {
@@ -122,15 +122,13 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                                 InputMethodMode.ABC -> SymbolicKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                 InputMethodMode.Cantonese -> CantoneseSymbolicKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                         }
-                        KeyboardForm.NineKeyNumeric -> TailoredNumericKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
-                        KeyboardForm.NineKeyStroke -> TailoredStrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                        KeyboardForm.TailoredNumbers -> TailoredNumericKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                        KeyboardForm.TailoredStroke -> TailoredStrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                         KeyboardForm.CandidateBoard -> CandidateBoard(height = keyboardHeight(keyOffset))
                         KeyboardForm.Settings -> CompactTheme { SettingsScreen(height = keyboardHeight(keyOffset)) }
                         KeyboardForm.LayoutPicker -> CompactTheme { LayoutPickerScreen(height = keyboardHeight(keyOffset)) }
                         KeyboardForm.EmojiBoard -> EmojiBoard(height = keyboardHeight(keyOffset))
                         KeyboardForm.EditingPanel -> EditingPanel(height = keyboardHeight(keyOffset))
-                        KeyboardForm.NumberPad,
-                        KeyboardForm.DecimalPad -> NumericKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                 }
         }
 

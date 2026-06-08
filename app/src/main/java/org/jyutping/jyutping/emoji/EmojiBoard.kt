@@ -142,7 +142,7 @@ fun EmojiBoard(height: Dp) {
                                 onClick = {
                                         context.audioFeedback(SoundEffect.Back)
                                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                        context.transformTo(KeyboardForm.Alphabetic)
+                                        context.transformTo(KeyboardForm.Primary)
                                 },
                                 modifier = Modifier.weight(edgeIndicatorWeight)
                         ) {

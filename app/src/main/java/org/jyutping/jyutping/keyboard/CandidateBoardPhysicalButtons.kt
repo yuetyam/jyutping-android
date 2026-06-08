@@ -55,7 +55,7 @@ fun CandidateBoardPhysicalButtons() {
                         view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                         // Toggle between collapsed and expanded states
                         if (isExpanded) {
-                                context.transformTo(KeyboardForm.Alphabetic)
+                                context.transformTo(KeyboardForm.Primary)
                         } else {
                                 context.transformTo(KeyboardForm.CandidateBoard)
                         }

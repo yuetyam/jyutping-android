@@ -202,6 +202,6 @@ fun NumericKeyboard(keyHeight: Dp) {
                         Spacer(modifier = Modifier.weight(0.1f))
                         BackspaceKey(modifier = Modifier.weight(1.4f))
                 }
-                ABCBottomKeyRow(transform = KeyboardForm.Alphabetic, height = keyHeight)
+                ABCBottomKeyRow(transform = KeyboardForm.Primary, height = keyHeight)
         }
 }

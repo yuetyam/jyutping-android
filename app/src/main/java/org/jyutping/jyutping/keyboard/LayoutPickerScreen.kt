@@ -97,7 +97,7 @@ fun LayoutPickerScreen(height: Dp) {
                         ) {
                                 context.audioFeedback(SoundEffect.Back)
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                context.transformTo(KeyboardForm.Alphabetic)
+                                context.transformTo(KeyboardForm.Primary)
                         }
                         Spacer(modifier = Modifier.weight(1f))
                         Text(

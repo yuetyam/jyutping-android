@@ -73,7 +73,7 @@ fun TailoredNumericKeyboard(keyHeight: Dp) {
                                         modifier = Modifier.weight(0.75f)
                                 )
                                 NineKeyNavigateKey(
-                                        destination = KeyboardForm.Alphabetic,
+                                        destination = KeyboardForm.Primary,
                                         modifier = Modifier.weight(0.25f)
                                 )
                         }

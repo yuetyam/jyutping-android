@@ -5,9 +5,13 @@ package org.jyutping.jyutping.numeric
  */
 enum class NumericLayout(var identifier: Int) {
 
-        /** Normal Numeric Keyboard */
+        /** Normal numeric keyboard */
         Default(1),
 
-        /** 10-Key KeyPad */
-        NumberKeyPad(2);
+        /** 10-key keypad-style digit keyboard with a symbol sidebar and some other keys */
+        Tailored(2);
+
+        /** 10-key keypad-style digit keyboard with a symbol sidebar and some other keys */
+        val isTailored: Boolean
+                get() = (this == Tailored)
 }

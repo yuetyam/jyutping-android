@@ -58,7 +58,7 @@ fun SidebarPanel(unitHeight: Dp, modifier: Modifier) {
         LaunchedEffect(pressingState) {
                 state.animateScrollToItem(index = 0, scrollOffset = 0)
         }
-        val entries = if (keyboardForm.isNineKeyNumeric) SidebarEntry.symbols else if (isBuffering) sidebarEntries else SidebarEntry.punctuation
+        val entries = if (keyboardForm.isTailoredNumbers) SidebarEntry.symbols else if (isBuffering) sidebarEntries else SidebarEntry.punctuation
         LazyColumn(
                 modifier = modifier
                         .padding(3.dp)

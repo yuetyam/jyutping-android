@@ -1,28 +1,53 @@
 package org.jyutping.jyutping.models
 
 enum class KeyboardForm {
-        Alphabetic,
-        CandidateBoard,
-        DecimalPad,
-        EditingPanel,
-        EmojiBoard,
-        LayoutPicker,
-        NineKeyNumeric,
-        NineKeyStroke,
-        NumberPad,
-        Numeric,
-        Settings,
-        Symbolic;
 
+        /** Expanded Candidate page */
+        CandidateBoard,
+
+        /** Button page for copy, cut, clear, etc. */
+        EditingPanel,
+
+        /** Emoji keyboard */
+        EmojiBoard,
+
+        /** KeyboardLayout picking page */
+        LayoutPicker,
+
+        /** Numbers and symbols */
+        Numeric,
+
+        /** Main keyboard; alphabetic; letters or 9-key (T9) */
+        Primary,
+
+        /** Keyboard settings page */
+        Settings,
+
+        /** Extra symbols */
+        Symbolic,
+
+        /** 10-key keypad-style digit keyboard with a symbol sidebar and some other keys */
+        TailoredNumbers,
+
+        /** 9-key (T9) Stroke keyboard for reverse lookup */
+        TailoredStroke;
+
+        /** Should stay buffering, should keep the bufferText */
         val isBufferable: Boolean
                 get() = when (this) {
-                        Alphabetic, CandidateBoard, NineKeyStroke -> true
+                        Primary, CandidateBoard, TailoredStroke -> true
                         else -> false
                 }
 
-        val isNineKeyNumeric: Boolean
-                get() = (this == NineKeyNumeric)
+        /** Main keyboard; alphabetic; letters or 9-key (T9) */
+        val isPrimary: Boolean
+                get() = (this == Primary)
 
-        val isNineKeyStroke: Boolean
-                get() = (this == NineKeyStroke)
+        /** 10-key keypad-style digit keyboard with a symbol sidebar and some other keys */
+        val isTailoredNumbers: Boolean
+                get() = (this == TailoredNumbers)
+
+        /** 9-key (T9) Stroke keyboard for reverse lookup */
+        val isTailoredStroke: Boolean
+                get() = (this == TailoredStroke)
 }

@@ -33,15 +33,15 @@ import org.jyutping.jyutping.utilities.ToolBox
 fun NineKeyNavigateKey(destination: KeyboardForm, modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
-        val useNineKeyNumberPad by context.useNineKeyNumberPad.collectAsState()
+        val useTailoredNumberPad by context.useTailoredNumberPad.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         var isPressing by remember { mutableStateOf(false) }
         val keyText: String = when (destination) {
-                KeyboardForm.Alphabetic -> "ABC"
-                KeyboardForm.Numeric -> if (useNineKeyNumberPad) "#@$" else "123"
+                KeyboardForm.Primary -> "ABC"
+                KeyboardForm.Numeric -> if (useTailoredNumberPad) "#@$" else "123"
                 KeyboardForm.Symbolic -> "#+="
-                KeyboardForm.NineKeyNumeric -> "123"
+                KeyboardForm.TailoredNumbers -> "123"
                 else -> "???"
         }
         val keyShape = RoundedCornerShape(PresetConstant.largeKeyCornerRadius.dp)

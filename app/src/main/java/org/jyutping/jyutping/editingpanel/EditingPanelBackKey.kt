@@ -51,7 +51,7 @@ fun EditingPanelBackKey(modifier: Modifier) {
                         .clickable(interactionSource = interactionSource, indication = null) {
                                 context.audioFeedback(SoundEffect.Back)
                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                context.transformTo(KeyboardForm.Alphabetic)
+                                context.transformTo(KeyboardForm.Primary)
                         }
                         .fillMaxSize()
                         .padding(if (isPressed) 1.dp else 3.dp)

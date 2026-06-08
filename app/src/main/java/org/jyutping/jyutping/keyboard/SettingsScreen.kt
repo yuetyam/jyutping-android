@@ -82,8 +82,8 @@ fun SettingsScreen(height: Dp) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isAudioFeedbackOn by context.isAudioFeedbackOn.collectAsState()
         val isHapticFeedbackOn by context.isHapticFeedbackOn.collectAsState()
-        val useNineKeyNumberPad by context.useNineKeyNumberPad.collectAsState()
-        val useNineKeyStrokeLayout by context.useNineKeyStrokeLayout.collectAsState()
+        val useTailoredNumberPad by context.useTailoredNumberPad.collectAsState()
+        val useTailoredStrokeLayout by context.useTailoredStrokeLayout.collectAsState()
         val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
         val previewKeyText by context.previewKeyText.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
@@ -155,7 +155,7 @@ fun SettingsScreen(height: Dp) {
                         ) {
                                 context.audioFeedback(SoundEffect.Back)
                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                context.transformTo(KeyboardForm.Alphabetic)
+                                context.transformTo(KeyboardForm.Primary)
                         }
                         Spacer(modifier = Modifier.weight(1f))
                         Text(
@@ -240,13 +240,13 @@ fun SettingsScreen(height: Dp) {
                                                 )
                                                 Spacer(modifier = Modifier.weight(1f))
                                                 Switch(
-                                                        checked = useNineKeyNumberPad,
+                                                        checked = useTailoredNumberPad,
                                                         onCheckedChange = {
                                                                 context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(if (it) onHaptic else offHaptic)
-                                                                context.updateUseNineKeyNumberPad(it)
+                                                                context.updateTailoredNumberPadUsage(it)
                                                         },
-                                                        thumbContent = { SwitchThumbContent(useNineKeyNumberPad) }
+                                                        thumbContent = { SwitchThumbContent(useTailoredNumberPad) }
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -260,13 +260,13 @@ fun SettingsScreen(height: Dp) {
                                                 )
                                                 Spacer(modifier = Modifier.weight(1f))
                                                 Switch(
-                                                        checked = useNineKeyStrokeLayout,
+                                                        checked = useTailoredStrokeLayout,
                                                         onCheckedChange = {
                                                                 context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(if (it) onHaptic else offHaptic)
-                                                                context.updateUseNineKeyStrokeLayout(it)
+                                                                context.updateTailoredStrokeLayoutUsage(it)
                                                         },
-                                                        thumbContent = { SwitchThumbContent(useNineKeyStrokeLayout) }
+                                                        thumbContent = { SwitchThumbContent(useTailoredStrokeLayout) }
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)

@@ -1,5 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
+// TODO: Rename to CompositionType
 enum class QwertyForm {
 
         /** ANSI layout for typing English */

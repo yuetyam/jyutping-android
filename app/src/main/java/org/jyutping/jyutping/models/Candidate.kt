@@ -27,10 +27,15 @@ data class Candidate(
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true
                 if (other !is Candidate) return false
-                return (sessionState == other.sessionState) && (lexicon.type == other.lexicon.type) && (text == other.text) && (comment == other.comment)
+                return (sessionState == other.sessionState) && (lexicon.inputCount == other.lexicon.inputCount) && (text == other.text) && (comment == other.comment)
         }
-
-        override fun hashCode(): Int = text.hashCode() * 31 + comment.hashCode()
+        override fun hashCode(): Int {
+                var result = sessionState.hashCode()
+                result = 31 * result + lexicon.inputCount
+                result = 31 * result + text.hashCode()
+                result = 31 * result + (comment?.hashCode() ?: 0)
+                return result
+        }
 
         /**
          * Create a Candidate from the given text and Lexicon.

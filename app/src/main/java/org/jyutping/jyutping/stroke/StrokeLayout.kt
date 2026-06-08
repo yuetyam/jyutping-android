@@ -6,10 +6,10 @@ enum class StrokeLayout(val identifier: Int) {
         /** QWERTY layout */
         Default(1),
 
-        /** 10-key layout */
-        NineKey(2);
+        /** 9-key (T9) layout */
+        Tailored(2);
 
-        /** 10-key layout */
-        val isNineKey: Boolean
-                get() = (this == NineKey)
+        /** 9-key (T9) layout */
+        val isTailored: Boolean
+                get() = (this == Tailored)
 }
