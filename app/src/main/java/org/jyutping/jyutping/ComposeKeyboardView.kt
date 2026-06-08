@@ -120,8 +120,8 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                                 InputMethodMode.ABC -> SymbolicKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                                 InputMethodMode.Cantonese -> CantoneseSymbolicKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                         }
-                        KeyboardForm.TailoredNumbers -> TailoredNumericKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
-                        KeyboardForm.TailoredStroke -> TailoredStrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                        KeyboardForm.DedicatedNumbers -> TailoredNumericKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
+                        KeyboardForm.DedicatedStroke -> TailoredStrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                         KeyboardForm.CandidateBoard -> CandidateBoard(height = keyboardHeight(keyOffset))
                         KeyboardForm.Settings -> CompactTheme { SettingsScreen(height = keyboardHeight(keyOffset)) }
                         KeyboardForm.LayoutPicker -> CompactTheme { LayoutPickerScreen(height = keyboardHeight(keyOffset)) }

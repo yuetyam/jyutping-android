@@ -7,9 +7,9 @@ enum class StrokeLayout(val identifier: Int) {
         Default(1),
 
         /** 9-key (T9) layout */
-        Tailored(2);
+        Dedicated(2);
 
         /** 9-key (T9) layout */
-        val isTailored: Boolean
-                get() = (this == Tailored)
+        val isDedicated: Boolean
+                get() = (this == Dedicated)
 }

@@ -30,7 +30,7 @@ import org.jyutping.jyutping.presets.PresetConstant
 fun NineKeyKeyboard(keyHeight: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isBuffering by context.isBuffering.collectAsState()
-        val useTailoredNumberPad by context.useTailoredNumberPad.collectAsState()
+        val useDedicatedNumberPad by context.useDedicatedNumberPad.collectAsState()
         val needsInputModeSwitchKey by context.needsInputModeSwitchKey.collectAsState()
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
@@ -75,7 +75,7 @@ fun NineKeyKeyboard(keyHeight: Dp) {
                                         modifier = Modifier.weight(0.75f)
                                 )
                                 NineKeyNavigateKey(
-                                        destination = if (useTailoredNumberPad) KeyboardForm.TailoredNumbers else KeyboardForm.Numeric,
+                                        destination = if (useDedicatedNumberPad) KeyboardForm.DedicatedNumbers else KeyboardForm.Numeric,
                                         modifier = Modifier.weight(0.25f)
                                 )
                         }
@@ -119,7 +119,7 @@ fun NineKeyKeyboard(keyHeight: Dp) {
                         ) {
                                 NineKeyBackspaceKey(modifier = Modifier.weight(0.25f))
                                 NineKeyNavigateKey(
-                                        destination = if (useTailoredNumberPad) KeyboardForm.Numeric else KeyboardForm.Symbolic,
+                                        destination = if (useDedicatedNumberPad) KeyboardForm.Numeric else KeyboardForm.Symbolic,
                                         modifier = Modifier.weight(0.25f)
                                 )
                                 NineKeyReturnKey(modifier = Modifier.weight(0.5f))

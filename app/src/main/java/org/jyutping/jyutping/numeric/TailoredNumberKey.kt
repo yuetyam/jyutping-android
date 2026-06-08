@@ -30,7 +30,7 @@ import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.ToolBox
 
-/** Number input key for 10-key numeric keyboard */
+/** Number input key for the dedicated 10-key keypad-style numeric keyboard */
 @Composable
 fun TailoredNumberKey(virtual: VirtualInputKey, modifier: Modifier) {
         val view = LocalView.current

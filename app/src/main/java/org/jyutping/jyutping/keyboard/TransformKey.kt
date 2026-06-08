@@ -39,7 +39,7 @@ fun TransformKey(destination: KeyboardForm, modifier: Modifier) {
         var isPressing by remember { mutableStateOf(false) }
         val keyText: String = when (destination) {
                 KeyboardForm.Primary -> "ABC"
-                KeyboardForm.TailoredNumbers -> "123"
+                KeyboardForm.DedicatedNumbers -> "123"
                 KeyboardForm.Numeric -> "123"
                 KeyboardForm.Symbolic -> "#+="
                 else -> "???"

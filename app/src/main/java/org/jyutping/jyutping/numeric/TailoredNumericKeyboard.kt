@@ -31,6 +31,7 @@ import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
 
+/** Dedicated 10-key keypad-style digit keyboard */
 @Composable
 fun TailoredNumericKeyboard(keyHeight: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService

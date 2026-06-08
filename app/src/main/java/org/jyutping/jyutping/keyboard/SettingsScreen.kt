@@ -82,8 +82,8 @@ fun SettingsScreen(height: Dp) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isAudioFeedbackOn by context.isAudioFeedbackOn.collectAsState()
         val isHapticFeedbackOn by context.isHapticFeedbackOn.collectAsState()
-        val useTailoredNumberPad by context.useTailoredNumberPad.collectAsState()
-        val useTailoredStrokeLayout by context.useTailoredStrokeLayout.collectAsState()
+        val useDedicatedNumberPad by context.useDedicatedNumberPad.collectAsState()
+        val useDedicatedStrokeLayout by context.useDedicatedStrokeLayout.collectAsState()
         val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
         val previewKeyText by context.previewKeyText.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
@@ -240,13 +240,13 @@ fun SettingsScreen(height: Dp) {
                                                 )
                                                 Spacer(modifier = Modifier.weight(1f))
                                                 Switch(
-                                                        checked = useTailoredNumberPad,
+                                                        checked = useDedicatedNumberPad,
                                                         onCheckedChange = {
                                                                 context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(if (it) onHaptic else offHaptic)
-                                                                context.updateTailoredNumberPadUsage(it)
+                                                                context.updateDedicatedNumberPadUsage(it)
                                                         },
-                                                        thumbContent = { SwitchThumbContent(useTailoredNumberPad) }
+                                                        thumbContent = { SwitchThumbContent(useDedicatedNumberPad) }
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -260,13 +260,13 @@ fun SettingsScreen(height: Dp) {
                                                 )
                                                 Spacer(modifier = Modifier.weight(1f))
                                                 Switch(
-                                                        checked = useTailoredStrokeLayout,
+                                                        checked = useDedicatedStrokeLayout,
                                                         onCheckedChange = {
                                                                 context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(if (it) onHaptic else offHaptic)
-                                                                context.updateTailoredStrokeLayoutUsage(it)
+                                                                context.updateDedicatedStrokeLayoutUsage(it)
                                                         },
-                                                        thumbContent = { SwitchThumbContent(useTailoredStrokeLayout) }
+                                                        thumbContent = { SwitchThumbContent(useDedicatedStrokeLayout) }
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)

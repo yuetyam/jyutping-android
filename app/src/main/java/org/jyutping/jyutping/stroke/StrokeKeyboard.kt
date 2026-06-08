@@ -34,7 +34,7 @@ fun StrokeKeyboard(keyHeight: Dp) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
-        val useTailoredNumberPad by context.useTailoredNumberPad.collectAsState()
+        val useDedicatedNumberPad by context.useDedicatedNumberPad.collectAsState()
         Column(
                 modifier = Modifier
                         .background(
@@ -107,7 +107,7 @@ fun StrokeKeyboard(keyHeight: Dp) {
                         BackspaceKey(modifier = Modifier.weight(1.4f))
                 }
                 SimpleBottomKeyRow(
-                        transform = if (useTailoredNumberPad) KeyboardForm.TailoredNumbers else KeyboardForm.Numeric,
+                        transform = if (useDedicatedNumberPad) KeyboardForm.DedicatedNumbers else KeyboardForm.Numeric,
                         height = keyHeight
                 )
         }

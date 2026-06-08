@@ -9,9 +9,9 @@ enum class NumericLayout(var identifier: Int) {
         Default(1),
 
         /** 10-key keypad-style digit keyboard with a symbol sidebar and some other keys */
-        Tailored(2);
+        Dedicated(2);
 
         /** 10-key keypad-style digit keyboard with a symbol sidebar and some other keys */
-        val isTailored: Boolean
-                get() = (this == Tailored)
+        val isDedicated: Boolean
+                get() = (this == Dedicated)
 }

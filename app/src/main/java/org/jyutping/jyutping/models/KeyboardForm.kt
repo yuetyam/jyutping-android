@@ -5,6 +5,12 @@ enum class KeyboardForm {
         /** Expanded Candidate page */
         CandidateBoard,
 
+        /** 10-key keypad-style digit keyboard with a symbol sidebar and some other action keys */
+        DedicatedNumbers,
+
+        /** 9-key (T9) Stroke keyboard for reverse lookup */
+        DedicatedStroke,
+
         /** Button page for copy, cut, clear, etc. */
         EditingPanel,
 
@@ -24,18 +30,12 @@ enum class KeyboardForm {
         Settings,
 
         /** Extra symbols */
-        Symbolic,
-
-        /** 10-key keypad-style digit keyboard with a symbol sidebar and some other keys */
-        TailoredNumbers,
-
-        /** 9-key (T9) Stroke keyboard for reverse lookup */
-        TailoredStroke;
+        Symbolic;
 
         /** Should stay buffering, should keep the bufferText */
         val isBufferable: Boolean
                 get() = when (this) {
-                        Primary, CandidateBoard, TailoredStroke -> true
+                        Primary, CandidateBoard, DedicatedStroke -> true
                         else -> false
                 }
 
@@ -44,10 +44,10 @@ enum class KeyboardForm {
                 get() = (this == Primary)
 
         /** 10-key keypad-style digit keyboard with a symbol sidebar and some other keys */
-        val isTailoredNumbers: Boolean
-                get() = (this == TailoredNumbers)
+        val isDedicatedNumbers: Boolean
+                get() = (this == DedicatedNumbers)
 
         /** 9-key (T9) Stroke keyboard for reverse lookup */
-        val isTailoredStroke: Boolean
-                get() = (this == TailoredStroke)
+        val isDedicatedStroke: Boolean
+                get() = (this == DedicatedStroke)
 }

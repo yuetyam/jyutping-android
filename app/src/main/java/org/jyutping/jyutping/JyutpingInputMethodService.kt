@@ -289,7 +289,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 val isSimplified: Boolean = characterStandard.value.isMutilated
                 val newForm: SpaceKeyForm = when {
                         inputMethodMode.value.isABC -> SpaceKeyForm.English
-                        keyboardForm.value.isTailoredNumbers -> SpaceKeyForm.Fallback
+                        keyboardForm.value.isDedicatedNumbers -> SpaceKeyForm.Fallback
                         isBuffering.value -> {
                                 if (candidates.value.isEmpty()) {
                                         if (isSimplified) SpaceKeyForm.ConfirmSimplified else SpaceKeyForm.Confirm
@@ -375,7 +375,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         val shouldKeepBuffer: Boolean = when (destination) {
                                 KeyboardForm.Primary,
                                 KeyboardForm.CandidateBoard,
-                                KeyboardForm.TailoredStroke -> true
+                                KeyboardForm.DedicatedStroke -> true
                                 else -> false
                         }
                         if (shouldKeepBuffer.negative) {
@@ -510,29 +510,28 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
 
         /** Use 10-key digit keypad instead of normal numeric keyboard */
-        val useTailoredNumberPad: MutableStateFlow<Boolean> by lazy {
+        val useDedicatedNumberPad: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.NumericLayout, NumericLayout.Default.identifier)
-                val isUsing: Boolean = (savedValue == NumericLayout.Tailored.identifier)
+                val isUsing: Boolean = (savedValue == NumericLayout.Dedicated.identifier)
                 MutableStateFlow(isUsing)
         }
-        fun updateTailoredNumberPadUsage(isOn: Boolean) {
-                useTailoredNumberPad.value = isOn
-                val value: Int = if (isOn) NumericLayout.Tailored.identifier else NumericLayout.Default.identifier
+        fun updateDedicatedNumberPadUsage(isOn: Boolean) {
+                useDedicatedNumberPad.value = isOn
+                val value: Int = if (isOn) NumericLayout.Dedicated.identifier else NumericLayout.Default.identifier
                 sharedPreferences.edit {
                         putInt(UserSettingsKey.NumericLayout, value)
                 }
         }
 
         /** Use the 9-key (T9) layout for Stroke reverse lookup instead of the QWERTY layout */
-        val useTailoredStrokeLayout: MutableStateFlow<Boolean> by lazy {
+        val useDedicatedStrokeLayout: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.StrokeLayout, StrokeLayout.Default.identifier)
-                val isUsing: Boolean = (savedValue == StrokeLayout.Tailored.identifier)
+                val isUsing: Boolean = (savedValue == StrokeLayout.Dedicated.identifier)
                 MutableStateFlow(isUsing)
         }
-
-        fun updateTailoredStrokeLayoutUsage(isOn: Boolean) {
-                useTailoredStrokeLayout.value = isOn
-                val value: Int = if (isOn) StrokeLayout.Tailored.identifier else StrokeLayout.Default.identifier
+        fun updateDedicatedStrokeLayoutUsage(isOn: Boolean) {
+                useDedicatedStrokeLayout.value = isOn
+                val value: Int = if (isOn) StrokeLayout.Dedicated.identifier else StrokeLayout.Default.identifier
                 sharedPreferences.edit {
                         putInt(UserSettingsKey.StrokeLayout, value)
                 }
@@ -769,7 +768,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                                 when (keyboardForm.value) {
                                         KeyboardForm.CandidateBoard,
-                                        KeyboardForm.TailoredStroke -> transformTo(KeyboardForm.Primary)
+                                        KeyboardForm.DedicatedStroke -> transformTo(KeyboardForm.Primary)
                                         else -> {}
                                 }
                                 updateCompositionType(CompositionType.Primary)
@@ -842,8 +841,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                                 val suggestions = Converter.transformed(lexicons = (textMarks + queried), commentForm = RomanizationForm.Full, charset = characterStandard.value, sessionState = sessionState)
                                 withContext(Dispatchers.Main) {
-                                        if (useTailoredStrokeLayout.value && keyboardForm.value.isTailoredStroke.negative) {
-                                                transformTo(KeyboardForm.TailoredStroke)
+                                        if (useDedicatedStrokeLayout.value && keyboardForm.value.isDedicatedStroke.negative) {
+                                                transformTo(KeyboardForm.DedicatedStroke)
                                         } else {
                                                 updateCompositionType(CompositionType.Stroke)
                                         }
@@ -993,7 +992,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                                 when (keyboardForm.value) {
                                         KeyboardForm.CandidateBoard,
-                                        KeyboardForm.TailoredStroke -> transformTo(KeyboardForm.Primary)
+                                        KeyboardForm.DedicatedStroke -> transformTo(KeyboardForm.Primary)
                                         else -> {}
                                 }
                                 updateSpaceKeyForm()
@@ -1189,7 +1188,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun performReturn() {
                 if (isBuffering.value) {
-                        if (keyboardForm.value.isTailoredStroke && candidates.value.isNotEmpty()) {
+                        if (keyboardForm.value.isDedicatedStroke && candidates.value.isNotEmpty()) {
                                 candidates.value.firstOrNull()?.let { selectCandidate(it) }
                         } else {
                                 val text = joinedBufferTexts()
