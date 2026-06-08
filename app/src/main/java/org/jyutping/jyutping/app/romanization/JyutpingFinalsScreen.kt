@@ -85,7 +85,6 @@ fun JyutpingFinalsScreen() {
                                 verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                                 FinalLabel(word = "嘅", syllable = "ge3", jyutping = "e", ipa = "[ ɛː ]")
-                                FinalLabel(word = "記", syllable = "gei3", jyutping = "ei", ipa = "[ ei ]")
                                 FinalLabel(word = "掉", syllable = "deu6", jyutping = "eu", ipa = "[ ɛːu ]")
                                 FinalLabel(word = "𦧷", syllable = "lem2", jyutping = "em", ipa = "[ ɛːm ]")
                                 FinalLabel(word = "鏡", syllable = "geng3", jyutping = "eng", ipa = "[ ɛːŋ ]")
@@ -102,14 +101,25 @@ fun JyutpingFinalsScreen() {
                                         .padding(horizontal = 8.dp, vertical = 4.dp),
                                 verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
+                                FinalLabel(word = "記", syllable = "gei3", jyutping = "ei", ipa = "[ ei ]")
+                                FinalLabel(word = "敬", syllable = "ging3", jyutping = "ing", ipa = "[ eŋ ]")
+                                FinalLabel(word = "極", syllable = "gik6", jyutping = "ik", ipa = "[ ek̚ ]")
+                        }
+                }
+                item {
+                        Column(
+                                modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
                                 FinalLabel(word = "意", syllable = "ji3", jyutping = "i", ipa = "[ iː ]")
                                 FinalLabel(word = "叫", syllable = "giu3", jyutping = "iu", ipa = "[ iːu ]")
                                 FinalLabel(word = "劍", syllable = "gim3", jyutping = "im", ipa = "[ iːm ]")
                                 FinalLabel(word = "見", syllable = "gin3", jyutping = "in", ipa = "[ iːn ]")
-                                FinalLabel(word = "敬", syllable = "ging3", jyutping = "ing", ipa = "[ eŋ ]")
                                 FinalLabel(word = "劫", syllable = "gip3", jyutping = "ip", ipa = "[ iːp̚ ]")
                                 FinalLabel(word = "結", syllable = "git3", jyutping = "it", ipa = "[ iːt̚ ]")
-                                FinalLabel(word = "極", syllable = "gik6", jyutping = "ik", ipa = "[ ek̚ ]")
                         }
                 }
                 item {
@@ -122,7 +132,6 @@ fun JyutpingFinalsScreen() {
                         ) {
                                 FinalLabel(word = "個", syllable = "go3", jyutping = "o", ipa = "[ ɔː ]")
                                 FinalLabel(word = "蓋", syllable = "goi3", jyutping = "oi", ipa = "[ ɔːi ]")
-                                FinalLabel(word = "告", syllable = "gou3", jyutping = "ou", ipa = "[ ɔːu ]")
                                 FinalLabel(word = "幹", syllable = "gon3", jyutping = "on", ipa = "[ ɔːn ]")
                                 FinalLabel(word = "鋼", syllable = "gong3", jyutping = "ong", ipa = "[ ɔːŋ ]")
                                 FinalLabel(word = "割", syllable = "got3", jyutping = "ot", ipa = "[ ɔːt̚ ]")
@@ -137,12 +146,23 @@ fun JyutpingFinalsScreen() {
                                         .padding(horizontal = 8.dp, vertical = 4.dp),
                                 verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
+                                FinalLabel(word = "告", syllable = "gou3", jyutping = "ou", ipa = "[ ou ]")
+                                FinalLabel(word = "貢", syllable = "gung3", jyutping = "ung", ipa = "[ oŋ ]")
+                                FinalLabel(word = "谷", syllable = "guk1", jyutping = "uk", ipa = "[ ok̚ ]")
+                        }
+                }
+                item {
+                        Column(
+                                modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(color = colorScheme.background, shape = RoundedCornerShape(16.dp))
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
                                 FinalLabel(word = "夫", syllable = "fu1", jyutping = "u", ipa = "[ uː ]")
                                 FinalLabel(word = "灰", syllable = "fui1", jyutping = "ui", ipa = "[ uːi ]")
                                 FinalLabel(word = "寬", syllable = "fun1", jyutping = "un", ipa = "[ uːn ]")
-                                FinalLabel(word = "封", syllable = "fung1", jyutping = "ung", ipa = "[ oːŋ ]")
                                 FinalLabel(word = "闊", syllable = "fut3", jyutping = "ut", ipa = "[ uːt̚ ]")
-                                FinalLabel(word = "福", syllable = "fuk1", jyutping = "uk", ipa = "[ oːk̚ ]")
                         }
                 }
                 item {
