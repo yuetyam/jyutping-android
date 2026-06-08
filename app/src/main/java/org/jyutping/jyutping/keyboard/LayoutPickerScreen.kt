@@ -5,6 +5,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalGridApi
+import androidx.compose.foundation.layout.Grid
+import androidx.compose.foundation.layout.GridTrackSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -50,6 +53,7 @@ import org.jyutping.jyutping.models.KeyboardLayout
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 
+@OptIn(ExperimentalGridApi::class)
 @Composable
 fun LayoutPickerScreen(height: Dp) {
         val view = LocalView.current
@@ -58,7 +62,6 @@ fun LayoutPickerScreen(height: Dp) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
-        val sectionShape = RoundedCornerShape(16.dp)
         val tintColor: Color = if (isDarkMode) Color.White else Color.Black
         fun select(layout: KeyboardLayout) {
                 context.audioFeedback(SoundEffect.Click)
@@ -115,31 +118,37 @@ fun LayoutPickerScreen(height: Dp) {
                 }
                 LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                         item {
-                                Column(
+                                Grid(
+                                        config = {
+                                                repeat(times = 4) {
+                                                        column(percentage = 0.25f)
+                                                }
+                                                repeat(times = 2) {
+                                                        row(size = GridTrackSize.Auto)
+                                                }
+                                                rowGap(12.dp)
+                                        },
                                         modifier = Modifier
                                                 .border(
                                                         width = 1.dp,
                                                         color = Color.Transparent,
-                                                        shape = sectionShape
+                                                        shape = RoundedCornerShape(20.dp)
                                                 )
                                                 .fillMaxWidth()
                                                 .padding(8.dp)
                                 ) {
-                                        Row(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                horizontalArrangement = Arrangement.SpaceAround,
-                                                verticalAlignment = Alignment.Top,
-                                        ) {
-                                                LayoutOptionButton(layout = KeyboardLayout.Qwerty, isSelected = keyboardLayout.isQwerty, isDarkMode = isDarkMode, onClick = { select(KeyboardLayout.Qwerty) })
-                                                LayoutOptionButton(layout = KeyboardLayout.TripleStroke, isSelected = keyboardLayout.isTripleStroke, isDarkMode = isDarkMode, onClick = { select(KeyboardLayout.TripleStroke) })
-                                                LayoutOptionButton(layout = KeyboardLayout.NineKey, isSelected = keyboardLayout.isNineKey, isDarkMode = isDarkMode, onClick = { select(KeyboardLayout.NineKey) })
-                                                Spacer(modifier = Modifier.width(64.dp))
-                                        }
-                                        Spacer(modifier = Modifier.height(64.dp))
+                                        LayoutOptionButton(layout = KeyboardLayout.Qwerty, isSelected = keyboardLayout.isQwerty, isDarkMode = isDarkMode) { select(KeyboardLayout.Qwerty) }
+                                        LayoutOptionButton(layout = KeyboardLayout.TripleStroke, isSelected = keyboardLayout.isTripleStroke, isDarkMode = isDarkMode) { select(KeyboardLayout.TripleStroke) }
+                                        LayoutOptionButton(layout = KeyboardLayout.NineKey, isSelected = keyboardLayout.isNineKey, isDarkMode = isDarkMode) { select(KeyboardLayout.NineKey) }
+                                        Spacer(modifier = Modifier.size(64.dp))
+                                        Spacer(modifier = Modifier.size(64.dp))
+                                        Spacer(modifier = Modifier.size(64.dp))
+                                        Spacer(modifier = Modifier.size(64.dp))
+                                        Spacer(modifier = Modifier.size(64.dp))
                                 }
                         }
                 }
@@ -151,7 +160,7 @@ private fun LayoutOptionButton(layout: KeyboardLayout, isSelected: Boolean, isDa
         val accentColor = MaterialTheme.colorScheme.primary
         Column(
                 modifier = Modifier.width(64.dp),
-                verticalArrangement = Arrangement.spacedBy(3.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
                 IconButton(
