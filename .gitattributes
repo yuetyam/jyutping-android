@@ -23,3 +23,9 @@
 *.otf binary
 *.ttc binary
 *.ttf binary
+
+/preparing/src/main/resources/chohok.txt       binary
+/preparing/src/main/resources/fanwan.txt       binary
+/preparing/src/main/resources/gwongwan.txt     binary
+/preparing/src/main/resources/structure.txt    binary
+/preparing/src/main/resources/yingwaa.txt      binary

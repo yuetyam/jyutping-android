@@ -27,14 +27,25 @@ data class Candidate(
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true
                 if (other !is Candidate) return false
-                return (sessionState == other.sessionState) && (lexicon.inputCount == other.lexicon.inputCount) && (text == other.text) && (comment == other.comment)
+                if (sessionState != other.sessionState) return false
+                return if (isCantonese && other.isCantonese && (comment == null)) {
+                        (text == other.text) && (lexicon.toneFreeRomanization == other.lexicon.toneFreeRomanization)
+                } else {
+                        (text == other.text) && (comment == other.comment)
+                }
         }
         override fun hashCode(): Int {
-                var result = sessionState.hashCode()
-                result = 31 * result + lexicon.inputCount
-                result = 31 * result + text.hashCode()
-                result = 31 * result + (comment?.hashCode() ?: 0)
-                return result
+                if (isCantonese && (comment == null)) {
+                        var result = sessionState.hashCode()
+                        result = 31 * result + text.hashCode()
+                        result = 31 * result + lexicon.toneFreeRomanization.hashCode()
+                        return result
+                } else {
+                        var result = sessionState.hashCode()
+                        result = 31 * result + text.hashCode()
+                        result = 31 * result + (comment?.hashCode() ?: 0)
+                        return result
+                }
         }
 
         /**
@@ -54,7 +65,7 @@ data class Candidate(
                 text = text ?: lexicon.text,
                 comment = if (lexicon.isNotCantonese) null else when (commentForm) {
                         RomanizationForm.Full -> lexicon.romanization
-                        RomanizationForm.Toneless -> lexicon.romanization.filterNot { it.isCantoneseToneDigit }
+                        RomanizationForm.Toneless -> lexicon.toneFreeRomanization
                         RomanizationForm.Nothing -> null
                 },
                 lexicon = lexicon,

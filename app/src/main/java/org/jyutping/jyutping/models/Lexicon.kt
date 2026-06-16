@@ -48,6 +48,7 @@ data class Lexicon(
                 romanization.filterNot { it.isSpace }
         }
 
+        // TODO: Rename to something else
         /** romanization reduced to a-z letters only */
         val syllableLetters: String by lazy(LazyThreadSafetyMode.PUBLICATION) {
                 romanization.filter { it.isLowercaseBasicLatinLetter }

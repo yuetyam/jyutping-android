@@ -131,7 +131,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 window?.window?.let { win ->
                                         win.addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
                                         val density = resources.displayMetrics.density
-                                        val blurPixel = (32 * density).roundToInt()
+                                        val blurPixel = (50 * density).roundToInt()
                                         win.setBackgroundBlurRadius(blurPixel)
                                 }
                         }
