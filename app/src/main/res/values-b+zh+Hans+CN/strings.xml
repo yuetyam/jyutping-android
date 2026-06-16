@@ -136,4 +136,7 @@
     <string name="emoji_board_header_objects">物品</string>
     <string name="emoji_board_header_symbols">符號</string>
     <string name="emoji_board_header_flags">旗幟</string>
+    <string name="detail_inspecting_summary_input_count">輸入次數</string>
+    <string name="detail_inspecting_summary_latest">最近輸入</string>
+    <string name="detail_inspecting_forget_candidate_button_title">從輸入記憶移除</string>
 </resources>

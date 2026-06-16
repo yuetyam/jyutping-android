@@ -71,4 +71,8 @@ data class Candidate(
                 lexicon = lexicon,
                 sessionState = sessionState
         )
+
+        companion object {
+                val sample: Candidate = Candidate(text = "例", comment = "lai6", lexicon = Lexicon.sample, sessionState = 9527)
+        }
 }

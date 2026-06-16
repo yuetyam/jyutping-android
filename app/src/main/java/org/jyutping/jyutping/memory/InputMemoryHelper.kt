@@ -209,6 +209,19 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
                 val command: String = "DELETE FROM core_memory;"
                 writableDatabase.execSQL(command)
         }
+
+        fun inspect(lexicon: Lexicon): Pair<Long, Long> {
+                var frequency: Long = 0L
+                var latest: Long = 0L
+                val command = "SELECT frequency, latest FROM core_memory WHERE word = ? AND romanization = ? LIMIT 1;"
+                readableDatabase.rawQuery(command, arrayOf(lexicon.text, lexicon.romanization)).use { cursor ->
+                        if (cursor.moveToFirst()) {
+                                frequency = cursor.getLong(0)
+                                latest = cursor.getLong(1)
+                        }
+                }
+                return Pair(frequency, latest)
+        }
 }
 
 fun InputMemoryHelper.searchMemory(keys: List<VirtualInputKey>, text: String, segmentation: Segmentation): List<Lexicon> {

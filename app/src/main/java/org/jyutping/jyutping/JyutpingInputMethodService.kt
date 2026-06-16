@@ -372,13 +372,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         val keyboardForm: MutableStateFlow<KeyboardForm> by lazy { MutableStateFlow(KeyboardForm.Primary) }
         fun transformTo(destination: KeyboardForm) {
                 if (isBuffering.value) {
-                        val shouldKeepBuffer: Boolean = when (destination) {
-                                KeyboardForm.Primary,
-                                KeyboardForm.CandidateBoard,
-                                KeyboardForm.DedicatedStroke -> true
-                                else -> false
-                        }
-                        if (shouldKeepBuffer.negative) {
+                        if (destination.isBufferable.negative) {
                                 val text = joinedBufferTexts()
                                 currentInputConnection.commitText(text, 1)
                                 clearBuffer()
@@ -691,10 +685,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         private val selectedLexicons: MutableList<Lexicon> by lazy { mutableListOf() }
         private val memoryHelper by lazy { InputMemoryHelper(applicationContext) }
+
         fun forgetCandidate(candidate: Candidate? = null, index: Int? = null) = when {
                 candidate != null -> memoryHelper.forget(candidate.lexicon)
                 index != null -> candidates.value.getOrNull(index)?.let { memoryHelper.forget(it.lexicon) }
-                else -> {}
+                else -> memoryHelper.forget(inspectingCandidate.value.lexicon)
         }
         fun clearInputMemory() {
                 memoryHelper.deleteAll()
@@ -743,6 +738,16 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 emojiBoardEmojis.value = defaultFrequentEmojis + emojiSequence
         }
         //endregion
+
+        val inspectingCandidate: MutableStateFlow<Candidate> by lazy { MutableStateFlow(Candidate.sample) }
+        val inspectedMemory: MutableStateFlow<Pair<Long, Long>> by lazy { MutableStateFlow(Pair(0L, 0L)) }
+        fun inspect(candidate: Candidate? = null, index: Int? = null) {
+                (candidate ?: index?.let { candidates.value.getOrNull(it) })?.let {
+                        inspectedMemory.value = memoryHelper.inspect(it.lexicon)
+                        inspectingCandidate.value = it
+                        transformTo(KeyboardForm.DetailInspecting)
+                }
+        }
 
         val candidateState: MutableStateFlow<Long> by lazy {
                 Elephant.connectDatabase(applicationContext)

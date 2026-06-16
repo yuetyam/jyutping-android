@@ -26,6 +26,7 @@ import org.jyutping.jyutping.keyboard.CantoneseKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseNumericKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseSymbolicKeyboard
 import org.jyutping.jyutping.keyboard.CommentStyle
+import org.jyutping.jyutping.keyboard.DetailInspectingScreen
 import org.jyutping.jyutping.keyboard.LayoutPickerScreen
 import org.jyutping.jyutping.keyboard.NumericKeyboard
 import org.jyutping.jyutping.keyboard.PhysicalKeyboardCandidateBar
@@ -123,6 +124,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                         KeyboardForm.DedicatedNumbers -> TailoredNumericKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                         KeyboardForm.DedicatedStroke -> TailoredStrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                         KeyboardForm.CandidateBoard -> CandidateBoard(height = keyboardHeight(keyOffset))
+                        KeyboardForm.DetailInspecting -> DetailInspectingScreen(height = keyboardHeight(keyOffset))
                         KeyboardForm.Settings -> CompactTheme { SettingsScreen(height = keyboardHeight(keyOffset)) }
                         KeyboardForm.LayoutPicker -> CompactTheme { LayoutPickerScreen(height = keyboardHeight(keyOffset)) }
                         KeyboardForm.EmojiBoard -> EmojiBoard(height = keyboardHeight(keyOffset))

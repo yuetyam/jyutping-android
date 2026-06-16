@@ -123,5 +123,7 @@ data class Lexicon(
                         val newNumber: Int = lexicons.map { it.number }.fold(0) { acc, i -> acc + i + step }
                         return Lexicon(text = newText, romanization = newRomanization, input = newInput, mark = newMark, number = newNumber)
                 }
+
+                val sample: Lexicon = Lexicon(text = "例", romanization = "lai6", input = "lai")
         }
 }

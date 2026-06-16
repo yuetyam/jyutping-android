@@ -144,15 +144,15 @@ fun CandidateBoard(height: Dp, isPhysicalKeyboard: Boolean = false) {
                                                         candidate = it,
                                                         commentStyle = commentStyle,
                                                         isDarkMode = isDarkMode,
-                                                        selection = {
+                                                        onTap = {
                                                                 context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.selectCandidate(it)
                                                         },
-                                                        deletion = {
-                                                                context.audioFeedback(SoundEffect.Delete)
+                                                        onLongPress = {
+                                                                context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-                                                                context.forgetCandidate(it)
+                                                                context.inspect(it)
                                                         }
                                                 )
                                         }

@@ -136,4 +136,7 @@
     <string name="emoji_board_header_objects">Objects</string>
     <string name="emoji_board_header_symbols">Symbols</string>
     <string name="emoji_board_header_flags">Flags</string>
+    <string name="detail_inspecting_summary_input_count">Input Count</string>
+    <string name="detail_inspecting_summary_latest">Latest Input</string>
+    <string name="detail_inspecting_forget_candidate_button_title">Remove from Input Memory</string>
 </resources>

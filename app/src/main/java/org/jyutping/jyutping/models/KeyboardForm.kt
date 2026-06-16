@@ -11,6 +11,9 @@ enum class KeyboardForm {
         /** 9-key (T9) Stroke keyboard for reverse lookup */
         DedicatedStroke,
 
+        /** Candidate detail page */
+        DetailInspecting,
+
         /** Button page for copy, cut, clear, etc. */
         EditingPanel,
 
@@ -35,7 +38,7 @@ enum class KeyboardForm {
         /** Should stay buffering, should keep the bufferText */
         val isBufferable: Boolean
                 get() = when (this) {
-                        Primary, CandidateBoard, DedicatedStroke -> true
+                        Primary, CandidateBoard, DedicatedStroke, DetailInspecting -> true
                         else -> false
                 }
 

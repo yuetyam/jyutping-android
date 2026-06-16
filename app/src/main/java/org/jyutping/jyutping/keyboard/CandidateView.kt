@@ -30,8 +30,8 @@ fun CandidateView(
         candidate: Candidate,
         commentStyle: CommentStyle,
         isDarkMode: Boolean,
-        selection: () -> Unit,
-        deletion: () -> Unit,
+        onTap: () -> Unit,
+        onLongPress: () -> Unit,
         numberLabel: String? = null
 ) {
         val textColor: Color = if (isDarkMode) Color.White else Color.Black
@@ -42,10 +42,10 @@ fun CandidateView(
                                 detectTapGestures(
                                         onLongPress = {
                                                 if (candidateState > 0L) {
-                                                        deletion()
+                                                        onLongPress()
                                                 }
                                         },
-                                        onTap = { selection() }
+                                        onTap = { onTap() }
                                 )
                         }
                         .padding(horizontal = if (candidate.isCantonese) 8.dp else 10.dp)
@@ -103,8 +103,8 @@ fun AltCandidateView(
         candidate: Candidate,
         commentStyle: CommentStyle,
         isDarkMode: Boolean,
-        selection: () -> Unit,
-        deletion: () -> Unit
+        onTap: () -> Unit,
+        onLongPress: () -> Unit
 ) {
         val textColor: Color = if (isDarkMode) Color.White else Color.Black
         Column(
@@ -113,10 +113,10 @@ fun AltCandidateView(
                                 detectTapGestures(
                                         onLongPress = {
                                                 if (candidateState > 0L) {
-                                                        deletion()
+                                                        onLongPress()
                                                 }
                                         },
-                                        onTap = { selection() }
+                                        onTap = { onTap() }
                                 )
                         },
                 verticalArrangement = Arrangement.spacedBy((-2).dp),
