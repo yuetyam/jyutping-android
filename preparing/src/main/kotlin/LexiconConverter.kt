@@ -16,7 +16,12 @@ object LexiconConverter {
         fun structure(): List<LexiconEntry> {
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("structure.txt") ?: error("Can not load structure.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                return sourceLines.map { convert(it) }.distinct()
+                val transformedLines = sourceLines.mapNotNull { line ->
+                        val parts = line.split(PresetString.TAB)
+                        if (parts.size != 3) return@mapNotNull null
+                        return@mapNotNull parts[0] + PresetString.TAB + parts[2]
+                }
+                return transformedLines.distinct().map { convert(it) }.distinct()
         }
         private fun convert(text: String): LexiconEntry {
                 val badLineFormat = "bad line format: $text"

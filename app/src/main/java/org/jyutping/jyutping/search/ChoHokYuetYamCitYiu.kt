@@ -2,7 +2,7 @@ package org.jyutping.jyutping.search
 
 data class ChoHokYuetYamCitYiu(
         val word: String,
-        val pronunciation: String,
+        val phone: String,
         val tone: String,
         val faancit: String,
         val romanization: String,

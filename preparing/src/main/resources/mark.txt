@@ -53,6 +53,7 @@ bonjour	Bonjour
 bridgeos	bridgeOS
 bugatti	Bugatti
 byd	BYD
+byok	BYOK
 bytedance	ByteDance
 cafe	Café
 cafe	cafe
@@ -94,6 +95,7 @@ compose	Compose
 copilot	Copilot
 coretext	Core Text
 costco	Costco
+cowork	Cowork
 cpu	CPU
 css	CSS
 cuda	CUDA
@@ -169,6 +171,8 @@ gmail	Gmail
 gmail	gmail.com
 gnu	GNU
 gnupg	GnuPG
+goldengate	Golden Gate
+goodnotes	Goodnotes
 goog	Google
 googl	Google
 google	Google
@@ -335,6 +339,7 @@ nfl	NFL
 nikon	Nikon
 nissan	Nissan
 nokia	Nokia
+notability	Notability
 notebooklm	NotebookLM
 notion	Notion
 npu	NPU
@@ -403,9 +408,9 @@ python	Python
 pytorch	PyTorch
 qled	QLED
 qq	QQ
-qq	qq
 qrcode	QR Code
 qualcomm	Qualcomm
+quicklook	QuickLook
 quicktime	QuickTime
 quora	Quora
 ram	RAM
@@ -441,6 +446,8 @@ sequoia	Sequoia
 shareplay	SharePlay
 shopify	Shopify
 sim	SIM
+siri	Siri
+siriai	Siri AI
 sirikit	SiriKit
 slack	Slack
 snapchat	Snapchat
@@ -542,7 +549,9 @@ winui	WinUI
 word	Word
 word	word
 wordpress	WordPress
+wwdc	WWDC
 wwe	WWE
+www	www
 xbox	Xbox
 xcod	Xcode
 xcode	Xcode
@@ -592,19 +601,22 @@ gb	GB
 tb	TB
 hz	Hz
 db	dB
-alpha	Alpha
-beta	Beta
-gamma	Gamma
-delta	Delta
-epsilon	Epsilon
-kappa	Kappa
-lambda	Lambda
-omicron	Omicron
-sigma	Sigma
-omega	Omega
+alpha	alpha
+beta	beta
+gamma	gamma
+delta	delta
+epsilon	epsilon
+lambda	lambda
+omicron	omicron
+sigma	sigma
+omega	omega
+shadowsocks	Shadowsocks
+shadowrocket	Shadowrocket
+xray	Xray
+clash	Clash
+clashx	ClashX
 agent	agent
 agents	agents
-alpha	alpha
 auth	auth
 bbc	BBC
 bbq	BBQ
@@ -616,6 +628,7 @@ goodman	Goodman
 lgbt	LGBT
 lgbtq	LGBTQ
 lgbtqia	LGBTQIA
+mamba	mamba
 momo	momo
 ootd	ootd
 pinkman	Pinkman
@@ -1011,6 +1024,13 @@ clear	⌧
 function	function
 home	home
 end	end
+alpha	α
+beta	β
+gamma	γ
+delta	Δ
+delta	δ
+lambda	λ
+omega	Ω
 mary	Mary
 patricia	Patricia
 jennifer	Jennifer
@@ -3081,7 +3101,6 @@ pain	pain
 particularly	particularly
 factors	factors
 coffee	coffee
-www	www
 settings	settings
 cum	cum
 buyer	buyer
@@ -6835,7 +6854,6 @@ threats	threats
 puzzles	puzzles
 reaching	reaching
 damaged	damaged
-cams	cams
 receptor	receptor
 piss	piss
 laugh	laugh
@@ -8744,7 +8762,6 @@ wicked	wicked
 introduces	introduces
 kills	kills
 roommate	roommate
-webcams	webcams
 pushed	pushed
 webmasters	webmasters
 computational	computational
@@ -10783,7 +10800,6 @@ brady	brady
 bulls	bulls
 bullying	bullying
 capitalism	capitalism
-clash	clash
 condemned	condemned
 convincing	convincing
 curiosity	curiosity
@@ -11803,7 +11819,6 @@ banning	banning
 bishops	bishops
 broncos	broncos
 caesar	caesar
-cans	cans
 cavalry	cavalry
 coffin	coffin
 colorful	colorful
@@ -12898,18 +12913,14 @@ trousers	trousers
 unwilling	unwilling
 variants	variants
 varsity	varsity
-vows	vows
 whichever	whichever
 whipped	whipped
 wrath	wrath
-yuan	yuan
 abuses	abuses
 accomplishment	accomplishment
-aide	aide
 allegiance	allegiance
 attracting	attracting
 bangalore	bangalore
-bans	bans
 battling	battling
 blaze	blaze
 brendan	brendan
@@ -13372,17 +13383,12 @@ sweating	sweating
 swings	swings
 tangible	tangible
 tara	tara
-theo	theo
-tilt	tilt
 tougher	tougher
 trivial	trivial
 turks	turks
 unofficial	unofficial
-veil	veil
 versatile	versatile
-zoe	zoe
 acknowledging	acknowledging
-alec	alec
 artery	artery
 bamboo	bamboo
 basil	basil
@@ -15292,4 +15298,5 @@ doubtful	doubtful
 dysfunction	dysfunction
 padding	padding
 cameraman	cameraman
+trillionaire	trillionaire
 ecosystems	ecosystems

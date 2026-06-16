@@ -10,6 +10,7 @@ object PresetString {
 
         // English full-stop
         const val PERIOD: String = "."
+        const val UPPER_LETTER_X: String = "X"
         const val FULL_WIDTH: String = "全寬"
         const val HALF_WIDTH: String = "半寬"
 }

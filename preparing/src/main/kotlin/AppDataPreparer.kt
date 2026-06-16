@@ -110,29 +110,30 @@ object AppDataPreparer {
         }
 
         private fun createYingWaaTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE yingwaa_table(code INTEGER NOT NULL, word TEXT NOT NULL, romanization TEXT NOT NULL, pronunciation TEXT NOT NULL, pronunciationmark TEXT NOT NULL, interpretation TEXT NOT NULL);"
+                val createTableCommand: String = "CREATE TABLE yingwaa_table(code INTEGER NOT NULL, word TEXT NOT NULL, romanization TEXT NOT NULL, pronunciation TEXT NOT NULL, note TEXT NOT NULL, interpretation TEXT NOT NULL);"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
                 }
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("yingwaa.txt") ?: error("Can not load yingwaa.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val insertEntryCommand: String = "INSERT INTO yingwaa_table (code, word, romanization, pronunciation, pronunciationmark, interpretation) VALUES (?, ?, ?, ?, ?, ?);"
+                val insertEntryCommand: String = "INSERT INTO yingwaa_table (code, word, romanization, pronunciation, note, interpretation) VALUES (?, ?, ?, ?, ?, ?);"
                 val insertedCount = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(PresetString.TAB)
-                        if (parts.size != 6) error(badLineFormat)
-                        val code = parts[0].toInt()
-                        val word = parts[1]
-                        val romanization = parts[2]
-                        val pronunciation = parts[3]
-                        val pronunciationMark = parts[4]
-                        val interpretation = parts[5]
+                        if (parts.size != 5) error(badLineFormat)
+                        val word = parts[0]
+                        if (word.isBlank()) error(badLineFormat)
+                        val code = word.codePointAt(0)
+                        val romanization = parts[1]
+                        val pronunciation = parts[2]
+                        val note = parts[3]
+                        val interpretation = parts[4]
                         statement.setInt(1, code)
                         statement.setString(2, word)
                         statement.setString(3, romanization)
                         statement.setString(4, pronunciation)
-                        statement.setString(5, pronunciationMark)
+                        statement.setString(5, note)
                         statement.setString(6, interpretation)
                 }
                 connection.close()
@@ -140,32 +141,31 @@ object AppDataPreparer {
         }
 
         private fun createChoHokTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE chohok_table(code INTEGER NOT NULL, word TEXT NOT NULL, romanization TEXT NOT NULL, initial TEXT NOT NULL, final TEXT NOT NULL, tone TEXT NOT NULL, faancit TEXT NOT NULL);"
+                val createTableCommand: String = "CREATE TABLE chohok_table(code INTEGER NOT NULL, word TEXT NOT NULL, romanization TEXT NOT NULL, phone TEXT NOT NULL, tone TEXT NOT NULL, faancit TEXT NOT NULL);"
                 val connection = DriverManager.getConnection(url)
                 connection.createStatement().use { statement ->
                         statement.executeUpdate(createTableCommand)
                 }
                 val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("chohok.txt") ?: error("Can not load chohok.txt")
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val insertEntryCommand: String = "INSERT INTO chohok_table (code, word, romanization, initial, final, tone, faancit) VALUES (?, ?, ?, ?, ?, ?, ?);"
+                val insertEntryCommand: String = "INSERT INTO chohok_table (code, word, romanization, phone, tone, faancit) VALUES (?, ?, ?, ?, ?, ?);"
                 val insertedCount = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(PresetString.TAB)
-                        if (parts.size != 7) error(badLineFormat)
-                        val code = parts[0].toInt()
-                        val word = parts[1]
-                        val romanization = parts[2]
-                        val initial = parts[3]
-                        val final = parts[4]
-                        val tone = parts[5]
-                        val faancit = parts[6]
+                        if (parts.size != 5) error(badLineFormat)
+                        val word = parts[0]
+                        if (word.isBlank()) error(badLineFormat)
+                        val code = word.codePointAt(0)
+                        val romanization = parts[1]
+                        val phone = parts[2]
+                        val tone = parts[3]
+                        val faancit = parts[4]
                         statement.setInt(1, code)
                         statement.setString(2, word)
                         statement.setString(3, romanization)
-                        statement.setString(4, initial)
-                        statement.setString(5, final)
-                        statement.setString(6, tone)
-                        statement.setString(7, faancit)
+                        statement.setString(4, phone)
+                        statement.setString(5, tone)
+                        statement.setString(6, faancit)
                 }
                 connection.close()
                 println("Inserted chohok entries: $insertedCount")
@@ -181,18 +181,19 @@ object AppDataPreparer {
                 val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
                 val insertEntryCommand: String = "INSERT INTO fanwan_table (code, word, romanization, initial, final, yamyeung, tone, rhyme, interpretation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
                 val insertedCount = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
-                        val badLineFormat = "bad line format: $line"
+                        val badLineFormat = "FanWan, bad line format: $line"
                         val parts = line.split(PresetString.TAB)
-                        if (parts.size != 9) error(badLineFormat)
-                        val code = parts[0].toInt()
-                        val word = parts[1]
-                        val romanization = parts[2]
-                        val initial = parts[3]
-                        val final = parts[4]
-                        val yamyeung = parts[5]
-                        val tone = parts[6]
-                        val rhyme = parts[7]
-                        val interpretation = parts[8]
+                        if (parts.size != 8) error(badLineFormat)
+                        val word = parts[0]
+                        if (word.isBlank()) error(badLineFormat)
+                        val code = word.codePointAt(0)
+                        val romanization = parts[1]
+                        val initial = parts[2]
+                        val final = parts[3]
+                        val yamyeung = parts[4]
+                        val tone = parts[5]
+                        val rhyme = parts[6]
+                        val interpretation = parts[7]
                         statement.setInt(1, code)
                         statement.setString(2, word)
                         statement.setString(3, romanization)
@@ -219,22 +220,23 @@ object AppDataPreparer {
                 val insertedCount = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
                         val badLineFormat = "bad line format: $line"
                         val parts = line.split(",")
-                        if (parts.size != 15) error(badLineFormat)
-                        val code = parts[0].toInt()
-                        val word = parts[1]
-                        val rhyme = parts[2]
-                        val subrhyme = parts[3]
-                        val subrhymeserial = parts[4].toInt()
-                        val subrhymenumber = parts[5].toInt()
-                        val upper = parts[6]
-                        val lower = parts[7]
-                        val initial = parts[8]
-                        val rounding = parts[9]
-                        val division = parts[10]
-                        val rhymeclass = parts[11]
-                        val repeating = parts[12]
-                        val tone = parts[13]
-                        val interpretation = parts[14]
+                        if (parts.size != 14) error(badLineFormat)
+                        val word = parts[0]
+                        if (word.isBlank()) error(badLineFormat)
+                        val code = word.codePointAt(0)
+                        val rhyme = parts[1]
+                        val subrhyme = parts[2]
+                        val subrhymeserial = parts[3].toInt()
+                        val subrhymenumber = parts[4].toInt()
+                        val upper = parts[5]
+                        val lower = parts[6]
+                        val initial = parts[7]
+                        val rounding = parts[8]
+                        val division = parts[9]
+                        val rhymeclass = parts[10]
+                        val repeating = parts[11]
+                        val tone = parts[12]
+                        val interpretation = parts[13]
                         statement.setInt(1, code)
                         statement.setString(2, word)
                         statement.setString(3, rhyme)

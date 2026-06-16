@@ -68,7 +68,7 @@ private fun ChoHokPronunciationView(entry: ChoHokYuetYamCitYiu) {
                                 )
                                 SeparatorMark()
                                 Text(
-                                        text = entry.pronunciation,
+                                        text = entry.phone,
                                         color = colorScheme.onBackground
                                 )
                         }
@@ -77,7 +77,7 @@ private fun ChoHokPronunciationView(entry: ChoHokYuetYamCitYiu) {
                                 color = colorScheme.onBackground
                         )
                         Text(
-                                text = entry.faancit,
+                                text = entry.faancit + "切",
                                 color = colorScheme.onBackground
                         )
                 }

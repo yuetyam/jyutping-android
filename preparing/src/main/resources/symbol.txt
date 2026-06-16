@@ -358,8 +358,11 @@
 1	110000	1F92C	鬧人	naau6 jan4
 1	110000	1F92C	粗口	cou1 hau2
 1	110000	1F92C	爆粗	baau3 cou1
-1	110000	1F92F	頭都大埋	tau4 dou1 daai6 maai4
+1	110000	1F92F	爆炸頭	baau3 zaa3 tau4
+1	110000	1F92F	爆炸	baau3 zaa3
+1	110000	1F92F	炸裂	zaa3 lit6
 1	110000	1F92F	大腦爆炸	daai6 nou5 baau3 zaa3
+1	110000	1F92F	頭都大埋	tau4 dou1 daai6 maai4
 1	110000	1F92F	噉都得	gam2 dou1 dak1
 1	110000	1F633	愕然	ngok6 jin4
 1	110000	1F633	不知所措	bat1 zi1 so2 cou3
@@ -1785,15 +1788,30 @@
 1	110000	1F468.200D.2764.FE0F.200D.1F48B.200D.1F468	相吻男	soeng1 man5 naam4
 1	110000	1FAA2	結	git3
 1	110000	1FAA2	繩結	sing4 git3
+1	110000	1FAA2	結繩	git3 sing4
+1	110000	1FAA2	打結	daa2 git3
+1	110000	1FAA2	編結	pin1 git3
+1	110000	1F9F6	唥	laang1
+1	110000	1F9F6	唥線	laang1 sin3
 1	110000	1F9F6	毛線	mou4 sin3
 1	110000	1F9F6	毛線團	mou4 sin3 tyun4
 1	110000	1F9F6	線團	sin3 tyun4
 1	110000	1F9F5	線	sin3
+1	110000	1F9F5	線筒	sin3 tung4
 1	110000	1F9F5	線軸	sin3 zuk6
 1	110000	1F9F5	線輪	sin3 leon4
+1	110000	1F9F5	線梳	sin3 so1
+1	110000	1F9F5	梭芯	so1 sam1
+1	110000	1F9F5	針線	zam1 sin3
+1	110000	1F9F5	女紅	neoi5 gung1
+1	110000	1F9F5	線緒	sin3 seoi5
+1	110000	1F9F5	線程	sin3 cing4
+1	110000	1F9F5	執行緒	zap1 hang4 seoi5
 1	110000	1FAA1	縫衣針	fung4 ji1 zam1
+1	110000	1FAA1	衣針	ji1 zam1
 1	110000	1FAA1	針	zam1
 1	110000	1FAA1	針線	zam1 sin3
+1	110000	1FAA1	女紅	neoi5 gung1
 1	110000	1F9E5	外套	ngoi6 tou3
 1	110000	1F9E5	大衣	daai6 ji1
 1	110000	1F9E5	風衣	fung1 ji1
@@ -2583,6 +2601,9 @@
 2	150000	1FABB	風信子	fung1 seon3 zi2
 2	140000	1FAB7	蓮花	lin4 faa1
 2	140000	1FAB7	蓮	lin4
+2	140000	1FAB7	荷花	ho4 faa1
+2	140000	1FAB7	荷	ho4
+2	140000	1FAB7	水芙蓉	seoi2 fu4 jung4
 2	110000	1F33A	木槿	muk6 gan2
 2	110000	1F33A	木槿花	muk6 gan2 faa1
 2	110000	1F33A	芙蓉	fu4 jung4
@@ -4091,6 +4112,7 @@
 6	110000	1F5A8	打印機	daa2 jan3 gei1
 6	110000	1F5A8	打印	daa2 jan3
 6	110000	1F5A8	印表機	jan3 biu2 gei1
+6	110000	1F5A8	印表	jan3 biu2
 6	110000	1F5A8	印	jan3
 6	110000	1F5B1	鼠標	syu2 biu1
 6	110000	1F5B1	滑鼠	waat6 syu2
@@ -4174,7 +4196,6 @@
 6	110000	23F0	時間	si4 gaan1
 6	110000	23F0	時間	si4 gaan3
 6	110000	1F570.FE0F	檯鐘	toi4 zung1
-6	110000	1F570.FE0F	鐘	zung1
 6	110000	231B.FE0F	漏斗	lau6 dau2
 6	110000	231B.FE0F	沙漏	saa1 lau6
 6	110000	231B.FE0F	計時	gai3 si4
@@ -4187,6 +4208,7 @@
 6	110000	1F4E1	衛星通訊	wai6 sing1 tung1 seon3
 6	110000	1F4E1	鑊形天線	wok6 jing4 tin1 sin3
 6	110000	1F4E1	衛星鑊	wai6 sing1 wok6
+6	110000	1F4E1	鑊斗	wok6 dau2
 6	110000	1F50B	電池	din6 ci4
 6	110000	1F50B	電量	din6 loeng6
 6	140000	1FAAB	低電量	dai1 din6 loeng6
@@ -4226,6 +4248,7 @@
 6	110000	1F4B5	美元	mei5 jyun4
 6	110000	1F4B5	美金	mei5 gam1
 6	110000	1F4B5	美鈔	mei5 caau1
+6	110000	1F4B5	美幣	mei5 bai6
 6	110000	1F4B5	紙幣	zi2 bai6
 6	110000	1F4B5	銀紙	ngan4 zi2
 6	110000	1F4B5	鈔票	caau1 piu3
@@ -4235,7 +4258,9 @@
 6	110000	1F4B5	錢銀	cin2 ngan2
 6	110000	1F4B5	錢財	cin4 coi4
 6	110000	1F4B4	日元	jat6 jyun4
+6	110000	1F4B4	日幣	jat6 bai6
 6	110000	1F4B6	歐元	au1 jyun4
+6	110000	1F4B6	歐幣	au1 bai6
 6	110000	1F4B7	英鎊	jing1 bong6
 6	110000	1F4B7	鎊	bong6
 6	110000	1FA99	硬幣	ngaang6 bai6
@@ -4343,7 +4368,10 @@
 6	110000	1FA93	斧頭	fu2 tau4
 6	110000	1F52A	刀	dou1
 6	110000	1F52A	菜刀	coi3 dou1
+6	110000	1F52A	把刀	baa2 dou1
+6	110000	1F52A	張刀	zoeng1 dou1
 6	110000	1F5E1	劍	gim3
+6	110000	1F5E1	刀劍	dou1 gim3
 6	110000	2694.FE0F	劍	gim3
 6	110000	2694.FE0F	兵器	bing1 hei3
 6	110000	2694.FE0F	武器	mou5 hei3
@@ -5332,17 +5360,12 @@
 7	110000	1F503	順時針箭頭	seon6 si4 zam1 zin3 tau4
 7	110000	1F3B5	音樂	jam1 ngok6
 7	110000	1F3B5	音符	jam1 fu4
-7	110000	1F3B5	樂	ngok6
-7	110000	1F3B6	音符	jam1 fu4
+7	110000	1F3B6	音樂符號	jam1 ngok6 fu4 hou6
 7	110000	2795	加號	gaa1 hou6
-7	110000	2795	加	gaa1
 7	110000	2796	減號	gaam2 hou6
-7	110000	2796	減	gaam2
 7	110000	2797	除號	ceoi4 hou6
-7	110000	2797	除	ceoi4
 7	110000	2797	除以	ceoi4 ji5
 7	110000	2716.FE0F	乘號	sing4 hou6
-7	110000	2716.FE0F	乘	sing4
 7	110000	2716.FE0F	乘以	sing4 ji5
 7	140000	1F7F0	等號	dang2 hou6
 7	140000	1F7F0	等於	dang2 jyu1
@@ -6416,12 +6439,10 @@
 10	110000	266B	音符	jam1 fu4
 10	110000	266B	音樂	jam1 ngok6
 10	110000	266B	樂	ngok6
-10	110000	266C	音符	jam1 fu4
+10	110000	266C	音樂符號	jam1 ngok6 fu4 hou6
 10	110000	1D11E	樂譜	ngok6 pou2
 10	110000	1D11E	曲譜	kuk1 pou2
 10	110000	1D11E	歌譜	go1 pou2
-10	110000	1D11E	音符	jam1 fu4
-10	110000	1D11E	音樂	jam1 ngok6
 10	110000	266F	昇號	sing1 hou6
 10	110000	266F	昇記號	sing1 gei3 hou6
 10	110000	266F	昇音符	sing1 jam1 fu4

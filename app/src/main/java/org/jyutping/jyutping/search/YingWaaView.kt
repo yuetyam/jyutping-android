@@ -57,7 +57,6 @@ fun YingWaaView(entries: List<YingWaaFanWan>) {
 @Composable
 private fun YingWaaPronunciationView(entry: YingWaaFanWan) {
         val ipaText = OldCantonese.IPAText(entry.romanization)
-        val pronunciationMark = entry.pronunciationMark?.let { YingWaaFanWan.processPronunciationMark(it) }
         val homophoneText = if (entry.homophones.isEmpty()) null else entry.homophones.joinToString(separator = PresetString.SPACE)
         Column {
                 Row(
@@ -74,7 +73,7 @@ private fun YingWaaPronunciationView(entry: YingWaaFanWan) {
                                         color = colorScheme.onBackground
                                 )
                         }
-                        pronunciationMark?.let {
+                        entry.note?.let {
                                 Text(
                                         text = it,
                                         color = colorScheme.onBackground,

@@ -139,7 +139,7 @@ object SearchHelper {
                 Elephant.sharedDatabase.rawQuery(command, arrayOf(word, romanization)).use { cursor ->
                         if (cursor.moveToFirst()) {
                                 val text = cursor.getString(0)
-                                if (text != "X") {
+                                if (text != PresetString.UPPER_LETTER_X) {
                                         items = text.split(";")
                                 }
                         }
@@ -167,22 +167,21 @@ object SearchHelper {
         private fun yingWaaFanWanMatch(text: String): List<YingWaaFanWan> {
                 val entries: MutableList<YingWaaFanWan> = mutableListOf()
                 val code = text.codePointAt(0)
-                val command = "SELECT * FROM yingwaa_table WHERE code = $code;"
+                val command = "SELECT word, romanization, pronunciation, note, interpretation FROM yingwaa_table WHERE code = $code;"
                 Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
                         while (cursor.moveToNext()) {
-                                // val code = cursor.getInt(0)
-                                val word = cursor.getString(1)
-                                val romanization = cursor.getString(2)
-                                val pronunciation = cursor.getString(3)
-                                val pronunciationMark = cursor.getString(4)
-                                val interpretation = cursor.getString(5)
+                                val word = cursor.getString(0)
+                                val romanization = cursor.getString(1)
+                                val pronunciation = cursor.getString(2)
+                                val note = cursor.getString(3)
+                                val interpretation = cursor.getString(4)
                                 val homophones = fetchYingWaaHomophones(romanization).filter { it != word }
                                 val instance = YingWaaFanWan(
                                         word = word,
                                         romanization = romanization,
                                         pronunciation = pronunciation,
-                                        pronunciationMark = if (pronunciationMark == "X") null else pronunciationMark,
-                                        interpretation = if (interpretation == "X") null else interpretation,
+                                        note = if (note == PresetString.UPPER_LETTER_X) null else note,
+                                        interpretation = if (interpretation == PresetString.UPPER_LETTER_X) null else interpretation,
                                         homophones = homophones
                                 )
                                 entries.add(instance)
@@ -211,26 +210,20 @@ object SearchHelper {
         private fun choHokYuetYamCitYiuMatch(text: String): List<ChoHokYuetYamCitYiu> {
                 val entries: MutableList<ChoHokYuetYamCitYiu> = mutableListOf()
                 val code = text.codePointAt(0)
-                val command = "SELECT * FROM chohok_table WHERE code = $code;"
+                val command = "SELECT word, romanization, phone, tone, faancit FROM chohok_table WHERE code = $code;"
                 Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
                         while (cursor.moveToNext()) {
-                                // val code = cursor.getInt(0)
-                                val word = cursor.getString(1)
-                                val romanization = cursor.getString(2)
-                                val initial = cursor.getString(3)
-                                val final = cursor.getString(4)
-                                val tone = cursor.getString(5)
-                                val faancit = cursor.getString(6)
+                                val word = cursor.getString(0)
+                                val romanization = cursor.getString(1)
+                                val phone = cursor.getString(2)
+                                val tone = cursor.getString(3)
+                                val faancit = cursor.getString(4)
                                 val homophones = fetchChoHokHomophones(romanization).filter { it != word }
-                                val convertedInitial: String = if (initial == "X") "" else initial
-                                val convertedFinal: String = if (final == "X") "" else final
-                                val pronunciation: String = convertedInitial + convertedFinal
-                                val faancitText: String = faancit + "切"
                                 val instance = ChoHokYuetYamCitYiu(
                                         word = word,
-                                        pronunciation = pronunciation,
+                                        phone = phone,
                                         tone = tone,
-                                        faancit = faancitText,
+                                        faancit = faancit,
                                         romanization = romanization,
                                         homophones = homophones
                                 )
@@ -278,7 +271,7 @@ object SearchHelper {
                                         .replace(Regex("8$"), "3")
                                         .replace(Regex("9$"), "6")
                                 val homophones = fetchFanWanHomophones(romanization).filter { it != word }
-                                val processedInterpretation = if (interpretation == "X") "(None)" else interpretation
+                                val processedInterpretation = if (interpretation == PresetString.UPPER_LETTER_X) "(None)" else interpretation
                                 val instance = FanWanCuetYiu(
                                         word = word,
                                         pronunciation = pronunciation,
@@ -331,8 +324,8 @@ object SearchHelper {
                                 val tone = cursor.getString(13)
                                 val interpretation = cursor.getString(14)
                                 val faancit = upper + lower + "切"
-                                val hasDivision = division != "X"
-                                val hasRounding = rounding != "X"
+                                val hasDivision = division != PresetString.UPPER_LETTER_X
+                                val hasRounding = rounding != PresetString.UPPER_LETTER_X
                                 val tailText: String = when {
                                         hasDivision && hasRounding -> "　${division}等　${rounding}口"
                                         hasDivision && !hasRounding -> "　${division}等"
