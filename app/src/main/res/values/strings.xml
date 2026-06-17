@@ -19,15 +19,15 @@
     <string name="guide_abbreviated_input_row1">Type faster by entering only syllable initials (e.g., “nh” → “你好”).</string>
     <string name="guide_abbreviated_input_row2">Combine abbreviated and full input for flexibility (e.g., “nhou” / “neih” → “你好”).</string>
     <string name="guide_pinyin_reverse_lookup_heading">Lookup Jyutping with Mandarin Pinyin</string>
-    <string name="guide_pinyin_reverse_lookup_body">Start with “r”, then enter Pinyin code. For example, “rlin” → “林”.</string>
+    <string name="guide_pinyin_reverse_lookup_body">Start with “r”, then enter Pinyin. For example, “rlin” → “林”.</string>
     <string name="guide_cangjie_reverse_lookup_heading">Lookup Jyutping with Cangjie or Quick (Sucheng)</string>
     <string name="guide_cangjie_reverse_lookup_body">Start with “v”, then enter Cangjie or Quick code. For example, “vdd” → “林”.</string>
-    <string name="guide_cangjie_reverse_lookup_note">You can choose Cangjie / Quick version in the Keyboard’s settings page</string>
+    <string name="guide_cangjie_reverse_lookup_note">You can choose Cangjie / Quick version in the keyboard settings page</string>
     <string name="guide_stroke_reverse_lookup_heading">Lookup Jyutping with Stroke</string>
     <string name="guide_stroke_reverse_lookup_body">Start with “x”, then enter Stroke code. For example, “xwsad” → “木”.</string>
     <string name="guide_stroke_reverse_lookup_examples">Stroke Code</string>
     <string name="guide_structure_reverse_lookup_heading">Lookup Jyutping with character components</string>
-    <string name="guide_structure_reverse_lookup_body">Start with “q”, then enter two components’ Jyutping. For example, “qmukmuk” → “林”.</string>
+    <string name="guide_structure_reverse_lookup_body">Start with “q”, then enter the Jyutping of the components. For example, “qmukmuk” → “林”.</string>
     <string name="guide_tones_input_heading">Tones Input</string>
     <string name="guide_tones_input_body">v = 1, High Level (陰平)\nx = 2, Medium Rising (陰上)\nq = 3, Medium Level (陰去)\nvv = 4, Low Falling (陽平)\nxx = 5, Low Rising (陽上)\nqq = 6, Low Level (陽去)</string>
     <string name="guide_tones_input_examples">Examples: sinq = sin3(線), sinqq = sin6(羨)</string>
