@@ -5,7 +5,7 @@ import kotlin.math.min
 
 typealias Segmentation = List<Scheme>
 
-fun Segmentation.descended(): Segmentation = this.sortedWith(compareBy({it.schemeLength.unaryMinus()}, {it.size}))
+fun Segmentation.descended(): Segmentation = this.sortedWith(compareBy({ it.schemeLength.unaryMinus() }, { it.size }))
 
 object Segmenter {
         fun prepare() {
@@ -21,70 +21,66 @@ object Segmenter {
         fun needsPreparation(): Boolean = syllableCodeMap.isEmpty()
         private val syllableCodeMap: HashMap<Long, Syllable> = hashMapOf()
         private fun lookup(code: Long): Syllable? = syllableCodeMap[code]
-        private fun splitLeading(keys: List<VirtualInputKey>): List<Syllable> {
-                val maxLength = min(keys.size, 6)
-                if (maxLength < 1) return emptyList()
-                return (maxLength downTo 1).mapNotNull { lookup(code = keys.take(it).combinedCode()) }
-        }
+
+        private const val MAX_SYLLABLE_LENGTH: Int = 6
         private fun split(keys: List<VirtualInputKey>): Segmentation {
-                val headSyllables = splitLeading(keys)
-                if (headSyllables.isEmpty()) return emptyList()
                 val inputLength = keys.size
-                val segmentation: HashSet<Scheme> = headSyllables.map { listOf(it) }.toHashSet()
-                var previousSyllableCount = segmentation.map { it.size }.fold(0) { acc, i -> acc + i }
-                var shouldContinue = true
-                while (shouldContinue) {
-                        for (scheme in segmentation.toList()) {
-                                val schemeLength = scheme.schemeLength
-                                if (schemeLength >= inputLength) continue
-                                val tailKeys = keys.drop(schemeLength)
-                                val tailSyllables = splitLeading(tailKeys)
-                                if (tailSyllables.isEmpty()) continue
-                                val newSegmentation = tailSyllables.map { scheme + it }
-                                segmentation += newSegmentation
-                        }
-                        val currentSyllableCount = segmentation.map { it.size }.fold(0) { acc, i -> acc + i }
-                        if (currentSyllableCount != previousSyllableCount) {
-                                previousSyllableCount = currentSyllableCount
-                        } else {
-                                shouldContinue = false
+                if (inputLength == 0) return emptyList()
+                val segmentations = Array(inputLength + 1) { mutableListOf<Scheme>() }
+                val segmentation = mutableListOf<Scheme>()
+                segmentations[0].add(emptyList())
+                for (startIndex in 0.rangeUntil(inputLength)) {
+                        val leadingSchemes = segmentations[startIndex]
+                        if (leadingSchemes.isEmpty()) continue
+                        var code = 0L
+                        val endLimit = min(inputLength, startIndex + MAX_SYLLABLE_LENGTH)
+                        for (endIndex in startIndex.rangeUntil(endLimit)) {
+                                code = code * 100L + keys[endIndex].code.toLong()
+                                val syllable = lookup(code = code) ?: continue
+                                val targetSchemes = segmentations[endIndex + 1]
+                                for (scheme in leadingSchemes) {
+                                        val newScheme = scheme + syllable
+                                        targetSchemes.add(newScheme)
+                                        segmentation.add(newScheme)
+                                }
                         }
                 }
                 return segmentation.filter { it.isValid() }.descended()
         }
-        fun segment(keys: List<VirtualInputKey>): Segmentation {
-                return when (keys.size) {
-                        0 -> emptyList()
-                        1 -> when (keys.first()) {
-                                VirtualInputKey.letterA -> letterA
-                                VirtualInputKey.letterO -> letterO
-                                VirtualInputKey.letterM -> letterM
-                                else -> emptyList()
-                        }
-                        4 -> when (keys.combinedCode()) {
-                                32203220L -> mama
-                                32203228L -> mami
-                                else -> {
-                                        val syllableKeys = keys.filter { it.isSyllableLetter }
-                                        val code = syllableKeys.combinedCode()
-                                        cachedSegmentations[code]
-                                        val segmented = split(syllableKeys)
-                                        if (code > 0L) {
-                                                cache(code, segmented)
-                                        }
-                                        segmented
-                                }
-                        }
+
+        fun segment(keys: List<VirtualInputKey>): Segmentation = when (keys.size) {
+                0 -> emptyList()
+                1 -> when (keys.first()) {
+                        VirtualInputKey.letterA -> letterA
+                        VirtualInputKey.letterO -> letterO
+                        VirtualInputKey.letterM -> letterM
+                        else -> emptyList()
+                }
+
+                4 -> when (keys.combinedCode()) {
+                        32203220L -> mama
+                        32203228L -> mami
                         else -> {
                                 val syllableKeys = keys.filter { it.isSyllableLetter }
                                 val code = syllableKeys.combinedCode()
-                                cachedSegmentations[code]
+                                cachedSegmentations[code]?.let { return it }
                                 val segmented = split(syllableKeys)
                                 if (code > 0L) {
                                         cache(code, segmented)
                                 }
                                 segmented
                         }
+                }
+
+                else -> {
+                        val syllableKeys = keys.filter { it.isSyllableLetter }
+                        val code = syllableKeys.combinedCode()
+                        cachedSegmentations[code]?.let { return it }
+                        val segmented = split(syllableKeys)
+                        if (code > 0L) {
+                                cache(code, segmented)
+                        }
+                        segmented
                 }
         }
 
