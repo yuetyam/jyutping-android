@@ -3698,6 +3698,7 @@
 累	leoi6
 私營	si1 jing4
 舅父	kau5 fu2
+舅父	kau5 fu6
 洗衣機	sai2 ji1 gei1
 接住	zip3 zyu6
 追問	zeoi1 man6
@@ -10342,7 +10343,6 @@
 家財	gaa1 coi4
 失手	sat1 sau2
 伯父	baak3 fu6
-伯父	baak3 fu2
 返生	faan1 saang1
 嫌棄	jim4 hei3
 融合	jung4 hap6
@@ -22258,7 +22258,6 @@
 言喻	jin4 jyu6
 猿人	jyun4 jan4
 成朝	seng4 ziu1
-叔父	suk1 fu2
 叔父	suk1 fu6
 亨利	hang1 lei6
 連擊	lin4 gik1
@@ -36311,6 +36310,12 @@
 冰字旁	bing1 zi6 pong4
 撐艇仔	caang1 teng5 zai2
 走之底	zau2 zi1 dai2
+走字底	zau2 zi6 dai2
+走字邊	zau2 zi6 bin1
+走字旁	zau2 zi6 pong4
+之字底	zi1 zi6 dai2
+之字邊	zi1 zi6 bin1
+之字旁	zi1 zi6 pong4
 辵部	coek3 bou6
 建字底	gin3 zi6 dai2
 國字框	gwok3 zi6 hong1
@@ -37504,7 +37509,6 @@
 牌子	paai4 zi2
 有的	jau5 dik1
 攬實	laam2 sat6
-丁	zang1
 嘟嘟	dyut1 dyut1
 跛	bo2
 稍爲	saau2 wai4
@@ -37718,7 +37722,6 @@
 一地	jat1 dei6
 陶	jiu4
 荷	ho6
-父	fu2
 壁	bek3
 埗	bou6
 埗	fau6
@@ -70453,6 +70456,7 @@
 可溶	ho2 jung4
 叫車	giu3 ce1
 口硬	hau4 ngaang6
+叔父	suk1 fu2
 反黨	faan2 dong2
 南邊	naam4 bin1
 南邊	naam4 bin6
@@ -70472,6 +70476,7 @@
 倒刺	dou3 ci3
 佩蘭	pui3 laan4
 何物	ho4 mat6
+伯父	baak3 fu2
 仆直	puk1 zik6
 乳鴿	jyu5 gaap2
 乖張	gwaai1 zoeng1
@@ -164772,7 +164777,6 @@
 童花頭	tung4 faa1 tau4
 同分異構	tung4 fan1 ji6 kau3
 同伙	tung4 fo2
-同父母	tung4 fu2 mou5
 同福	tung4 fuk1
 同福路	tung4 fuk1 lou6
 銅管樂	tung4 gun2 ngok6
@@ -168368,7 +168372,6 @@
 邑	ap1
 嘔	au1
 慪	au1
-毆	au1
 嘔	au3
 熰	au3
 耙	baa3
@@ -169376,6 +169379,7 @@
 𠃌	gwan2
 吽	hung1
 媿	kwai3
+丁	zang1
 厊	aa1
 鐚	aa1
 唖	aa2
@@ -170093,7 +170097,6 @@
 桘	ceoi4
 槯	ceoi4
 櫉	ceoi4
-沝	ceoi4
 涂	ceoi4
 瓍	ceoi4
 磪	ceoi4
@@ -173043,6 +173046,7 @@
 佦	jau6
 揉	jau6
 斿	jau6
+有	jau6
 櫾	jau6
 糅	jau6
 蝣	jau6
@@ -175362,7 +175366,6 @@
 齮	ngai5
 兿	ngai6
 埶	ngai6
-燚	ngai6
 秇	ngai6
 聣	ngai6
 萟	ngai6
