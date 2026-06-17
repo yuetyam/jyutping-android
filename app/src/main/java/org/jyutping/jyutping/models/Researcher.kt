@@ -1,7 +1,6 @@
 package org.jyutping.jyutping.models
 
 import org.jyutping.jyutping.Elephant
-import org.jyutping.jyutping.extensions.isApostrophe
 import org.jyutping.jyutping.extensions.isCantoneseToneDigit
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.extensions.toneConverted
@@ -60,162 +59,151 @@ private fun Researcher.dispatch(keys: List<VirtualInputKey>, segmentation: Segme
                 hasApostrophes && hasTones -> {
                         val convertedText = text.toneConverted()
                         lexicons.mapNotNull {
-                                if (convertedText.startsWith(it.romanization)) Lexicon(text = it.text, romanization = it.romanization, input = text) else null
+                                if (convertedText.startsWith(it.romanization)) it.replacedInput(text) else null
                         }
                 }
-                hasTones -> oldProcessWithTones(text = text.toneConverted(), lexicons = lexicons)
-                else -> oldProcessWithSeparators(text = text, lexicons = lexicons)
+                hasTones -> processWithTones(keys = keys, lexicons = lexicons)
+                else -> processWithSeparators(keys = keys, lexicons = lexicons)
         }
 }
 
-private fun Researcher.oldProcessWithTones(text: String, lexicons: List<Lexicon>): List<Lexicon> {
+private fun Researcher.processWithTones(keys: List<VirtualInputKey>, lexicons: List<Lexicon>): List<Lexicon> {
+        val inputText = keys.joinToString(separator = PresetString.EMPTY) { it.text }
+        val toneInput = keys.filter { it.isSyllableLetter.negative }.joinToString(separator = PresetString.EMPTY) { it.text }
+        val text = inputText.toneConverted()
         val textTones = text.filter { it.isCantoneseToneDigit }
-        val textToneCount = textTones.length
-        val qualified: MutableList<Lexicon> = mutableListOf()
-        for (item in lexicons) {
-                val continuous = item.spaceFreeRomanization
-                val continuousTones = continuous.filter { it.isCantoneseToneDigit }
-                val continuousToneCount = continuousTones.length
+        val qualified = lexicons.mapNotNull { item ->
+                val syllableText = item.spaceFreeRomanization
+                if (syllableText.startsWith(text)) return@mapNotNull item.replacedInput(inputText)
+                val tones = syllableText.filter { it.isCantoneseToneDigit }
                 when {
-                        textToneCount == 1 && continuousToneCount == 1 -> {
-                                if (textTones != continuousTones) continue
-                                val isCorrectPosition: Boolean = text.drop(item.inputCount).firstOrNull()?.isDigit() == true
-                                if (!isCorrectPosition) continue
-                                val combinedInput = item.input + textTones
-                                val newItem = Lexicon(text = item.text, romanization = item.romanization, input = combinedInput)
-                                qualified.add(newItem)
+                        textTones.length == 1 && tones.length == 1 -> {
+                                if (textTones != tones) return@mapNotNull null
+                                val isCorrectPosition: Boolean = text.drop(item.inputCount).firstOrNull()?.isCantoneseToneDigit ?: false
+                                if (isCorrectPosition) item.replacedInput(item.input + toneInput) else null
                         }
-                        textToneCount == 1 && continuousToneCount == 2 -> {
-                                val isToneLast: Boolean = text.lastOrNull()?.isDigit() == true
+                        textTones.length == 1 && tones.length == 2 -> {
+                                val isToneLast: Boolean = text.lastOrNull()?.isCantoneseToneDigit ?: false
                                 if (isToneLast) {
-                                        if (!(continuousTones.endsWith(textTones))) continue
-                                        val isCorrectPosition: Boolean = text.drop(item.inputCount).firstOrNull()?.isDigit() == true
-                                        if (!isCorrectPosition) continue
-                                        val newItem = Lexicon(text = item.text, romanization = item.romanization, input = text)
-                                        qualified.add(newItem)
+                                        if (tones.endsWith(textTones).negative) return@mapNotNull null
+                                        val isCorrectPosition: Boolean = text.drop(item.inputCount).firstOrNull()?.isCantoneseToneDigit ?: false
+                                        if (isCorrectPosition) item.replacedInput(inputText) else null
                                 } else {
-                                        if (!continuous.startsWith(text)) continue
-                                        val newItem = Lexicon(text = item.text, romanization = item.romanization, input = text)
-                                        qualified.add(newItem)
+                                        if (tones.startsWith(textTones)) item.replacedInput(item.input + toneInput) else null
                                 }
                         }
-                        textToneCount == 2 && continuousToneCount == 1 -> {
-                                if (!(textTones.startsWith(continuousTones))) continue
-                                val isCorrectPosition: Boolean = text.drop(item.inputCount).firstOrNull()?.isDigit() == true
-                                if (!isCorrectPosition) continue
-                                val combinedInput = item.input + continuousTones
-                                val newItem = Lexicon(text = item.text, romanization = item.romanization, input = combinedInput)
-                                qualified.add(newItem)
+                        textTones.length == 2 && tones.length == 1 -> {
+                                if (textTones.startsWith(tones).negative) return@mapNotNull null
+                                val isCorrectPosition: Boolean = text.drop(item.inputCount).firstOrNull()?.isCantoneseToneDigit ?: false
+                                if (isCorrectPosition) {
+                                        val leadingKeys = keys.leadingToneInputKeys()
+                                        item.replacedInput(leadingKeys.joinToString(separator = PresetString.EMPTY) { it.text })
+                                } else {
+                                        null
+                                }
                         }
-                        textToneCount == 2 && continuousToneCount == 2 -> {
-                                if (textTones != continuousTones) continue
-                                val isLastTone: Boolean = text.lastOrNull()?.isDigit() == true
-                                if (isLastTone) {
-                                        if (item.inputCount != (text.length - 2)) continue
-                                        val newItem = Lexicon(text = item.text, romanization = item.romanization, input = text, mark = text)
-                                        qualified.add(newItem)
+                        textTones.length == 2 && tones.length == 2 -> {
+                                if (textTones != tones) return@mapNotNull null
+                                val isToneLast: Boolean = text.lastOrNull()?.isCantoneseToneDigit ?: false
+                                if (isToneLast) {
+                                        if (item.inputCount == (text.length - 2)) item.replacedInput(inputText) else null
                                 } else {
                                         val tail = text.drop(item.inputCount + 1)
                                         val isCorrectPosition: Boolean = tail.firstOrNull() == textTones.lastOrNull()
-                                        if (!isCorrectPosition) continue
-                                        val combinedInput = item.input + textTones
-                                        val newItem = Lexicon(text = item.text, romanization = item.romanization, input = combinedInput, mark = item.input)
-                                        qualified.add(newItem)
+                                        if (isCorrectPosition) item.replacedInput(item.input + toneInput) else null
                                 }
                         }
-                        else -> {
-                                if (continuous.startsWith(text)) {
-                                        val newItem = Lexicon(text = item.text, romanization = item.romanization, input = text)
-                                        qualified.add(newItem)
-                                } else if (text.startsWith(continuous)) {
-                                        val newItem = Lexicon(text = item.text, romanization = item.romanization, input = continuous, mark = item.input)
-                                        qualified.add(newItem)
-                                } else {
-                                        continue
-                                }
-                        }
+                        else -> if (inputText.startsWith(syllableText).negative) null else item.replacedInput(syllableText)
                 }
         }
-        return qualified
+        return qualified.sortedByDescending { it.inputCount }
 }
 
-private fun Researcher.oldProcessWithSeparators(text: String, lexicons: List<Lexicon>): List<Lexicon> {
-        val separatorCount = text.count { it.isApostrophe }
+private fun Researcher.processWithSeparators(keys: List<VirtualInputKey>, lexicons: List<Lexicon>): List<Lexicon> {
+        val isHeadingSeparator: Boolean = keys.firstOrNull()?.isApostrophe ?: false
+        if (isHeadingSeparator) return emptyList()
+        val isTrailingSeparator: Boolean = keys.lastOrNull()?.isApostrophe ?: false
+        val inputSeparatorCount = keys.count { it.isApostrophe }
+        val inputLength = keys.size
+        val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
         val textParts = text.split(PresetCharacter.APOSTROPHE).filter { it.isNotEmpty() }
-        val isHeadingSeparator: Boolean = text.firstOrNull()?.isApostrophe ?: false
-        val isTrailingSeparator: Boolean = text.lastOrNull()?.isApostrophe ?: false
-        val qualified: MutableList<Lexicon> = mutableListOf()
-        for (item in lexicons) {
+        val qualified = lexicons.mapNotNull { item ->
                 val syllables = item.syllables
-                if (syllables == textParts) {
-                        val newItem = Lexicon(text = item.text, romanization = item.romanization, input = text)
-                        qualified.add(newItem)
-                        continue
-                }
-                if (isHeadingSeparator) continue
+                if (syllables == textParts) return@mapNotNull item.replacedInput(text)
                 when {
-                        separatorCount == 1 && isTrailingSeparator -> {
-                                if (syllables.size != 1) continue
-                                val isLengthNotMatched: Boolean = item.inputCount != (text.length - 1)
-                                if (isLengthNotMatched) continue
-                                val newItem = Lexicon(text = item.text, romanization = item.romanization, input = text, mark = text)
-                                qualified.add(newItem)
+                        inputSeparatorCount == 1 && isTrailingSeparator -> {
+                                if (syllables.size != 1) return@mapNotNull null
+                                if (item.inputCount == (inputLength - 1)) item.replacedInput(text) else null
                         }
-                        separatorCount == 1 -> {
+                        inputSeparatorCount == 1 -> {
                                 when (syllables.size) {
                                         1 -> {
-                                                if (item.input != textParts.firstOrNull()) continue
-                                                val combinedInput: String = item.input + PresetCharacter.APOSTROPHE
-                                                val newItem = Lexicon(text = item.text, romanization = item.romanization, input = combinedInput)
-                                                qualified.add(newItem)
+                                                if (item.inputCount == textParts.firstOrNull()?.length) item.replacedInput(item.input + PresetString.APOSTROPHE) else null
                                         }
                                         2 -> {
-                                                if (syllables.firstOrNull() != textParts.firstOrNull()) continue
-                                                val combinedInput: String = item.input + PresetCharacter.APOSTROPHE
-                                                val newItem = Lexicon(text = item.text, romanization = item.romanization, input = combinedInput)
-                                                qualified.add(newItem)
+                                                val isMatched: Boolean = when {
+                                                        inputLength == 3 -> true
+                                                        syllables.firstOrNull() == textParts.firstOrNull() -> true
+                                                        textParts.firstOrNull()?.length != 1 -> false
+                                                        textParts.firstOrNull()?.firstOrNull() != syllables.firstOrNull()?.firstOrNull() -> false
+                                                        else -> textParts.lastOrNull()?.startsWith(syllables.lastOrNull() ?: PresetString.EMPTY) ?: false
+                                                }
+                                                if (isMatched) item.replacedInput(item.input + PresetString.APOSTROPHE) else null
                                         }
-                                        else -> continue
+                                        else -> null
                                 }
                         }
-                        separatorCount == 2 && isTrailingSeparator -> {
+                        inputSeparatorCount == 2 && isTrailingSeparator -> {
                                 when (syllables.size) {
                                         1 -> {
-                                                if (item.input != textParts.firstOrNull()) continue
-                                                val combinedInput: String = item.input + PresetCharacter.APOSTROPHE
-                                                val newItem = Lexicon(text = item.text, romanization = item.romanization, input = combinedInput)
-                                                qualified.add(newItem)
+                                                if (item.inputCount == textParts.firstOrNull()?.length) item.replacedInput(item.input + PresetString.APOSTROPHE) else null
                                         }
                                         2 -> {
-                                                val isLengthNotMatched: Boolean = item.inputCount != (text.length - 2)
-                                                if (isLengthNotMatched) continue
-                                                if (syllables.firstOrNull() != textParts.firstOrNull()) continue
-                                                val newItem = Lexicon(text = item.text, romanization = item.romanization, input = text)
-                                                qualified.add(newItem)
+                                                if (item.inputCount != (inputLength - 2)) return@mapNotNull null
+                                                val isMatched: Boolean = when {
+                                                        inputLength == 4 -> true
+                                                        syllables.firstOrNull() == textParts.firstOrNull() -> true
+                                                        textParts.firstOrNull()?.length != 1 -> false
+                                                        textParts.firstOrNull()?.firstOrNull() != syllables.firstOrNull()?.firstOrNull() -> false
+                                                        else -> textParts.lastOrNull() == syllables.lastOrNull()
+                                                }
+                                                if (isMatched) item.replacedInput(text) else null
                                         }
-                                        else -> continue
+                                        else -> null
+                                }
+                        }
+                        (inputSeparatorCount == 2 && inputLength == 5 && textParts.size == 3) ||
+                                (inputSeparatorCount == 3 && inputLength == 6 && textParts.size == 3) -> {
+                                when (syllables.size) {
+                                        1 -> if (item.inputCount == 1) item.replacedInput(item.input + PresetString.APOSTROPHE) else null
+                                        2 -> if (item.inputCount == 2) item.replacedInput(item.input + PresetString.APOSTROPHE + PresetString.APOSTROPHE) else null
+                                        3 -> item.replacedInput(text)
+                                        else -> null
                                 }
                         }
                         else -> {
-                                if (syllables.size >= textParts.size) continue
+                                val textPartCount = textParts.size
+                                val syllableCount = syllables.size
+                                if (syllableCount >= textPartCount) return@mapNotNull null
                                 val isMatched = syllables.indices.all { syllables[it] == textParts[it] }
-                                if (!isMatched) continue
-                                val separatorNumber = syllables.size - 1
-                                val tail = CharArray(separatorNumber) { 'i' }.concatToString()
-                                val combinedInput = item.input + tail
-                                val newItem = Lexicon(text = item.text, romanization = item.romanization, input = combinedInput)
-                                qualified.add(newItem)
+                                if (isMatched) {
+                                        val separatorCount = syllableCount - 1
+                                        val tail = "i".repeat(separatorCount)
+                                        item.replacedInput(item.input + tail)
+                                } else {
+                                        null
+                                }
                         }
                 }
         }
-        if (qualified.isNotEmpty()) return qualified
-        val anchors = textParts.mapNotNull { it.firstOrNull() }
-        val anchorKeys = anchors.mapNotNull { VirtualInputKey.matchVirtualInputKey(it) }
+        if (qualified.isNotEmpty()) return qualified.sortedByDescending { it.inputCount }
+        val anchorKeys = keys.splitByApostrophe().mapNotNull { it.firstOrNull() }
+        val anchorCount = anchorKeys.size
         return anchorsMatch(keys = anchorKeys)
                 .filter { item ->
                         val syllables = item.syllables
-                        if (syllables.size != anchors.size) false else {
-                                anchors.indices.all { index ->
+                        if (syllables.size != anchorCount) false else {
+                                0.rangeUntil(anchorCount).all { index ->
                                         val part = textParts[index]
                                         val isAnchorOnly = (part.length == 1)
                                         if (isAnchorOnly) syllables[index].startsWith(part) else syllables[index] == part
@@ -223,8 +211,45 @@ private fun Researcher.oldProcessWithSeparators(text: String, lexicons: List<Lex
                         }
                 }
                 .map {
-                        Lexicon(text = it.text, romanization = it.romanization, input = text)
+                        it.replacedInput(text)
                 }
+}
+
+private fun List<VirtualInputKey>.leadingToneInputKeys(): List<VirtualInputKey> {
+        val leadingKeys: MutableList<VirtualInputKey> = mutableListOf()
+        for (key in this) {
+                if (key.isSyllableLetter) {
+                        leadingKeys.add(key)
+                } else {
+                        break
+                }
+        }
+        for (key in drop(leadingKeys.size)) {
+                if (key.isSyllableLetter.negative) {
+                        leadingKeys.add(key)
+                } else {
+                        break
+                }
+        }
+        return leadingKeys
+}
+private fun List<VirtualInputKey>.splitByApostrophe(): List<List<VirtualInputKey>> {
+        val parts: MutableList<List<VirtualInputKey>> = mutableListOf()
+        var current: MutableList<VirtualInputKey> = mutableListOf()
+        for (key in this) {
+                if (key.isApostrophe) {
+                        if (current.isNotEmpty()) {
+                                parts.add(current)
+                                current = mutableListOf()
+                        }
+                } else {
+                        current.add(key)
+                }
+        }
+        if (current.isNotEmpty()) {
+                parts.add(current)
+        }
+        return parts
 }
 
 private fun Researcher.search(keys: List<VirtualInputKey>, text: String, segmentation: Segmentation, limit: Int? = null): List<Lexicon> {
