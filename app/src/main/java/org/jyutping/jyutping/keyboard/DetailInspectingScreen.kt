@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material3.ButtonDefaults
@@ -35,8 +36,10 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.extensions.characterCount
@@ -45,9 +48,11 @@ import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
+import org.jyutping.jyutping.presets.PresetString
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import kotlin.streams.toList
 
 @Composable
 fun DetailInspectingScreen(height: Dp) {
@@ -127,30 +132,22 @@ fun DetailInspectingScreen(height: Dp) {
                                                 .padding(horizontal = 10.dp, vertical = 8.dp),
                                         verticalArrangement = Arrangement.spacedBy(10.dp)
                                 ) {
-                                        Column(
-                                                modifier = Modifier.fillMaxWidth()
-                                        ) {
+                                        if (candidate.isNotCantonese) {
                                                 Text(
-                                                        text = candidate.lexicon.romanization,
-                                                        style = MaterialTheme.typography.bodySmall
+                                                        text = candidate.text,
+                                                        color = if (isDarkMode) Color.White else Color.Black,
+                                                        style = MaterialTheme.typography.headlineSmall
                                                 )
-                                                if (candidate.text == candidate.lexicon.text) {
-                                                        Text(
-                                                                text = candidate.lexicon.text,
-                                                                style = MaterialTheme.typography.headlineSmall
-                                                        )
-                                                } else {
-                                                        Row(
-                                                                modifier = Modifier.fillMaxWidth(),
-                                                                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                                                verticalAlignment = Alignment.CenterVertically
-                                                        ) {
-                                                                Text(
-                                                                        text = candidate.lexicon.text,
-                                                                        style = MaterialTheme.typography.headlineSmall
-                                                                )
+                                        } else {
+                                                Row(
+                                                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                                        verticalAlignment = Alignment.Bottom
+                                                ) {
+                                                        RubyStackRow(text = candidate.lexicon.text, romanization = candidate.lexicon.romanization, isDarkMode = isDarkMode)
+                                                        if (candidate.text != candidate.lexicon.text) {
                                                                 Text(
                                                                         text = candidate.text,
+                                                                        color = if (isDarkMode) Color.White else Color.Black,
                                                                         modifier = Modifier.alpha(0.66f)
                                                                 )
                                                         }
@@ -159,37 +156,102 @@ fun DetailInspectingScreen(height: Dp) {
                                         if (candidate.lexicon.text.characterCount == 1) {
                                                 Text(
                                                         text = "Unicode: ${candidate.lexicon.text.codePointsText}",
+                                                        color = if (isDarkMode) Color.White else Color.Black,
                                                         style = MaterialTheme.typography.bodySmall
                                                 )
                                         }
-                                        Text(
-                                                text = stringResource(id = R.string.detail_inspecting_summary_input_count) + ": ${inspectedMemory.first}",
-                                                style = MaterialTheme.typography.bodySmall
-                                        )
+                                        if (candidate.isCantonese) {
+                                                Text(
+                                                        text = stringResource(id = R.string.detail_inspecting_summary_input_count) + ": ${inspectedMemory.first}",
+                                                        color = if (isDarkMode) Color.White else Color.Black,
+                                                        style = MaterialTheme.typography.bodySmall
+                                                )
+                                        }
                                         if (inspectedMemory.first > 0L) {
                                                 Text(
                                                         text = stringResource(id = R.string.detail_inspecting_summary_latest) + ": ${inspectedMemory.second.toDisplayDate()}",
+                                                        color = if (isDarkMode) Color.White else Color.Black,
                                                         style = MaterialTheme.typography.bodySmall
                                                 )
                                         }
                                 }
                         }
-                        item {
-                                TextButton(
-                                        onClick = {
-                                                context.forgetCandidate(candidate)
-                                                context.inspect(candidate)
-                                        },
-                                        modifier = Modifier.fillMaxWidth(),
-                                        shape = CircleShape,
-                                        colors = ButtonDefaults.textButtonColors(containerColor = backColor, contentColor = Color.Red)
-                                ) {
-                                        Text(
-                                                text = stringResource(id = R.string.detail_inspecting_forget_candidate_button_title),
-                                                textAlign = TextAlign.Center
-                                        )
+                        if (inspectedMemory.first > 0L) {
+                                item {
+                                        TextButton(
+                                                onClick = {
+                                                        context.forgetCandidate(candidate)
+                                                        context.inspect(candidate)
+                                                },
+                                                modifier = Modifier.fillMaxWidth(),
+                                                shape = CircleShape,
+                                                colors = ButtonDefaults.textButtonColors(containerColor = backColor, contentColor = Color.Red)
+                                        ) {
+                                                Text(
+                                                        text = stringResource(id = R.string.detail_inspecting_forget_candidate_button_title),
+                                                        textAlign = TextAlign.Center
+                                                )
+                                        }
                                 }
                         }
                 }
+        }
+}
+
+@Composable
+private fun RubyStackRow(text: String, romanization: String, isDarkMode: Boolean) {
+        val characters: List<String> = text.codePoints().toList().map { code -> buildString { appendCodePoint(code) } }
+        val syllables: List<String> = romanization.split(PresetString.SPACE)
+        var units: List<DisplayUnit> = emptyList()
+        for (index in characters.indices) {
+                val character = characters[index]
+                syllables.getOrNull(index)?.let { syllable ->
+                        val unit = DisplayUnit(character = character, syllable = syllable)
+                        units = units + unit
+                }
+        }
+        val annotationLength = syllables.maxBy { it.length }.length
+        Row(
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                verticalAlignment = Alignment.CenterVertically
+        ) {
+                units.forEach { unit ->
+                        CharacterSyllableView(unit = unit, annotationLength = annotationLength, isDarkMode = isDarkMode)
+                }
+        }
+}
+
+private data class DisplayUnit(val character: String, val syllable: String)
+
+@Composable
+private fun CharacterSyllableView(unit: DisplayUnit, annotationLength: Int, isDarkMode: Boolean) {
+        val annotation: String = run {
+                val shortAmount = (annotationLength - unit.syllable.length)
+                if (shortAmount <= 0) return@run unit.syllable
+                if (shortAmount == 1) return@run PresetString.SPACE + unit.syllable
+                val trailing = (shortAmount / 2)
+                val leading = (shortAmount - trailing)
+                return@run PresetString.SPACE.repeat(leading) + unit.syllable + PresetString.SPACE.repeat(trailing)
+        }
+        Column(
+                modifier = Modifier.width(34.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+                Text(
+                        text = annotation,
+                        color = if (isDarkMode) Color.White else Color.Black,
+                        autoSize = TextAutoSize.StepBased(minFontSize = 6.sp, maxFontSize = 12.sp),
+                        fontSize = 12.sp,
+                        overflow = TextOverflow.Visible,
+                        maxLines = 1
+                )
+                Text(
+                        text = unit.character,
+                        color = if (isDarkMode) Color.White else Color.Black,
+                        autoSize = TextAutoSize.StepBased(minFontSize = 10.sp, maxFontSize = 24.sp),
+                        fontSize = 24.sp,
+                        overflow = TextOverflow.Visible,
+                        maxLines = 1
+                )
         }
 }
