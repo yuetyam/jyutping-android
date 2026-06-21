@@ -12,10 +12,18 @@ on:
 
 jobs:
   prepare:
-    name: Prepare Database
-    runs-on: ubuntu-latest
+    name: Prepare Database (${{ matrix.runner }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-26.04
+            gradlew: ./gradlew
+          - runner: windows-11-vs2026-arm
+            gradlew: .\gradlew.bat
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: setup JDK
         uses: actions/setup-java@v5
         with:
@@ -23,21 +31,27 @@ jobs:
           distribution: "temurin"
           cache: gradle
       - name: Run gradlew
-        run: ./gradlew run --warning-mode all
+        run: ${{ matrix.gradlew }} run --warning-mode all
         working-directory: ./preparing
   buildapp:
-    name: Build App
-#    needs: [prepare]
-    runs-on: ubuntu-latest
+    name: Build App (${{ matrix.runner }})
+    needs: [prepare]
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-26.04
+            gradlew: ./gradlew
+          - runner: windows-11-vs2026-arm
+            gradlew: .\gradlew.bat
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: setup JDK
         uses: actions/setup-java@v5
         with:
           java-version: "21"
           distribution: "temurin"
           cache: gradle
-#      - name: Grant execute permission for gradlew
-#        run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew build --warning-mode all
+        run: ${{ matrix.gradlew }} build --warning-mode all
