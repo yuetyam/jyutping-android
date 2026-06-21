@@ -53,5 +53,10 @@ jobs:
           java-version: "21"
           distribution: "temurin"
           cache: gradle
+      - name: Setup Android SDK
+        if: startsWith(matrix.runner, 'windows-')
+        uses: android-actions/setup-android@v4
+        with:
+          packages: tools platform-tools platforms;android-37 build-tools;37.0.0
       - name: Build with Gradle
         run: ${{ matrix.gradlew }} build --warning-mode all
