@@ -1,0 +1,2 @@
+1. Improved keyboard performance and smoothness.
+2. Enhanced Jyutping reverse lookup via character decomposition.

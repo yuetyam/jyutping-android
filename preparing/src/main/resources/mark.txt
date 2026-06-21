@@ -13,8 +13,8 @@ airpods	AirPods
 airpodsmax	AirPods Max
 airpodspro	AirPods Pro
 airtag	AirTag
-am	a.m.
 am	am
+am	a.m.
 amazon	Amazon
 amd	AMD
 amoled	AMOLED
@@ -393,8 +393,8 @@ photokit	PhotoKit
 pinterest	Pinterest
 pkg	pkg
 playstore	Play Store
-pm	p.m.
 pm	pm
+pm	p.m.
 png	PNG
 porsche	Porsche
 postgresql	PostgreSQL
