@@ -18,8 +18,8 @@ android {
                 applicationId = "org.jyutping.jyutping"
                 minSdk = 29
                 targetSdk = 37
-                versionCode = 66
-                versionName = "0.63.0"
+                versionCode = 67
+                versionName = "0.63.1"
                 testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 vectorDrawables.useSupportLibrary = true
         }
