@@ -35,7 +35,7 @@ jobs:
       - name: Run gradlew
         run: ${{ matrix.gradlew }} run --warning-mode all
         working-directory: ./preparing
-  buildapp:
+  build:
     name: Build App (${{ matrix.runner }})
     needs: [prepare]
     runs-on: ${{ matrix.runner }}
@@ -44,8 +44,6 @@ jobs:
       matrix:
         include:
           - runner: ubuntu-26.04
-            gradlew: ./gradlew
-          - runner: ubuntu-26.04-arm
             gradlew: ./gradlew
     steps:
       - uses: actions/checkout@v7

@@ -142,6 +142,9 @@ data class VirtualInputKey(
                         letterV, letterW, letterX, letterY, letterZ
                 )
 
+                val gwInputKeys: List<VirtualInputKey> = listOf(letterG, letterW)
+                val kwInputKeys: List<VirtualInputKey> = listOf(letterK, letterW)
+
                 fun matchVirtualInputKey(code: Int): VirtualInputKey? = alphabetSet.find { it.code == code } ?: digitSet.find { it.code == code }
                 fun matchVirtualInputKey(char: Char): VirtualInputKey? {
                         val code = char.interCode ?: return null

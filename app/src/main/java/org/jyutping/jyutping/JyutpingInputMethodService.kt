@@ -756,12 +756,14 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         val candidates: MutableStateFlow<List<Candidate>> by lazy { MutableStateFlow(emptyList()) }
         private var suggestionJob: Job? = null
+        private var inputLengthSequence: List<Int> = emptyList()
         private var bufferEvents: List<BasicInputEvent> by Delegates.observable(emptyList()) { _, _, newValue ->
                 suggestionJob?.cancel()
                 candidateOffset.value = 0
                 val sessionState: Long = candidateState.value + 1L
                 when (newValue.firstOrNull()?.key) {
                         null -> {
+                                inputLengthSequence = emptyList()
                                 currentInputConnection.setComposingText(PresetString.EMPTY, 1)
                                 currentInputConnection.finishComposingText()
                                 if (isBuffering.value) {
@@ -942,6 +944,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
 
         val isBuffering: MutableStateFlow<Boolean> by lazy { MutableStateFlow(false) }
         fun clearBuffer() {
+                inputLengthSequence = emptyList()
                 if (bufferEvents.isNotEmpty()) {
                         bufferEvents = emptyList()
                 }
@@ -954,6 +957,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 val shouldAppendEvent: Boolean = inputMethodMode.value.isCantonese && keyboardForm.value.isBufferable
                 if (shouldAppendEvent) {
                         val newEvent = BasicInputEvent(key = key, case = keyboardCase.value)
+                        inputLengthSequence = inputLengthSequence + 1
                         bufferEvents = bufferEvents + newEvent
                 } else {
                         val text: String = if (keyboardCase.value.isLowercased) key.text else key.text.uppercase()
@@ -963,12 +967,29 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         fun process(text: String) {
                 val shouldAppendEvents: Boolean = inputMethodMode.value.isCantonese && keyboardForm.value.isBufferable
-                if (shouldAppendEvents) {
-                        val case = keyboardCase.value
-                        val newEvents = text.mapNotNull { VirtualInputKey.matchVirtualInputKey(it) }.map { BasicInputEvent(key = it, case = case) }
-                        bufferEvents = bufferEvents + newEvents
-                } else {
+                if (shouldAppendEvents.negative) {
                         currentInputConnection.commitText(text, 1)
+                        adjustKeyboardCase()
+                        return
+                }
+                val keys = text.lowercase().mapNotNull { VirtualInputKey.matchVirtualInputKey(it) }
+                if (keys.isEmpty()) {
+                        currentInputConnection.commitText(text, 1)
+                        adjustKeyboardCase()
+                        return
+                }
+                val shouldConvertKeys: Boolean = keyboardLayout.value.isTripleStroke &&
+                        (inputLengthSequence.lastOrNull() == 2) &&
+                        (keys == VirtualInputKey.gwInputKeys) &&
+                        (bufferEvents.takeLast(2).map { it.key } == VirtualInputKey.gwInputKeys)
+                val newKeys: List<VirtualInputKey> = if (shouldConvertKeys) VirtualInputKey.kwInputKeys else keys
+                val case = keyboardCase.value
+                val newEvents = newKeys.map { BasicInputEvent(key = it, case = case) }
+                if (shouldConvertKeys) {
+                        bufferEvents = bufferEvents.dropLast(2) + newEvents
+                } else {
+                        inputLengthSequence = inputLengthSequence + keys.size
+                        bufferEvents = bufferEvents + newEvents
                 }
                 adjustKeyboardCase()
         }
@@ -1131,7 +1152,12 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         tail = tail.drop(1)
                                 }
                                 val tailLength = tail.size
-                                bufferEvents = if (tailLength < 1) emptyList() else (bufferEvents.take(1) + bufferEvents.takeLast(tailLength))
+                                if (tailLength < 1) {
+                                        clearBuffer()
+                                } else {
+                                        inputLengthSequence = inputLengthSequence.take(1) + inputLengthSequence.takeLast(tailLength)
+                                        bufferEvents = bufferEvents.take(1) + bufferEvents.takeLast(tailLength)
+                                }
                         } else {
                                 if (item.isCantonese) {
                                         selectedLexicons.add(item.lexicon)
@@ -1144,7 +1170,12 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         tail = tail.drop(1)
                                 }
                                 val tailLength = tail.size
-                                bufferEvents = if (tailLength < 1) emptyList() else bufferEvents.takeLast(tailLength)
+                                if (tailLength < 1) {
+                                        clearBuffer()
+                                } else {
+                                        inputLengthSequence = inputLengthSequence.takeLast(tailLength)
+                                        bufferEvents = bufferEvents.takeLast(tailLength)
+                                }
                         }
                         KeyboardLayout.NineKey -> if (bufferCombos.first().isSpecial) {
                                 selectedLexicons.clear()
@@ -1165,10 +1196,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 if (isBuffering.value) {
                         when (keyboardLayout.value) {
                                 KeyboardLayout.Qwerty -> {
+                                        inputLengthSequence = inputLengthSequence.dropLast(1)
                                         bufferEvents = bufferEvents.dropLast(1)
                                 }
                                 KeyboardLayout.TripleStroke -> {
-                                        bufferEvents = bufferEvents.dropLast(1)
+                                        val lastInputLength: Int = inputLengthSequence.lastOrNull() ?: return
+                                        inputLengthSequence = inputLengthSequence.dropLast(1)
+                                        bufferEvents = bufferEvents.dropLast(lastInputLength)
                                 }
                                 KeyboardLayout.NineKey -> {
                                         bufferCombos = bufferCombos.dropLast(1)
