@@ -333,14 +333,12 @@ fun HomeScreen(navController: NavHostController) {
                                                 }
                                                 if (BuildConfig.DEBUG) {
                                                         // TODO: Enhance Display Language Switching
-                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                                                EnhancedHorizontalDivider()
-                                                                NavigationLabel(
-                                                                        icon = Icons.Outlined.Public,
-                                                                        text = stringResource(id = R.string.home_label_display_languages)
-                                                                ) {
-                                                                        navController.navigate(route = Screen.DisplayLanguages.route)
-                                                                }
+                                                        EnhancedHorizontalDivider()
+                                                        NavigationLabel(
+                                                                icon = Icons.Outlined.Public,
+                                                                text = stringResource(id = R.string.home_label_display_languages)
+                                                        ) {
+                                                                navController.navigate(route = Screen.DisplayLanguages.route)
                                                         }
                                                 }
                                         }

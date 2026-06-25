@@ -1,6 +1,5 @@
 package org.jyutping.jyutping.ninekey
 
-import android.os.Build
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -65,9 +64,7 @@ fun NineKeySpaceKey(modifier: Modifier) {
                                                 isDragging = true
                                         },
                                         onDragEnd = {
-                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                                                        view.performHapticFeedback(HapticFeedbackConstants.GESTURE_END)
-                                                }
+                                                view.performHapticFeedback(HapticFeedbackConstants.GESTURE_END)
                                                 isDragging = false
                                         },
                                         onDragCancel = {

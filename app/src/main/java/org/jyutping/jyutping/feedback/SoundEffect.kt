@@ -1,7 +1,6 @@
 package org.jyutping.jyutping.feedback
 
 import android.media.AudioManager
-import android.os.Build
 
 /**
  * Keyboard Audio Feedback
@@ -17,7 +16,7 @@ enum class SoundEffect {
 
         val soundId: Int
                 get() = when (this) {
-                        Back   -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) AudioManager.FX_BACK else AudioManager.FX_KEY_CLICK
+                        Back   -> AudioManager.FX_BACK
                         Click  -> AudioManager.FX_KEY_CLICK
                         Delete -> AudioManager.FX_KEYPRESS_DELETE
                         Input  -> AudioManager.FX_KEYPRESS_STANDARD

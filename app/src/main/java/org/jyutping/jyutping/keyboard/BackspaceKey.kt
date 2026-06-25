@@ -1,6 +1,5 @@
 package org.jyutping.jyutping.keyboard
 
-import android.os.Build
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -107,11 +106,7 @@ fun BackspaceKey(modifier: Modifier) {
                                                         // drag from right to left
                                                         if (offsetX > 20f) {
                                                                 context.audioFeedback(SoundEffect.Delete)
-                                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                                                                        view.performHapticFeedback(HapticFeedbackConstants.GESTURE_END)
-                                                                } else {
-                                                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_RELEASE)
-                                                                }
+                                                                view.performHapticFeedback(HapticFeedbackConstants.GESTURE_END)
                                                                 context.clearBuffer()
                                                                 isDraggable = false
                                                         } else {
@@ -119,11 +114,7 @@ fun BackspaceKey(modifier: Modifier) {
                                                                 // drag from bottom to top
                                                                 if (offsetY > 20f) {
                                                                         context.audioFeedback(SoundEffect.Delete)
-                                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                                                                                view.performHapticFeedback(HapticFeedbackConstants.GESTURE_END)
-                                                                        } else {
-                                                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_RELEASE)
-                                                                        }
+                                                                        view.performHapticFeedback(HapticFeedbackConstants.GESTURE_END)
                                                                         context.clearBuffer()
                                                                         isDraggable = false
                                                                 }

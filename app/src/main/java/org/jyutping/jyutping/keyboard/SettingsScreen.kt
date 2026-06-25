@@ -1007,11 +1007,7 @@ fun SettingsScreen(height: Dp) {
                                                         TextButton(
                                                                 onClick = {
                                                                         context.audioFeedback(SoundEffect.Delete)
-                                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                                                                                view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
-                                                                        } else {
-                                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                        }
+                                                                        view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
                                                                         context.clearInputMemory()
                                                                         coroutineScope.launch {
                                                                                 delay(1000L.milliseconds) // 1s

@@ -1,6 +1,5 @@
 package org.jyutping.jyutping.editingpanel
 
-import android.os.Build
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -50,11 +49,7 @@ fun EditingPanelReturnKey(modifier: Modifier) {
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
                                 context.audioFeedback(SoundEffect.Return)
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                                        view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
-                                } else {
-                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                }
+                                view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
                                 context.performReturn()
                         }
                         .fillMaxSize()

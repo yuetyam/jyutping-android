@@ -121,23 +121,18 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         DatabasePreparer.prepare(applicationContext)
                         memoryHelper.performMemoryMigration()
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        val manufacturer = Build.MANUFACTURER.lowercase()
-                        val brand = Build.BRAND.lowercase()
-                        val shouldDisableBlur: Boolean = blurBlackList.contains(manufacturer) || blurBlackList.contains(brand)
-                        canBlurWindow = if (shouldDisableBlur) false else (getSystemService(WindowManager::class.java)?.isCrossWindowBlurEnabled ?: false)
-                        PresetColor.attach(canBlur = canBlurWindow)
-                        if (canBlurWindow) {
-                                window?.window?.let { win ->
-                                        win.addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
-                                        val density = resources.displayMetrics.density
-                                        val blurPixel = (50 * density).roundToInt()
-                                        win.setBackgroundBlurRadius(blurPixel)
-                                }
+                val manufacturer = Build.MANUFACTURER.lowercase()
+                val brand = Build.BRAND.lowercase()
+                val shouldDisableBlur: Boolean = blurBlackList.contains(manufacturer) || blurBlackList.contains(brand)
+                canBlurWindow = if (shouldDisableBlur) false else (getSystemService(WindowManager::class.java)?.isCrossWindowBlurEnabled ?: false)
+                PresetColor.attach(canBlur = canBlurWindow)
+                if (canBlurWindow) {
+                        window?.window?.let { win ->
+                                win.addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED)
+                                val density = resources.displayMetrics.density
+                                val blurPixel = (50 * density).roundToInt()
+                                win.setBackgroundBlurRadius(blurPixel)
                         }
-                } else {
-                        canBlurWindow = false
-                        PresetColor.attach(canBlur = false)
                 }
         }
         override fun onConfigurationChanged(newConfig: Configuration) {
@@ -162,13 +157,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         decorView.setViewTreeSavedStateRegistryOwner(this)
                 }
                 if (canBlurWindow) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                val canNowBlur: Boolean = getSystemService(WindowManager::class.java)?.isCrossWindowBlurEnabled ?: false
-                                if (canNowBlur.negative) {
-                                        canBlurWindow = false
-                                        PresetColor.attach(canBlur = false)
-                                }
-                        } else {
+                        val canNowBlur: Boolean = getSystemService(WindowManager::class.java)?.isCrossWindowBlurEnabled ?: false
+                        if (canNowBlur.negative) {
                                 canBlurWindow = false
                                 PresetColor.attach(canBlur = false)
                         }

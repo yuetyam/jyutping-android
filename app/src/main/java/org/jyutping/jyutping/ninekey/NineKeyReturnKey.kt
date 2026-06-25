@@ -1,6 +1,5 @@
 package org.jyutping.jyutping.ninekey
 
-import android.os.Build
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -51,11 +50,7 @@ fun NineKeyReturnKey(modifier: Modifier) {
                                         onPress = {
                                                 isPressing = true
                                                 context.audioFeedback(SoundEffect.Return)
-                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                                                        view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
-                                                } else {
-                                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                                }
+                                                view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
                                                 context.performReturn()
                                                 try {
                                                         tryAwaitRelease()

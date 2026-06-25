@@ -2,7 +2,6 @@ package org.jyutping.jyutping.app.home
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.provider.Settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -55,12 +54,10 @@ fun DisplayLanguagesScreen() {
                                 DisableSelection {
                                         Button(
                                                 onClick = {
-                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                                                val intent = Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
-                                                                        .apply { data = Uri.fromParts("package", context.packageName, null) }
-                                                                        .apply { setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
-                                                                context.startActivity(intent)
-                                                        }
+                                                        val intent = Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
+                                                                .apply { data = Uri.fromParts("package", context.packageName, null) }
+                                                                .apply { setFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
+                                                        context.startActivity(intent)
                                                 },
                                                 shape = CircleShape,
                                                 colors = ButtonDefaults.buttonColors(containerColor = colorScheme.background, contentColor = PresetColor.blue),
