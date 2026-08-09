@@ -14,6 +14,6 @@ data class SidebarEntry(
 
         companion object {
                 val punctuation = listOf("，", "。", "？", "！", "、", "：", "；", "／", "…", "~", "～").map { SidebarEntry(text = it, isSymbol = true) }
-                val symbols = listOf("+", "-", "*", "/", "=", "%", ":", "@", "#", ",", "$", "~", "≈").map { SidebarEntry(text = it, isSymbol = true) }
+                val symbols = listOf("+", "-", "*", "/", "=", "%", ":", "@", "#", ",", "$", "~", "≈", "×", "÷").map { SidebarEntry(text = it, isSymbol = true) }
         }
 }

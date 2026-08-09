@@ -1,6 +1,6 @@
 plugins {
         application
-        kotlin("jvm") version "2.4.0"
+        kotlin("jvm") version "2.4.10"
 }
 
 group = "org.jyutping.preparing"
@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-        implementation("org.xerial:sqlite-jdbc:3.53.1.0")
+        implementation("org.xerial:sqlite-jdbc:3.53.2.1")
         implementation("org.slf4j:slf4j-simple:2.0.18")
         testImplementation(kotlin("test"))
 }
