@@ -3,10 +3,13 @@ package org.jyutping.preparing
 data class LexiconEntry(
         val word: String,
         val romanization: String,
+        val charCount: Int,
+        val letterCount: Int,
+        val complexity: Long,
         val anchors: Long,
         val spell: Long,
         val nineKeyAnchors: Long,
-        val nineKeyCode: Long,
+        val nineKeySpell: Long,
 ) {
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true

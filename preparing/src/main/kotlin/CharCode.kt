@@ -1,30 +1,5 @@
 package org.jyutping.preparing
 
-@Deprecated(message = "Use serialCode instead")
-val String.charCode: Long?
-        get() {
-                if (this.length >= 10) return null
-                val codes = this.mapNotNull { it.interCode }
-                if (codes.size != this.length) return null
-                return codes.radix100Combined()
-        }
-
-@Deprecated(message = "Use keypadCode instead")
-val String.nineKeyCharCode: Long?
-        get() {
-                if (this.length >= 19) return null
-                val codes = this.mapNotNull { it.keypadCharCode }
-                if (codes.size != this.length) return null
-                return codes.decimalCombined()
-        }
-
-@Deprecated(message = "Use radix100Overflowed() instead")
-fun Iterable<Int>.radix100Combined(): Long = if (this.count() >= 10) 0L else this.fold(0L) { acc, i -> acc * 100L + i}
-
-@Deprecated(message = "Use decimalOverflowed() instead")
-fun Iterable<Int>.decimalCombined(): Long = if (this.count() >= 19) 0L else this.fold(0L) { acc, i -> acc * 10L + i}
-
-
 /** Encodes lowercase Basic Latin letters as two-digit serial codes. */
 val String.serialCode: Long
         get() = mapNotNull { it.interCode }.radix100Overflowed()

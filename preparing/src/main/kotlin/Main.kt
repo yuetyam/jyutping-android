@@ -1,19 +1,16 @@
 package org.jyutping.preparing
 
 import java.io.File
+import java.sql.DriverManager
 
 fun main() {
         val dbPath = "../app/src/main/assets/appdb.sqlite3"
         val dbFile = File(dbPath)
-        if (dbFile.exists()) {
-                val isDeleted = dbFile.delete()
-                if (isDeleted) {
-                        println("Deleted the old database file.")
-                } else {
-                        println("Failed to delete the old database file at ${dbFile.absolutePath}")
-                }
+        if (dbFile.exists() && !dbFile.delete()) {
+                error("Failed to delete the old database file at ${dbFile.absolutePath}")
         }
-        val url = "jdbc:sqlite:$dbPath"
-        AppDataPreparer.prepare(url)
-        KeyboardDataPreparer.prepare(url)
+        DriverManager.getConnection("jdbc:sqlite:$dbPath").use { connection ->
+                KeyboardDataPreparer.prepare(connection)
+                AppDataPreparer.prepare(connection)
+        }
 }

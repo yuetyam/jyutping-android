@@ -1,45 +1,53 @@
 package org.jyutping.preparing
 
-import java.io.InputStream
-
 object LexiconConverter {
+        val jyutpingSourceLines: List<String> by lazy {
+                readResourceLines("jyutping.txt")
+                        .map { it.trim() }
+                        .filter { it.isNotEmpty() }
+        }
+
         fun jyutping(): List<LexiconEntry> {
-                val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("jyutping.txt") ?: error("Can not load jyutping.txt")
-                val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                return sourceLines.map { convert(it) }.distinct()
+                return jyutpingSourceLines.map(::convert)
         }
+
         fun pinyin(): List<LexiconEntry> {
-                val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("pinyin.txt") ?: error("Can not load pinyin.txt")
-                val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                return sourceLines.map { convert(it) }.distinct()
+                return readResourceLines("pinyin.txt")
+                        .map { it.trim() }
+                        .filter { it.isNotEmpty() }
+                        .map(::convert)
         }
+
         fun structure(): List<LexiconEntry> {
-                val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("structure.txt") ?: error("Can not load structure.txt")
-                val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val transformedLines = sourceLines.mapNotNull { line ->
+                val transformedLines = readResourceLines("structure.txt").map { line ->
                         val parts = line.split(PresetString.TAB)
-                        if (parts.size != 3) return@mapNotNull null
-                        return@mapNotNull parts[0] + PresetString.TAB + parts[2]
+                        require(parts.size == 3) { "bad line format: $line" }
+                        parts[0] + PresetString.TAB + parts[2]
                 }
-                return transformedLines.distinct().map { convert(it) }.distinct()
+                return transformedLines.distinct().map(::convert)
         }
+
         private fun convert(text: String): LexiconEntry {
                 val badLineFormat = "bad line format: $text"
                 val parts = text.trim().split(PresetString.TAB).map { it.trim() }
-                if (parts.count() != 2) error(badLineFormat)
+                require(parts.size == 2) { badLineFormat }
                 val word = parts[0]
                 val romanization = parts[1]
-                val anchors = romanization.split(PresetString.SPACE).mapNotNull { it.firstOrNull() }
-                if (anchors.isEmpty()) error(badLineFormat)
-                val anchorText = anchors.joinToString(separator = PresetString.EMPTY)
-                val anchorCode = anchorText.charCode
-                val nineKeyAnchorCode = anchorText.nineKeyCharCode
-                if (anchorCode == null) error(badLineFormat)
-                if (nineKeyAnchorCode == null) error(badLineFormat)
-                val syllableText = romanization.filter { it in 'a'..'z' }
-                if (syllableText.isEmpty()) error(badLineFormat)
-                val spell: Long = syllableText.hashCode().toLong()
-                val nineKeyCode: Long = syllableText.nineKeyCharCode ?: 0
-                return LexiconEntry(word = word, romanization = romanization, anchors = anchorCode, spell = spell, nineKeyAnchors = nineKeyAnchorCode, nineKeyCode = nineKeyCode)
+                val phones = romanization.filterNot { it.isBasicDigit }.split(PresetString.SPACE)
+                val complexity = phones.map(String::length).decimalOverflowed()
+                val anchorText = phones.mapNotNull(String::firstOrNull).joinToString(PresetString.EMPTY)
+                val letters = romanization.filter(Char::isLowercaseBasicLatinLetter)
+                require(letters.isNotEmpty()) { badLineFormat }
+                return LexiconEntry(
+                        word = word,
+                        romanization = romanization,
+                        charCount = word.characterCount(),
+                        letterCount = letters.length,
+                        complexity = complexity,
+                        anchors = anchorText.serialCode,
+                        spell = letters.serialCode,
+                        nineKeyAnchors = anchorText.keypadCode,
+                        nineKeySpell = letters.keypadCode,
+                )
         }
 }

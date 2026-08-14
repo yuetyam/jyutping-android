@@ -1,332 +1,77 @@
 package org.jyutping.preparing
 
-import java.io.InputStream
-import java.sql.DriverManager
-import kotlin.use
+import java.sql.Connection
 
 object KeyboardDataPreparer {
-        fun prepare(url: String) {
-                createLexiconTable(url)
-                createCharacterVariantTable(fileName = "CharacterVariant.AncientBooksPublishing.txt", tableName = "variant_abp", url = url)
-                createCharacterVariantTable(fileName = "CharacterVariant.HongKong.txt", tableName = "variant_hk", url = url)
-                createCharacterVariantTable(fileName = "CharacterVariant.Inherited.txt", tableName = "variant_old", url = url)
-                createCharacterVariantTable(fileName = "CharacterVariant.PRCGeneral.txt", tableName = "variant_prc", url = url)
-                createCharacterVariantTable(fileName = "CharacterVariant.Simplified.txt", tableName = "variant_sim", url = url)
-                createCharacterVariantTable(fileName = "CharacterVariant.Taiwan.txt", tableName = "variant_tw", url = url)
-                createStructureTable(url)
-                createPinyinTable(url)
-                createCoreSyllableTable(url)
-                createPinyinSyllableTable(url)
-                createTextMarkTable(url)
-                createSymbolTable(url)
-                createEmojiSkinMapTable(url)
-                createStrokeTable(url)
-                createCangjieTable(url)
-                createQuickTable(url)
-                createIndexes(url)
-        }
-        private fun createIndexes(url: String) {
-                val commands: List<String> = listOf(
-                        "CREATE INDEX ix_core_lexicon_spell ON core_lexicon (spell);",
-                        "CREATE INDEX ix_core_lexicon_anchors ON core_lexicon (anchors);",
-                        "CREATE INDEX ix_core_lexicon_strict ON core_lexicon (spell, anchors);",
-                        "CREATE INDEX ix_core_lexicon_nine_key_code ON core_lexicon (nine_key_code);",
-                        "CREATE INDEX ix_core_lexicon_nine_key_anchors ON core_lexicon (nine_key_anchors);",
-                        "CREATE INDEX ix_core_lexicon_word ON core_lexicon (word);",
-                        "CREATE INDEX ix_core_lexicon_romanization ON core_lexicon (romanization);",
-                        "CREATE INDEX ix_core_lexicon_word_romanization ON core_lexicon (word, romanization);",
-
-                        "CREATE INDEX ix_structure_spell ON structure_table (spell);",
-                        "CREATE INDEX ix_structure_nine_key_code ON structure_table (nine_key_code);",
-
-                        "CREATE INDEX ix_pinyin_spell ON pinyin_lexicon (spell);",
-                        "CREATE INDEX ix_pinyin_anchors ON pinyin_lexicon (anchors);",
-                        "CREATE INDEX ix_pinyin_strict ON pinyin_lexicon (spell, anchors);",
-                        "CREATE INDEX ix_pinyin_nine_key_code ON pinyin_lexicon (nine_key_code);",
-                        "CREATE INDEX ix_pinyin_nine_key_anchors ON pinyin_lexicon (nine_key_anchors);",
-
-                        "CREATE INDEX ix_symbol_spell ON symbol_table (spell);",
-                        "CREATE INDEX ix_symbol_nine_key_code ON symbol_table (nine_key_code);",
-                        "CREATE INDEX ix_emoji_skin_map_source ON emoji_skin_map (source);",
-
-                        "CREATE INDEX ix_mark_spell ON mark_table (spell);",
-                        "CREATE INDEX ix_mark_nine_key_code ON mark_table (nine_key_code);",
-
-                        "CREATE INDEX ix_core_syllable_nine_key_alias_code ON core_syllable_table (nine_key_alias_code);",
-                        "CREATE INDEX ix_pinyin_syllable_nine_key_code ON pinyin_syllable_table (nine_key_code);",
-
-                        "CREATE INDEX ix_stroke_stroke ON stroke_table (stroke);",
-                        "CREATE INDEX ix_stroke_spell ON stroke_table (spell);",
-                        "CREATE INDEX ix_stroke_code ON stroke_table (code);",
-
-                        "CREATE INDEX ix_cangjie_cangjie5 ON cangjie_table (cangjie5);",
-                        "CREATE INDEX ix_cangjie_c5code ON cangjie_table (c5code);",
-                        "CREATE INDEX ix_cangjie_cangjie3 ON cangjie_table (cangjie3);",
-                        "CREATE INDEX ix_cangjie_c3code ON cangjie_table (c3code);",
-
-                        "CREATE INDEX ix_quick_quick5 ON quick_table (quick5);",
-                        "CREATE INDEX ix_quick_q5code ON quick_table (q5code);",
-                        "CREATE INDEX ix_quick_quick3 ON quick_table (quick3);",
-                        "CREATE INDEX ix_quick_q3code ON quick_table (q3code);",
-
-
-                        // "CREATE INDEX ix_variant_abp_source ON variant_abp (source);",
-                        "CREATE INDEX ix_variant_abp_target ON variant_abp (target);",
-
-                        // "CREATE INDEX ix_variant_hk_source ON variant_hk (source);",
-                        "CREATE INDEX ix_variant_hk_target ON variant_hk (target);",
-
-                        // "CREATE INDEX ix_variant_old_source ON variant_old (source);",
-                        "CREATE INDEX ix_variant_old_target ON variant_old (target);",
-
-                        // "CREATE INDEX ix_variant_prc_source ON variant_prc (source);",
-                        "CREATE INDEX ix_variant_prc_target ON variant_prc (target);",
-
-                        // "CREATE INDEX ix_variant_sim_source ON variant_sim (source);",
-                        "CREATE INDEX ix_variant_sim_target ON variant_sim (target);",
-
-                        // "CREATE INDEX ix_variant_tw_source ON variant_tw (source);",
-                        "CREATE INDEX ix_variant_tw_target ON variant_tw (target);",
-                )
-                DriverManager.getConnection(url).use { connection ->
-                        connection.createStatement().use { statement ->
-                                for (command in commands) {
-                                        statement.executeUpdate(command)
-                                }
-                        }
-                }
-                println("Created keyboard data indexes.")
+        fun prepare(connection: Connection) {
+                prepareCoreLexiconTable(connection)
+                prepareStructureTable(connection)
+                preparePinyinTable(connection)
+                prepareCangjieTable(connection)
+                prepareQuickTable(connection)
+                prepareStrokeTable(connection)
+                prepareSymbolTable(connection)
+                prepareEmojiSkinMapTable(connection)
+                preparePlainTextTable(connection)
+                prepareCoreSyllableTable(connection)
+                prepareNineKeySyllableTable(connection)
+                preparePinyinSyllableTable(connection)
+                prepareCharacterVariantTable(connection, "CharacterVariant.AncientBooksPublishing.txt", "variant_abp")
+                prepareCharacterVariantTable(connection, "CharacterVariant.HongKong.txt", "variant_hk")
+                prepareCharacterVariantTable(connection, "CharacterVariant.Inherited.txt", "variant_old")
+                prepareCharacterVariantTable(connection, "CharacterVariant.PRCGeneral.txt", "variant_prc")
+                prepareCharacterVariantTable(connection, "CharacterVariant.Simplified.txt", "variant_sim")
+                prepareCharacterVariantTable(connection, "CharacterVariant.Taiwan.txt", "variant_tw")
+                createIndexes(connection)
         }
 
-        private fun createLexiconTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE core_lexicon (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, romanization TEXT NOT NULL, anchors INTEGER NOT NULL, spell INTEGER NOT NULL, nine_key_anchors INTEGER NOT NULL, nine_key_code INTEGER NOT NULL, UNIQUE (word, romanization));"
-                val connection = DriverManager.getConnection(url)
-                connection.createStatement().use { statement ->
-                        statement.executeUpdate(createTableCommand)
-                }
+        private fun prepareCoreLexiconTable(connection: Connection) {
+                connection.execute("CREATE TABLE lexicon_core (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, romanization TEXT NOT NULL, char_count INTEGER NOT NULL, complexity INTEGER NOT NULL, anchors INTEGER NOT NULL, spell INTEGER NOT NULL, anchors_9key INTEGER NOT NULL, spell_9key INTEGER NOT NULL);")
                 val entries = LexiconConverter.jyutping()
-                val insertEntryCommand: String = "INSERT INTO core_lexicon (word, romanization, anchors, spell, nine_key_anchors, nine_key_code) VALUES (?, ?, ?, ?, ?, ?);"
-                val insertedCount = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
+                batchInsert(connection, "INSERT INTO lexicon_core (word, romanization, char_count, complexity, anchors, spell, anchors_9key, spell_9key) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", entries) { statement, entry ->
                         statement.setString(1, entry.word)
                         statement.setString(2, entry.romanization)
-                        statement.setLong(3, entry.anchors)
-                        statement.setLong(4, entry.spell)
-                        statement.setLong(5, entry.nineKeyAnchors)
-                        statement.setLong(6, entry.nineKeyCode)
+                        statement.setInt(3, entry.charCount)
+                        statement.setLong(4, entry.complexity)
+                        statement.setLong(5, entry.anchors)
+                        statement.setLong(6, entry.spell)
+                        statement.setLong(7, entry.nineKeyAnchors)
+                        statement.setLong(8, entry.nineKeySpell)
                 }
-                connection.close()
-                println("Inserted lexicon entries: $insertedCount")
         }
-        private fun createCharacterVariantTable(fileName: String, tableName: String, url: String) {
-                val createTableCommand: String = "CREATE TABLE $tableName (source INTEGER PRIMARY KEY, target INTEGER NOT NULL);"
-                val connection = DriverManager.getConnection(url)
-                connection.createStatement().use { statement ->
-                        statement.executeUpdate(createTableCommand)
-                }
-                val entries = CharacterVariant.process(fileName)
-                val insertEntryCommand: String = "INSERT INTO $tableName (source, target) VALUES (?, ?);"
-                val insertedCount = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
-                        statement.setInt(1, entry.left)
-                        statement.setInt(2, entry.right)
-                }
-                connection.close()
-                println("Inserted $tableName entries: $insertedCount")
-        }
-        private fun createStructureTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE structure_table (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, romanization TEXT NOT NULL, spell INTEGER NOT NULL, nine_key_code INTEGER NOT NULL);"
-                val connection = DriverManager.getConnection(url)
-                connection.createStatement().use { statement ->
-                        statement.executeUpdate(createTableCommand)
-                }
+
+        private fun prepareStructureTable(connection: Connection) {
+                connection.execute("CREATE TABLE structure_table (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, romanization TEXT NOT NULL, char_count INTEGER NOT NULL, complexity INTEGER NOT NULL, spell INTEGER NOT NULL, spell_9key INTEGER NOT NULL);")
                 val entries = LexiconConverter.structure()
-                val insertEntryCommand: String = "INSERT INTO structure_table (word, romanization, spell, nine_key_code) VALUES (?, ?, ?, ?);"
-                val insertedCount = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
+                batchInsert(connection, "INSERT INTO structure_table (word, romanization, char_count, complexity, spell, spell_9key) VALUES (?, ?, ?, ?, ?, ?);", entries) { statement, entry ->
                         statement.setString(1, entry.word)
                         statement.setString(2, entry.romanization)
-                        statement.setLong(3, entry.spell)
-                        statement.setLong(4, entry.nineKeyCode)
+                        statement.setInt(3, entry.charCount)
+                        statement.setLong(4, entry.complexity)
+                        statement.setLong(5, entry.spell)
+                        statement.setLong(6, entry.nineKeySpell)
                 }
-                connection.close()
-                println("Inserted structure entries: $insertedCount")
         }
 
-        private fun createPinyinTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE pinyin_lexicon (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, romanization TEXT NOT NULL, anchors INTEGER NOT NULL, spell INTEGER NOT NULL, nine_key_anchors INTEGER NOT NULL, nine_key_code INTEGER NOT NULL);"
-                val connection = DriverManager.getConnection(url)
-                connection.createStatement().use { statement ->
-                        statement.executeUpdate(createTableCommand)
-                }
+        private fun preparePinyinTable(connection: Connection) {
+                connection.execute("CREATE TABLE pinyin_lexicon (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, romanization TEXT NOT NULL, char_count INTEGER NOT NULL, complexity INTEGER NOT NULL, anchors INTEGER NOT NULL, spell INTEGER NOT NULL, anchors_9key INTEGER NOT NULL, spell_9key INTEGER NOT NULL);")
                 val entries = LexiconConverter.pinyin()
-                val insertEntryCommand: String = "INSERT INTO pinyin_lexicon (word, romanization, anchors, spell, nine_key_anchors, nine_key_code) VALUES (?, ?, ?, ?, ?, ?);"
-                val insertedCount = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
+                batchInsert(connection, "INSERT INTO pinyin_lexicon (word, romanization, char_count, complexity, anchors, spell, anchors_9key, spell_9key) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", entries) { statement, entry ->
                         statement.setString(1, entry.word)
                         statement.setString(2, entry.romanization)
-                        statement.setLong(3, entry.anchors)
-                        statement.setLong(4, entry.spell)
-                        statement.setLong(5, entry.nineKeyAnchors)
-                        statement.setLong(6, entry.nineKeyCode)
+                        statement.setInt(3, entry.charCount)
+                        statement.setLong(4, entry.complexity)
+                        statement.setLong(5, entry.anchors)
+                        statement.setLong(6, entry.spell)
+                        statement.setLong(7, entry.nineKeyAnchors)
+                        statement.setLong(8, entry.nineKeySpell)
                 }
-                connection.close()
-                println("Inserted pinyin entries: $insertedCount")
         }
 
-        private fun createCoreSyllableTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE core_syllable_table (alias_code INTEGER PRIMARY KEY, origin_code INTEGER NOT NULL, nine_key_alias_code INTEGER NOT NULL, nine_key_origin_code INTEGER NOT NULL, alias TEXT NOT NULL, origin TEXT NOT NULL);"
-                val connection = DriverManager.getConnection(url)
-                connection.createStatement().use { statement ->
-                        statement.executeUpdate(createTableCommand)
-                }
-                val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("syllable.txt") ?: error("Can not load syllable.txt")
-                val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val insertEntryCommand: String = "INSERT INTO core_syllable_table (alias_code, origin_code, nine_key_alias_code, nine_key_origin_code, alias, origin) VALUES (?, ?, ?, ?, ?, ?);"
-                val insertedCount = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
-                        val badLineFormat = "bad line format: $line"
-                        val parts = line.split(PresetString.TAB)
-                        if (parts.size != 2) error(badLineFormat)
-                        val alias = parts[0]
-                        val origin = parts[1]
-                        val aliasCode = alias.charCode
-                        val originCode = origin.charCode
-                        if (aliasCode == null || originCode == null) error(badLineFormat)
-                        if (aliasCode == 0L || originCode == 0L) error(badLineFormat)
-                        val nineKeyAliasCode = alias.nineKeyCharCode
-                        val nineKeyOriginCode = origin.nineKeyCharCode
-                        if (nineKeyAliasCode == null || nineKeyOriginCode == null) error(badLineFormat)
-                        if (nineKeyAliasCode == 0L || nineKeyOriginCode == 0L) error(badLineFormat)
-                        statement.setLong(1, aliasCode)
-                        statement.setLong(2, originCode)
-                        statement.setLong(3, nineKeyAliasCode)
-                        statement.setLong(4, nineKeyOriginCode)
-                        statement.setString(5, alias)
-                        statement.setString(6, origin)
-                }
-                connection.close()
-                println("Inserted syllable entries: $insertedCount")
-        }
-
-        private fun createPinyinSyllableTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE pinyin_syllable_table (code INTEGER PRIMARY KEY, nine_key_code INTEGER NOT NULL, syllable TEXT NOT NULL);"
-                val connection = DriverManager.getConnection(url)
-                connection.createStatement().use { statement ->
-                        statement.executeUpdate(createTableCommand)
-                }
-                val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("pinyin-syllable.txt") ?: error("Can not load pinyin-syllable.txt")
-                val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val insertEntryCommand: String = "INSERT INTO pinyin_syllable_table (code, nine_key_code, syllable) VALUES (?, ?, ?);"
-                val insertedCount = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
-                        val badLineFormat = "bad line format: $line"
-                        val code = line.charCode
-                        val nineKeycode = line.nineKeyCharCode
-                        if (code == null || nineKeycode == null) error(badLineFormat)
-                        if (code == 0L || nineKeycode == 0L) error(badLineFormat)
-                        statement.setLong(1, code)
-                        statement.setLong(2, nineKeycode)
-                        statement.setString(3, line)
-                }
-                connection.close()
-                println("Inserted pinyin syllable entries: $insertedCount")
-        }
-
-        private fun createTextMarkTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE mark_table (id INTEGER PRIMARY KEY AUTOINCREMENT, input TEXT NOT NULL, mark TEXT NOT NULL, spell INTEGER NOT NULL, nine_key_code INTEGER NOT NULL);"
-                val connection = DriverManager.getConnection(url)
-                connection.createStatement().use { statement ->
-                        statement.executeUpdate(createTableCommand)
-                }
-                val insertEntryCommand: String = "INSERT INTO mark_table (input, mark, spell, nine_key_code) VALUES (?, ?, ?, ?);"
-                val items = TextMarkLexicon.generate()
-                val insertedCount = batchInsert(connection, insertEntryCommand, items) { statement, item ->
-                        statement.setString(1, item.input)
-                        statement.setString(2, item.mark)
-                        statement.setInt(3, item.spellCode)
-                        statement.setLong(4, item.nineKeyCode)
-                }
-                connection.close()
-                println("Inserted text mark entries: $insertedCount")
-        }
-
-        private fun createSymbolTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE symbol_table (id INTEGER PRIMARY KEY AUTOINCREMENT, category INTEGER NOT NULL, unicode_version INTEGER NOT NULL, code_point TEXT NOT NULL, cantonese TEXT NOT NULL, romanization TEXT NOT NULL, spell INTEGER NOT NULL, nine_key_code INTEGER NOT NULL);"
-                val connection = DriverManager.getConnection(url)
-                connection.createStatement().use { statement ->
-                        statement.executeUpdate(createTableCommand)
-                }
-                val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("symbol.txt") ?: error("Can not load symbol.txt")
-                val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val insertEntryCommand: String = "INSERT INTO symbol_table (category, unicode_version, code_point, cantonese, romanization, spell, nine_key_code) VALUES (?, ?, ?, ?, ?, ?, ?);"
-                val insertedCount = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
-                        val badLineFormat = "bad line format: $line"
-                        val parts = line.split(PresetString.TAB)
-                        if (parts.size != 5) error(badLineFormat)
-                        val category = parts[0].toIntOrNull() ?: error(badLineFormat)
-                        val version = parts[1].toIntOrNull() ?: error(badLineFormat)
-                        val codePoint = parts[2]
-                        val cantonese = parts[3]
-                        val romanization = parts[4]
-                        val syllableText = romanization.filter { it.isLetter() }
-                        val spellCode = syllableText.hashCode()
-                        val nineKeyCode = syllableText.nineKeyCharCode ?: 0
-                        statement.setInt(1, category)
-                        statement.setInt(2, version)
-                        statement.setString(3, codePoint)
-                        statement.setString(4, cantonese)
-                        statement.setString(5, romanization)
-                        statement.setInt(6, spellCode)
-                        statement.setLong(7, nineKeyCode)
-                }
-                connection.close()
-                println("Inserted symbol entries: $insertedCount")
-        }
-        private fun createEmojiSkinMapTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE emoji_skin_map (id INTEGER PRIMARY KEY AUTOINCREMENT, source TEXT NOT NULL, target TEXT NOT NULL);"
-                val connection = DriverManager.getConnection(url)
-                connection.createStatement().use { statement ->
-                        statement.executeUpdate(createTableCommand)
-                }
-                val inputStream: InputStream = object {}.javaClass.classLoader.getResourceAsStream("skin-tone-map.txt") ?: error("Can not load skin-tone-map.txt")
-                val sourceLines = inputStream.bufferedReader().use { it.readLines().filter { line -> line.isNotBlank() } }
-                val insertEntryCommand: String = "INSERT INTO emoji_skin_map (source, target) VALUES (?, ?);"
-                val insertedCount = batchInsert(connection, insertEntryCommand, sourceLines) { statement, line ->
-                        val badLineFormat = "bad line format: $line"
-                        val parts = line.split(PresetString.TAB)
-                        if (parts.size != 2) error(badLineFormat)
-                        val source = parts[0]
-                        val target = parts[1]
-                        statement.setString(1, source)
-                        statement.setString(2, target)
-                }
-                connection.close()
-                println("Inserted emoji-skin-map entries: $insertedCount")
-        }
-
-        private fun createStrokeTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE stroke_table (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, stroke TEXT NOT NULL, complex INTEGER NOT NULL, spell INTEGER NOT NULL, code INTEGER NOT NULL);"
-                val connection = DriverManager.getConnection(url)
-                connection.createStatement().use { statement ->
-                        statement.executeUpdate(createTableCommand)
-                }
-                val entries = Stroke.generate()
-                val insertEntryCommand: String = "INSERT INTO stroke_table (word, stroke, complex, spell, code) VALUES (?, ?, ?, ?, ?);"
-                val insertedCount = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
-                        statement.setString(1, entry.word)
-                        statement.setString(2, entry.stroke)
-                        statement.setInt(3, entry.complex)
-                        statement.setInt(4, entry.spell)
-                        statement.setLong(5, entry.code)
-                }
-                connection.close()
-                println("Inserted stroke entries: $insertedCount")
-        }
-
-        private fun createCangjieTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE cangjie_table (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, cangjie5 TEXT NOT NULL, c5complex INTEGER NOT NULL, c5code INTEGER NOT NULL, cangjie3 TEXT NOT NULL, c3complex INTEGER NOT NULL, c3code INTEGER NOT NULL);"
-                val connection = DriverManager.getConnection(url)
-                connection.createStatement().use { statement ->
-                        statement.executeUpdate(createTableCommand)
-                }
+        private fun prepareCangjieTable(connection: Connection) {
+                connection.execute("CREATE TABLE cangjie_table (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, cangjie5 TEXT NOT NULL, c5complex INTEGER NOT NULL, c5code INTEGER NOT NULL, cangjie3 TEXT NOT NULL, c3complex INTEGER NOT NULL, c3code INTEGER NOT NULL);")
                 val entries = Cangjie.generate()
-                val insertEntryCommand: String = "INSERT INTO cangjie_table (word, cangjie5, c5complex, c5code, cangjie3, c3complex, c3code) VALUES (?, ?, ?, ?, ?, ?, ?);"
-                val insertedCount = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
+                batchInsert(connection, "INSERT INTO cangjie_table (word, cangjie5, c5complex, c5code, cangjie3, c3complex, c3code) VALUES (?, ?, ?, ?, ?, ?, ?);", entries) { statement, entry ->
                         statement.setString(1, entry.word)
                         statement.setString(2, entry.cangjie5)
                         statement.setInt(3, entry.c5complex)
@@ -335,19 +80,12 @@ object KeyboardDataPreparer {
                         statement.setInt(6, entry.c3complex)
                         statement.setLong(7, entry.c3code)
                 }
-                connection.close()
-                println("Inserted cangjie entries: $insertedCount")
         }
 
-        private fun createQuickTable(url: String) {
-                val createTableCommand: String = "CREATE TABLE quick_table (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, quick5 TEXT NOT NULL, q5complex INTEGER NOT NULL, q5code INTEGER NOT NULL, quick3 TEXT NOT NULL, q3complex INTEGER NOT NULL, q3code INTEGER NOT NULL);"
-                val connection = DriverManager.getConnection(url)
-                connection.createStatement().use { statement ->
-                        statement.executeUpdate(createTableCommand)
-                }
+        private fun prepareQuickTable(connection: Connection) {
+                connection.execute("CREATE TABLE quick_table (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, quick5 TEXT NOT NULL, q5complex INTEGER NOT NULL, q5code INTEGER NOT NULL, quick3 TEXT NOT NULL, q3complex INTEGER NOT NULL, q3code INTEGER NOT NULL);")
                 val entries = Quick.generate()
-                val insertEntryCommand: String = "INSERT INTO quick_table (word, quick5, q5complex, q5code, quick3, q3complex, q3code) VALUES (?, ?, ?, ?, ?, ?, ?);"
-                val insertedCount = batchInsert(connection, insertEntryCommand, entries) { statement, entry ->
+                batchInsert(connection, "INSERT INTO quick_table (word, quick5, q5complex, q5code, quick3, q3complex, q3code) VALUES (?, ?, ?, ?, ?, ?, ?);", entries) { statement, entry ->
                         statement.setString(1, entry.word)
                         statement.setString(2, entry.quick5)
                         statement.setInt(3, entry.q5complex)
@@ -356,7 +94,169 @@ object KeyboardDataPreparer {
                         statement.setInt(6, entry.q3complex)
                         statement.setLong(7, entry.q3code)
                 }
-                connection.close()
-                println("Inserted quick entries: $insertedCount")
         }
+
+        private fun prepareStrokeTable(connection: Connection) {
+                connection.execute("CREATE TABLE stroke_table (id INTEGER PRIMARY KEY AUTOINCREMENT, word TEXT NOT NULL, stroke TEXT NOT NULL, complex INTEGER NOT NULL, code INTEGER NOT NULL);")
+                val entries = Stroke.generate()
+                batchInsert(connection, "INSERT INTO stroke_table (word, stroke, complex, code) VALUES (?, ?, ?, ?);", entries) { statement, entry ->
+                        statement.setString(1, entry.word)
+                        statement.setString(2, entry.stroke)
+                        statement.setInt(3, entry.complex)
+                        statement.setLong(4, entry.code)
+                }
+        }
+
+        private fun prepareSymbolTable(connection: Connection) {
+                connection.execute("CREATE TABLE symbol_table (id INTEGER PRIMARY KEY AUTOINCREMENT, category INTEGER NOT NULL, unicode_version INTEGER NOT NULL, code_point TEXT NOT NULL, cantonese TEXT NOT NULL, romanization TEXT NOT NULL, complexity INTEGER NOT NULL, spell INTEGER NOT NULL, spell_9key INTEGER NOT NULL);")
+                val entries = readResourceLines("symbol.txt").mapNotNull { line ->
+                        val parts = line.split(PresetString.TAB)
+                        if (parts.size != 5) return@mapNotNull null
+                        val romanization = parts[4]
+                        val complexity = romanization.split(PresetString.SPACE).map { it.length - 1 }.decimalOverflowed()
+                        val letters = romanization.filter(Char::isLowercaseBasicLatinLetter)
+                        SymbolEntry(
+                                category = parts[0].toInt(),
+                                unicodeVersion = parts[1].toInt(),
+                                codePoint = parts[2],
+                                cantonese = parts[3],
+                                romanization = romanization,
+                                complexity = complexity,
+                                spell = letters.serialCode,
+                                nineKeySpell = letters.keypadCode,
+                        )
+                }
+                batchInsert(connection, "INSERT INTO symbol_table (category, unicode_version, code_point, cantonese, romanization, complexity, spell, spell_9key) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", entries) { statement, entry ->
+                        statement.setInt(1, entry.category)
+                        statement.setInt(2, entry.unicodeVersion)
+                        statement.setString(3, entry.codePoint)
+                        statement.setString(4, entry.cantonese)
+                        statement.setString(5, entry.romanization)
+                        statement.setLong(6, entry.complexity)
+                        statement.setLong(7, entry.spell)
+                        statement.setLong(8, entry.nineKeySpell)
+                }
+        }
+
+        private fun prepareEmojiSkinMapTable(connection: Connection) {
+                connection.execute("CREATE TABLE emoji_skin_map (id INTEGER PRIMARY KEY AUTOINCREMENT, source TEXT NOT NULL, target TEXT NOT NULL);")
+                val entries = readResourceLines("skin-tone-map.txt").mapNotNull { line ->
+                        val parts = line.split(PresetString.TAB)
+                        if (parts.size == 2) parts[0] to parts[1] else null
+                }
+                batchInsert(connection, "INSERT INTO emoji_skin_map (source, target) VALUES (?, ?);", entries) { statement, entry ->
+                        statement.setString(1, entry.first)
+                        statement.setString(2, entry.second)
+                }
+        }
+
+        private fun preparePlainTextTable(connection: Connection) {
+                connection.execute("CREATE TABLE plain_text_table (id INTEGER PRIMARY KEY AUTOINCREMENT, input TEXT NOT NULL, word TEXT NOT NULL, letter_count INTEGER NOT NULL, spell INTEGER NOT NULL, spell_9key INTEGER NOT NULL);")
+                val entries = PlainText.convert()
+                batchInsert(connection, "INSERT INTO plain_text_table (input, word, letter_count, spell, spell_9key) VALUES (?, ?, ?, ?, ?);", entries) { statement, entry ->
+                        statement.setString(1, entry.input)
+                        statement.setString(2, entry.word)
+                        statement.setInt(3, entry.letterCount)
+                        statement.setLong(4, entry.spell)
+                        statement.setLong(5, entry.nineKeySpell)
+                }
+        }
+
+        private fun prepareCoreSyllableTable(connection: Connection) {
+                connection.execute("CREATE TABLE syllable_core_table (alias_code INTEGER PRIMARY KEY, origin_code INTEGER NOT NULL, alias TEXT NOT NULL, origin TEXT NOT NULL);")
+                val entries = syllablePairs("syllable-core.txt")
+                batchInsert(connection, "INSERT INTO syllable_core_table (alias_code, origin_code, alias, origin) VALUES (?, ?, ?, ?);", entries) { statement, entry ->
+                        statement.setLong(1, entry.first.serialCode)
+                        statement.setLong(2, entry.second.serialCode)
+                        statement.setString(3, entry.first)
+                        statement.setString(4, entry.second)
+                }
+        }
+
+        private fun prepareNineKeySyllableTable(connection: Connection) {
+                connection.execute("CREATE TABLE syllable_9key_table (alias_code INTEGER PRIMARY KEY, origin_code INTEGER NOT NULL, alias_9key_code INTEGER NOT NULL, origin_9key_code INTEGER NOT NULL, alias TEXT NOT NULL, origin TEXT NOT NULL);")
+                val entries = syllablePairs("syllable-9key.txt")
+                batchInsert(connection, "INSERT INTO syllable_9key_table (alias_code, origin_code, alias_9key_code, origin_9key_code, alias, origin) VALUES (?, ?, ?, ?, ?, ?);", entries) { statement, entry ->
+                        statement.setLong(1, entry.first.serialCode)
+                        statement.setLong(2, entry.second.serialCode)
+                        statement.setLong(3, entry.first.keypadCode)
+                        statement.setLong(4, entry.second.keypadCode)
+                        statement.setString(5, entry.first)
+                        statement.setString(6, entry.second)
+                }
+        }
+
+        private fun preparePinyinSyllableTable(connection: Connection) {
+                connection.execute("CREATE TABLE syllable_pinyin_table (code INTEGER PRIMARY KEY, code_9key INTEGER NOT NULL, syllable TEXT NOT NULL);")
+                val entries = readResourceLines("syllable-pinyin.txt").map(String::trim).filter(String::isNotEmpty)
+                batchInsert(connection, "INSERT INTO syllable_pinyin_table (code, code_9key, syllable) VALUES (?, ?, ?);", entries) { statement, syllable ->
+                        statement.setLong(1, syllable.serialCode)
+                        statement.setLong(2, syllable.keypadCode)
+                        statement.setString(3, syllable)
+                }
+        }
+
+        private fun prepareCharacterVariantTable(connection: Connection, fileName: String, tableName: String) {
+                connection.execute("CREATE TABLE $tableName (source INTEGER PRIMARY KEY, target INTEGER NOT NULL);")
+                val entries = CharacterVariant.generate(fileName)
+                batchInsert(connection, "INSERT INTO $tableName (source, target) VALUES (?, ?);", entries) { statement, entry ->
+                        statement.setInt(1, entry.left)
+                        statement.setInt(2, entry.right)
+                }
+        }
+
+        private fun syllablePairs(fileName: String): List<Pair<String, String>> {
+                return readResourceLines(fileName).map(String::trim).filter(String::isNotEmpty).map { line ->
+                        val parts = line.split(PresetString.TAB)
+                        require(parts.size == 2) { "$fileName: bad format: $line" }
+                        parts[0] to parts[1]
+                }
+        }
+
+        private fun createIndexes(connection: Connection) {
+                val commands = listOf(
+                        "CREATE INDEX ix_lexicon_core_anchors ON lexicon_core (anchors, char_count);",
+                        "CREATE INDEX ix_lexicon_core_spell ON lexicon_core (spell, complexity);",
+                        "CREATE INDEX ix_lexicon_core_anchors_9key ON lexicon_core (anchors_9key, char_count);",
+                        "CREATE INDEX ix_lexicon_core_spell_9key ON lexicon_core (spell_9key, complexity);",
+                        "CREATE INDEX ix_lexicon_core_word ON lexicon_core (word);",
+                        "CREATE INDEX ix_structure_spell ON structure_table (spell, complexity);",
+                        "CREATE INDEX ix_structure_spell_9key ON structure_table (spell_9key, complexity);",
+                        "CREATE INDEX ix_pinyin_anchors ON pinyin_lexicon (anchors, char_count);",
+                        "CREATE INDEX ix_pinyin_spell ON pinyin_lexicon (spell, complexity);",
+                        "CREATE INDEX ix_pinyin_anchors_9key ON pinyin_lexicon (anchors_9key, char_count);",
+                        "CREATE INDEX ix_pinyin_spell_9key ON pinyin_lexicon (spell_9key, complexity);",
+                        "CREATE INDEX ix_cangjie_cangjie5 ON cangjie_table (cangjie5, c5complex);",
+                        "CREATE INDEX ix_cangjie_c5code ON cangjie_table (c5code);",
+                        "CREATE INDEX ix_cangjie_cangjie3 ON cangjie_table (cangjie3, c3complex);",
+                        "CREATE INDEX ix_cangjie_c3code ON cangjie_table (c3code);",
+                        "CREATE INDEX ix_quick_quick5 ON quick_table (quick5, q5complex);",
+                        "CREATE INDEX ix_quick_q5code ON quick_table (q5code);",
+                        "CREATE INDEX ix_quick_quick3 ON quick_table (quick3, q3complex);",
+                        "CREATE INDEX ix_quick_q3code ON quick_table (q3code);",
+                        "CREATE INDEX ix_stroke_stroke ON stroke_table (stroke, complex);",
+                        "CREATE INDEX ix_stroke_code ON stroke_table (code, complex);",
+                        "CREATE INDEX ix_symbol_spell ON symbol_table (spell, complexity);",
+                        "CREATE INDEX ix_symbol_spell_9key ON symbol_table (spell_9key, complexity);",
+                        "CREATE INDEX ix_emoji_skin_map_source ON emoji_skin_map (source);",
+                        "CREATE INDEX ix_plain_text_spell ON plain_text_table (spell, letter_count);",
+                        "CREATE INDEX ix_plain_text_spell_9key ON plain_text_table (spell_9key, letter_count);",
+                )
+                commands.forEach(connection::execute)
+        }
+
+        private data class SymbolEntry(
+                val category: Int,
+                val unicodeVersion: Int,
+                val codePoint: String,
+                val cantonese: String,
+                val romanization: String,
+                val complexity: Long,
+                val spell: Long,
+                val nineKeySpell: Long,
+        )
+}
+
+fun Connection.execute(command: String) {
+        createStatement().use { it.executeUpdate(command) }
 }
