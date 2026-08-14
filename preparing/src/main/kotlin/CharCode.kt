@@ -1,5 +1,6 @@
 package org.jyutping.preparing
 
+@Deprecated(message = "Use serialCode instead")
 val String.charCode: Long?
         get() {
                 if (this.length >= 10) return null
@@ -8,26 +9,38 @@ val String.charCode: Long?
                 return codes.radix100Combined()
         }
 
+@Deprecated(message = "Use keypadCode instead")
 val String.nineKeyCharCode: Long?
         get() {
                 if (this.length >= 19) return null
-                val codes = this.mapNotNull { it.nineKeyInterCode }
+                val codes = this.mapNotNull { it.keypadCharCode }
                 if (codes.size != this.length) return null
                 return codes.decimalCombined()
         }
 
+@Deprecated(message = "Use radix100Overflowed() instead")
 fun Iterable<Int>.radix100Combined(): Long = if (this.count() >= 10) 0L else this.fold(0L) { acc, i -> acc * 100L + i}
 
+@Deprecated(message = "Use decimalOverflowed() instead")
 fun Iterable<Int>.decimalCombined(): Long = if (this.count() >= 19) 0L else this.fold(0L) { acc, i -> acc * 10L + i}
 
-val Char.interCode: Int?
-        get() = CharCode.letterCodeMap[this]
 
-val Char.nineKeyInterCode: Int?
-        get() = CharCode.nineKeyCodeMap[this]
+/** Encodes lowercase Basic Latin letters as two-digit serial codes. */
+val String.serialCode: Long
+        get() = mapNotNull { it.interCode }.radix100Overflowed()
+
+/** Encodes lowercase Basic Latin letters as telephone keypad digits. */
+val String.keypadCode: Long
+        get() = mapNotNull { it.keypadCharCode }.decimalOverflowed()
+
+private val Char.interCode: Int?
+        get() = CharCode.codeMap[this]
+
+private val Char.keypadCharCode: Int?
+        get() = CharCode.keypadCodeMap[this]
 
 private object CharCode {
-        val letterCodeMap: Map<Char, Int> = mapOf(
+        val codeMap: Map<Char, Int> = mapOf(
                 'a' to 20,
                 'b' to 21,
                 'c' to 22,
@@ -55,7 +68,7 @@ private object CharCode {
                 'y' to 44,
                 'z' to 45,
         )
-        val nineKeyCodeMap: Map<Char, Int> = mapOf(
+        val keypadCodeMap: Map<Char, Int> = mapOf(
                 'a' to 2,
                 'b' to 2,
                 'c' to 2,

@@ -17,20 +17,20 @@ object AppDataPreparer {
         }
         private fun createIndexes(url: String) {
                 val commands: List<String> = listOf(
-                        "CREATE INDEX ix_collocation_word_romanization ON collocation_table (word, romanization);",
+                        "CREATE INDEX ix_collocation_unified ON collocation_table (word, romanization);",
 
-                        "CREATE INDEX ix_dictionary_word_romanization ON dictionary_table (word, romanization);",
+                        "CREATE INDEX ix_dictionary_unified ON dictionary_table (word, romanization);",
 
-                        "CREATE INDEX ix_yingwaa_code ON yingwaa_table(code);",
-                        "CREATE INDEX ix_yingwaa_romanization ON yingwaa_table(romanization);",
+                        "CREATE INDEX ix_yingwaa_code ON yingwaa_table (code);",
+                        "CREATE INDEX ix_yingwaa_romanization ON yingwaa_table (romanization);",
 
-                        "CREATE INDEX ix_chohok_code ON chohok_table(code);",
-                        "CREATE INDEX ix_chohok_romanization ON chohok_table(romanization);",
+                        "CREATE INDEX ix_chohok_code ON chohok_table (code);",
+                        "CREATE INDEX ix_chohok_romanization ON chohok_table (romanization);",
 
-                        "CREATE INDEX ix_fanwan_code ON fanwan_table(code);",
-                        "CREATE INDEX ix_fanwan_romanization ON fanwan_table(romanization);",
+                        "CREATE INDEX ix_fanwan_code ON fanwan_table (code);",
+                        "CREATE INDEX ix_fanwan_romanization ON fanwan_table (romanization);",
 
-                        "CREATE INDEX ix_gwongwan_code ON gwongwan_table(code);",
+                        "CREATE INDEX ix_gwongwan_code ON gwongwan_table (code);",
                 )
                 DriverManager.getConnection(url).use { connection ->
                         connection.createStatement().use { statement ->
@@ -42,7 +42,9 @@ object AppDataPreparer {
                 println("Created app data indexes.")
         }
 
-        @Deprecated(message = "Use core_lexicon table instead")
+        // In Android, the main app and the keyboard can both use the shared database,
+        // so there's no need to create a separated `jyutping_table` like the iOS version.
+        @Deprecated(message = "Use the lexicon_core table instead")
         private fun createJyutpingTable(url: String) {}
 
         private fun createCollocationTable(url: String) {
