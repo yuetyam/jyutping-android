@@ -203,6 +203,9 @@ homepod	HomePod
 homepodmini	HomePod mini
 honda	Honda
 html	HTML
+http	http
+https	https
+https	https://
 huawei	Huawei
 huggingface	Hugging Face
 hyperos	HyperOS
@@ -256,6 +259,7 @@ jyutping	Jyutping
 keyboard	keyboard
 keynote	Keynote
 kia	KIA
+kimi	Kimi
 kodak	Kodak
 kotlin	Kotlin
 lamborghini	Lamborghini
@@ -624,6 +628,7 @@ ptsd	PTSD
 qwerty	qwerty
 refactor	refactor
 saul	Saul
+seadog	seadog
 skyler	Skyler
 tint	tint
 tv	TV
@@ -1024,6 +1029,13 @@ delta	Δ
 delta	δ
 lambda	λ
 omega	Ω
+apple	
+microsoft	❖
+windows	❖
+bitcoin	Bitcoin
+bitcoin	₿
+dollar	dollar
+dollar	$
 mary	Mary
 patricia	Patricia
 jennifer	Jennifer
@@ -3385,7 +3397,6 @@ counter	counter
 failure	failure
 follows	follows
 weekend	weekend
-dollar	dollar
 camp	camp
 ontario	ontario
 automatically	automatically
@@ -5454,7 +5465,6 @@ couples	couples
 nashville	nashville
 ranking	ranking
 jokes	jokes
-http	http
 ceo	ceo
 simpson	simpson
 twiki	twiki
@@ -10115,7 +10125,6 @@ beating	beating
 alright	alright
 cops	cops
 expecting	expecting
-https	https
 racist	racist
 whoever	whoever
 colonel	colonel
@@ -10183,7 +10192,6 @@ pissed	pissed
 racism	racism
 rude	rude
 sooner	sooner
-bitcoin	bitcoin
 celebrated	celebrated
 grandfather	grandfather
 habit	habit
@@ -15253,7 +15261,6 @@ chennai	chennai
 cherish	cherish
 chuckle	chuckle
 civilized	civilized
-comb	comb
 completes	completes
 complexes	complexes
 conceal	conceal
@@ -15262,8 +15269,6 @@ contemplating	contemplating
 cores	cores
 cruiser	cruiser
 cruising	cruising
-dams	dams
-dared	dared
 defends	defends
 demolished	demolished
 denim	denim

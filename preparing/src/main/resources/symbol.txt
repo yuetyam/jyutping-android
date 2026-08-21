@@ -6151,6 +6151,7 @@
 10	110000	2326	刪除鍵	saan1 ceoi4 gin6
 10	110000	2327	清空	cing1 hung1
 10	110000	2327	清除	cing1 ceoi4
+10	110000	23FB	電源鍵	din6 jyun4 gin6
 10	110000	1F000	東	dung1
 10	110000	1F001	南	naam4
 10	110000	1F002	西	sai1
@@ -6200,6 +6201,8 @@
 10	110000	1F029	冬	dung1
 10	110000	1F02A	百搭	baak3 daap3
 10	110000	1F02B	麻雀背面	maa4 zoek3 bui3 min6
+10	110000	2756	微軟	mei4 jyun5
+10	110000	2756	視窗	si6 coeng1
 10	110000	F8FF	蘋果	ping4 gwo2
 10	110000	262E.FE0E	和平	wo4 ping4
 10	110000	262E.FE0E	和平標誌	wo4 ping4 biu1 zi3
@@ -6232,6 +6235,8 @@
 10	110000	A3	英鎊	jing1 bong6
 10	110000	A3	鎊	bong6
 10	110000	20AC	歐元	au1 jyun4
+10	110000	20AC	歐幣	au1 bai6
+10	110000	20BF	比特幣	bei2 dak6 bai6
 10	110000	2642	男	naam4
 10	110000	2642	男性	naam4 sing3
 10	110000	2642	男士	naam4 si6
@@ -6273,15 +6278,29 @@
 10	110000	2198	下降	haa6 gong3
 10	110000	2198	降調	gong3 diu6
 10	110000	2198	降	gong3
+10	110000	21C6	轉換	zyun2 wun6
+10	110000	21C6	左右箭頭	zo2 jau6 zin3 tau4
+10	110000	21CC	化學平衡	faa3 hok6 ping4 hang4
+10	110000	21CC	平衡	ping4 hang4
 10	110000	21D2	箭頭	zin3 tau4
+10	110000	21D2	箭嘴	zin3 zeoi2
 10	110000	21D4	互等	wu6 dang2
 10	110000	21D4	等價	dang2 gaa3
 10	110000	21D4	等價於	dang2 gaa3 jyu1
 10	110000	21D4	等同	dang2 tung4
 10	110000	21D4	等同於	dang2 tung4 jyu1
 10	110000	21D4	左右箭頭	zo2 jau6 zin3 tau4
-10	110000	21C6	轉換	zyun2 wun6
-10	110000	21C6	左右箭頭	zo2 jau6 zin3 tau4
+10	110000	21E4	最左	zeoi3 zo2
+10	110000	21E4	行首	hong4 sau2
+10	110000	21E4	句首	geoi3 sau2
+10	110000	21E5	最右	zeoi3 jau1
+10	110000	21E5	行末	hong4 mut6
+10	110000	21E5	行尾	hong4 mei5
+10	110000	21E5	句末	geoi3 mut6
+10	110000	21E5	句尾	geoi3 mei5
+10	110000	21E5	末尾	mut6 mei5
+10	110000	21E5	最尾	zeoi3 mei5
+10	110000	21E5	最屘	zeoi3 mei1
 10	110000	27F2	逆時針	jik6 si4 zam1
 10	110000	27F2	逆時針方向	jik6 si4 zam1 fong1 hoeng3
 10	110000	27F3	順時針	seon6 si4 zam1
@@ -6986,7 +7005,8 @@
 10	110000	4E.61.2082.53	硫化鈉	lau4 faa3 hing1
 10	110000	43.75.53	硫化銅	lau4 faa3 tung4
 10	110000	4B.43.6C.4F.2083	氯酸鉀	luk6 syun1 gaap3
-10	110000	4B.2082.4D.6E.4F.2084	高錳酸鉀	gou1 maang5 syun1 gaap3
+10	110000	4B.2082.4D.6E.4F.2084	錳酸鉀	maang5 syun1 gaap3
+10	110000	4B.4D.6E.4F.2084	高錳酸鉀	gou1 maang5 syun1 gaap3
 10	110000	43.2083.48.2086.4E.2086	三聚氰胺	saam1 zeoi6 cing4 on3
 10	110000	43.48.2083.4E.48.2082	甲胺	gaap3 on3
 10	110000	43.2089.48.2081.2080.4F	苯基丙酮	bun2 gei1 bing2 tung4
