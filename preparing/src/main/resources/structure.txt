@@ -60,9 +60,7 @@
 度	广又	jim2 jau6
 度	广又	gwong2 jau6
 度	广廿又	jim2 jaa6 jau6
-度	广廿又	jim2 jap6 jau6
 度	广廿又	gwong2 jaa6 jau6
-度	广廿又	gwong2 jap6 jau6
 家	宀豕	min4 ci2
 一	一	jat1
 住	亻主	jan4 zyu2
@@ -695,9 +693,7 @@
 王	二丄	ji6 soeng5
 王	二丄	ji6 soeng6
 黃	廿八	jaa6 baat3
-黃	廿八	jap6 baat3
 黃	廿一田八	jaa6 jat1 tin4 baat3
-黃	廿一田八	jap6 jat1 tin4 baat3
 錯	金昔	gam1 sik1
 賣	士買	si6 maai5
 貓	豸苗	zi6 miu4
@@ -1741,11 +1737,8 @@
 西	一四	jat1 sei3
 龜	丿乂	pit3 ngaai6
 燕	廿灬	jaa6 fo2
-燕	廿灬	jap6 fo2
 燕	廿北口火	jaa6 bak1 hau2 fo2
-燕	廿北口火	jap6 bak1 hau2 fo2
 燕	廿北口灬	jaa6 bak1 hau2 fo2
-燕	廿北口灬	jap6 bak1 hau2 fo2
 淫	氵壬	seoi2 jam4
 淫	水爪壬	seoi2 zaau2 jam4
 淫	氵爫壬	seoi2 zaau2 jam4
@@ -2359,8 +2352,6 @@
 世	一乙	jat1 jyut3
 世	廿丨一	jaa6 gwan2 jat1
 世	廿丨一	jaa6 syu6 jat1
-世	廿丨一	jap6 gwan2 jat1
-世	廿丨一	jap6 syu6 jat1
 體	骨豊	gwat1 lai5
 灰	一火	jat1 fo2
 灰	厂火	hon3 fo2
@@ -3163,9 +3154,7 @@
 席	广巾	jim2 gan1
 席	广巾	gwong2 gan1
 席	广廿巾	jim2 jaa6 gan1
-席	广廿巾	jim2 jap6 gan1
 席	广廿巾	gwong2 jaa6 gan1
-席	广廿巾	gwong2 jap6 gan1
 富	宀畐	min4 fuk1
 折	扌斤	sau2 gan1
 折	手斤	sau2 gan1
@@ -3474,9 +3463,7 @@
 尋	彐寸	gai3 cyun3
 尋	彐工口寸	gai3 gung1 hau2 cyun3
 革	廿十	jaa6 sap6
-革	廿十	jap6 sap6
 革	廿口十	jaa6 hau2 sap6
-革	廿口十	jap6 hau2 sap6
 互	一一	jat1 jat1
 互	一彑	jat1 gai3
 率	亠十	tau4 sap6
@@ -3673,7 +3660,6 @@
 詠	言永	jin4 wing5
 棄	亠木	tau4 muk6
 棄	亠厶廿木	tau4 si1 jaa6 muk6
-棄	亠厶廿木	tau4 si1 jap6 muk6
 毒	丰母	fung1 mou5
 毒	丰毋	fung1 mou4
 毒	丰毋	fung1 m4
@@ -3755,7 +3741,6 @@
 貌	豸白儿	zaai6 baak6 ngai4
 賞	尚貝	soeng6 bui3
 甘	廿一	jaa6 jat1
-甘	廿一	jap6 jat1
 境	土竟	tou2 ging2
 梅	木每	muk6 mui5
 床	广木	jim2 muk6
@@ -7083,8 +7068,8 @@
 衷	一中衣	jat1 zung3 ji3
 匣	匚甲	fo1 gaap3
 匣	匚甲	fong1 gaap3
-趺	足夫	zuk1 fu1
-趺	足夫	zuk1 fu4
+膚	虍胃	fu1 wai6
+膚	虎胃	fu2 wai6
 糾	糹丩	si1 gau2
 糾	糹丩	si1 gau1
 糾	絲丩	si1 gau2
@@ -7899,8 +7884,8 @@
 芽	艸牙	cou2 ngaa4
 昊	日天	jat6 tin1
 暉	日軍	jat6 gwan1
-嚥	口燕	hau2 jin3
-嚥	口燕	hau2 jin1
+研	石开	sek6 hoi1
+研	石开	sek6 gin1
 朴	木卜	muk6 buk1
 碩	石頁	sek6 jip6
 𡃶	口錫	hau2 sik1
@@ -8886,6 +8871,8 @@
 黔	黑今	haak1 gam1
 雋	隹冂	zeoi1 tong4
 鎗	金倉	gam1 cong1
+趺	足夫	zuk1 fu1
+趺	足夫	zuk1 fu4
 璇	王旋	wong4 syun4
 璇	玉旋	juk6 syun4
 胺	月安	jyut6 on1
@@ -11423,6 +11410,8 @@
 囪	囗乂	gwok3 ngaai6
 囪	囗乂	wai4 ngaai6
 嚷	口襄	hau2 soeng1
+嚥	口燕	hau2 jin3
+嚥	口燕	hau2 jin1
 卟	口卜	hau2 buk1
 饌	食巽	sik6 seon3
 韉	革薦	gaak3 zin3
@@ -11730,12 +11719,8 @@
 庹	广尺	gwong2 cik1
 庹	广廿尺	jim2 jaa6 cek3
 庹	广廿尺	jim2 jaa6 cik1
-庹	广廿尺	jim2 jap6 cek3
-庹	广廿尺	jim2 jap6 cik1
 庹	广廿尺	gwong2 jaa6 cek3
 庹	广廿尺	gwong2 jaa6 cik1
-庹	广廿尺	gwong2 jap6 cek3
-庹	广廿尺	gwong2 jap6 cik1
 塍	月土	jyut6 tou2
 塍	肉丷夫土	juk6 baat3 fu1 tou2
 塍	肉丷夫土	juk6 baat3 fu4 tou2
@@ -22285,7 +22270,6 @@
 獞	犬童	hyun2 tung4
 桭	木辰	muk6 san4
 揅	研手	jin4 sau2
-揅	研手	jin6 sau2
 嬧	女盡	neoi5 zeon6
 塽	土爽	tou2 song2
 垏	土聿	tou2 jyut6
@@ -26723,9 +26707,7 @@
 刌	寸刂	cyun3 dou1
 刌	寸刀	cyun3 dou1
 傇	亻茸	jan4 jung4
-傇	亻茸	jan4 jung5
 傇	人茸	jan4 jung4
-傇	人茸	jan4 jung5
 㩵	扌獻	sau2 hin3
 黤	黑奄	hak1 jim2
 黤	黑奄	haak1 jim2
@@ -26912,8 +26894,6 @@
 祉	礻止	si6 zi2
 祉	示止	si6 zi2
 硱	石困	sek6 kwan3
-研	石开	sek6 hoi1
-研	石开	sek6 gin1
 瞚	目寅	muk6 jan4
 璽	爾玉	ji5 juk6
 狽	犭貝	hyun2 bui3
@@ -27035,13 +27015,9 @@
 庶	广灬	jim2 fo2
 庶	广灬	gwong2 fo2
 庶	广廿火	jim2 jaa6 fo2
-庶	广廿火	jim2 jap6 fo2
 庶	广廿火	gwong2 jaa6 fo2
-庶	广廿火	gwong2 jap6 fo2
 庶	广廿灬	jim2 jaa6 fo2
-庶	广廿灬	jim2 jap6 fo2
 庶	广廿灬	gwong2 jaa6 fo2
-庶	广廿灬	gwong2 jap6 fo2
 庵	广奄	jim2 jim2
 庵	广奄	gwong2 jim2
 幩	巾賁	gan1 ban1
@@ -28200,7 +28176,6 @@
 崨	山疌	saan1 zit3
 岰	山幼	saan1 jau3
 媶	女茸	neoi5 jung4
-媶	女茸	neoi5 jung5
 匵	匚賣	fo1 maai6
 匵	匚賣	fong1 maai6
 伂	亻巿	jan4 fat1
@@ -29869,7 +29844,6 @@
 焨	火冐	fo2 mak6
 焨	火冐	fo2 mou6
 榵	木茸	muk6 jung4
-榵	木茸	muk6 jung5
 鷝	畢鳥	bat1 niu5
 鶐	述鳥	seot6 niu5
 迺	辶西	coek3 sai1
@@ -30115,8 +30089,6 @@
 茸	艸耳	cou2 ji5
 臘	月巤	jyut6 lip6
 臘	肉巤	juk6 lip6
-膚	虍胃	fu1 wai6
-膚	虎胃	fu2 wai6
 腺	月泉	jyut6 cyun4
 腺	肉泉	juk6 cyun4
 脅	力月	lik6 jyut6
@@ -30331,9 +30303,7 @@
 墻	土嗇	tou2 sik1
 塾	孰土	suk6 tou2
 堇	廿土	jaa6 tou2
-堇	廿土	jap6 tou2
 堇	廿口丰	jaa6 hau2 fung1
-堇	廿口丰	jap6 hau2 fung1
 垠	土艮	tou2 gan3
 址	土止	tou2 zi2
 圃	囗甫	gwok3 fu2
@@ -31526,7 +31496,6 @@
 鷰	燕鳥	jin3 niu5
 鷰	燕鳥	jin1 niu5
 鷰	廿北口鳥	jaa6 bak1 hau2 niu5
-鷰	廿北口鳥	jap6 bak1 hau2 niu5
 鶒	束鳥	cuk1 niu5
 鶒	勅鳥	cik1 niu5
 鶄	青鳥	cing1 niu5
@@ -36302,7 +36271,6 @@
 𧗠	行冫	haang4 bing1
 㰽	匽欠	jin2 him3
 㷼	廿火	jaa6 fo2
-㷼	廿火	jap6 fo2
 䞁	貝妟	bui3 aan3
 䴏	燕鳥	jin3 niu5
 䴏	燕鳥	jin1 niu5
@@ -36330,7 +36298,6 @@
 䂴	石言	sek6 jin4
 䇾	竹言	zuk1 jin4
 䊙	研米	jin4 mai5
-䊙	研米	jin6 mai5
 䓂	艹言	cou2 jin4
 䔳	艹然	cou2 jin4
 䕼	艹難	cou2 naan4
@@ -36683,16 +36650,13 @@
 䗤	虫庸	cung4 jung4
 䘬	衤戎	ji1 jung4
 䠜	足茸	zuk1 jung4
-䠜	足茸	zuk1 jung5
 䡥	車容	ce1 jung4
 䡥	車容	geoi1 jung4
 䤊	酉茸	jau5 jung4
-䤊	酉茸	jau5 jung5
 䧡	阝庸	fau6 jung4
 䧡	阝庸	jap1 jung4
 䧡	阝庸	ji5 jung4
 䩸	革茸	gaak3 jung4
-䩸	革茸	gaak3 jung5
 𥡲	禾庸	wo4 jung4
 𦞳	月容	jyut6 jung4
 𩲭	鬼戎	gwai2 jung4
@@ -37990,11 +37954,8 @@
 䮋	馬列	maa5 lit6
 𦶣	艹烈	cou2 lit6
 𨑬	辶廿	coek3 jaa6
-𨑬	辶廿	coek3 jap6
 𨑬	辶廿	zau2 jaa6
-𨑬	辶廿	zau2 jap6
 𨑬	辶廿	zi1 jaa6
-𨑬	辶廿	zi1 jap6
 㭂	木小	muk6 siu2
 㙩	土尞	tou2 liu4
 㝋	宀了	min4 liu5
@@ -38440,7 +38401,6 @@
 𤷪	疒孟	bing6 maang6
 㟿	山莽	saan1 mong5
 㒼	廿入	jaa6 jap6
-㒼	廿入	jap6 jap6
 䈍	竹盲	zuk1 maang4
 䉚	竹瓦	zuk1 ngaa5
 䑅	月夢	jyut6 mung6
@@ -46052,7 +46012,6 @@
 灮	火儿	fo2 ji4
 灮	火儿	fo2 ngai4
 炗	廿火	jaa6 fo2
-炗	廿火	jap6 fo2
 炚	日火	jat6 fo2
 炛	火化	fo2 faa3
 烡	火共	fo2 gung6
@@ -47361,9 +47320,7 @@
 墕	土焉	tou2 jin4
 墕	土焉	tou2 jin1
 嬊	廿女	jaa6 neoi5
-嬊	廿女	jap6 neoi5
 嬊	廿北口女	jaa6 bak1 hau2 neoi5
-嬊	廿北口女	jap6 bak1 hau2 neoi5
 巚	山獻	saan1 hin3
 隁	阝妟	fau6 aan3
 隁	阝妟	jap1 aan3
@@ -47732,22 +47689,15 @@
 搈	手容	sau2 jung4
 搈	才容	coi4 jung4
 搑	扌茸	sau2 jung4
-搑	扌茸	sau2 jung5
 搑	手茸	sau2 jung4
-搑	手茸	sau2 jung5
 搑	才茸	coi4 jung4
-搑	才茸	coi4 jung5
 曧	日融	jat6 jung4
 牅	爿庸	baan6 jung4
 穁	禾茸	wo4 jung4
-穁	禾茸	wo4 jung5
 穃	禾容	wo4 jung4
 縙	糹茸	si1 jung4
-縙	糹茸	si1 jung5
 縙	絲茸	si1 jung4
-縙	絲茸	si1 jung5
 縙	糸茸	mik6 jung4
-縙	糸茸	mik6 jung5
 螎	虫鬲	wai2 ak1
 螎	虫鬲	wai2 gaak3
 螎	虫鬲	wai2 lik6
@@ -50756,12 +50706,9 @@
 丗	卅一	saa1 jat1
 丗	廿丨	jaa6 gwan2
 丗	廿丨	jaa6 syu6
-丗	廿丨	jap6 gwan2
-丗	廿丨	jap6 syu6
 丗	十凵	sap6 ham3
 丗	十凵	sap6 jyu1
 卋	十廿	sap6 jaa6
-卋	十廿	sap6 jap6
 朑	月世	jyut6 sai3
 笹	竹世	zuk1 sai3
 聟	知耳	zi1 ji5
@@ -51618,9 +51565,7 @@
 庻	广从	jim2 cung4
 庻	广从	gwong2 cung4
 庻	广廿人人	jim2 jaa6 jan4 jan4
-庻	广廿人人	jim2 jap6 jan4 jan4
 庻	广廿人人	gwong2 jaa6 jan4 jan4
-庻	广廿人人	gwong2 jap6 jan4 jan4
 杸	木殳	muk6 syu4
 蠴	虫薯	wai2 syu4
 蠴	虫薯	wai2 syu2

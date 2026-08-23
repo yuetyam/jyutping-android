@@ -19323,7 +19323,7 @@
 扭擰	niu ning
 布魯日	bu lu ri
 蘇醒	su xing
-趺	fu
+膚	fu
 康樂	kang le
 咚咚	dong dong
 信紙	xin zhi
@@ -24149,7 +24149,7 @@
 暉	hui
 東莞市	dong guan shi
 檢修	jian xiu
-嚥	yan
+研	yan
 組團	zu tuan
 詳見	xiang jian
 讚揚	zan yang
@@ -26715,6 +26715,8 @@
 三低人士	san di ren shi
 低端人口	di duan ren kou
 摺疊屏	zhe die ping
+雙摺疊	shuang zhe die
+三摺疊	san zhe die
 田園犬	tian yuan quan
 李師師	li shi shi
 剪映	jian ying
@@ -32001,6 +32003,10 @@
 宗主	zong zhu
 敲碎	qiao sui
 敲爛	qiao lan
+斷網	duan wang
+咁熱	gan re
+咁冷	gan leng
+咁凍	gan dong
 頭頂光環	tou ding guang huan
 得意洋洋	de yi yang yang
 閃閃心	shan shan xin
@@ -32969,9 +32975,8 @@
 節節高	jie jie gao
 盆栽	pen zai
 盆景	pen jing
-七夕樹	qi xi shu
 許願樹	xu yuan shu
-七夕節	qi xi jie
+七夕樹	qi xi shu
 枯葉	ku ye
 凋零	diao ling
 凋落	diao luo
@@ -35115,6 +35120,7 @@
 硫化鈉	liu hua na
 硫化銅	liu hua tong
 氯酸鉀	lv suan jia
+錳酸鉀	meng suan jia
 高錳酸鉀	gao meng suan jia
 甲胺	jia an
 苯基丙酮	ben ji bing tong
@@ -36173,6 +36179,7 @@
 黔	qian
 雋	juan
 鎗	qiang
+趺	fu
 生物技術	sheng wu ji shu
 變速箱	bian su xiang
 知青	zhi qing
@@ -37259,7 +37266,7 @@
 華西	hua xi
 英倫	ying lun
 祖母	zu mu
-石子	shi zi
+錫紙	xi zhi
 直說	zhi shuo
 異步	yi bu
 珠子	zhu zi
@@ -48539,6 +48546,7 @@
 檸檬酸	ning meng suan
 宣武門	xuan wu men
 再使用	zai shi yong
+七夕節	qi xi jie
 驚駭	jing hai
 饒有	rao you
 道指	dao zhi
@@ -49204,6 +49212,7 @@
 嫦	chang
 囪	cong
 嚷	rang
+嚥	yan
 卟	bu
 飽和脂肪酸	bao he zhi fang suan
 生物多樣性	sheng wu duo yang xing
@@ -62936,7 +62945,7 @@
 阻截	zu jie
 闡發	chan fa
 鎮原	zhen yuan
-錫紙	xi zhi
+石子	shi zi
 酒肆	jiu si
 遮罩	zhe zhao
 連繫	lian xi
@@ -72763,7 +72772,6 @@
 馬爾斯	ma er si
 震撼性	zhen han xing
 雙生子	shuang sheng zi
-阿合奇	a he qi
 長筒襪	zhang tong wa
 長明燈	zhang ming deng
 金鑾殿	jin luan dian
@@ -74022,6 +74030,7 @@
 嘆惜	tan xi
 唁電	yan dian
 哈迷	ha mi
+哈氣	ha qi
 哀叫	ai jiao
 合婚	he hun
 各別	ge bie
@@ -87474,7 +87483,6 @@
 鬼頭鬼腦	gui tou gui nao
 高麗王朝	gao li wang chao
 項上人頭	xiang shang ren tou
-阿合奇縣	a he qi xian
 違禁藥品	wei jin yao pin
 過境簽證	guo jing qian zheng
 譴責小說	qian ze xiao shuo
@@ -103089,7 +103097,6 @@
 勒維納斯	lei wei na si
 鹿谷鄉	lu gu xiang
 韓彥直	han yan zhi
-阿希姆	a xi mu
 葛縷子	ge lv zi
 落葉劑	luo ye ji
 萬國碼	wan guo ma
@@ -103446,7 +103453,6 @@
 北寒帶	bei han dai
 勘探員	kan tan yuan
 光射線	guang she xian
-亞哈斯	ya ha si
 三元醇	san yuan chun
 雲液	yun ye
 集餐	ji can
@@ -106969,7 +106975,6 @@
 傰	beng
 財務再保險	cai wu zai bao xian
 列支敦斯登	lie zhi dun si deng
-阿金庫爾	a jin ku er
 防毒手套	fang du shou tao
 長山山脈	zhang shan shan mai
 賞心悅事	shang xin yue shi
@@ -110101,7 +110106,6 @@
 祐	you
 祉	zhi
 硱	kun
-研	yan
 瞚	shun
 璽	xi
 狽	bei
@@ -116896,7 +116900,6 @@
 荼	tu
 茸	rong
 臘	la
-膚	fu
 腺	xian
 脅	xie
 肅	su
@@ -131232,7 +131235,7 @@
 亞急性	ya ji xing
 阿狗阿貓	a gou a mao
 阿個	a ge
-亞哈	ya ha
+錒系	a xi
 阿一哥	a yi ge
 阿衣奴	a yi nu
 阿伊努	a yi nu
@@ -136710,6 +136713,7 @@
 㧻嚫	zhuo chen
 㧻穿	zhuo chuan
 㧻穿個窿	zhuo chuan ge long
+㧻穿窿	zhuo chuan long
 㞘底	du di
 督導員	du dao yuan
 篤篤	du du
@@ -139588,6 +139592,7 @@
 角百靈	jiao bai ling
 各花入各眼	ge hua ru ge yan
 各家自掃門前雪	ge jia zi sao men qian xue
+擱腳	ge jiao
 各有不同	ge you bu tong
 各有特色	ge you te se
 各有道理	ge you dao li
@@ -141371,6 +141376,7 @@
 後尾架	hou wei jia
 後尾䪴	hou wei zhen
 後生遙遙	hou sheng yao yao
+後生女仔	hou sheng nv zai
 後生細仔	hou sheng xi zai
 後生仔女	hou sheng zai nv
 後數	hou shu
@@ -145788,6 +145794,7 @@
 靚嘢	jing ye
 靚嘢唔平	jing ye wu ping
 靚溜	jing liu
+靚靚靚	jing jing jing
 靚唔靚	jing wu jing
 靚唔靚啊	jing wu jing a
 靚唔靚仔	jing wu jing zai
@@ -150127,7 +150134,6 @@
 腦葉	nao ye
 胬肉	nu rou
 努美阿	nu mei a
-腦內啡	nao nei fei
 腦瓢	nao piao
 腦囟	nao xin
 腦筍	nao sun
@@ -162021,7 +162027,6 @@
 畘	nan
 遖	nan
 䪏	na
-呐	na
 獶	nao
 獿	nao
 詉	nao
@@ -169365,7 +169370,6 @@
 卡賓槍	ka bin qiang
 卡波耶拉	ka bo ye la
 卡波西氏肉瘤	ka bo xi shi rou liu
-卡布其諾	ka bu qi nuo
 卡布奇諾	ka bu qi nuo
 卡恩	ka en
 喀爾巴阡山脈	ka er ba qian shan mai
@@ -171188,7 +171192,6 @@
 摭	shu
 匣	he
 重置	chong zhi
-趺	die
 着迷	zhao mi
 閪	hai
 閪	hei
@@ -171668,6 +171671,7 @@
 黔	qin
 雋	jun
 鎗	cheng
+趺	die
 流行音樂	liu xing yin yue
 調和	tiao he
 祛	que
@@ -179401,7 +179405,6 @@
 娚	nao
 煵	xia
 䪏	da
-呐	ne
 詉	na
 詉	nu
 䨲	wan

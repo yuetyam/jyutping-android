@@ -2295,7 +2295,6 @@
 2	110000	1F402	牯	gu2
 2	110000	1F402	牛	ngau4
 2	110000	1F404	奶牛	naai5 ngau4
-2	110000	1F404	牛	ngau4
 2	150000	1FACF	驢	leoi4
 2	150000	1FACF	驢	lou4
 2	150000	1FACF	驢仔	leoi4 zai2
@@ -2483,13 +2482,8 @@
 2	110000	1F38D	節節高	zit3 zit3 gou1
 2	110000	1FAB4	盆栽	pun4 zoi1
 2	110000	1FAB4	盆景	pun4 ging2
-2	110000	1F38B	七夕樹	cat1 zik6 syu6
 2	110000	1F38B	許願樹	heoi2 jyun6 syu6
-2	110000	1F38B	七夕節	cat1 zik6 zit3
-2	110000	1F38B	乞巧節	hat1 haau2 zit3
-2	110000	1F38B	七夕	cat1 zik6
-2	110000	1F38B	乞巧	hat1 haau2
-2	110000	1F38B	竹	zuk1
+2	110000	1F38B	七夕樹	cat1 zik6 syu6
 2	110000	1F343	落葉	lok6 jip6
 2	110000	1F343	木葉	muk6 jip6
 2	110000	1F343	樹葉	syu6 jip6

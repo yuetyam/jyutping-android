@@ -28191,6 +28191,8 @@
 三低人士	saam1 dai1 jan4 si6
 低端人口	dai1 dyun1 jan4 hau2
 摺疊屏	zip3 dip6 ping4
+雙摺疊	soeng1 zip3 dip6
+三摺疊	saam1 zip3 dip6
 田園犬	tin4 jyun4 hyun2
 李師師	lei5 si1 si1
 剪映	zin2 jing2
@@ -34726,9 +34728,8 @@
 節節高	zit3 zit3 gou1
 盆栽	pun4 zoi1
 盆景	pun4 ging2
-七夕樹	cat1 zik6 syu6
 許願樹	heoi2 jyun6 syu6
-七夕節	cat1 zik6 zit3
+七夕樹	cat1 zik6 syu6
 枯葉	fu1 jip6
 凋零	diu1 ling4
 凋落	diu1 lok6
@@ -37664,7 +37665,6 @@
 或是	waak6 si6
 表妹	biu2 mui1
 痾	o1
-廿	jap6
 知識	zi3 sik1
 般	baan1
 禁	kam1
@@ -50222,7 +50222,7 @@
 碎紙機	seoi3 zi2 gei1
 大忙人	daai6 mong4 jan4
 南岸區	naam4 ngon6 keoi1
-阿膠	aa3 gaau1
+阿膠	o1 gaau1
 關緊	gwaan1 gan2
 金湖	gam1 wu4
 速寫	cuk1 se2
@@ -51539,6 +51539,7 @@
 檸檬酸	ning4 mung1 syun1
 宣武門	syun1 mou5 mun4
 再使用	zoi3 si2 jung6
+七夕節	cat1 zik6 zit3
 驚駭	ging1 haai5
 饒有	jiu4 jau5
 道指	dou6 zi2
@@ -76686,7 +76687,6 @@
 馬爾斯	maa5 ji5 si1
 震撼性	zan3 ham6 sing3
 雙生子	soeng1 sang1 zi2
-阿合奇	aa3 hap6 kei4
 長筒襪	coeng4 tung2 mat6
 長明燈	coeng4 ming4 dang1
 金鑾殿	gam1 lyun4 din6
@@ -91902,7 +91902,6 @@
 鬼頭鬼腦	gwai2 tau4 gwai2 nou5
 高麗王朝	gou1 lei4 wong4 ciu4
 項上人頭	hong6 soeng6 jan4 tau4
-阿合奇縣	aa3 hap6 kei4 jyun6
 違禁藥品	wai4 gam3 joek6 ban2
 過境簽證	gwo3 ging2 cim1 zing3
 譴責小說	hin2 zaak3 siu2 syut3
@@ -108087,7 +108086,6 @@
 勒維納斯	lak6 wai4 naap6 si1
 鹿谷鄉	luk6 guk1 hoeng1
 韓彥直	hon4 jin6 zik6
-阿希姆	aa3 hei1 mou5
 葛縷子	got3 leoi5 zi2
 落葉劑	lok6 jip6 zai1
 萬國碼	maan6 gwok3 maa5
@@ -108467,7 +108465,6 @@
 北寒帶	bak1 hon4 daai3
 勘探員	ham3 taam3 jyun4
 光射線	gwong1 se6 sin3
-亞哈斯	aa3 haa1 si1
 三元醇	saam1 jyun4 seon4
 雲液	wan4 jik6
 集餐	zaap6 caan1
@@ -112159,7 +112156,6 @@
 傰	pang4
 財務再保險	coi4 mou6 zoi3 bou2 him2
 列支敦斯登	lit6 zi1 deon1 si1 dang1
-阿金庫爾	aa3 gam1 fu3 ji5
 防毒手套	fong4 duk6 sau2 tou3
 長山山脈	coeng4 saan1 saan1 mak6
 賞心悅事	soeng2 sam1 jyut6 si6
@@ -139103,7 +139099,7 @@
 亞急性	aa3 gap1 sing3
 阿狗阿貓	aa3 gau2 aa3 maau1
 阿個	aa3 go3
-亞哈	aa3 haa1
+錒系	aa3 hai6
 阿一哥	aa3 jat1 go1
 阿衣奴	aa3 ji1 nou4
 阿伊努	aa3 ji1 nou5
@@ -144817,6 +144813,7 @@
 㧻嚫	duk1 can1
 㧻穿	duk1 cyun1
 㧻穿個窿	duk1 cyun1 go3 lung1
+㧻穿窿	duk1 cyun1 lung1
 㞘底	duk1 dai2
 督導員	duk1 dou6 jyun4
 篤篤	duk1 duk1
@@ -147833,6 +147830,7 @@
 角百靈	gok3 baak3 ling4
 各花入各眼	gok3 faa1 jap6 gok3 ngaan5
 各家自掃門前雪	gok3 gaa1 zi6 sou3 mun4 cin4 syut3
+擱腳	gok3 goek3
 各有不同	gok3 jau5 bat1 tung4
 各有特色	gok3 jau5 dak6 sik1
 各有道理	gok3 jau5 dou6 lei5
@@ -149693,6 +149691,7 @@
 後尾架	hau6 mei5 gaa2
 後尾䪴	hau6 mei5 zam2
 後生遙遙	hau6 saang1 jiu4 jiu4
+後生女仔	hau6 saang1 neoi5 zai2
 後生細仔	hau6 saang1 sai3 zai2
 後生仔女	hau6 saang1 zai2 neoi2
 後生仔女	hau6 saang1 zai2 neoi5
@@ -154348,6 +154347,7 @@
 靚嘢唔平	leng3 je5 m4 peng4
 靚溜	leng3 lau3
 靚溜	leng3 lau6
+靚靚靚	leng3 leng3 leng3
 靚唔靚	leng3 m4 leng3
 靚唔靚啊	leng3 m4 leng3 aa3
 靚唔靚仔	leng3 m4 leng3 zai2
@@ -158943,7 +158943,6 @@
 腦葉	nou5 jip6
 胬肉	nou5 juk6
 努美阿	nou5 mei5 aa3
-腦內啡	nou5 naap6 fe1
 腦瓢	nou5 piu4
 腦囟	nou5 seon2
 腦筍	nou5 seon2
@@ -168264,7 +168263,6 @@
 搉	gok3
 斠	gok3
 榷	gok3
-腳	gok3
 較	gok3
 閤	gok3
 阬	gon1
@@ -168554,7 +168552,6 @@
 夢	mung4
 隆	naam4
 淰	naam5
-內	naap6
 鈉	naat3
 挐	naau4
 蟯	naau4
@@ -168929,6 +168926,7 @@
 厂	hon2
 吽	hung1
 吔	jaak3
+廿	jap6
 媿	kwai3
 拉	laap6
 忘	mong6
@@ -174748,7 +174746,6 @@
 嫨	naan5
 熯	naan5
 䪏	naap6
-呐	naap6
 蒳	naap6
 訥	naap6
 䖧	naat6
@@ -174770,7 +174767,6 @@
 而	nang4
 嫐	nat1
 吶	nat6
-呐	nat6
 肭	nat6
 訥	nat6
 休	nau2
@@ -174816,7 +174812,6 @@
 女	neoi6
 錗	neoi6
 䖓	neot6
-呐	neot6
 抐	neot6
 袦	neot6
 豽	neot6
@@ -175018,6 +175013,7 @@
 麶	nim4
 捻	nim5
 㑫	nim6
+廿	nim6
 艌	nim6
 脌	nin1
 拈	nin2
