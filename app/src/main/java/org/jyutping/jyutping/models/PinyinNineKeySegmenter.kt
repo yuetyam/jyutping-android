@@ -2,45 +2,78 @@ package org.jyutping.jyutping.models
 
 import android.util.Log
 import org.jyutping.jyutping.Elephant
+import org.jyutping.jyutping.ninekey.Combo
+import org.jyutping.jyutping.ninekey.matchedCombos
 
-/** Segments Jyutping input into possible syllable schemes. */
-object Segmenter {
+data class PinyinNineKeySyllable(
+        val code: Long
+) {
+        val combos: List<Combo> = code.matchedCombos
 
-        private const val TAG: String = "Segmenter"
+        override fun equals(other: Any?): Boolean {
+                if (this === other) return true
+                if (other !is PinyinNineKeySyllable) return false
+                return code == other.code
+        }
+        override fun hashCode(): Int = code.hashCode()
+}
+
+typealias PinyinNineKeyScheme = List<PinyinNineKeySyllable>
+typealias PinyinNineKeySegmentation = List<PinyinNineKeyScheme>
+
+/** Count of all input combos */
+val PinyinNineKeyScheme.length: Int
+        get() = this.fold(0) { acc, syllable -> acc + syllable.combos.size }
+
+/**
+ * Conjoined digit of syllable lengths.
+ *
+ * For example: lengths of syllables “xi an shi” are `[2, 2, 3]`, which makes the `complexity` become `223`
+ */
+val PinyinNineKeyScheme.complexity: Long
+        get() = this.map { it.combos.size }.decimalOverflowed()
+
+/** Input combos conjoined as a sequence */
+val PinyinNineKeyScheme.combos: List<Combo>
+        get() = this.flatMap { it.combos }
+
+/** Segments 9-key Pinyin input into possible syllable schemes. */
+object PinyinNineKeySegmenter {
+
+        private const val TAG: String = "PinyinNineKeySegmenter"
 
         fun prepare() {
                 if (syllableCodeMap.isEmpty()) {
-                        Log.w(TAG, "Syllable Dictionary is Empty")
+                        Log.w(TAG, "PinyinNineKeySyllable Dictionary is Empty")
                 }
         }
 
-        private val syllableCodeMap: Map<Long, Syllable> by lazy {
-                val dict: HashMap<Long, Syllable> = HashMap(1300)
-                val command: String = "SELECT alias_code, origin_code FROM syllable_core_table;"
+        private val syllableCodeMap: Map<Long, PinyinNineKeySyllable> by lazy {
+                val dict: HashMap<Long, PinyinNineKeySyllable> = HashMap(500)
+                val command: String = "SELECT DISTINCT code_9key FROM syllable_pinyin_table ORDER BY code_9key;"
                 Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
                         while (cursor.moveToNext()) {
-                                val aliasCode = cursor.getLong(0)
-                                val originCode = cursor.getLong(1)
-                                dict[aliasCode] = Syllable(aliasCode = aliasCode, originCode = originCode)
+                                val code = cursor.getLong(0)
+                                dict[code] = PinyinNineKeySyllable(code = code)
                         }
                 }
                 dict
         }
-        private fun lookup(code: Long): Syllable? = syllableCodeMap[code]
+        private fun lookup(code: Long): PinyinNineKeySyllable? = syllableCodeMap[code]
 
-        private const val maxSyllableKeyCount: Int = 6
+        private const val maxSyllableComboCount: Int = 6
 
-        private class SplitEdge(val syllable: Syllable, val endIndex: Int)
-        private class SplitNode(val syllable: Syllable, val previousIndex: Int, val length: Int)
+        private class SplitEdge(val syllable: PinyinNineKeySyllable, val endIndex: Int)
+        private class SplitNode(val syllable: PinyinNineKeySyllable, val previousIndex: Int, val length: Int)
 
-        private fun splitEdges(keys: List<VirtualInputKey>): Array<MutableList<SplitEdge>> {
-                val inputLength = keys.size
+        private fun splitEdges(combos: List<Combo>): Array<MutableList<SplitEdge>> {
+                val inputLength = combos.size
                 val edges = Array(inputLength) { mutableListOf<SplitEdge>() }
                 for (startIndex in 0 until inputLength) {
                         var code: Long = 0L
-                        val endIndexLimit = minOf(inputLength, startIndex + maxSyllableKeyCount)
+                        val endIndexLimit = minOf(inputLength, startIndex + maxSyllableComboCount)
                         for (endIndex in startIndex until endIndexLimit) {
-                                code = code * 100L + keys[endIndex].code
+                                code = code * 10L + combos[endIndex].digit
                                 val syllable = lookup(code) ?: continue
                                 edges[startIndex].add(SplitEdge(syllable = syllable, endIndex = endIndex + 1))
                         }
@@ -48,8 +81,8 @@ object Segmenter {
                 return edges
         }
 
-        private fun scheme(nodeIndex: Int, nodes: List<SplitNode>): Scheme {
-                val syllables: MutableList<Syllable> = ArrayList(nodes[nodeIndex].length)
+        private fun scheme(nodeIndex: Int, nodes: List<SplitNode>): PinyinNineKeyScheme {
+                val syllables: MutableList<PinyinNineKeySyllable> = ArrayList(nodes[nodeIndex].length)
                 var currentIndex: Int = nodeIndex
                 while (currentIndex >= 0) {
                         val node = nodes[currentIndex]
@@ -60,10 +93,10 @@ object Segmenter {
                 return syllables
         }
 
-        private fun split(keys: List<VirtualInputKey>): Segmentation {
-                val inputLength = keys.size
+        private fun split(combos: List<Combo>): PinyinNineKeySegmentation {
+                val inputLength = combos.size
                 if (inputLength <= 0) return emptyList()
-                val edges = splitEdges(keys)
+                val edges = splitEdges(combos)
                 if (edges.firstOrNull()?.isEmpty() != false) return emptyList()
                 val nodes: MutableList<SplitNode> = mutableListOf()
                 val nodeIndicesByLength = Array(inputLength + 1) { mutableListOf<Int>() }
@@ -88,7 +121,7 @@ object Segmenter {
                         levelStartIndex = nextLevelStartIndex
                         levelEndIndex = nodes.size
                 }
-                val schemes: MutableList<Scheme> = ArrayList(nodes.size)
+                val schemes: MutableList<PinyinNineKeyScheme> = ArrayList(nodes.size)
                 for (length in inputLength downTo 1) {
                         for (nodeIndex in nodeIndicesByLength[length]) {
                                 schemes.add(scheme(nodeIndex = nodeIndex, nodes = nodes))
@@ -97,25 +130,7 @@ object Segmenter {
                 return schemes
         }
 
-        fun segment(keys: List<VirtualInputKey>): Segmentation {
-                return when (keys.size) {
-                        0 -> emptyList()
-                        1 -> when (keys.first()) {
-                                VirtualInputKey.letterA -> letterA
-                                VirtualInputKey.letterO -> letterO
-                                VirtualInputKey.letterM -> letterM
-                                else -> emptyList()
-                        }
-                        else -> split(keys.filter { it.isSyllableLetter })
-                }
-        }
-
-        private val letterA: Segmentation = listOf(listOf(Syllable(aliasCode = 20L, originCode = 2020L)))
-        private val letterO: Segmentation = listOf(listOf(Syllable(aliasCode = 34L, originCode = 34L)))
-        private val letterM: Segmentation = listOf(listOf(Syllable(aliasCode = 32L, originCode = 32L)))
-
-        fun syllableText(keys: List<VirtualInputKey>): String? {
-                if (keys.size > 6) return null
-                return lookup(keys.conjoinedCode)?.originText
+        fun segment(combos: List<Combo>): PinyinNineKeySegmentation {
+                return split(combos)
         }
 }

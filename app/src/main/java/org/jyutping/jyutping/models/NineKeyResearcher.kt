@@ -1,121 +1,147 @@
 package org.jyutping.jyutping.models
 
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.isActive
 import org.jyutping.jyutping.Elephant
-import org.jyutping.jyutping.emoji.Emoji
-import org.jyutping.jyutping.emoji.EmojiCategory
-import org.jyutping.jyutping.extensions.generateSymbol
-import org.jyutping.jyutping.extensions.isCantoneseToneDigit
 import org.jyutping.jyutping.extensions.isSpace
+import org.jyutping.jyutping.extensions.negative
+import org.jyutping.jyutping.extensions.strippedTones
 import org.jyutping.jyutping.ninekey.Combo
+import org.jyutping.jyutping.ninekey.decimalCombinedCode
+import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetString
 
 object NineKeyResearcher {
-        fun queryTextMarks(combos: List<Combo>): List<Lexicon> {
-                val code = combos.map { it.digit }.decimalCombined()
-                if (code < 1) return emptyList()
+
+        private suspend fun isActive(): Boolean = currentCoroutineContext().isActive
+
+        suspend fun suggest(combos: List<Combo>, segmentation: NineKeySegmentation): List<Lexicon> {
+                val shouldProcessSlices: Boolean = (segmentation.firstOrNull()?.firstOrNull()?.alias?.size ?: 0) == 0
+                return if (shouldProcessSlices) {
+                        processSlices(combos = combos)
+                } else {
+                        search(combos = combos, segmentation = segmentation)
+                }
+        }
+
+        private suspend fun processSlices(combos: List<Combo>, limit: Int? = null): List<Lexicon> {
+                if (combos.isEmpty()) return emptyList()
+                return (combos.size downTo 1).flatMap { number ->
+                        if (isActive().negative) return@flatMap emptyList<Lexicon>()
+                        if (number > Researcher.MAX_CHAR_COUNT) return@flatMap emptyList<Lexicon>()
+                        anchorsMatch(combos = combos.take(number), limit = limit)
+                }
+        }
+
+        private suspend fun search(combos: List<Combo>, segmentation: NineKeySegmentation, limit: Int? = null): List<Lexicon> {
+                if (isActive().negative) return emptyList()
+                val inputLength: Int = combos.size
+                if (inputLength <= 1) return anchorsMatch(combos = combos, limit = limit)
+                val anchorsMatched = anchorsMatch(combos = combos, limit = limit)
+                val queried = query(inputLength = inputLength, segmentation = segmentation, limit = limit)
+                val fetched: List<Lexicon> = run {
+                        val idealQueried = queried.filter { it.inputCount == inputLength }.sortedBy { it.number }.distinct()
+                        val notIdealQueried = queried.filter { it.inputCount < inputLength }.sorted().distinct()
+                        val extra: List<Lexicon> = if (idealQueried.isNotEmpty()) emptyList() else ExtraEntry.nineKeySearch(combos = combos)
+                        (idealQueried + extra + anchorsMatched.take(4) + notIdealQueried).distinct()
+                }
+                val firstInputCount: Int = fetched.firstOrNull()?.inputCount
+                        ?: return processSlices(combos = combos, limit = limit)
+                if (firstInputCount >= inputLength) return fetched
+                val tailCombos: List<Combo> = combos.drop(firstInputCount)
+                val tailSegmentation: NineKeySegmentation = NineKeySegmenter.segment(combos = tailCombos)
+                val tailLexicons: List<Lexicon> = search(combos = tailCombos, segmentation = tailSegmentation, limit = 20)
+                if (tailLexicons.isEmpty()) return fetched
+                val head: Lexicon = fetched.first()
+                val concatenated: List<Lexicon> = tailLexicons.mapNotNull { head + it }
+                        .sorted()
+                        .take(1)
+                return concatenated + fetched
+        }
+
+        private suspend fun query(inputLength: Int, segmentation: NineKeySegmentation, limit: Int? = null): List<Lexicon> {
+                val idealSchemes = segmentation.filter { it.length == inputLength }
+                return if (idealSchemes.isEmpty()) {
+                        segmentation.flatMap { scheme -> perform(scheme = scheme, limit = limit) }
+                } else {
+                        idealSchemes.flatMap { scheme ->
+                                when (scheme.size) {
+                                        0 -> emptyList()
+                                        1 -> perform(scheme = scheme, limit = limit)
+                                        else -> (scheme.size downTo 1).flatMap { number -> perform(scheme = scheme.take(number), limit = limit) }
+                                }
+                        }
+                }
+        }
+
+        private suspend fun perform(scheme: NineKeyScheme, limit: Int? = null): List<Lexicon> {
+                if (isActive().negative || (scheme.size > Researcher.MAX_CHAR_COUNT)) return emptyList()
+                val containsIrregular: Boolean = scheme.any { it.isIrregular }
+                return if (containsIrregular) {
+                        serialMatch(keys = scheme.serialOriginKeys, complexity = scheme.complexity, limit = limit)
+                } else {
+                        spellMatch(combos = scheme.originCombos, complexity = scheme.complexity, limit = limit)
+                }
+        }
+
+        fun anchorsMatch(combos: List<Combo>, limit: Int? = null): List<Lexicon> {
+                val charCount: Long = combos.size.toLong()
+                if (charCount > Researcher.MAX_CHAR_COUNT) return emptyList()
+                val anchorsCode: Long = combos.decimalCombinedCode
+                val limitValue: Long = limit?.toLong() ?: 100L
                 val items: MutableList<Lexicon> = mutableListOf()
-                val command = "SELECT input, mark FROM mark_table WHERE nine_key_code = ${code};"
+                val command: String = "SELECT rowid, word, romanization FROM lexicon_core WHERE anchors_9key = $anchorsCode AND char_count = $charCount ORDER BY rowid LIMIT $limitValue;"
                 Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
                         while (cursor.moveToNext()) {
-                                val input = cursor.getString(0)
-                                val textMark = cursor.getString(1)
-                                val instance = Lexicon(type = LexiconType.Text, text = textMark, romanization = textMark, input = input)
+                                val number = cursor.getInt(0)
+                                val word = cursor.getString(1)
+                                val romanization = cursor.getString(2)
+                                val anchors = romanization.split(PresetCharacter.SPACE).mapNotNull { it.firstOrNull() }
+                                val anchorText = anchors.joinToString(separator = PresetString.EMPTY)
+                                val instance = Lexicon(text = word, romanization = romanization, input = anchorText, mark = anchorText, number = number)
                                 items.add(instance)
                         }
                 }
                 return items
         }
-        fun nineKeySearchSymbols(combos: List<Combo>): List<Lexicon> {
-                val code = combos.map { it.digit }.decimalCombined()
-                if (code < 1) return emptyList()
-                val emojis: MutableList<Emoji> = mutableListOf()
-                val command = "SELECT category, unicode_version, code_point, cantonese, romanization FROM symbol_table WHERE nine_key_code = ${code};"
+
+        fun spellMatch(combos: List<Combo>, complexity: Long, input: String? = null, mark: String? = null, limit: Int? = null): List<Lexicon> {
+                val code: Long = combos.decimalCombinedCode
+                val complexityValue: Long = complexity
+                val limitValue: Long = limit?.toLong() ?: -1L
+                val items: MutableList<Lexicon> = mutableListOf()
+                val command: String = "SELECT rowid, word, romanization FROM lexicon_core WHERE spell_9key = $code AND complexity = $complexityValue ORDER BY rowid LIMIT $limitValue;"
                 Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
                         while (cursor.moveToNext()) {
-                                val categoryCode = cursor.getInt(0)
-                                val unicodeVersion = cursor.getInt(1)
-                                val codePointText = cursor.getString(2)
-                                val cantonese = cursor.getString(3)
-                                val romanization = cursor.getString(4)
-                                val category = EmojiCategory.categoryOf(categoryCode) ?: EmojiCategory.Frequent
-                                val entry = Emoji(category = category, unicodeVersion = unicodeVersion, identifier = categoryCode, text = codePointText, cantonese = cantonese, romanization = romanization)
-                                emojis.add(entry)
+                                val number = cursor.getInt(0)
+                                val word = cursor.getString(1)
+                                val romanization = cursor.getString(2)
+                                val markText: String = mark ?: romanization.strippedTones()
+                                val inputText: String = input ?: markText.filterNot { it.isSpace }
+                                val instance = Lexicon(text = word, romanization = romanization, input = inputText, mark = markText, number = number)
+                                items.add(instance)
                         }
                 }
-                val input: String = combos.mapNotNull { it.letters.firstOrNull() }.joinToString(separator = PresetString.EMPTY)
-                return emojis.map { emoji ->
-                        val codePointText = emoji.text
-                        val shouldMapSkinTone: Boolean = emoji.category == EmojiCategory.SmileysAndPeople || emoji.category == EmojiCategory.Activity
-                        val mappedCodePointText: String = if (shouldMapSkinTone) (Elephant.mapSkinTone(codePointText) ?: codePointText) else codePointText
-                        val symbolText: String = mappedCodePointText.generateSymbol()
-                        val type: LexiconType = if (emoji.identifier < 10) LexiconType.Emoji else LexiconType.Symbol
-                        Lexicon(type = type, text = symbolText, romanization = emoji.romanization, input = input, attached = emoji.cantonese)
-                }
+                return items
         }
-        fun nineKeySearch(combos: List<Combo>, limit: Int? = null): List<Lexicon> {
-                val inputLength: Int = combos.size
-                val fullCode: Long = combos.map { it.digit }.decimalCombined()
-                when (inputLength) {
-                        0 -> return emptyList()
-                        1 -> return nineKeyCodeMatch(fullCode, limit) + nineKeyAnchorsMatch(fullCode, 100)
-                        else -> {}
-                }
-                val fullMatched = nineKeyCodeMatch(fullCode, limit)
-                val idealAnchorsMatched = nineKeyAnchorsMatch(fullCode, 4)
-                val codeMatched: List<Lexicon> = 1.rangeUntil(inputLength).flatMap { number ->
-                        val code = combos.dropLast(number).map { it.digit }.decimalCombined()
-                        return@flatMap if (code < 1) emptyList() else nineKeyCodeMatch(code, limit)
-                }
-                val anchorsMatched: List<Lexicon> = 0.rangeUntil(inputLength).flatMap { number ->
-                        val code = combos.dropLast(number).map { it.digit }.decimalCombined()
-                        return@flatMap if (code < 1) emptyList() else nineKeyAnchorsMatch(code, limit)
-                }
-                val queried = (fullMatched + idealAnchorsMatched + codeMatched + anchorsMatched)
-                val firstInputCount = queried.firstOrNull()?.inputCount ?: 0
-                if (firstInputCount >= inputLength) return queried
-                val tailCombos = combos.drop(firstInputCount)
-                val tailCode = tailCombos.map { it.digit }.decimalCombined()
-                if (tailCode < 1) return queried
-                val tailLexicons = nineKeyCodeMatch(tailCode, 20) + nineKeyAnchorsMatch(tailCode, 20)
-                if (tailLexicons.isEmpty()) return queried
-                val head = queried.firstOrNull() ?: return queried
-                val concatenated = tailLexicons.mapNotNull { head + it }.sorted().take(1)
-                return concatenated + queried
-        }
-}
 
-private fun NineKeyResearcher.nineKeyAnchorsMatch(code: Long, limit: Int? = null): List<Lexicon> {
-        if (code < 1) return emptyList()
-        val items: MutableList<Lexicon> = mutableListOf()
-        val limitValue: Int = limit ?: 30
-        val command = "SELECT rowid, word, romanization FROM core_lexicon WHERE nine_key_anchors = $code LIMIT ${limitValue};"
-        Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
-                while (cursor.moveToNext()) {
-                        val number = cursor.getInt(0)
-                        val word = cursor.getString(1)
-                        val romanization = cursor.getString(2)
-                        val anchors = romanization.split(PresetString.SPACE).mapNotNull { it.firstOrNull() }.joinToString(separator = PresetString.EMPTY)
-                        val instance = Lexicon(text = word, romanization = romanization, input = anchors, mark = anchors, number = number)
-                        items.add(instance)
+        fun serialMatch(keys: List<VirtualInputKey>, complexity: Long, input: String? = null, mark: String? = null, limit: Int? = null): List<Lexicon> {
+                val spell: Long = keys.conjoinedCode
+                val complexityValue: Long = complexity
+                val limitValue: Long = limit?.toLong() ?: -1L
+                val items: MutableList<Lexicon> = mutableListOf()
+                val command: String = "SELECT rowid, word, romanization FROM lexicon_core WHERE spell = $spell AND complexity = $complexityValue ORDER BY rowid LIMIT $limitValue;"
+                Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
+                        while (cursor.moveToNext()) {
+                                val number = cursor.getInt(0)
+                                val word = cursor.getString(1)
+                                val romanization = cursor.getString(2)
+                                val markText: String = mark ?: romanization.strippedTones()
+                                val inputText: String = input ?: markText.filterNot { it.isSpace }
+                                val instance = Lexicon(text = word, romanization = romanization, input = inputText, mark = markText, number = number)
+                                items.add(instance)
+                        }
                 }
+                return items
         }
-        return items
-}
-private fun NineKeyResearcher.nineKeyCodeMatch(code: Long, limit: Int? = null): List<Lexicon> {
-        if (code < 1) return emptyList()
-        val items: MutableList<Lexicon> = mutableListOf()
-        val limitValue: Int = limit ?: -1
-        val command = "SELECT rowid, word, romanization FROM core_lexicon WHERE nine_key_code = $code LIMIT ${limitValue};"
-        Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
-                while (cursor.moveToNext()) {
-                        val number = cursor.getInt(0)
-                        val word = cursor.getString(1)
-                        val romanization = cursor.getString(2)
-                        val mark = romanization.filterNot { it.isCantoneseToneDigit }
-                        val input = mark.filterNot { it.isSpace }
-                        val instance = Lexicon(text = word, romanization = romanization, input = input, mark = mark, number = number)
-                        items.add(instance)
-                }
-        }
-        return items
 }

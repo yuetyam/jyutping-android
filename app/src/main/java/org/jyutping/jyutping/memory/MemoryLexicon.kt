@@ -1,7 +1,7 @@
 package org.jyutping.jyutping.memory
 
 import org.jyutping.jyutping.extensions.isLowercaseBasicLatinLetter
-import org.jyutping.jyutping.models.nineKeyCharCode
+import org.jyutping.jyutping.models.keypadCode
 import org.jyutping.jyutping.presets.PresetString
 
 data class MemoryLexicon(
@@ -28,8 +28,8 @@ data class MemoryLexicon(
                         val letterText = romanization.filter { it.isLowercaseBasicLatinLetter }
                         val shortcut: Int = anchorText.hashCode()
                         val spell: Int = letterText.hashCode()
-                        val nineKeyAnchors: Long = anchorText.nineKeyCharCode ?: 0L
-                        val nineKeyCode: Long = letterText.nineKeyCharCode ?: 0L
+                        val nineKeyAnchors: Long = anchorText.keypadCode
+                        val nineKeyCode: Long = letterText.keypadCode
                         val timestamp: Long = latest ?: System.currentTimeMillis()
                         return MemoryLexicon(word = word, romanization = romanization, frequency = frequency, latest = timestamp, shortcut = shortcut, spell = spell, nineKeyAnchors = nineKeyAnchors, nineKeyCode = nineKeyCode)
                 }

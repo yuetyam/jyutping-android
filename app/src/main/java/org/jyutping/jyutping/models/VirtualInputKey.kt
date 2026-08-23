@@ -169,11 +169,10 @@ val Long.matchedVirtualInputKeys: List<VirtualInputKey>
                 return codes.reversed().mapNotNull { VirtualInputKey.matchVirtualInputKey(code = it.toInt()) }
         }
 
-fun List<VirtualInputKey>.combinedCode(): Long {
-        if (this.size > 9) return 0L
-        return this.fold(0L) { acc, key -> acc * 100L + key.code.toLong() }
-}
+/** Combines the element codes as base-100 digits using wrapping arithmetic. */
+val List<VirtualInputKey>.conjoinedCode: Long
+        get() = this.fold(0L) { acc, key -> acc * 100L + key.code.toLong() }
 
-fun List<VirtualInputKey>.anchorsCode(): Long {
-        return this.map { if (it == VirtualInputKey.letterY) VirtualInputKey.letterJ else it }.combinedCode()
-}
+/** Replace letter Y with letter J */
+val List<VirtualInputKey>.anchorNormalized: List<VirtualInputKey>
+        get() = this.map { if (it == VirtualInputKey.letterY) VirtualInputKey.letterJ else it }

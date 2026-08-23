@@ -4,6 +4,7 @@ import org.jyutping.jyutping.Elephant
 import org.jyutping.jyutping.keyboard.ShapeLexicon
 import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.models.VirtualInputKey
+import org.jyutping.jyutping.models.decimalOverflowed
 import org.jyutping.jyutping.presets.PresetString
 
 object Stroke {
@@ -12,30 +13,22 @@ object Stroke {
                 val isWildcard: Boolean = strokeKeys.any { it.isWildcard }
                 val input: String = strokeKeys.joinToString(separator = PresetString.EMPTY) { it.code.toString() }
                 val text: String = if (isWildcard) input.replace("6", "[12345]") else input
-                val matched = if (isWildcard) strokeWildcardMatch(text, input) else strokeMatch(strokeKeys, text)
-                return (matched + strokeGlob(text, input))
+                val matched: List<ShapeLexicon> = if (isWildcard) strokeWildcardMatch(text = text, input = input) else strokeMatch(keys = strokeKeys, input = input)
+                return (matched + strokeGlob(text = text, input = input))
                         .distinct()
-                        .flatMap { lexicon ->
-                                Elephant.lookupRomanization(lexicon.text)
-                                        .map { romanization ->
-                                                Lexicon(text = lexicon.text, romanization = romanization, input = lexicon.input, number = lexicon.order)
-                                        }
-                        }
+                        .flatMap { Elephant.reveresLookup(text = it.text, input = it.input) }
         }
 
-        private fun strokeMatch(keys: List<StrokeVirtualKey>, text: String): List<ShapeLexicon> {
-                val items: MutableList<ShapeLexicon> = mutableListOf()
+        private fun strokeMatch(keys: List<StrokeVirtualKey>, input: String): List<ShapeLexicon> {
+                val code: Long = keys.map { it.code }.decimalOverflowed()
                 val complex: Int = keys.size
-                val isLongSequence: Boolean = complex >= 19
-                val column: String = if (isLongSequence) "spell" else "code"
-                val codeValue: Long = if (isLongSequence) text.hashCode().toLong() else keys.map { it.code.toLong() }.fold(0L) { acc, i -> acc * 10L + i }
-                val command = "SELECT rowid, word FROM stroke_table WHERE $column = ${codeValue};"
+                val items: MutableList<ShapeLexicon> = mutableListOf()
+                val command: String = "SELECT rowid, word FROM stroke_table WHERE code = $code AND complex = $complex;"
                 Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
                         while (cursor.moveToNext()) {
                                 val rowId = cursor.getInt(0)
-                                val word = cursor.getString(1)
-                                val instance = ShapeLexicon(text = word, input = text, complex = complex, order = rowId)
-                                items.add(instance)
+                                val word = cursor.getString(1) ?: continue
+                                items.add(ShapeLexicon(text = word, input = input, complex = complex, order = rowId))
                         }
                 }
                 return items
@@ -43,14 +36,13 @@ object Stroke {
 
         private fun strokeWildcardMatch(text: String, input: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
-                val command = "SELECT rowid, word, complex FROM stroke_table WHERE stroke LIKE '${text}' LIMIT 100;"
-                Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
+                val command: String = "SELECT rowid, word, complex FROM stroke_table WHERE stroke LIKE ? LIMIT 100;"
+                Elephant.sharedDatabase.rawQuery(command, arrayOf(text)).use { cursor ->
                         while (cursor.moveToNext()) {
                                 val rowId = cursor.getInt(0)
-                                val word = cursor.getString(1)
+                                val word = cursor.getString(1) ?: continue
                                 val complex = cursor.getInt(2)
-                                val instance = ShapeLexicon(text = word, input = input, complex = complex, order = rowId)
-                                items.add(instance)
+                                items.add(ShapeLexicon(text = word, input = input, complex = complex, order = rowId))
                         }
                 }
                 return items.sorted()
@@ -58,14 +50,13 @@ object Stroke {
 
         private fun strokeGlob(text: String, input: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
-                val command = "SELECT rowid, word, complex FROM stroke_table WHERE stroke GLOB '${text}*' ORDER BY complex ASC LIMIT 100;"
-                Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
+                val command: String = "SELECT rowid, word, complex FROM stroke_table WHERE stroke GLOB ? ORDER BY complex ASC LIMIT 100;"
+                Elephant.sharedDatabase.rawQuery(command, arrayOf("$text*")).use { cursor ->
                         while (cursor.moveToNext()) {
                                 val rowId = cursor.getInt(0)
-                                val word = cursor.getString(1)
+                                val word = cursor.getString(1) ?: continue
                                 val complex = cursor.getInt(2)
-                                val instance = ShapeLexicon(text = word, input = input, complex = complex, order = rowId)
-                                items.add(instance)
+                                items.add(ShapeLexicon(text = word, input = input, complex = complex, order = rowId))
                         }
                 }
                 return items.sorted()

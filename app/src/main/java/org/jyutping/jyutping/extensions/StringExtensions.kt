@@ -67,6 +67,19 @@ fun String.markFormatted(): String {
         return result
 }
 
+/** Cantonese tone digits [1-6] only */
+val String.toneDigitOnly: String
+        get() = this.filter { it.isCantoneseToneDigit }
+
+/** Romanization with Cantonese tone digits stripped */
+fun String.strippedTones(): String = this.filterNot { it.isCantoneseToneDigit }
+
+/** Text with spaces stripped */
+fun String.strippedSpaces(): String = this.filterNot { it.isSpace }
+
+/** Text reduced to lowercase a-z letters only */
+fun String.latinLetterOnly(): String = this.filter { it.isLowercaseBasicLatinLetter }
+
 /**
  * A space-separated list of Unicode code points in `U+XXXX` notation.
  *

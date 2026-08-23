@@ -8,7 +8,7 @@ object Converter {
         fun dispatch(
                 memory: List<Lexicon>,
                 defined: List<Lexicon>,
-                marks: List<Lexicon>,
+                texts: List<Lexicon>,
                 symbols: List<Lexicon>,
                 queried: List<Lexicon>,
                 commentForm: RomanizationForm,
@@ -26,7 +26,7 @@ object Converter {
                                 chained.add(entry)
                         }
                 }
-                chained.addAll(index = 0, elements = idealMemory.take(3) + defined + marks + idealMemory)
+                chained.addAll(index = 0, elements = idealMemory.take(3) + defined + texts + idealMemory)
                 for (symbol in symbols.reversed()) {
                         val index = chained.indexOfFirst { it.isCantonese && it.text == symbol.attached && it.romanization == symbol.romanization }
                         if (index >= 0) {

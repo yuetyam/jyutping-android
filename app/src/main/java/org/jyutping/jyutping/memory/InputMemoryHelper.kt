@@ -17,11 +17,11 @@ import org.jyutping.jyutping.models.Segmenter
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.aliasAnchors
 import org.jyutping.jyutping.models.aliasText
-import org.jyutping.jyutping.models.decimalCombined
+import org.jyutping.jyutping.models.decimalOverflowed
+import org.jyutping.jyutping.models.length
+import org.jyutping.jyutping.models.mark
 import org.jyutping.jyutping.models.originAnchorsText
 import org.jyutping.jyutping.models.originText
-import org.jyutping.jyutping.models.previewMark
-import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.models.syllableText
 import org.jyutping.jyutping.ninekey.Combo
 import org.jyutping.jyutping.presets.PresetString
@@ -229,11 +229,11 @@ fun InputMemoryHelper.searchMemory(keys: List<VirtualInputKey>, text: String, se
         val inputLength = keys.size
         // val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
         val fullMatched = spellMatch(text = text, input = text)
-        val idealSchemes = segmentation.filter { it.schemeLength == inputLength }
+        val idealSchemes = segmentation.filter { it.length == inputLength }
         val idealQueried: List<InternalLexicon> = idealSchemes.flatMap { scheme ->
                 val spellCode = scheme.originText.hashCode()
                 val shortcutCode = scheme.originAnchorsText.hashCode()
-                return@flatMap strictMatch(spell = spellCode, shortcut = shortcutCode, input = text, mark = scheme.previewMark)
+                return@flatMap strictMatch(spell = spellCode, shortcut = shortcutCode, input = text, mark = scheme.mark)
         }
         val queried = query(segmentation = segmentation, idealSchemes = idealSchemes)
         if (fullMatched.isNotEmpty() || idealQueried.isNotEmpty()) {
@@ -249,12 +249,12 @@ fun InputMemoryHelper.searchMemory(keys: List<VirtualInputKey>, text: String, se
         if (shouldPartiallyMatch.negative) return queried
         val prefixMatched: List<InternalLexicon> = segmentation.flatMap { scheme ->
                 if (scheme.isEmpty()) return@flatMap emptyList<InternalLexicon>()
-                val tail = keys.drop(scheme.schemeLength)
+                val tail = keys.drop(scheme.length)
                 if (tail.isEmpty()) return@flatMap emptyList<InternalLexicon>()
                 val schemeAnchors = scheme.aliasAnchors
                 val conjoinedText = (schemeAnchors + tail).joinToString(separator = PresetString.EMPTY) { it.text }
                 val schemeSyllableText = scheme.syllableText
-                val mark: String = scheme.previewMark + PresetString.SPACE + tail.joinToString(separator = PresetString.EMPTY) { it.text }
+                val mark: String = scheme.mark + PresetString.SPACE + tail.joinToString(separator = PresetString.EMPTY) { it.text }
                 val tailAsAnchorText = tail.mapNotNull { if (it == VirtualInputKey.letterY) VirtualInputKey.letterJ.text.firstOrNull() else it.text.firstOrNull() }
                 val conjoinedMatched = shortcutMatch(text = conjoinedText, input = conjoinedText)
                         .mapNotNull { item ->
@@ -347,7 +347,7 @@ private fun InputMemoryHelper.query(segmentation: Segmentation, idealSchemes: Li
 private fun InputMemoryHelper.performQuery(scheme: Scheme): List<InternalLexicon> {
         val spellCode = scheme.originText.hashCode()
         val shortcutCode = scheme.originAnchorsText.hashCode()
-        return strictMatch(spell = spellCode, shortcut = shortcutCode, input = scheme.aliasText, mark = scheme.previewMark, limit = 5)
+        return strictMatch(spell = spellCode, shortcut = shortcutCode, input = scheme.aliasText, mark = scheme.mark, limit = 5)
 }
 private fun InputMemoryHelper.shortcutMatch(text: String, input: String, limit: Int? = null): List<InternalLexicon> {
         val instances: MutableList<InternalLexicon> = mutableListOf()
@@ -404,7 +404,7 @@ private fun InputMemoryHelper.strictMatch(spell: Int, shortcut: Int, input: Stri
 
 fun InputMemoryHelper.nineKeyMemorySearch(combos: List<Combo>): List<Lexicon> {
         val inputLength: Int = combos.size
-        val fullCode: Long = combos.map { it.digit }.decimalCombined()
+        val fullCode: Long = combos.map { it.digit }.decimalOverflowed()
         when (inputLength) {
                 0 -> return emptyList()
                 1 -> return (nineKeyCodeMatch(fullCode, 100) + nineKeyAnchorsMatch(fullCode, 100)).map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -1) }
@@ -416,7 +416,7 @@ fun InputMemoryHelper.nineKeyMemorySearch(combos: List<Combo>): List<Lexicon> {
                 .distinct()
                 .map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -1) }
         val queried = 1.rangeUntil(inputLength).flatMap { number ->
-                val code = combos.dropLast(number).map { it.digit }.decimalCombined()
+                val code = combos.dropLast(number).map { it.digit }.decimalOverflowed()
                 return@flatMap if (code < 1) emptyList() else nineKeyCodeMatch(code, limit = 4)
         }.peculiarSorted().take(6).map { Lexicon(text = it.word, romanization = it.romanization, input = it.input, mark = it.mark, number = -2) }
         return ideal + queried

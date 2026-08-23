@@ -2,96 +2,64 @@ package org.jyutping.jyutping.keyboard
 
 import org.jyutping.jyutping.Elephant
 import org.jyutping.jyutping.models.Lexicon
-import org.jyutping.jyutping.models.charCode
+import org.jyutping.jyutping.models.VirtualInputKey
+import org.jyutping.jyutping.models.conjoinedCode
 
 object Cangjie {
 
         /**
          * Cangjie / Quick(Sucheng) Reverse Lookup
-         * @param text User input
+         * @param keys User input keys
          * @param variant Cangjie / Quick version
-         * @return List of Candidate
+         * @return List of Lexicon
          */
-        fun reverseLookup(text: String, variant: CangjieVariant): List<Lexicon> = when (variant) {
-                CangjieVariant.Cangjie5 -> cangjieReverseLookup(5, text)
-                CangjieVariant.Cangjie3 -> cangjieReverseLookup(3, text)
-                CangjieVariant.Quick5 -> quickReverseLookup(5, text)
-                CangjieVariant.Quick3 -> quickReverseLookup(3, text)
+        fun reverseLookup(keys: List<VirtualInputKey>, variant: CangjieVariant): List<Lexicon> = when (variant) {
+                CangjieVariant.Cangjie5 -> cangjieLookup(keys = keys, table = "cangjie_table", codeColumn = "c5code", matchedComplexColumn = null, textColumn = "cangjie5", complexColumn = "c5complex")
+                CangjieVariant.Cangjie3 -> cangjieLookup(keys = keys, table = "cangjie_table", codeColumn = "c3code", matchedComplexColumn = null, textColumn = "cangjie3", complexColumn = "c3complex")
+                CangjieVariant.Quick5 -> cangjieLookup(keys = keys, table = "quick_table", codeColumn = "q5code", matchedComplexColumn = "q5complex", textColumn = "quick5", complexColumn = "q5complex")
+                CangjieVariant.Quick3 -> cangjieLookup(keys = keys, table = "quick_table", codeColumn = "q3code", matchedComplexColumn = "q3complex", textColumn = "quick3", complexColumn = "q3complex")
         }
 
-        private fun cangjieReverseLookup(version: Int, text: String): List<Lexicon> = (cangjieMatch(version, text) + cangjieGlob(version, text))
-                .distinct()
-                .flatMap { lexicon ->
-                        Elephant.lookupRomanization(lexicon.text)
-                                .map { romanization ->
-                                        Lexicon(text = lexicon.text, romanization = romanization, input = lexicon.input, number = lexicon.order)
-                                }
-                }
+        private fun cangjieLookup(keys: List<VirtualInputKey>, table: String, codeColumn: String, matchedComplexColumn: String?, textColumn: String, complexColumn: String): List<Lexicon> {
+                val code = keys.conjoinedCode
+                val text = keys.joinToString(separator = "") { it.text }
+                val complex = keys.size
+                return (match(table = table, codeColumn = codeColumn, matchedComplexColumn = matchedComplexColumn, code = code, input = text, complex = complex) +
+                        glob(table = table, textColumn = textColumn, complexColumn = complexColumn, text = text))
+                        .distinct()
+                        .flatMap { Elephant.reveresLookup(text = it.text, input = it.input) }
+        }
 
-        private fun quickReverseLookup(version: Int, text: String): List<Lexicon> = (quickMatch(version, text) + quickGlob(version, text))
-                .distinct()
-                .flatMap { lexicon ->
-                        Elephant.lookupRomanization(lexicon.text)
-                                .map { romanization ->
-                                        Lexicon(text = lexicon.text, romanization = romanization, input = lexicon.input, number = lexicon.order)
-                                }
-                }
-
-        private fun cangjieMatch(version: Int, text: String): List<ShapeLexicon> {
-                val code = text.charCode() ?: return emptyList()
-                val command = "SELECT rowid, word FROM cangjie_table WHERE c${version}code = ${code};"
+        private fun match(table: String, codeColumn: String, matchedComplexColumn: String?, code: Long, input: String, complex: Int): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
+                val command: String = if (matchedComplexColumn != null) {
+                        "SELECT rowid, word, $matchedComplexColumn FROM $table WHERE $codeColumn = $code;"
+                } else {
+                        "SELECT rowid, word FROM $table WHERE $codeColumn = $code;"
+                }
                 Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
                         while (cursor.moveToNext()) {
                                 val rowId = cursor.getInt(0)
-                                val word = cursor.getString(1)
-                                val instance = ShapeLexicon(text = word, input = text, complex = text.length, order = rowId)
-                                items.add(instance)
+                                val word = cursor.getString(1) ?: continue
+                                if (matchedComplexColumn != null) {
+                                        val matchedComplex = cursor.getInt(2)
+                                        if (matchedComplex != complex) continue
+                                }
+                                items.add(ShapeLexicon(text = word, input = input, complex = complex, order = rowId))
                         }
                 }
                 return items
         }
 
-        private fun cangjieGlob(version: Int, text: String): List<ShapeLexicon> {
+        private fun glob(table: String, textColumn: String, complexColumn: String, text: String): List<ShapeLexicon> {
                 val items: MutableList<ShapeLexicon> = mutableListOf()
-                val command = "SELECT rowid, word, c${version}complex FROM cangjie_table WHERE cangjie${version} GLOB '${text}*' ORDER BY c${version}complex ASC LIMIT 100;"
-                Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
+                val command: String = "SELECT rowid, word, $complexColumn FROM $table WHERE $textColumn GLOB ? ORDER BY $complexColumn ASC LIMIT 100;"
+                Elephant.sharedDatabase.rawQuery(command, arrayOf("$text*")).use { cursor ->
                         while (cursor.moveToNext()) {
                                 val rowId = cursor.getInt(0)
-                                val word = cursor.getString(1)
+                                val word = cursor.getString(1) ?: continue
                                 val complex = cursor.getInt(2)
-                                val instance = ShapeLexicon(text = word, input = text, complex = complex, order = rowId)
-                                items.add(instance)
-                        }
-                }
-                return items.sorted()
-        }
-
-        private fun quickMatch(version: Int, text: String): List<ShapeLexicon> {
-                val code = text.charCode() ?: return emptyList()
-                val command = "SELECT rowid, word FROM quick_table WHERE q${version}code = ${code};"
-                val items: MutableList<ShapeLexicon> = mutableListOf()
-                Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
-                        while (cursor.moveToNext()) {
-                                val rowId = cursor.getInt(0)
-                                val word = cursor.getString(1)
-                                val instance = ShapeLexicon(text = word, input = text, complex = text.length, order = rowId)
-                                items.add(instance)
-                        }
-                }
-                return items
-        }
-
-        private fun quickGlob(version: Int, text: String): List<ShapeLexicon> {
-                val items: MutableList<ShapeLexicon> = mutableListOf()
-                val command = "SELECT rowid, word, q${version}complex FROM quick_table WHERE quick${version} GLOB '${text}*' ORDER BY q${version}complex ASC LIMIT 100;"
-                Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
-                        while (cursor.moveToNext()) {
-                                val rowId = cursor.getInt(0)
-                                val word = cursor.getString(1)
-                                val complex = cursor.getInt(2)
-                                val instance = ShapeLexicon(text = word, input = text, complex = complex, order = rowId)
-                                items.add(instance)
+                                items.add(ShapeLexicon(text = word, input = text, complex = complex, order = rowId))
                         }
                 }
                 return items.sorted()

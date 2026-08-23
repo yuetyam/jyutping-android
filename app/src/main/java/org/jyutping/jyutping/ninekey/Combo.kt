@@ -50,5 +50,23 @@ enum class Combo(val digit: Int) {
                         TUV  to listOf("t", "u"),
                         WXYZ to listOf("w", "y", "z")
                 )
+
+                fun comboOf(digit: Int): Combo? = entries.find { it.digit == digit }
         }
 }
+
+/** Combines the decimal digit codes using wrapping arithmetic. */
+val List<Combo>.decimalCombinedCode: Long
+        get() = this.fold(0L) { acc, combo -> acc * 10L + combo.digit.toLong() }
+
+/** Decomposes a decimal combined code into the matched combos sequence. */
+val Long.matchedCombos: List<Combo>
+        get() {
+                var number = this
+                val digits = mutableListOf<Int>()
+                while (number > 0L) {
+                        digits.add((number % 10L).toInt())
+                        number /= 10L
+                }
+                return digits.reversed().mapNotNull { Combo.comboOf(it) }
+        }

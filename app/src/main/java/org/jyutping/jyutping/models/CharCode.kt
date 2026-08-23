@@ -1,50 +1,42 @@
 package org.jyutping.jyutping.models
 
-fun String.charCode(): Long? {
-        if (this.length >= 10) return null
-        val codes = this.mapNotNull { it.interCode }
-        if (codes.size != this.length) return null
-        return codes.radix100Combined()
-}
+/**
+ * Combines the elements as base-100 digits using wrapping arithmetic.
+ *
+ * For example, `[20, 21, 22]` produces `202122L`.
+ * An empty iterable produces `0L`.
+ *
+ * If the result exceeds the range of [Long], the arithmetic wraps around according to Kotlin's two's-complement integer overflow semantics.
+ */
+fun Iterable<Int>.radix100Overflowed(): Long = fold(0L) { acc, i -> acc * 100L + i }
 
-/*
-fun String.anchorsCode(): Long? {
-        if (this.length >= 10) return null
-        val codes = this.mapNotNull { it.interCode }
-        if (codes.size != this.length) return null
-        val code = codes
-                .map { if (it == 44) 29 else it } // Replace 'y' with 'j'
-                .radix100Combined()
-        return code
-}
-fun Iterable<Char>.anchorsCode(): Long? {
-        if (this.count() >= 10) return null
-        val codes = this.mapNotNull { it.interCode }
-        if (codes.size != this.count()) return null
-        val code = codes
-                .map { if (it == 44) 29 else it } // Replace 'y' with 'j'
-                .radix100Combined()
-        return code
-}
-*/
+/**
+ * Combines the elements as decimal digits using wrapping arithmetic.
+ *
+ * For example, `[2, 3, 4]` produces `234L`.
+ * An empty iterable produces `0L`.
+ *
+ * If the result exceeds the range of [Long], the arithmetic wraps around according to Kotlin's two's-complement integer overflow semantics.
+ */
+fun Iterable<Int>.decimalOverflowed(): Long = fold(0L) { acc, i -> acc * 10L + i }
 
-val String.nineKeyCharCode: Long?
-        get() {
-                if (this.length >= 19) return null
-                val codes = this.mapNotNull { it.nineKeyInterCode }
-                if (codes.size != this.length) return null
-                return codes.decimalCombined()
-        }
+/** Encodes lowercase Basic Latin letters as two-digit serial codes. Non-letter characters are skipped. */
+val String.serialCode: Long
+        get() = this.mapNotNull { it.serialCharCode }.radix100Overflowed()
 
-fun Iterable<Int>.radix100Combined(): Long = if (this.count() >= 10) 0L else this.fold(0L) { acc, i -> acc * 100L + i}
+/** Encodes lowercase Basic Latin letters as telephone keypad digits. Non-letter characters are skipped. */
+val String.keypadCode: Long
+        get() = this.mapNotNull { it.keypadCharCode }.decimalOverflowed()
 
-fun Iterable<Int>.decimalCombined(): Long = if (this.count() >= 19) 0L else this.fold(0L) { acc, i -> acc * 10L + i}
-
+/** Unique identifier code of the character. Letters [a-z] and digits [0-9]. */
 val Char.interCode: Int?
         get() = CharCode.letterCodeMap[this] ?: CharCode.numberCodeMap[this]
 
-val Char.nineKeyInterCode: Int?
-        get() = CharCode.nineKeyCodeMap[this]
+private val Char.serialCharCode: Int?
+        get() = CharCode.letterCodeMap[this]
+
+private val Char.keypadCharCode: Int?
+        get() = CharCode.keypadCodeMap[this]
 
 private object CharCode {
         val letterCodeMap: Map<Char, Int> = mapOf(
@@ -88,7 +80,7 @@ private object CharCode {
                 '9' to 19
         )
 
-        val nineKeyCodeMap: Map<Char, Int> = mapOf(
+        val keypadCodeMap: Map<Char, Int> = mapOf(
                 'a' to 2,
                 'b' to 2,
                 'c' to 2,
