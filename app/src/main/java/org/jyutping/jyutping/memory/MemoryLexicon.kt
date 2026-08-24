@@ -1,5 +1,6 @@
 package org.jyutping.jyutping.memory
 
+import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.isBasicDigit
 import org.jyutping.jyutping.extensions.isLowercaseBasicLatinLetter
 import org.jyutping.jyutping.extensions.negative
@@ -42,7 +43,7 @@ data class MemoryLexicon(
                                 romanization = romanization,
                                 frequency = frequency,
                                 latest = timestamp,
-                                charCount = word.length,
+                                charCount = word.characterCount,
                                 letterCount = letters.length,
                                 complexity = complexity,
                                 anchors = anchorText.serialCode,

@@ -362,7 +362,7 @@ suspend fun InputMemoryHelper.suggest(keys: List<VirtualInputKey>, segmentation:
                                         inputSeparatorCount == 1 -> {
                                                 if (syllables.size != 2) return@mapNotNull null
                                                 val isMatched: Boolean = run {
-                                                        if (inputLength != 3) return@run true
+                                                        if (inputLength == 3) return@run true
                                                         if (syllables.first() == textParts.first()) return@run true
                                                         if (textParts.firstOrNull()?.length != 1) return@run false
                                                         if (textParts.firstOrNull()?.firstOrNull() != syllables.firstOrNull()?.firstOrNull()) return@run false
@@ -376,7 +376,7 @@ suspend fun InputMemoryHelper.suggest(keys: List<VirtualInputKey>, segmentation:
                                                 if (syllables.size != 2) return@mapNotNull null
                                                 if (item.inputCount != (inputLength - 2)) return@mapNotNull null
                                                 val isMatched: Boolean = run {
-                                                        if (inputLength != 4) return@run true
+                                                        if (inputLength == 4) return@run true
                                                         if (syllables.first() == textParts.first()) return@run true
                                                         if (textParts.firstOrNull()?.length != 1) return@run false
                                                         if (textParts.firstOrNull()?.firstOrNull() != syllables.firstOrNull()?.firstOrNull()) return@run false
