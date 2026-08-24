@@ -45,7 +45,7 @@ typealias NineKeyScheme = List<NineKeySyllable>
 typealias NineKeySegmentation = List<NineKeyScheme>
 
 /** Count of all alias combos */
-val NineKeyScheme.length: Int
+val NineKeyScheme.schemeLength: Int
         get() = this.fold(0) { acc, syllable -> acc + syllable.alias.size }
 
 /**

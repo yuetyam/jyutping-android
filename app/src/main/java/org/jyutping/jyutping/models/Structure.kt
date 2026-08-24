@@ -82,7 +82,7 @@ object Structure {
         private fun search(keys: List<VirtualInputKey>, segmentation: Segmentation): List<Lexicon> {
                 val inputLength: Int = keys.size
                 val input: String = keys.joinToString(separator = PresetString.EMPTY) { it.text }
-                return segmentation.filter { it.length == inputLength }
+                return segmentation.filter { it.schemeLength == inputLength }
                         .flatMap { scheme -> match(keys = scheme.originKeys, complexity = scheme.complexity, input = input) }
                         .distinct()
         }

@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.keyboard
+package org.jyutping.jyutping.models
 
 /** Letter input key style */
 enum class InputKeyStyle(val identifier: Int) {

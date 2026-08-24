@@ -291,20 +291,20 @@ object Researcher {
                         if (inputLength <= 2 || inputLength >= 25) return@run false
                         if ((keys.lastOrNull() == VirtualInputKey.letterM) || (keys.firstOrNull() == VirtualInputKey.letterM)) return@run true
                         if (queried.any { it.inputCount == inputLength }) return@run false
-                        segmentation.any { it.length == inputLength }.negative
+                        segmentation.any { it.schemeLength == inputLength }.negative
                 }
                 val prefixesLimit: Int = if (limit == null) 500 else 200
                 val prefixMatched: List<Lexicon> = if (shouldMatchPrefixes.negative) emptyList() else segmentation.flatMap { scheme ->
                         if (isActive().negative) return@flatMap emptyList<Lexicon>()
                         val leadingCharCount: Int = scheme.size
                         if (leadingCharCount <= 0 || leadingCharCount > MAX_CHAR_COUNT) return@flatMap emptyList<Lexicon>()
-                        val tail: List<VirtualInputKey> = keys.drop(scheme.length)
+                        val tail: List<VirtualInputKey> = keys.drop(scheme.schemeLength)
                         val lastAnchor = tail.firstOrNull() ?: return@flatMap emptyList<Lexicon>()
                         val schemeAnchors: List<VirtualInputKey> = scheme.aliasAnchors
                         val conjoined: List<VirtualInputKey> = schemeAnchors + tail
                         val anchors: List<VirtualInputKey> = schemeAnchors + listOf(lastAnchor)
                         val schemeSyllableText: String = scheme.syllableText
-                        val mark: String = scheme.mark + PresetString.SPACE + tail.joinToString(separator = PresetString.EMPTY) { it.text }
+                        val mark: String = scheme.previewMark + PresetString.SPACE + tail.joinToString(separator = PresetString.EMPTY) { it.text }
                         val tailAsAnchorText: List<Char> = tail.mapNotNull { if (it == VirtualInputKey.letterY) VirtualInputKey.letterJ.text.firstOrNull() else it.text.firstOrNull() }
                         val conjoinedMatched = anchorsMatch(keys = conjoined, limit = prefixesLimit)
                                 .mapNotNull { item ->
@@ -371,22 +371,22 @@ object Researcher {
         }
 
         private suspend fun query(inputLength: Int, segmentation: Segmentation, limit: Int? = null): List<Lexicon> {
-                val idealSchemes = segmentation.filter { it.length == inputLength }
+                val idealSchemes = segmentation.filter { it.schemeLength == inputLength }
                 return if (idealSchemes.isEmpty()) {
                         segmentation.flatMap { scheme ->
                                 if (isActive().negative || (scheme.size > MAX_CHAR_COUNT)) return@flatMap emptyList<Lexicon>()
-                                spellMatch(keys = scheme.originKeys, complexity = scheme.complexity, input = scheme.aliasText, mark = scheme.mark, limit = limit)
+                                spellMatch(keys = scheme.originKeys, complexity = scheme.complexity, input = scheme.aliasText, mark = scheme.previewMark, limit = limit)
                         }
                 } else {
                         idealSchemes.flatMap { scheme ->
                                 if (isActive().negative) return@flatMap emptyList<Lexicon>()
                                 when (scheme.size) {
                                         0 -> emptyList()
-                                        1 -> spellMatch(keys = scheme.originKeys, complexity = scheme.complexity, input = scheme.aliasText, mark = scheme.mark, limit = limit)
+                                        1 -> spellMatch(keys = scheme.originKeys, complexity = scheme.complexity, input = scheme.aliasText, mark = scheme.previewMark, limit = limit)
                                         else -> (scheme.size downTo 1).flatMap { number ->
                                                 if (isActive().negative || (number > MAX_CHAR_COUNT)) return@flatMap emptyList<Lexicon>()
                                                 val slice: Scheme = scheme.take(number)
-                                                spellMatch(keys = slice.originKeys, complexity = slice.complexity, input = slice.aliasText, mark = slice.mark, limit = limit)
+                                                spellMatch(keys = slice.originKeys, complexity = slice.complexity, input = slice.aliasText, mark = slice.previewMark, limit = limit)
                                         }
                                 }
                         }

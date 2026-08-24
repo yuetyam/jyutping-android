@@ -30,10 +30,10 @@ import org.jyutping.jyutping.models.anchorNormalized
 import org.jyutping.jyutping.models.complexity
 import org.jyutping.jyutping.models.conjoinedCode
 import org.jyutping.jyutping.models.isIrregular
-import org.jyutping.jyutping.models.length
-import org.jyutping.jyutping.models.mark
 import org.jyutping.jyutping.models.originCombos
 import org.jyutping.jyutping.models.originKeys
+import org.jyutping.jyutping.models.previewMark
+import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.models.serialOriginKeys
 import org.jyutping.jyutping.models.syllableText
 import org.jyutping.jyutping.ninekey.Combo
@@ -404,7 +404,7 @@ private suspend fun isActive(): Boolean = currentCoroutineContext().isActive
 
 private suspend fun InputMemoryHelper.search(keys: List<VirtualInputKey>, segmentation: Segmentation): List<Lexicon> {
         val inputLength: Int = keys.size
-        val idealSchemes: List<Scheme> = segmentation.filter { it.length == inputLength }
+        val idealSchemes: List<Scheme> = segmentation.filter { it.schemeLength == inputLength }
         val queried = query(segmentation = segmentation, idealSchemes = idealSchemes)
         val anchorsMatched = anchorsMatch(keys = keys, limit = if (queried.isEmpty()) 20 else 5)
                 .regularSorted(isOrdered = true)
@@ -426,12 +426,12 @@ private suspend fun InputMemoryHelper.search(keys: List<VirtualInputKey>, segmen
                 if (isActive().negative) return@flatMap emptyList<InternalLexicon>()
                 val leadingCharCount: Int = scheme.size
                 if (leadingCharCount <= 0 || leadingCharCount > MAX_CHAR_COUNT) return@flatMap emptyList()
-                val tail: List<VirtualInputKey> = keys.drop(scheme.length)
+                val tail: List<VirtualInputKey> = keys.drop(scheme.schemeLength)
                 if (tail.isEmpty()) return@flatMap emptyList()
                 val schemeAnchors: List<VirtualInputKey> = scheme.aliasAnchors
                 val conjoined: List<VirtualInputKey> = schemeAnchors + tail
                 val schemeSyllableText: String = scheme.syllableText
-                val mark: String = scheme.mark + PresetString.SPACE + tail.joinToString(separator = PresetString.EMPTY) { it.text }
+                val mark: String = scheme.previewMark + PresetString.SPACE + tail.joinToString(separator = PresetString.EMPTY) { it.text }
                 val tailAsAnchorText: List<Char> = tail.mapNotNull { if (it == VirtualInputKey.letterY) VirtualInputKey.letterJ.text.firstOrNull() else it.text.firstOrNull() }
                 val conjoinedMatched = anchorsMatch(keys = conjoined)
                         .mapNotNull { item ->
@@ -489,7 +489,7 @@ private suspend fun InputMemoryHelper.query(segmentation: Segmentation, idealSch
 
 private suspend fun InputMemoryHelper.perform(scheme: Scheme, limit: Int = 5): List<InternalLexicon> {
         if (isActive().negative) return emptyList()
-        return spellMatch(keys = scheme.originKeys, complexity = scheme.complexity, input = scheme.aliasText, mark = scheme.mark, limit = limit)
+        return spellMatch(keys = scheme.originKeys, complexity = scheme.complexity, input = scheme.aliasText, mark = scheme.previewMark, limit = limit)
 }
 
 private fun InputMemoryHelper.anchorsMatch(keys: List<VirtualInputKey>, input: String? = null, limit: Int? = null): List<InternalLexicon> {
@@ -553,7 +553,7 @@ fun InputMemoryHelper.nineKeySearch(combos: List<Combo>, segmentation: NineKeySe
         return ideal + notIdeal
 }
 private fun InputMemoryHelper.nineKeyQuery(inputLength: Int, segmentation: NineKeySegmentation): List<InternalLexicon> {
-        val idealSchemes = segmentation.filter { it.length == inputLength }
+        val idealSchemes = segmentation.filter { it.schemeLength == inputLength }
         return if (idealSchemes.isEmpty()) {
                 segmentation.flatMap { scheme -> nineKeyPerform(scheme = scheme, limit = 10) }
         } else {

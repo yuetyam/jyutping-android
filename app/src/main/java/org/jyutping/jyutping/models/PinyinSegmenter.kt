@@ -26,7 +26,7 @@ typealias PinyinScheme = List<PinyinSyllable>
 typealias PinyinSegmentation = List<PinyinScheme>
 
 /** Count of all input keys */
-val PinyinScheme.length: Int
+val PinyinScheme.schemeLength: Int
         get() = this.fold(0) { acc, syllable -> acc + syllable.keys.size }
 
 /**
@@ -42,7 +42,7 @@ val PinyinScheme.keys: List<VirtualInputKey>
         get() = this.flatMap { it.keys }
 
 /** Syllable texts separated by spaces */
-val PinyinScheme.mark: String
+val PinyinScheme.previewMark: String
         get() = this.joinToString(separator = PresetString.SPACE) { it.text }
 
 /** Segments Pinyin input into possible syllable schemes. */

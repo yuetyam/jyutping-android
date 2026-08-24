@@ -66,6 +66,7 @@ import org.jyutping.jyutping.CharacterStandard
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
+import org.jyutping.jyutping.models.InputKeyStyle
 import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.models.PreferredInputMode
 import org.jyutping.jyutping.presets.AltPresetColor

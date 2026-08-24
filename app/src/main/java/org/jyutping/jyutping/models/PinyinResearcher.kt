@@ -3,7 +3,6 @@ package org.jyutping.jyutping.models
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.isActive
 import org.jyutping.jyutping.Elephant
-import org.jyutping.jyutping.extensions.isSpace
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.extensions.strippedSpaces
 import org.jyutping.jyutping.ninekey.Combo
@@ -74,11 +73,11 @@ object PinyinResearcher {
                 val queried = pinyinQuery(inputLength = inputLength, segmentation = segmentation, limit = limit)
                 val shouldMatchPrefixes: Boolean = run {
                         if (queried.any { it.inputCount == inputLength }) return@run false
-                        segmentation.any { it.length == inputLength }.negative
+                        segmentation.any { it.schemeLength == inputLength }.negative
                 }
                 val prefixesLimit: Int = if (limit == null) 500 else 200
                 val prefixMatched: List<PinyinLexicon> = if (shouldMatchPrefixes.negative) emptyList() else segmentation.flatMap { scheme ->
-                        val tail: List<VirtualInputKey> = keys.drop(scheme.length)
+                        val tail: List<VirtualInputKey> = keys.drop(scheme.schemeLength)
                         val lastAnchor = tail.firstOrNull() ?: return@flatMap emptyList<PinyinLexicon>()
                         val schemeAnchors: List<VirtualInputKey> = scheme.mapNotNull { it.keys.firstOrNull() }
                         val conjoined: List<VirtualInputKey> = schemeAnchors + tail
@@ -142,18 +141,18 @@ object PinyinResearcher {
         }
 
         private fun pinyinQuery(inputLength: Int, segmentation: PinyinSegmentation, limit: Int? = null): List<PinyinLexicon> {
-                val idealSchemes = segmentation.filter { it.length == inputLength }
+                val idealSchemes = segmentation.filter { it.schemeLength == inputLength }
                 return if (idealSchemes.isEmpty()) {
                         segmentation.flatMap { scheme ->
-                                pinyinSpellMatch(keys = scheme.keys, complexity = scheme.complexity, mark = scheme.mark, limit = limit)
+                                pinyinSpellMatch(keys = scheme.keys, complexity = scheme.complexity, mark = scheme.previewMark, limit = limit)
                         }
                 } else {
                         idealSchemes.flatMap { scheme ->
                                 when (scheme.size) {
                                         0 -> emptyList()
-                                        1 -> pinyinSpellMatch(keys = scheme.keys, complexity = scheme.complexity, mark = scheme.mark, limit = limit)
+                                        1 -> pinyinSpellMatch(keys = scheme.keys, complexity = scheme.complexity, mark = scheme.previewMark, limit = limit)
                                         else -> (1..scheme.size).reversed().map { scheme.take(it) }.flatMap { slice ->
-                                                pinyinSpellMatch(keys = slice.keys, complexity = slice.complexity, mark = slice.mark, limit = limit)
+                                                pinyinSpellMatch(keys = slice.keys, complexity = slice.complexity, mark = slice.previewMark, limit = limit)
                                         }
                                 }
                         }

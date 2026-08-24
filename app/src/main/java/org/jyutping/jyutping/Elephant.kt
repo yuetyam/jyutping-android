@@ -13,9 +13,9 @@ import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.conjoinedCode
 import org.jyutping.jyutping.models.NineKeySegmentation
 import org.jyutping.jyutping.models.complexity
-import org.jyutping.jyutping.models.length
 import org.jyutping.jyutping.models.originKeys
 import org.jyutping.jyutping.models.originCombos
+import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.ninekey.Combo
 import org.jyutping.jyutping.ninekey.decimalCombinedCode
 import org.jyutping.jyutping.presets.PresetString
@@ -138,7 +138,7 @@ object Elephant {
         fun searchSymbols(keys: List<VirtualInputKey>, segmentation: Segmentation): List<Lexicon> {
                 val inputLength: Int = keys.count { it.isSyllableLetter }
                 val input: String = keys.joinToString(separator = PresetString.EMPTY) { it.text }
-                return segmentation.filter { it.length == inputLength }
+                return segmentation.filter { it.schemeLength == inputLength }
                         .flatMap { symbolMatch(spell = it.originKeys.conjoinedCode, complexity = it.complexity, input = input) }
                         .distinct()
         }
@@ -159,7 +159,7 @@ object Elephant {
                         }
                 }
                 if (emojis.isEmpty()) return emptyList()
-                return emojis.mapNotNull { emoji ->
+                return emojis.map { emoji ->
                         val codePointText: String = emoji.text
                         val shouldMapSkinTone: Boolean = (emoji.category == EmojiCategory.SmileysAndPeople) || (emoji.category == EmojiCategory.Activity)
                         val mappedCodePointText: String = if (shouldMapSkinTone) (mapSkinTone(codePointText) ?: codePointText) else codePointText
@@ -171,7 +171,7 @@ object Elephant {
 
         fun nineKeySearchSymbols(combos: List<Combo>, segmentation: NineKeySegmentation): List<Lexicon> {
                 val inputLength: Int = combos.size
-                return segmentation.filter { it.length == inputLength }
+                return segmentation.filter { it.schemeLength == inputLength }
                         .flatMap { nineKeySymbolMatch(combos = it.originCombos, complexity = it.complexity) }
                         .distinct()
         }
@@ -195,7 +195,7 @@ object Elephant {
                 }
                 if (emojis.isEmpty()) return emptyList()
                 val input: String = combos.mapNotNull { it.letters.firstOrNull() }.joinToString(separator = PresetString.EMPTY)
-                return emojis.mapNotNull { emoji ->
+                return emojis.map { emoji ->
                         val codePointText: String = emoji.text
                         val shouldMapSkinTone: Boolean = (emoji.category == EmojiCategory.SmileysAndPeople) || (emoji.category == EmojiCategory.Activity)
                         val mappedCodePointText: String = if (shouldMapSkinTone) (mapSkinTone(codePointText) ?: codePointText) else codePointText

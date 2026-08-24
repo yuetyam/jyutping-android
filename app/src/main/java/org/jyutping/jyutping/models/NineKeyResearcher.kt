@@ -60,7 +60,7 @@ object NineKeyResearcher {
         }
 
         private suspend fun query(inputLength: Int, segmentation: NineKeySegmentation, limit: Int? = null): List<Lexicon> {
-                val idealSchemes = segmentation.filter { it.length == inputLength }
+                val idealSchemes = segmentation.filter { it.schemeLength == inputLength }
                 return if (idealSchemes.isEmpty()) {
                         segmentation.flatMap { scheme -> perform(scheme = scheme, limit = limit) }
                 } else {

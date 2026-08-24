@@ -49,7 +49,7 @@ import org.jyutping.jyutping.keyboard.Cangjie
 import org.jyutping.jyutping.keyboard.CangjieVariant
 import org.jyutping.jyutping.keyboard.CommentStyle
 import org.jyutping.jyutping.keyboard.ExtraBottomPadding
-import org.jyutping.jyutping.keyboard.InputKeyStyle
+import org.jyutping.jyutping.models.InputKeyStyle
 import org.jyutping.jyutping.keyboard.ReturnKeyForm
 import org.jyutping.jyutping.keyboard.SpaceKeyForm
 import org.jyutping.jyutping.memory.InputMemoryHelper
@@ -78,9 +78,9 @@ import org.jyutping.jyutping.models.Segmenter
 import org.jyutping.jyutping.models.Simplifier
 import org.jyutping.jyutping.models.Structure
 import org.jyutping.jyutping.models.VirtualInputKey
-import org.jyutping.jyutping.models.length
-import org.jyutping.jyutping.models.mark
+import org.jyutping.jyutping.models.previewMark
 import org.jyutping.jyutping.models.previewMarkNormalized
+import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.ninekey.Combo
 import org.jyutping.jyutping.ninekey.SidebarEntry
 import org.jyutping.jyutping.numeric.NumericLayout
@@ -801,8 +801,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val firstLexicon = queried.firstOrNull()
                                         if (firstLexicon != null && firstLexicon.inputCount == keys.size) return@run firstLexicon.mark
                                         val bestScheme = segmentation.firstOrNull()
-                                        val leadingLength: Int = bestScheme?.length ?: 0
-                                        val leadingText: String = bestScheme?.mark ?: PresetString.EMPTY
+                                        val leadingLength: Int = bestScheme?.schemeLength ?: 0
+                                        val leadingText: String = bestScheme?.previewMark ?: PresetString.EMPTY
                                         when (leadingLength) {
                                                 0 -> bufferText.drop(1)
                                                 keys.size -> leadingText
@@ -876,8 +876,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val isPeculiar = newValue.any { it.isCapitalized } || keys.any { it.isSyllableLetter.negative }
                                         if (isPeculiar) return@run bufferText.drop(1).toneConverted().markFormatted()
                                         val bestScheme = segmentation.firstOrNull()
-                                        val leadingLength: Int = bestScheme?.length ?: 0
-                                        val leadingMark: String = bestScheme?.mark ?: PresetString.EMPTY
+                                        val leadingLength: Int = bestScheme?.schemeLength ?: 0
+                                        val leadingMark: String = bestScheme?.previewMark ?: PresetString.EMPTY
                                         when (leadingLength) {
                                                 0 -> bufferText.drop(1)
                                                 keys.size -> leadingMark
@@ -919,8 +919,8 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         val firstCandidate = suggestions.firstOrNull()
                                         if (firstCandidate?.lexicon?.inputCount == keys.size) return@run firstCandidate.lexicon.mark
                                         val bestScheme = segmentation.firstOrNull()
-                                        val leadingLength: Int = bestScheme?.length ?: 0
-                                        val leadingMark: String = bestScheme?.mark ?: PresetString.EMPTY
+                                        val leadingLength: Int = bestScheme?.schemeLength ?: 0
+                                        val leadingMark: String = bestScheme?.previewMark ?: PresetString.EMPTY
                                         when (leadingLength) {
                                                 0 -> joinedBufferTexts()
                                                 text.length -> leadingMark
