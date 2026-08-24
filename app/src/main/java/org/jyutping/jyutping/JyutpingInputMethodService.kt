@@ -52,8 +52,8 @@ import org.jyutping.jyutping.keyboard.ExtraBottomPadding
 import org.jyutping.jyutping.keyboard.ReturnKeyForm
 import org.jyutping.jyutping.keyboard.SpaceKeyForm
 import org.jyutping.jyutping.memory.InputMemoryHelper
-import org.jyutping.jyutping.memory.nineKeyMemorySearch
-import org.jyutping.jyutping.memory.searchMemory
+import org.jyutping.jyutping.memory.nineKeySearch
+import org.jyutping.jyutping.memory.suggest
 import org.jyutping.jyutping.models.BasicInputEvent
 import org.jyutping.jyutping.models.Candidate
 import org.jyutping.jyutping.models.CangjieConverter
@@ -120,7 +120,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 savedStateRegistryController.performRestore(null)
                 lifecycleScope.launch(Dispatchers.IO) {
                         DatabasePreparer.prepare(applicationContext)
-                        memoryHelper.performMemoryMigration()
+                        memoryHelper.prepare()
                 }
                 val manufacturer = Build.MANUFACTURER.lowercase()
                 val brand = Build.BRAND.lowercase()
@@ -885,7 +885,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 val textMarks = textMarksDeferred.await()
                                 val text = keys.joinToString(separator = PresetString.EMPTY) { it.text }
                                 val segmentation = Segmenter.segment(keys)
-                                val memoryDeferred = async { if (isInputMemoryOn.value) memoryHelper.searchMemory(keys = keys, text = text, segmentation = segmentation) else emptyList() }
+                                val memoryDeferred = async { if (isInputMemoryOn.value) memoryHelper.suggest(keys = keys, segmentation = segmentation) else emptyList() }
                                 val symbolsDeferred = async { if (isEmojiSuggestionsOn.value) Elephant.searchSymbols(keys = keys, segmentation = segmentation) else emptyList() }
                                 val queriedDeferred = async { Researcher.suggest(keys = keys, segmentation = segmentation) }
                                 val memory = memoryDeferred.await()
@@ -1047,7 +1047,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                         else -> suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                 val segmentation = NineKeySegmenter.segment(newValue)
-                                val memoryDeferred = async { if (isInputMemoryOn.value) memoryHelper.nineKeyMemorySearch(newValue) else emptyList() }
+                                val memoryDeferred = async { if (isInputMemoryOn.value) memoryHelper.nineKeySearch(combos = newValue, segmentation = segmentation) else emptyList() }
                                 val textMarksDeferred = async { if (isEnglishSuggestionsOn.value) Elephant.queryPlainTexts(newValue) else emptyList() }
                                 val symbolsDeferred = async { if (isEmojiSuggestionsOn.value) Elephant.nineKeySearchSymbols(combos = newValue, segmentation = segmentation) else emptyList() }
                                 val queriedDeferred = async { NineKeyResearcher.suggest(combos = newValue, segmentation = segmentation) }

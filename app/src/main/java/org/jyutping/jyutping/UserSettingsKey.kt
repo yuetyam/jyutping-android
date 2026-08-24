@@ -4,6 +4,7 @@ package org.jyutping.jyutping
 object UserSettingsKey {
         const val InputMemoryDatabaseFileName: String = "memory.sqlite3"
         const val MemoryMigration2026: String = "input_memory_migration2026"
+        const val MemoryMigration2608: String = "input_memory_migration2608"
         const val PreferencesFileName: String = "org.jyutping.jyutping.settings"
         const val LegacyCharacterStandard: String = "character_standard"
         const val TraditionalCharacterStandard: String = "traditional_character_standard"
