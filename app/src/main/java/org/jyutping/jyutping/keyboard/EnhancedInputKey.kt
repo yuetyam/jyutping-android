@@ -3,8 +3,8 @@ package org.jyutping.jyutping.keyboard
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -28,10 +29,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -39,6 +43,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.models.KeyModel
@@ -51,6 +57,7 @@ import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.shapes.BubbleShape
 import org.jyutping.jyutping.shapes.ExpansiveBubbleShape
 import org.jyutping.jyutping.utilities.ToolBox
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -75,75 +82,109 @@ fun EnhancedInputKey(
         val keyShape = RoundedCornerShape(PresetConstant.keyCornerRadius.dp)
         var isTouching by remember { mutableStateOf(false) }
         var isLongPressing by remember { mutableStateOf(false) }
-        var isSelected by remember { mutableStateOf(false) }
         var selectedIndex by remember { mutableIntStateOf(0) }
         var distance by remember { mutableFloatStateOf(0F) }
+        var pulled by remember { mutableStateOf<String?>(null) }
+        var pullDistance by remember { mutableFloatStateOf(0F) }
+        var holdTickCount by remember { mutableIntStateOf(0) }
+        LaunchedEffect(Unit) {
+                while (isActive) {
+                        delay(100L) // 0.1s
+                        if (isTouching && isLongPressing.not()) {
+                                val shouldTriggerLongPress: Boolean = (holdTickCount > 6) || (holdTickCount > 3 && pulled == null)
+                                if (shouldTriggerLongPress) {
+                                        isLongPressing = true
+                                } else {
+                                        holdTickCount += 1
+                                }
+                        }
+                }
+        }
         Box(
                 modifier = modifier
                         .pointerInput(Unit) {
-                                detectTapGestures(
-                                        onPress = {
-                                                isTouching = true
-                                                context.audioFeedback(SoundEffect.Input)
-                                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                                tryAwaitRelease()
+                                val farPullDistance = 36.dp.toPx()
+                                val nearPullDistance = 24.dp.toPx()
+                                awaitEachGesture {
+                                        val down = awaitFirstDown(requireUnconsumed = false)
+                                        isTouching = true
+                                        pullDistance = 0F
+                                        holdTickCount = 0
+                                        context.audioFeedback(SoundEffect.Input)
+                                        view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                                        try {
+                                                while (true) {
+                                                        val event = awaitPointerEvent()
+                                                        val change = event.changes.firstOrNull { it.id == down.id } ?: break
+                                                        if (change.changedToUp()) {
+                                                                val pulledText: String? = pulled
+                                                                when {
+                                                                        isLongPressing -> {
+                                                                                keyModel.members.getOrNull(selectedIndex)?.let { element ->
+                                                                                        val text: String = element.text.textCased(keyboardCase.textCase)
+                                                                                        context.process(text)
+                                                                                }
+                                                                        }
+                                                                        pulledText != null -> {
+                                                                                val text: String = pulledText.textCased(keyboardCase.textCase)
+                                                                                context.process(text)
+                                                                        }
+                                                                        else -> {
+                                                                                if (virtual != null) {
+                                                                                        context.handle(virtual)
+                                                                                } else {
+                                                                                        val text: String = keyModel.primary.text.textCased(keyboardCase.textCase)
+                                                                                        context.process(text)
+                                                                                }
+                                                                        }
+                                                                }
+                                                                break
+                                                        }
+                                                        val dragAmount: Offset = change.positionChange()
+                                                        if (dragAmount != Offset.Zero) {
+                                                                change.consume()
+                                                                if (isLongPressing) {
+                                                                        val horizontalAmount: Float = if (side.isLeft) dragAmount.x else dragAmount.x.unaryMinus()
+                                                                        distance += horizontalAmount
+                                                                        val baseWidth = baseSize.width * density.density
+                                                                        if (distance < (baseWidth / 2F)) {
+                                                                                if (selectedIndex != 0) {
+                                                                                        selectedIndex = 0
+                                                                                }
+                                                                        } else {
+                                                                                val memberCount = keyModel.members.size
+                                                                                val maxPoint = baseWidth * memberCount
+                                                                                val endIndex = memberCount - 1
+                                                                                val index = memberCount - ((maxPoint - distance) / baseWidth).toInt()
+                                                                                val newSelectedIndex = min(endIndex, max(0, index))
+                                                                                if (selectedIndex != newSelectedIndex) {
+                                                                                        selectedIndex = newSelectedIndex
+                                                                                }
+                                                                        }
+                                                                } else if (pulled == null) {
+                                                                        pullDistance += dragAmount.y
+                                                                        val pullSlop: Float = if (holdTickCount > 1) nearPullDistance else farPullDistance
+                                                                        val isSatisfied: Boolean = abs(pullDistance) > pullSlop
+                                                                        if (isSatisfied) {
+                                                                                pulled = if (pullDistance > 0F) {
+                                                                                        keyModel.primary.header ?: keyModel.primary.footer
+                                                                                } else {
+                                                                                        keyModel.primary.footer ?: keyModel.primary.header
+                                                                                }
+                                                                        }
+                                                                }
+                                                        }
+                                                }
+                                        } finally {
+                                                selectedIndex = 0
+                                                distance = 0F
+                                                pulled = null
+                                                pullDistance = 0F
+                                                holdTickCount = 0
+                                                isLongPressing = false
                                                 isTouching = false
-                                        },
-                                        onTap = {
-                                                if (isSelected) {
-                                                        isSelected = false
-                                                } else {
-                                                        if (virtual != null) {
-                                                                context.handle(virtual)
-                                                        } else {
-                                                                val text: String = keyModel.primary.text.textCased(keyboardCase.textCase)
-                                                                context.process(text)
-                                                        }
-                                                }
                                         }
-                                )
-                        }
-                        .pointerInput(Unit) {
-                                detectDragGesturesAfterLongPress(
-                                        onDragStart = {
-                                                isLongPressing = true
-                                        },
-                                        onDragEnd = {
-                                                keyModel.members.getOrNull(selectedIndex)?.let { element ->
-                                                        val text: String = element.text.textCased(keyboardCase.textCase)
-                                                        context.process(text)
-                                                }
-                                                selectedIndex = 0
-                                                distance = 0F
-                                                isLongPressing = false
-                                        },
-                                        onDragCancel = {
-                                                selectedIndex = 0
-                                                distance = 0F
-                                                isLongPressing = false
-                                        },
-                                        onDrag = { change, dragAmount ->
-                                                change.consume()
-                                                val horizontalAmount: Float = if (side.isLeft) dragAmount.x else dragAmount.x.unaryMinus()
-                                                distance += horizontalAmount
-                                                val baseWidth = baseSize.width * density.density
-                                                if (distance < (baseWidth / 2F)) {
-                                                        if (selectedIndex != 0) {
-                                                                selectedIndex = 0
-                                                        }
-                                                } else {
-                                                        val memberCount = keyModel.members.size
-                                                        val maxPoint = baseWidth * memberCount
-                                                        val endIndex = memberCount - 1
-                                                        val index = memberCount - ((maxPoint - distance) / baseWidth).toInt()
-                                                        val newSelectedIndex = min(endIndex, max(0, index))
-                                                        if (selectedIndex != newSelectedIndex) {
-                                                                selectedIndex = newSelectedIndex
-                                                                isSelected = true
-                                                        }
-                                                }
-                                        },
-                                )
+                                }
                         }
                         .fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -227,7 +268,7 @@ fun EnhancedInputKey(
                                 contentAlignment = Alignment.Center,
                         ) {
                                 Text(
-                                        text = keyModel.primary.text.textCased(displayTextCase),
+                                        text = (pulled ?: keyModel.primary.text).textCased(displayTextCase),
                                         modifier = Modifier.padding(bottom = (baseSize.height * 1.25F).dp),
                                         color = if (isDarkMode) Color.White else Color.Black,
                                         fontSize = if (keyModel.primary.isTextSingular) 32.sp else 22.sp

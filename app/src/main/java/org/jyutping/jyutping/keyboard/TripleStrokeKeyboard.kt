@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,6 +35,7 @@ fun TripleStrokeKeyboard(keyHeight: Dp) {
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
         val useDedicatedNumberPad by context.useDedicatedNumberPad.collectAsState()
+        val inputKeyStyle by context.inputKeyStyle.collectAsState()
         Column(
                 modifier = Modifier
                         .background(
@@ -64,46 +66,50 @@ fun TripleStrokeKeyboard(keyHeight: Dp) {
                                 .fillMaxWidth()
                                 .height(keyHeight)
                 ) {
-                        EdgeEnhancedInputKey(
-                                keyModel = KeyModel(
-                                        primary = KeyElement(text = "aa"),
-                                        members = listOf(
-                                                KeyElement(text = "aa"),
-                                                KeyElement(text = "q")
-                                        )
-                                ),
-                                modifier = Modifier.weight(1f)
-                        )
-                        LetterKey(virtual = VirtualInputKey.letterW, modifier = Modifier.weight(1f))
-                        LetterKey(virtual = VirtualInputKey.letterE, modifier = Modifier.weight(1f))
-                        EnhancedInputKey(
-                                side = KeySide.Left,
-                                keyModel = KeyModel(
-                                        primary = KeyElement(text = "oe", footer = "eo"),
-                                        members = listOf(
-                                                KeyElement(text = "oe"),
-                                                KeyElement(text = "r"),
-                                                KeyElement(text = "eo")
-                                        )
-                                ),
-                                modifier = Modifier.weight(1f)
-                        )
-                        LetterKey(virtual = VirtualInputKey.letterT, modifier = Modifier.weight(1f))
-                        EnhancedInputKey(
-                                side = KeySide.Left,
-                                keyModel = KeyModel(
-                                        primary = KeyElement(text = "yu"),
-                                        members = listOf(
-                                                KeyElement(text = "yu"),
-                                                KeyElement(text = "y")
-                                        )
-                                ),
-                                modifier = Modifier.weight(1f)
-                        )
-                        LetterKey(virtual = VirtualInputKey.letterU, modifier = Modifier.weight(1f))
-                        LetterKey(virtual = VirtualInputKey.letterI, modifier = Modifier.weight(1f))
-                        LetterKey(virtual = VirtualInputKey.letterO, modifier = Modifier.weight(1f))
-                        LetterKey(virtual = VirtualInputKey.letterP, modifier = Modifier.weight(1f), position = Alignment.End)
+                        if (inputKeyStyle.isClear) {
+                                EdgeEnhancedInputKey(
+                                        keyModel = KeyModel(
+                                                primary = KeyElement(text = "aa"),
+                                                members = listOf(
+                                                        KeyElement(text = "aa"),
+                                                        KeyElement(text = "q")
+                                                )
+                                        ),
+                                        modifier = Modifier.weight(1f)
+                                )
+                                LetterKey(virtual = VirtualInputKey.letterW, modifier = Modifier.weight(1f))
+                                LetterKey(virtual = VirtualInputKey.letterE, modifier = Modifier.weight(1f))
+                                EnhancedInputKey(
+                                        side = KeySide.Left,
+                                        keyModel = KeyModel(
+                                                primary = KeyElement(text = "oe", footer = "eo"),
+                                                members = listOf(
+                                                        KeyElement(text = "oe"),
+                                                        KeyElement(text = "r"),
+                                                        KeyElement(text = "eo")
+                                                )
+                                        ),
+                                        modifier = Modifier.weight(1f)
+                                )
+                                LetterKey(virtual = VirtualInputKey.letterT, modifier = Modifier.weight(1f))
+                                EnhancedInputKey(
+                                        side = KeySide.Left,
+                                        keyModel = KeyModel(
+                                                primary = KeyElement(text = "yu"),
+                                                members = listOf(
+                                                        KeyElement(text = "yu"),
+                                                        KeyElement(text = "y")
+                                                )
+                                        ),
+                                        modifier = Modifier.weight(1f)
+                                )
+                                LetterKey(virtual = VirtualInputKey.letterU, modifier = Modifier.weight(1f))
+                                LetterKey(virtual = VirtualInputKey.letterI, modifier = Modifier.weight(1f))
+                                LetterKey(virtual = VirtualInputKey.letterO, modifier = Modifier.weight(1f))
+                                LetterKey(virtual = VirtualInputKey.letterP, modifier = Modifier.weight(1f), position = Alignment.End)
+                        } else {
+                                FirstEnhancedKeyRow()
+                        }
                 }
                 Row(
                         modifier = Modifier
@@ -111,15 +117,19 @@ fun TripleStrokeKeyboard(keyHeight: Dp) {
                                 .height(keyHeight)
                 ) {
                         HiddenKey(hidden = HiddenVirtualKey.LetterA, modifier = Modifier.weight(0.5f))
-                        LetterKey(virtual = VirtualInputKey.letterA, modifier = Modifier.weight(1f))
-                        LetterKey(virtual = VirtualInputKey.letterS, modifier = Modifier.weight(1f))
-                        LetterKey(virtual = VirtualInputKey.letterD, modifier = Modifier.weight(1f))
-                        LetterKey(virtual = VirtualInputKey.letterF, modifier = Modifier.weight(1f))
-                        LetterKey(virtual = VirtualInputKey.letterG, modifier = Modifier.weight(1f))
-                        LetterKey(virtual = VirtualInputKey.letterH, modifier = Modifier.weight(1f))
-                        LetterKey(virtual = VirtualInputKey.letterJ, modifier = Modifier.weight(1f))
-                        LetterKey(virtual = VirtualInputKey.letterK, modifier = Modifier.weight(1f))
-                        LetterKey(virtual = VirtualInputKey.letterL, modifier = Modifier.weight(1f))
+                        if (inputKeyStyle.isNumbersAndSymbols) {
+                                SecondEnhancedKeyRow()
+                        } else {
+                                LetterKey(virtual = VirtualInputKey.letterA, modifier = Modifier.weight(1f))
+                                LetterKey(virtual = VirtualInputKey.letterS, modifier = Modifier.weight(1f))
+                                LetterKey(virtual = VirtualInputKey.letterD, modifier = Modifier.weight(1f))
+                                LetterKey(virtual = VirtualInputKey.letterF, modifier = Modifier.weight(1f))
+                                LetterKey(virtual = VirtualInputKey.letterG, modifier = Modifier.weight(1f))
+                                LetterKey(virtual = VirtualInputKey.letterH, modifier = Modifier.weight(1f))
+                                LetterKey(virtual = VirtualInputKey.letterJ, modifier = Modifier.weight(1f))
+                                LetterKey(virtual = VirtualInputKey.letterK, modifier = Modifier.weight(1f))
+                                LetterKey(virtual = VirtualInputKey.letterL, modifier = Modifier.weight(1f))
+                        }
                         HiddenKey(hidden = HiddenVirtualKey.LetterL, modifier = Modifier.weight(0.5f))
                 }
                 Row(
@@ -129,34 +139,38 @@ fun TripleStrokeKeyboard(keyHeight: Dp) {
                 ) {
                         ShiftKey(modifier = Modifier.weight(1.4f))
                         HiddenKey(hidden = HiddenVirtualKey.LetterZ, modifier = Modifier.weight(0.1f))
-                        LetterKey(virtual = VirtualInputKey.letterZ, modifier = Modifier.weight(1f))
-                        EnhancedInputKey(
-                                side = KeySide.Left,
-                                keyModel = KeyModel(
-                                        primary = KeyElement(text = "gw", footer = "kw"),
-                                        members = listOf(
-                                                KeyElement(text = "gw"),
-                                                KeyElement(text = "x"),
-                                                KeyElement(text = "kw")
-                                        )
-                                ),
-                                modifier = Modifier.weight(1f)
-                        )
-                        LetterKey(virtual = VirtualInputKey.letterC, modifier = Modifier.weight(1f))
-                        EnhancedInputKey(
-                                side = KeySide.Left,
-                                keyModel = KeyModel(
-                                        primary = KeyElement(text = "ng"),
-                                        members = listOf(
-                                                KeyElement(text = "ng"),
-                                                KeyElement(text = "v")
-                                        )
-                                ),
-                                modifier = Modifier.weight(1f)
-                        )
-                        LetterKey(virtual = VirtualInputKey.letterB, modifier = Modifier.weight(1f))
-                        LetterKey(virtual = VirtualInputKey.letterN, modifier = Modifier.weight(1f))
-                        LetterKey(virtual = VirtualInputKey.letterM, modifier = Modifier.weight(1f))
+                        if (inputKeyStyle.isNumbersAndSymbols) {
+                                ThirdEnhancedKeyRow()
+                        } else {
+                                LetterKey(virtual = VirtualInputKey.letterZ, modifier = Modifier.weight(1f))
+                                EnhancedInputKey(
+                                        side = KeySide.Left,
+                                        keyModel = KeyModel(
+                                                primary = KeyElement(text = "gw", footer = "kw"),
+                                                members = listOf(
+                                                        KeyElement(text = "gw"),
+                                                        KeyElement(text = "x"),
+                                                        KeyElement(text = "kw")
+                                                )
+                                        ),
+                                        modifier = Modifier.weight(1f)
+                                )
+                                LetterKey(virtual = VirtualInputKey.letterC, modifier = Modifier.weight(1f))
+                                EnhancedInputKey(
+                                        side = KeySide.Left,
+                                        keyModel = KeyModel(
+                                                primary = KeyElement(text = "ng"),
+                                                members = listOf(
+                                                        KeyElement(text = "ng"),
+                                                        KeyElement(text = "v")
+                                                )
+                                        ),
+                                        modifier = Modifier.weight(1f)
+                                )
+                                LetterKey(virtual = VirtualInputKey.letterB, modifier = Modifier.weight(1f))
+                                LetterKey(virtual = VirtualInputKey.letterN, modifier = Modifier.weight(1f))
+                                LetterKey(virtual = VirtualInputKey.letterM, modifier = Modifier.weight(1f))
+                        }
                         HiddenKey(hidden = HiddenVirtualKey.Backspace, modifier = Modifier.weight(0.1f))
                         BackspaceKey(modifier = Modifier.weight(1.4f))
                 }
@@ -165,4 +179,343 @@ fun TripleStrokeKeyboard(keyHeight: Dp) {
                         height = keyHeight
                 )
         }
+}
+
+@Composable
+private fun RowScope.FirstEnhancedKeyRow() {
+        EdgeEnhancedInputKey(
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "aa", header = "1"),
+                        members = listOf(
+                                KeyElement(text = "aa"),
+                                KeyElement(text = "1"),
+                                KeyElement(text = "q")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Left,
+                virtual = VirtualInputKey.letterW,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "w", header = "2"),
+                        members = listOf(
+                                KeyElement(text = "w"),
+                                KeyElement(text = "2")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Left,
+                virtual = VirtualInputKey.letterE,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "e", header = "3"),
+                        members = listOf(
+                                KeyElement(text = "e"),
+                                KeyElement(text = "3")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Left,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "oe", header = "4", footer = "eo"),
+                        members = listOf(
+                                KeyElement(text = "oe"),
+                                KeyElement(text = "4"),
+                                KeyElement(text = "r"),
+                                KeyElement(text = "eo")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Left,
+                virtual = VirtualInputKey.letterT,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "t", header = "5"),
+                        members = listOf(
+                                KeyElement(text = "t"),
+                                KeyElement(text = "5")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Left,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "yu", header = "6"),
+                        members = listOf(
+                                KeyElement(text = "yu"),
+                                KeyElement(text = "6"),
+                                KeyElement(text = "y")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Right,
+                virtual = VirtualInputKey.letterU,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "u", header = "7"),
+                        members = listOf(
+                                KeyElement(text = "u"),
+                                KeyElement(text = "7")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Right,
+                virtual = VirtualInputKey.letterI,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "i", header = "8"),
+                        members = listOf(
+                                KeyElement(text = "i"),
+                                KeyElement(text = "8")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Right,
+                virtual = VirtualInputKey.letterO,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "o", header = "9"),
+                        members = listOf(
+                                KeyElement(text = "o"),
+                                KeyElement(text = "9")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EdgeEnhancedInputKey(
+                side = KeySide.Right,
+                virtual = VirtualInputKey.letterP,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "p", header = "0"),
+                        members = listOf(
+                                KeyElement(text = "p"),
+                                KeyElement(text = "0")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+}
+
+@Composable
+private fun RowScope.SecondEnhancedKeyRow() {
+        EnhancedInputKey(
+                side = KeySide.Left,
+                virtual = VirtualInputKey.letterA,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "a", header = "@"),
+                        members = listOf(
+                                KeyElement(text = "a"),
+                                KeyElement(text = "@")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Left,
+                virtual = VirtualInputKey.letterS,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "s", header = "#"),
+                        members = listOf(
+                                KeyElement(text = "s"),
+                                KeyElement(text = "#")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Left,
+                virtual = VirtualInputKey.letterD,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "d", header = "$"),
+                        members = listOf(
+                                KeyElement(text = "d"),
+                                KeyElement(text = "$"),
+                                KeyElement(text = "¥")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Left,
+                virtual = VirtualInputKey.letterF,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "f", header = "/"),
+                        members = listOf(
+                                KeyElement(text = "f"),
+                                KeyElement(text = "/"),
+                                KeyElement(text = "／", header = PresetConstant.fullWidth),
+                                KeyElement(text = "\\"),
+                                KeyElement(text = "＼", header = PresetConstant.fullWidth)
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Left,
+                virtual = VirtualInputKey.letterG,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "g", header = "（"),
+                        members = listOf(
+                                KeyElement(text = "g"),
+                                KeyElement(text = "（"),
+                                KeyElement(text = "gw")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Right,
+                virtual = VirtualInputKey.letterH,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "h", header = "）"),
+                        members = listOf(
+                                KeyElement(text = "h"),
+                                KeyElement(text = "）")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Right,
+                virtual = VirtualInputKey.letterJ,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "j", header = "「"),
+                        members = listOf(
+                                KeyElement(text = "j"),
+                                KeyElement(text = "「")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Right,
+                virtual = VirtualInputKey.letterK,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "k", header = "」"),
+                        members = listOf(
+                                KeyElement(text = "k"),
+                                KeyElement(text = "」"),
+                                KeyElement(text = "kw")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Right,
+                virtual = VirtualInputKey.letterL,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "l", header = "'"),
+                        members = listOf(
+                                KeyElement(text = "l"),
+                                KeyElement(text = "'", footer = "0027"),
+                                KeyElement(text = "’", header = "右", footer = "2019"),
+                                KeyElement(text = "‘", header = "左", footer = "2018"),
+                                KeyElement(text = "\"", footer = "0022"),
+                                KeyElement(text = "”", header = "右", footer = "201D"),
+                                KeyElement(text = "“", header = "左", footer = "201C")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+}
+
+@Composable
+private fun RowScope.ThirdEnhancedKeyRow() {
+        EnhancedInputKey(
+                side = KeySide.Left,
+                virtual = VirtualInputKey.letterZ,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "z", header = "%"),
+                        members = listOf(
+                                KeyElement(text = "z"),
+                                KeyElement(text = "%"),
+                                KeyElement(text = "％", header = PresetConstant.fullWidth),
+                                KeyElement(text = "‰")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Left,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "gw", header = "-", footer = "kw"),
+                        members = listOf(
+                                KeyElement(text = "gw"),
+                                KeyElement(text = "-"),
+                                KeyElement(text = "x"),
+                                KeyElement(text = "kw")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Left,
+                virtual = VirtualInputKey.letterC,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "c", header = "～"),
+                        members = listOf(
+                                KeyElement(text = "c"),
+                                KeyElement(text = "～"),
+                                KeyElement(text = "~", header = PresetConstant.halfWidth)
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Left,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "ng", header = "…"),
+                        members = listOf(
+                                KeyElement(text = "ng"),
+                                KeyElement(text = "…"),
+                                KeyElement(text = "v")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Left,
+                virtual = VirtualInputKey.letterB,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "b", header = "、"),
+                        members = listOf(
+                                KeyElement(text = "b"),
+                                KeyElement(text = "、")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Right,
+                virtual = VirtualInputKey.letterN,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "n", header = "；"),
+                        members = listOf(
+                                KeyElement(text = "n"),
+                                KeyElement(text = "；")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
+        EnhancedInputKey(
+                side = KeySide.Right,
+                virtual = VirtualInputKey.letterM,
+                keyModel = KeyModel(
+                        primary = KeyElement(text = "m", header = "："),
+                        members = listOf(
+                                KeyElement(text = "m"),
+                                KeyElement(text = "：")
+                        )
+                ),
+                modifier = Modifier.weight(1f)
+        )
 }

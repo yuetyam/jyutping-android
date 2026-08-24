@@ -49,6 +49,7 @@ import org.jyutping.jyutping.keyboard.Cangjie
 import org.jyutping.jyutping.keyboard.CangjieVariant
 import org.jyutping.jyutping.keyboard.CommentStyle
 import org.jyutping.jyutping.keyboard.ExtraBottomPadding
+import org.jyutping.jyutping.keyboard.InputKeyStyle
 import org.jyutping.jyutping.keyboard.ReturnKeyForm
 import org.jyutping.jyutping.keyboard.SpaceKeyForm
 import org.jyutping.jyutping.memory.InputMemoryHelper
@@ -604,6 +605,17 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         putInt(UserSettingsKey.KeyHeightOffset, offset)
                 }
         }
+        val inputKeyStyle: MutableStateFlow<InputKeyStyle> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.InputKeyStyle, InputKeyStyle.Clear.identifier)
+                val style: InputKeyStyle = InputKeyStyle.styleOf(savedValue)
+                MutableStateFlow(style)
+        }
+        fun updateInputKeyStyle(style: InputKeyStyle) {
+                inputKeyStyle.value = style
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.InputKeyStyle, style.identifier)
+                }
+        }
         val extraBottomPadding: MutableStateFlow<ExtraBottomPadding> by lazy {
                 val savedIdentifier: Int = sharedPreferences.getInt(UserSettingsKey.ExtraBottomPadding, ExtraBottomPadding.None.identifier)
                 val paddingLevel = ExtraBottomPadding.paddingLevelOf(savedIdentifier)
@@ -959,6 +971,20 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 val shouldAppendEvents: Boolean = inputMethodMode.value.isCantonese && keyboardForm.value.isBufferable
                 if (shouldAppendEvents.negative) {
                         currentInputConnection.commitText(text, 1)
+                        adjustKeyboardCase()
+                        return
+                }
+                val firstCharacter: Char? = text.firstOrNull()
+                val shouldAppendText: Boolean = (firstCharacter?.isBasicLatinLetter == true) ||
+                        (isBuffering.value && firstCharacter?.isCantoneseToneDigit == true)
+                if (shouldAppendText.negative) {
+                        if (isBuffering.value) {
+                                val bufferedText: String = joinedBufferTexts() + text
+                                currentInputConnection.commitText(bufferedText, 1)
+                                clearBuffer()
+                        } else {
+                                currentInputConnection.commitText(text, 1)
+                        }
                         adjustKeyboardCase()
                         return
                 }

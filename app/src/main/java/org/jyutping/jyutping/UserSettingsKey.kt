@@ -23,6 +23,7 @@ object UserSettingsKey {
         const val LeftKey: String = "left_key"
         const val RightKey: String = "right_key"
         const val KeyHeightOffset: String = "key_height_offset"
+        const val InputKeyStyle: String = "input_key_style"
         const val ExtraBottomPadding: String = "bottom_padding"
         const val CommentStyle: String = "comment_style"
         const val CangjieVariant: String = "cangjie_variant"

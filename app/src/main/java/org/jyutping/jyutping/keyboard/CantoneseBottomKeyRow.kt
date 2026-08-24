@@ -19,6 +19,7 @@ import org.jyutping.jyutping.models.KeyboardForm
 fun CantoneseBottomKeyRow(transform: KeyboardForm, height: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService
         val isBuffering by context.isBuffering.collectAsState()
+        val inputKeyStyle by context.inputKeyStyle.collectAsState()
         val needsInputModeSwitchKey by context.needsInputModeSwitchKey.collectAsState()
         val needsLeftKey by context.needsLeftKey.collectAsState()
         val needsRightKey by context.needsRightKey.collectAsState()
@@ -50,7 +51,7 @@ fun CantoneseBottomKeyRow(transform: KeyboardForm, height: Dp) {
                                 EnhancedBottomInputKey(
                                         side = KeySide.Left,
                                         keyModel = KeyModel(
-                                                primary = KeyElement("，"),
+                                                primary = KeyElement("，", header = if (inputKeyStyle.isNumbersAndSymbols) "！" else null),
                                                 members = listOf(
                                                         KeyElement("，"),
                                                         KeyElement("！"),
@@ -73,7 +74,7 @@ fun CantoneseBottomKeyRow(transform: KeyboardForm, height: Dp) {
                                 EnhancedBottomInputKey(
                                         side = KeySide.Right,
                                         keyModel = KeyModel(
-                                                primary = KeyElement("。"),
+                                                primary = KeyElement("。", header = if (inputKeyStyle.isNumbersAndSymbols) "？" else null),
                                                 members = listOf(
                                                         KeyElement("。"),
                                                         KeyElement("？"),
