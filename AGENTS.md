@@ -1,216 +1,226 @@
 # AGENTS.md
 
-This file provides guidance to AI Agents (Codex, Copilot, Claude Code, etc.) when working with code in this repository.
+This file describes the current repository structure and the checks expected when changing it.
 
-## Project Overview
+## Project overview
 
-**Jyutping** is a Cantonese Input Method Editor (IME) for Android using the Hong Kong Linguistic Society's Jyutping romanization scheme. 
+Jyutping is a Cantonese input method for Android. The repository contains two user-facing Compose surfaces:
 
-The project uses **Jetpack Compose** for UI and **Kotlin** for implementation. It includes a build-time data preparation module that generates the SQLite database used by the IME.
+- `MainActivity` is the launcher and reference app. It provides setup links, dictionary search, Jyutping and Cantonese reference screens, text-to-speech, display-language settings, and project information.
+- `JyutpingInputMethodService` is the input method. It owns keyboard state, input events, candidate generation and selection, user settings, physical-keyboard handling, and learned input memory.
 
-## Building and Development
+The root Gradle build contains the `:app` Android application. `preparing/` is a separate Gradle build that generates the SQLite asset consumed by both surfaces.
 
-### Build Environments and Tools
-- Android Studio 2025.3.4+
-- Android Gradle plugin 9.2.0+
+## Toolchain
+
+The checked-in build currently uses:
+
+- Android Studio 2026.1.3 or newer
 - JDK 21
-- Min SDK: 29 (Android 10)
-- Target SDK: 37 (Android 17)
-- Compile SDK: 37
+- Gradle 9.7.1
+- Android Gradle plugin 9.3.2
+- Kotlin 2.4.10
+- compile SDK 37
+- target SDK 37
+- minimum SDK 33 (Android 13)
 
+Both Gradle builds require a locally installed JDK 21; automatic toolchain download is disabled.
 
-### One-Time Setup: Prepare Databases
+## Build and validation commands
 
-Before opening in Android Studio, prepare the input method databases:
-
-```bash
-cd ./preparing/
-./gradlew run
-```
-
-This generates `appdb.sqlite3` which is copied to `app/src/main/assets/`. The database contains:
-- 20+ tables with input lexicon, character data, and linguistic information
-- Indexes for fast lookups during input
-- Symbol, mark, emoji, and variant character tables
-
-The preparing module is a standalone Gradle application that:
-1. Loads .txt resource files (jyutping.txt, collocation.txt, etc.)
-2. Creates normalized SQLite tables with proper indexes
-3. Outputs the database to app assets
-
-**Note**: Changes to resource files or database schema require re-running this step.
-
-### Building the App
+Run app commands from the repository root:
 
 ```bash
-# Debug build
 ./gradlew :app:assembleDebug
-
-# Release build
 ./gradlew :app:assembleRelease
+./gradlew build --warning-mode all
 ```
 
-### Running Tests
+The CI workflow in `.github/workflows/ci.yaml` regenerates the database on Linux x64, Linux ARM64, and Windows ARM64, then builds the app on Linux.
 
-Tests are currently disabled (`tasks.withType<Test>().configureEach { enabled = false }`). To enable:
-1. Remove the disable block in `app/build.gradle.kts`
-2. Run: `./gradlew :app:testDebugUnitTest`
-3. Run instrumented tests: `./gradlew :app:connectedAndroidTest`
+### Tests
 
-## Architecture Overview
+Local JVM tests for `:app` are deliberately disabled by this block in `app/build.gradle.kts`:
 
-### Layered Design
-
-```
-Presentation (Compose UI)
-  ↓ JyutpingInputMethodService (state holder + event handler)
-  ↓ Business Logic (Segmenter, Researcher, Converter)
-  ↓ Data Access (DatabaseHelper, InputMemoryHelper)
-  ↓ SQLite Database
+```kotlin
+tasks.withType<Test>().configureEach {
+        enabled = false
+}
 ```
 
-### Key Modules
+The checked-in app test sources are only template smoke tests. Do not report `:app:testDebugUnitTest` as meaningful coverage while the disable block remains. Instrumented tests require a connected emulator or device:
 
-#### **app/** - Main IME Application (20000+ LOC, 170+ Kotlin files)
-
-**JyutpingInputMethodService.kt** - Core IME service
-- Manages 60+ MutableStateFlow properties (input mode, candidates, buffer, settings)
-- Handles soft keyboard input (VirtualInputKey enums) and physical keyboard events
-- Processes input into candidates via Segmenter, Researcher, and Converter
-- Records user memory in InputMemoryHelper for learning
-
-**Package structure:**
-- `keyboard/` - 30+ Compose components for different keyboard layouts and candidate display
-- `models/` - Input/output data models, linguistic structures, and processing logic
-- `utilities/` - Database access, shape mapping (stroke/cangjie), character conversion
-- `editingpanel/` - Keyboard text editing buttons (copy/paste/cursor movement)
-- `search/` - Part of the main app, linguistic lookup (definitions, collocations, homophones)
-- `app/` - Main part of the main app, settings and educational screens (Cantonese, romanization guides)
-- `ui/` - Compose theme and reusable components
-- `ninekey/` - Nine-key (T9-style) keyboard layout
-- `numeric/` - Numeric keyboard layout
-- `stroke/` - Stroke input keyboard layout
-- `shapes/` - Custom Compose bubble shapes for key rendering
-- `emoji/` - Emoji keyboard
-- `feedback/` - Audio and haptic feedback
-- `extensions/` - Kotlin extension functions (Boolean, Char, String)
-- `linguistics/` - IPA conversion and Old Cantonese data
-- `presets/` - Preset constants, characters, colors, and strings
-- `speech/` - Text-to-speech (TTS) support
-
-#### **preparing/** - Build-Time Data Preparation (~1,600 LOC, 17 files)
-
-Generates `appdb.sqlite3` by:
-- **AppDataPreparer** - Creates linguistic reference tables (definitions, collocations, dictionaries)
-- **KeyboardDataPreparer** - Creates input method tables (core lexicon, stroke/cangjie/pinyin data, variants)
-- Database includes 25 tables and 56 indexes for performance
-
-## Critical Data Flows
-
-### Soft Keyboard Input Pipeline
-```
-User taps key → VirtualInputKey → bufferEvents (observable)
-  → Determine input mode (Cantonese/Pinyin/Stroke/etc.)
-  → Segmenter.segment() → Researcher.suggest()
-  → Converter.dispatch() (merging + sorting)
-  → candidates StateFlow → CandidateBoard renders
+```bash
+./gradlew :app:connectedDebugAndroidTest
 ```
 
-### Physical Keyboard Input
-- Hardware key events → `onKeyDown()/onKeyUp()` → `handlePhysicalKeyEvent()`
-- Key codes are mapped to VirtualInputKeys within the service
-- Can trigger full CandidateBoard or inline PhysicalKeyboardCandidateBar
-- Numbers 1-9 and 0 select candidates 1-10 respectively; Tab cycles through groups of 10
+The preparing build has its own test task, although it currently has no substantive test cases:
 
-### Candidate Selection & User Memory
-- User selects candidate → `selectCandidate()`
-- Commits text via InputConnection
-- Records in InputMemoryHelper (separate database) for future ranking
-- Clears buffer if input is complete
+```bash
+cd preparing
+./gradlew test
+```
 
-## Database Schema
+For IME behavior, an app build is only a compile/package check. Candidate selection, composing text, keyboard switching, physical-keyboard input, and input-memory behavior must be verified with the installed IME in a real client or emulator when the change affects those paths.
 
-**Main Database: appdb.sqlite3**
+## Database generation
 
-Core input tables:
-- `core_lexicon` - Main word database
-- `structure_table` - Character composition (stroke/shape codes)
-- `syllable_table`, `pinyin_syllable_table` - Syllable mappings
-- `pinyin_lexicon` - Pinyin input lexicon
-- `stroke_table`, `cangjie_table`, `quick_table` - Shape input methods
+Before the first app build, and after changing generator code or files in `preparing/src/main/resources/`, regenerate the bundled database:
 
-Linguistic reference tables:
-- `jyutping_table` - Jyutping romanization lookups
-- `collocation_table` - Word collocations
-- `dictionary_table` - Character/word definitions
-- `definition_table` - Unicode character definitions
-- `yingwaa_table`, `chohok_table`, `fanwan_table`, `gwongwan_table` - Specialized dictionaries
+```bash
+cd preparing
+./gradlew run --warning-mode all
+```
 
-Display/variant tables:
-- `symbol_table`, `mark_table` - Symbols and tone marks
-- `variant_sim`, `variant_hk`, `variant_tw`, `variant_prc`, `variant_abp`, `variant_old` - Character variants
-- `emoji_skin_map` - Emoji modifiers
+`preparing/` is a standalone Kotlin/JVM application using SQLite JDBC. `Main.kt` deletes and recreates exactly one output:
 
-All tables are indexed on frequently queried columns (spell, anchors, code) for fast lookup.
+```text
+app/src/main/assets/appdb.sqlite3
+```
 
-## Important Implementation Patterns
+`KeyboardDataPreparer` builds the IME tables and indexes. `AppDataPreparer` adds dictionary and linguistic-reference data. The current generated database contains 25 application tables and 35 explicit indexes.
 
-### State Management
-- JyutpingInputMethodService uses MutableStateFlow for all UI state
-- Compose components use `collectAsState()` to subscribe to state changes
-- No separate ViewModel; service acts as state holder
+When changing database data or schema:
 
-### Input Processing
-- VirtualInputKey enum covers all possible input keys
-- BasicInputEvent wraps key with keyboard case info
-- Segmenter breaks input into syllables
-- Researcher queries database for matching words
-- Converter ranks results by frequency, user memory, and context
+1. Change the authoritative source in `preparing/src/main/kotlin/` or `preparing/src/main/resources/`.
+2. Regenerate `app/src/main/assets/appdb.sqlite3`; do not hand-edit the database asset.
+3. Update all Android queries that consume renamed or reshaped tables.
+4. Run the preparing test task and generation command.
+5. Check the generated database with `PRAGMA integrity_check`, inspect its schema, and verify affected row content rather than relying only on row counts.
+6. Rebuild the app.
 
-### Character Conversion
-- Simplifier converts Traditional → Simplified
-- HongKongVariant, TaiwanVariant handle regional variants
-- CharacterStandard StateFlow determines display mode (applied in Converter)
+At runtime, `utilities/DatabasePreparer.kt` copies the asset to a version-code-specific file in the app database directory. `Elephant` opens that copy through `InheritedDatabaseHelper` and treats it as query-only. Old `appdb-v*` runtime copies are removed after a new version is installed.
 
-### Database Queries
-- DatabaseHelper provides typed query methods
-- All queries use parameterized statements (SQL injection safe)
-- Results wrapped in domain models (Candidate, Pronunciation, etc.)
-- InputMemoryHelper maintains separate user-learned data
+## Current database schema
 
-## Common Development Tasks
+IME and lookup tables:
 
-### Adding a New Keyboard Layout
-1. Create new `@Composable` function in `keyboard/` package
-2. Extend layout data (rows, key configuration) from existing layouts
-3. Register in JyutpingInputMethodService's keyboard mode handling
-4. Test input flow via physical and soft keyboard
+- `lexicon_core`
+- `structure_table`
+- `pinyin_lexicon`
+- `cangjie_table`
+- `quick_table`
+- `stroke_table`
+- `symbol_table`
+- `emoji_skin_map`
+- `plain_text_table`
+- `syllable_core_table`
+- `syllable_9key_table`
+- `syllable_pinyin_table`
 
-### Modifying Character Conversion
-- TaiwanVariant, HongKongVariant handle regional variants
-- Simplifier handles Traditional-Simplified conversion
-- Changes applied in Converter.dispatch() before ranking
-- Resource files in `preparing/src/main/resources/` drive variant generation
+Character-variant tables:
 
-### Debugging IME Input
-- JyutpingInputMethodService.bufferEvents observable receives all input
-- CandidateBoard displays top candidates in real-time
-- InputMemoryHelper can be inspected for learned words
-- Physical keyboard candidate bar shows current state
+- `variant_sim`
+- `variant_hk`
+- `variant_tw`
+- `variant_prc`
+- `variant_abp`
+- `variant_old`
 
-## File Organization Notes
+Launcher-app reference tables:
 
-- Source code: `app/src/main/java/org/jyutping/jyutping/`
-- Resources: `app/src/main/res/`, `preparing/src/main/resources/`
-- Database asset: `app/src/main/assets/appdb.sqlite3`
-- Confusion data: `app/src/main/assets/confusion.json`
-- F-Droid metadata: `metadata/` - Follows the [Fastlane/Triple-T](https://f-droid.org/docs/All_About_Descriptions_Graphics_and_Screenshots/) structure for F-Droid store listings. Contains localized directories (`en-US`, `zh-CN`, `zh-HK`, `zh-TW`) each with `title.txt`, `short_description.txt`, `full_description.txt`, `changelogs/` (per-versionCode), and `images/` (icon, feature graphic, screenshots in `en-US`).
-- Build outputs: `app/build/outputs/`
+- `collocation_table`
+- `dictionary_table`
+- `definition_table`
+- `yingwaa_table`
+- `chohok_table`
+- `fanwan_table`
+- `gwongwan_table`
 
-## Known Constraints
+The learned user lexicon is not part of `appdb.sqlite3`. `memory/InputMemoryHelper.kt` owns a separate writable SQLite database, including migration from legacy memory tables. Keep bundled-data migrations and user-memory migrations conceptually separate.
 
-- Tests disabled in build.gradle.kts (IME services difficult to unit test)
-- JyutpingInputMethodService is large; state logic concentrated here
-- Physical keyboard support only on devices with hardware keyboards
-- Database is pre-built; schema changes require preparing module rebuild
-- Character variant tables add database size but enable fast conversion
+## Architecture
+
+### Launcher app
+
+- `MainActivity.kt` initializes the bundled database on an IO dispatcher and hosts the Compose app.
+- `AppContent.kt`, `Screen.kt`, and `AppBottomBar.kt` define navigation.
+- `app/home/` contains setup, dictionary search, introductions, language settings, and TTS screens.
+- `app/romanization/` and `app/cantonese/` contain reference material.
+- `app/about/` and `app/common/` contain the about screen and reusable launcher components.
+- `utilities/SearchHelper.kt` queries dictionary and historical-reference tables.
+- `speech/` wraps Android text-to-speech.
+
+### Input method
+
+- `LifecycleInputMethodService.kt` supplies lifecycle ownership to the IME service.
+- `JyutpingInputMethodService.kt` is the central state holder and event handler. There is no separate IME `ViewModel`.
+- `ComposeKeyboardView.kt` observes service flows and selects the current keyboard form. It renders soft-keyboard layouts, candidate views, settings, emoji, editing controls, and the compact physical-keyboard candidate bar.
+- `keyboard/` contains the main QWERTY, Triple Stroke, Cangjie, numeric/symbolic, candidate, toolbar, settings, and shared key composables.
+- `ninekey/`, `stroke/`, `numeric/`, `editingpanel/`, and `emoji/` contain their specialized layouts and controls.
+- `models/` contains input events, segmentation, database research, candidates, ranking/conversion, Pinyin and nine-key variants, and character conversion.
+- `memory/` contains the learned lexicon and its SQLite helper.
+- `feedback/`, `linguistics/`, `extensions/`, `presets/`, and `shapes/` contain supporting behavior and shared types.
+
+### Candidate pipeline
+
+For the normal Cantonese path:
+
+```text
+key composable or hardware event
+  -> JyutpingInputMethodService.process()/nineKeyProcess()
+  -> buffered BasicInputEvent or Combo sequence
+  -> Segmenter/NineKeySegmenter
+  -> Researcher/NineKeyResearcher plus optional memory, plain-text, and symbol lookups
+  -> Converter.dispatch()
+  -> candidates StateFlow
+  -> CandidateView/CandidateBoard/PhysicalKeyboardCandidateBar
+  -> selectCandidate()
+  -> InputConnection commit and optional InputMemoryHelper update
+```
+
+The service cancels the previous suggestion coroutine whenever the buffer changes. Preserve cancellation checks in potentially expensive query paths.
+
+Special leading keys dispatch reverse lookup from the regular buffer:
+
+- `r`: Mandarin Pinyin via `PinyinSegmenter` and `PinyinResearcher`
+- `v`: Cangjie or Quick via `CangjieConverter` and `keyboard/Cangjie.kt`
+- `x`: stroke lookup via `stroke/Stroke.kt`
+- `q`: component/structure lookup via `models/Structure.kt`
+
+`Converter` merges and orders sources, applies the selected `CharacterStandard`, and emits `Candidate` values. Traditional variants use the generated variant tables; PRC tailoring and simplified conversion additionally use `TailoredConverter` and `Simplifier`.
+
+## Important change surfaces
+
+### Keyboard UI or layout
+
+Start from `ComposeKeyboardView.kt`, `models/KeyboardForm.kt`, `models/KeyboardLayout.kt`, and the relevant package. A new persistent option normally also requires a key in `UserSettingsKey.kt`, service state/update logic, settings UI, and localized resources.
+
+Check phone and tablet, portrait and landscape, soft and physical keyboard branches where relevant. Keyboard UI is hosted by an `InputMethodService`, so do not assume behavior from a normal activity preview alone.
+
+### Candidate or input behavior
+
+Trace both the QWERTY path and the nine-key path. They use related but separate segmenters and researchers. Check composing text, cancellation, candidate ordering, selection offsets, partial candidate consumption, character conversion, and learned-memory updates.
+
+### Launcher search and reference data
+
+Launcher search is in `app/home/HomeScreen.kt` and `utilities/SearchHelper.kt`. Its tables are generated by `AppDataPreparer`; a data-format change can therefore require coordinated resource, generator, query, and UI changes.
+
+### Localization and store metadata
+
+- Android strings are in `app/src/main/res/values*/strings.xml`, using BCP-47 resource directories for English, Cantonese, and Chinese variants.
+- `app/src/main/res/resources.properties` declares `en-US` as the unqualified resource locale.
+- F-Droid/Fastlane metadata is in `metadata/{en-US,zh-CN,zh-HK,zh-TW}/`.
+- Release changelog filenames under `metadata/*/changelogs/` use the Android `versionCode` from `app/build.gradle.kts`.
+
+Keep string keys aligned across affected locales and preserve intentional regional wording. Do not treat store metadata as Android runtime resources.
+
+## Code style and repository hygiene
+
+- Read `.editorconfig` before editing. Kotlin and Kotlin script files use 8-space indentation; XML uses 4 spaces. Files use UTF-8, LF endings, final newlines, and trimmed trailing whitespace.
+- Prefer the existing Compose, `StateFlow`, coroutine, and SQLite patterns in the nearest sibling code.
+- Keep SQL parameterized when values come from text or external input. When numeric codes are interpolated, preserve the established encoded-integer invariants.
+- Treat `app/src/main/assets/appdb.sqlite3` as generated output and `preparing/src/main/resources/` as source data.
+- Keep changes scoped. Do not rewrite generated data, translations, metadata, or unrelated formatting unless the task requires it.
+
+## Key paths
+
+- Android source: `app/src/main/java/org/jyutping/jyutping/`
+- Android resources: `app/src/main/res/`
+- Bundled assets: `app/src/main/assets/`
+- Unit-test placeholders: `app/src/test/`
+- Instrumented-test placeholders: `app/src/androidTest/`
+- Generator source: `preparing/src/main/kotlin/`
+- Generator resources: `preparing/src/main/resources/`
+- Store metadata: `metadata/`
+- CI workflow: `.github/workflows/ci.yaml`

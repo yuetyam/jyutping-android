@@ -28,7 +28,10 @@ Android 粵語拼音輸入法。
 支持簡、繁體漢字及各種字形標準。  
 可以用倉頡、速成、筆畫、普通話拼音、拆字等反查粵語拼音。
 
-另有 iOS、iPadOS 及 macOS 版: [yuetyam/jyutping](https://github.com/yuetyam/jyutping)
+另有其他系統版本:
+- [iOS and macOS](https://github.com/yuetyam/jyutping)
+- [Windows](https://github.com/yuetyam/jyutping-windows)
+- [HarmonyOS](https://github.com/yuetyam/jyutping-harmony)
 
 ## 擷屏（Screenshots）
 <img src="images/screenshot.png" alt="App Screenshot" width="300"/>
@@ -56,7 +59,7 @@ Android 粵語拼音輸入法。
 
 ## 如何構建（How to build）
 前置要求（Build requirements）：
-- Android Studio 2025.3.4+
+- Android Studio 2026.1.3+
 
 倉庫體積比較大，建議加 `--depth` 來 clone：
 ~~~bash

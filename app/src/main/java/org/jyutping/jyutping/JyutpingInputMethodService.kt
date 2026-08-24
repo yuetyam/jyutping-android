@@ -975,8 +975,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         return
                 }
                 val firstCharacter: Char? = text.firstOrNull()
-                val shouldAppendText: Boolean = (firstCharacter?.isBasicLatinLetter == true) ||
-                        (isBuffering.value && firstCharacter?.isCantoneseToneDigit == true)
+                val shouldAppendText: Boolean = (firstCharacter?.isBasicLatinLetter == true) || (isBuffering.value && firstCharacter?.isCantoneseToneDigit == true)
                 if (shouldAppendText.negative) {
                         if (isBuffering.value) {
                                 val bufferedText: String = joinedBufferTexts() + text

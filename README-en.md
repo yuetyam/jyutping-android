@@ -34,7 +34,10 @@ Feature highlights:
 - Easy ways to Copy, Cut, Paste and moving cursor backward/forward.
 - Audio and Haptic feedbacks.
 
-Jyutping for iOS & macOS: [yuetyam/jyutping](https://github.com/yuetyam/jyutping)
+See also:
+- [iOS and macOS](https://github.com/yuetyam/jyutping)
+- [Windows](https://github.com/yuetyam/jyutping-windows)
+- [HarmonyOS](https://github.com/yuetyam/jyutping-harmony)
 
 ## Screenshots
 <img src="images/screenshot.png" alt="App Screenshot" width="300"/>
@@ -62,7 +65,7 @@ Also available on our website: https://jyutping.app/android
 
 ## How to build
 Build requirements:
-- Android Studio 2025.3.4+
+- Android Studio 2026.1.3+
 
 Clone with `--depth` to reduce code size:
 ~~~bash
