@@ -26,6 +26,7 @@ import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
+import org.jyutping.jyutping.presets.PresetString
 
 @Composable
 fun TripleStrokeKeyboard(keyHeight: Dp) {
@@ -352,9 +353,9 @@ private fun RowScope.SecondEnhancedKeyRow() {
                         members = listOf(
                                 KeyElement(text = "f"),
                                 KeyElement(text = "/"),
-                                KeyElement(text = "／", header = PresetConstant.fullWidth),
+                                KeyElement(text = "／", header = PresetString.FULL_WIDTH),
                                 KeyElement(text = "\\"),
-                                KeyElement(text = "＼", header = PresetConstant.fullWidth)
+                                KeyElement(text = "＼", header = PresetString.FULL_WIDTH)
                         )
                 ),
                 modifier = Modifier.weight(1f)
@@ -438,7 +439,7 @@ private fun RowScope.ThirdEnhancedKeyRow() {
                         members = listOf(
                                 KeyElement(text = "z"),
                                 KeyElement(text = "%"),
-                                KeyElement(text = "％", header = PresetConstant.fullWidth),
+                                KeyElement(text = "％", header = PresetString.FULL_WIDTH),
                                 KeyElement(text = "‰")
                         )
                 ),
@@ -465,7 +466,7 @@ private fun RowScope.ThirdEnhancedKeyRow() {
                         members = listOf(
                                 KeyElement(text = "c"),
                                 KeyElement(text = "～"),
-                                KeyElement(text = "~", header = PresetConstant.halfWidth)
+                                KeyElement(text = "~", header = PresetString.HALF_WIDTH)
                         )
                 ),
                 modifier = Modifier.weight(1f)

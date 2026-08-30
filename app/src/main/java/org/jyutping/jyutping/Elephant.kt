@@ -8,19 +8,19 @@ import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.generateSymbol
 import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.models.LexiconType
+import org.jyutping.jyutping.models.NineKeySegmentation
 import org.jyutping.jyutping.models.Segmentation
 import org.jyutping.jyutping.models.VirtualInputKey
-import org.jyutping.jyutping.models.conjoinedCode
-import org.jyutping.jyutping.models.NineKeySegmentation
 import org.jyutping.jyutping.models.complexity
-import org.jyutping.jyutping.models.originKeys
+import org.jyutping.jyutping.models.conjoinedCode
 import org.jyutping.jyutping.models.originCombos
+import org.jyutping.jyutping.models.originKeys
 import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.ninekey.Combo
 import org.jyutping.jyutping.ninekey.decimalCombinedCode
 import org.jyutping.jyutping.presets.PresetString
-import org.jyutping.jyutping.utilities.InheritedDatabaseHelper
 import org.jyutping.jyutping.utilities.DatabasePreparer
+import org.jyutping.jyutping.utilities.InheritedDatabaseHelper
 import kotlin.math.max
 
 object Elephant {
@@ -34,7 +34,6 @@ object Elephant {
                 }
         }
 
-        // MARK: - Reverse Lookup Annotation
 
         /**
          * Reverse Lookup.
@@ -100,7 +99,6 @@ object Elephant {
                 return romanizations
         }
 
-        // MARK: - Plain Text Suggestions
 
         fun searchPlainTexts(keys: List<VirtualInputKey>): List<Lexicon> {
                 val spell: Long = keys.conjoinedCode
@@ -133,7 +131,6 @@ object Elephant {
                 return entries
         }
 
-        // MARK: - Emoji / Symbol Suggestions
 
         fun searchSymbols(keys: List<VirtualInputKey>, segmentation: Segmentation): List<Lexicon> {
                 val inputLength: Int = keys.count { it.isSyllableLetter }
@@ -205,7 +202,7 @@ object Elephant {
                 }.distinct()
         }
 
-        fun mapSkinTone(source: String): String? {
+        private fun mapSkinTone(source: String): String? {
                 var target: String? = null
                 val command = "SELECT target FROM emoji_skin_map WHERE source = ?;"
                 sharedDatabase.rawQuery(command, arrayOf(source)).use { cursor ->

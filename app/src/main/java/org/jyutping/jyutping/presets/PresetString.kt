@@ -8,7 +8,7 @@ object PresetString {
         const val TAB: String = "\t"
         const val QUESTION_MARK: String = "?"
 
-        // English full-stop
+        /** English full-stop */
         const val PERIOD: String = "."
         const val UPPER_LETTER_X: String = "X"
         const val FULL_WIDTH: String = "全寬"

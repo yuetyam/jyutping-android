@@ -8,6 +8,4 @@ object PresetConstant {
         const val ultraKeyCornerRadius: Float = 12f
         const val SpaceKeyLongPressHint: String = "← →"
         const val FrequentEmojiCount: Int = 30
-        const val halfWidth: String = "半寬"
-        const val fullWidth: String = "全寬"
 }

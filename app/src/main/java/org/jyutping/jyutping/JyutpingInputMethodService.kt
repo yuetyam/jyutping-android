@@ -49,7 +49,6 @@ import org.jyutping.jyutping.keyboard.Cangjie
 import org.jyutping.jyutping.keyboard.CangjieVariant
 import org.jyutping.jyutping.keyboard.CommentStyle
 import org.jyutping.jyutping.keyboard.ExtraBottomPadding
-import org.jyutping.jyutping.models.InputKeyStyle
 import org.jyutping.jyutping.keyboard.ReturnKeyForm
 import org.jyutping.jyutping.keyboard.SpaceKeyForm
 import org.jyutping.jyutping.memory.InputMemoryHelper
@@ -60,6 +59,7 @@ import org.jyutping.jyutping.models.Candidate
 import org.jyutping.jyutping.models.CangjieConverter
 import org.jyutping.jyutping.models.CompositionType
 import org.jyutping.jyutping.models.Converter
+import org.jyutping.jyutping.models.InputKeyStyle
 import org.jyutping.jyutping.models.InputMethodMode
 import org.jyutping.jyutping.models.KeyboardCase
 import org.jyutping.jyutping.models.KeyboardForm
@@ -755,6 +755,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         val candidateState: MutableStateFlow<Long> by lazy {
                 Elephant.connectDatabase(applicationContext)
                 Segmenter.prepare()
+                PinyinSegmenter.prepare()
+                NineKeySegmenter.prepare()
+                PinyinNineKeySegmenter.prepare()
                 MutableStateFlow(1L)
         }
         val candidates: MutableStateFlow<List<Candidate>> by lazy { MutableStateFlow(emptyList()) }

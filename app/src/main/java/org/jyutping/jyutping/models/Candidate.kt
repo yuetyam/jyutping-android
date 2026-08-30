@@ -1,7 +1,5 @@
 package org.jyutping.jyutping.models
 
-import org.jyutping.jyutping.extensions.isCantoneseToneDigit
-
 /** Display Candidate */
 data class Candidate(
 

@@ -28,7 +28,7 @@ object Segmenter {
         }
         private fun lookup(code: Long): Syllable? = syllableCodeMap[code]
 
-        private const val maxSyllableKeyCount: Int = 6
+        private const val MAX_SYLLABLE_KEY_COUNT: Int = 6
 
         private class SplitEdge(val syllable: Syllable, val endIndex: Int)
         private class SplitNode(val syllable: Syllable, val previousIndex: Int, val length: Int)
@@ -38,7 +38,7 @@ object Segmenter {
                 val edges = Array(inputLength) { mutableListOf<SplitEdge>() }
                 for (startIndex in 0 until inputLength) {
                         var code: Long = 0L
-                        val endIndexLimit = minOf(inputLength, startIndex + maxSyllableKeyCount)
+                        val endIndexLimit = minOf(inputLength, startIndex + MAX_SYLLABLE_KEY_COUNT)
                         for (endIndex in startIndex until endIndexLimit) {
                                 code = code * 100L + keys[endIndex].code
                                 val syllable = lookup(code) ?: continue
