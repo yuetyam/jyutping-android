@@ -93,8 +93,8 @@ fun SettingsScreen(height: Dp) {
         val needsRightKey by context.needsRightKey.collectAsState()
         val keyHeightOffset by context.keyHeightOffset.collectAsState()
         var keyHeightSliderPosition by remember { mutableFloatStateOf(keyHeightOffset.toFloat()) }
-        val inputKeyStyle by context.inputKeyStyle.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
+        val inputKeyStyle by context.inputKeyStyle.collectAsState()
         val preferredInputMode by context.preferredInputMode.collectAsState()
         val commentStyle by context.commentStyle.collectAsState()
         val preferredTraditionalStandard by context.preferredTraditionalStandard.collectAsState()
@@ -481,58 +481,6 @@ fun SettingsScreen(height: Dp) {
                                         verticalAlignment = Alignment.CenterVertically
                                 ) {
                                         Text(
-                                                text = stringResource(id = R.string.keyboard_settings_input_key_style_title),
-                                                color = tintColor,
-                                                style = MaterialTheme.typography.bodyMedium
-                                        )
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        ButtonGroup(
-                                                overflowIndicator = { menuState ->
-                                                        ButtonGroupDefaults.OverflowIndicator(menuState = menuState)
-                                                },
-                                                expandedRatio = 0f,
-                                                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                                                verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                                toggleableItem(
-                                                        checked = inputKeyStyle.isClear,
-                                                        label = context.applicationContext.getString(R.string.keyboard_settings_input_key_style_none),
-                                                        onCheckedChange = {
-                                                                context.audioFeedback(SoundEffect.Click)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                context.updateInputKeyStyle(InputKeyStyle.Clear)
-                                                        }
-                                                )
-                                                toggleableItem(
-                                                        checked = inputKeyStyle.isNumbers,
-                                                        label = context.applicationContext.getString(R.string.keyboard_settings_input_key_style_numbers),
-                                                        onCheckedChange = {
-                                                                context.audioFeedback(SoundEffect.Click)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                context.updateInputKeyStyle(InputKeyStyle.Numbers)
-                                                        }
-                                                )
-                                                toggleableItem(
-                                                        checked = inputKeyStyle.isNumbersAndSymbols,
-                                                        label = context.applicationContext.getString(R.string.keyboard_settings_input_key_style_symbols),
-                                                        onCheckedChange = {
-                                                                context.audioFeedback(SoundEffect.Click)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                context.updateInputKeyStyle(InputKeyStyle.NumbersAndSymbols)
-                                                        }
-                                                )
-                                        }
-                                }
-                        }
-                        item {
-                                Row(
-                                        modifier = Modifier
-                                                .background(color = backColor, shape = CircleShape)
-                                                .padding(horizontal = 4.dp)
-                                                .fillMaxWidth(),
-                                        verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                        Text(
                                                 text = stringResource(id = R.string.keyboard_settings_bottom_padding_title),
                                                 color = tintColor,
                                                 style = MaterialTheme.typography.bodyMedium
@@ -580,6 +528,58 @@ fun SettingsScreen(height: Dp) {
                                                                 context.audioFeedback(SoundEffect.Click)
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 context.updateExtraBottomPadding(ExtraBottomPadding.High)
+                                                        }
+                                                )
+                                        }
+                                }
+                        }
+                        item {
+                                Row(
+                                        modifier = Modifier
+                                                .background(color = backColor, shape = CircleShape)
+                                                .padding(horizontal = 4.dp)
+                                                .fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                        Text(
+                                                text = stringResource(id = R.string.keyboard_settings_input_key_style_title),
+                                                color = tintColor,
+                                                style = MaterialTheme.typography.bodyMedium
+                                        )
+                                        Spacer(modifier = Modifier.weight(1f))
+                                        ButtonGroup(
+                                                overflowIndicator = { menuState ->
+                                                        ButtonGroupDefaults.OverflowIndicator(menuState = menuState)
+                                                },
+                                                expandedRatio = 0f,
+                                                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                toggleableItem(
+                                                        checked = inputKeyStyle.isClear,
+                                                        label = context.applicationContext.getString(R.string.keyboard_settings_input_key_style_none),
+                                                        onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateInputKeyStyle(InputKeyStyle.Clear)
+                                                        }
+                                                )
+                                                toggleableItem(
+                                                        checked = inputKeyStyle.isNumbers,
+                                                        label = context.applicationContext.getString(R.string.keyboard_settings_input_key_style_numbers),
+                                                        onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateInputKeyStyle(InputKeyStyle.Numbers)
+                                                        }
+                                                )
+                                                toggleableItem(
+                                                        checked = inputKeyStyle.isNumbersAndSymbols,
+                                                        label = context.applicationContext.getString(R.string.keyboard_settings_input_key_style_symbols),
+                                                        onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                                context.updateInputKeyStyle(InputKeyStyle.NumbersAndSymbols)
                                                         }
                                                 )
                                         }

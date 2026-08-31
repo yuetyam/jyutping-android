@@ -56,8 +56,8 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
                 private const val KEY_MIGRATION: String = UserSettingsKey.MemoryMigration2608
                 private const val DEFINED_MIGRATION_VALUE: Int = 2608
 
-                private const val KEY_MIGRATION_2026: String = UserSettingsKey.MemoryMigration2026
-                private const val DEFINED_MIGRATION_2026_VALUE: Int = 2026
+                private const val PREVIOUS_MIGRATION_KEY: String = UserSettingsKey.PreviousMemoryMigration
+                private const val PREVIOUS_DEFINED_MIGRATION_VALUE: Int = 2026
 
                 @Volatile internal var isMigrating: Boolean = false
         }
@@ -106,7 +106,7 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
                 migrateMemory(sharedPreferences = sharedPreferences)
         }
         private fun migrateMemory(sharedPreferences: SharedPreferences) {
-                val didPreviousMigrationCompleted: Boolean = (sharedPreferences.getInt(KEY_MIGRATION_2026, 0) == DEFINED_MIGRATION_2026_VALUE)
+                val didPreviousMigrationCompleted: Boolean = (sharedPreferences.getInt(PREVIOUS_MIGRATION_KEY, 0) == PREVIOUS_DEFINED_MIGRATION_VALUE)
                 val tableName: String = if (didPreviousMigrationCompleted) LEGACY_CORE_MEMORY_TABLE_NAME else LEGACY_MEMORY_TABLE_NAME
                 if (isLegacyDataPresent(table = tableName)) {
                         performMigration(sharedPreferences = sharedPreferences, table = tableName)
@@ -201,7 +201,7 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
                 isMigrating = false
         }
         private fun cleanupObsoleteObjects(sharedPreferences: SharedPreferences) {
-                sharedPreferences.edit { remove(KEY_MIGRATION_2026) }
+                sharedPreferences.edit { remove(PREVIOUS_MIGRATION_KEY) }
         }
 
         //endregion

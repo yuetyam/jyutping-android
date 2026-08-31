@@ -605,17 +605,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         putInt(UserSettingsKey.KeyHeightOffset, offset)
                 }
         }
-        val inputKeyStyle: MutableStateFlow<InputKeyStyle> by lazy {
-                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.InputKeyStyle, InputKeyStyle.Clear.identifier)
-                val style: InputKeyStyle = InputKeyStyle.styleOf(savedValue)
-                MutableStateFlow(style)
-        }
-        fun updateInputKeyStyle(style: InputKeyStyle) {
-                inputKeyStyle.value = style
-                sharedPreferences.edit {
-                        putInt(UserSettingsKey.InputKeyStyle, style.identifier)
-                }
-        }
         val extraBottomPadding: MutableStateFlow<ExtraBottomPadding> by lazy {
                 val savedIdentifier: Int = sharedPreferences.getInt(UserSettingsKey.ExtraBottomPadding, ExtraBottomPadding.None.identifier)
                 val paddingLevel = ExtraBottomPadding.paddingLevelOf(savedIdentifier)
@@ -625,6 +614,17 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 extraBottomPadding.value = paddingLevel
                 sharedPreferences.edit {
                         putInt(UserSettingsKey.ExtraBottomPadding, paddingLevel.identifier)
+                }
+        }
+        val inputKeyStyle: MutableStateFlow<InputKeyStyle> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.InputKeyStyle, InputKeyStyle.Clear.identifier)
+                val style: InputKeyStyle = InputKeyStyle.styleOf(savedValue)
+                MutableStateFlow(style)
+        }
+        fun updateInputKeyStyle(style: InputKeyStyle) {
+                inputKeyStyle.value = style
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.InputKeyStyle, style.identifier)
                 }
         }
         val commentStyle: MutableStateFlow<CommentStyle> by lazy {
