@@ -304,7 +304,7 @@ suspend fun InputMemoryHelper.suggest(keys: List<VirtualInputKey>, segmentation:
                         val textTones: String = text.toneDigitOnly
                         candidates.mapNotNull { item ->
                                 val syllableText: String = item.romanization.strippedSpaces()
-                                if (syllableText != text) return@mapNotNull item.replacedInput(inputText)
+                                if (syllableText == text) return@mapNotNull item.replacedInput(inputText)
                                 val tones: String = syllableText.toneDigitOnly
                                 when (Pair(textTones.length, tones.length)) {
                                         Pair(1, 1) -> {

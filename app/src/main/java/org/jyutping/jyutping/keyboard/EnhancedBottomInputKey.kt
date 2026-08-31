@@ -58,6 +58,7 @@ import org.jyutping.jyutping.utilities.ToolBox
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun EnhancedBottomInputKey(
@@ -83,7 +84,7 @@ fun EnhancedBottomInputKey(
         var holdTickCount by remember { mutableIntStateOf(0) }
         LaunchedEffect(Unit) {
                 while (isActive) {
-                        delay(100L) // 0.1s
+                        delay(100L.milliseconds) // 0.1s
                         if (isTouching && isLongPressing.not()) {
                                 val shouldTriggerLongPress: Boolean = (holdTickCount > 6) || (holdTickCount > 3 && pulled == null)
                                 if (shouldTriggerLongPress) {
