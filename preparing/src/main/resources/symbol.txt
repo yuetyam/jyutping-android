@@ -3658,7 +3658,6 @@
 4	150000	1FA88	笛	dek2
 4	110000	1F3B2	骰	tau4
 4	110000	1F3B2	骰子	tau4 zi2
-4	110000	1F3B2	色	sik1
 4	110000	1F3B2	色子	sik1 zi2
 4	110000	1F3B2	骰仔	tau4 zai2
 4	110000	1F3B2	色仔	sik1 zai2
@@ -6001,6 +6000,9 @@
 10	110000	72AD	狗爪邊	gau2 zaau2 bin1
 10	110000	72AD	犬字邊	hyun2 zi6 bin1
 10	110000	72AD	犬字旁	hyun2 zi6 pong4
+10	110000	725C	牛字邊	ngau4 zi6 bin1
+10	110000	725C	牛字旁	ngau4 zi6 pong4
+10	110000	725C	左旁牛	zo2 pong4 ngau4
 10	110000	961D	阜字邊	fau6 zi6 bin1
 10	110000	961D	阜字旁	fau6 zi6 pong4
 10	110000	961D	耳仔邊	ji5 zai2 bin1

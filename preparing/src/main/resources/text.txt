@@ -225,6 +225,7 @@ instagram	Instagram
 intel	Intel
 inter	Inter
 ios	iOS
+ipa	IPA
 ipad	iPad
 ipadair	iPad Air
 ipadmini	iPad mini
@@ -632,6 +633,7 @@ seadog	seadog
 skyler	Skyler
 tint	tint
 tv	TV
+utc	UTC
 watsons	Watsons
 wink	wink
 zed	zed
@@ -4159,7 +4161,6 @@ blonde	blonde
 proceedings	proceedings
 favourite	favourite
 transmission	transmission
-utc	utc
 characteristics	characteristics
 lose	lose
 organic	organic

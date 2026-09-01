@@ -244,7 +244,7 @@ fun EnhancedInputKey(
                         Text(
                                 text = keyModel.primary.text.textCased(displayTextCase),
                                 color = if (isDarkMode) Color.White else Color.Black,
-                                fontSize = if (keyModel.primary.isTextSingular) 24.sp else 18.sp
+                                fontSize = if (keyModel.primary.isTextSingular) 24.sp else 17.sp
                         )
                 }
                 if (shouldPreviewKey && isTouching) {
