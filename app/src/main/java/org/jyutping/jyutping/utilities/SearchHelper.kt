@@ -113,7 +113,7 @@ object SearchHelper {
         }
         private fun fetchRomanizations(word: String): List<String> {
                 val romanizations: MutableList<String> = mutableListOf()
-                val command = "SELECT romanization FROM core_lexicon WHERE word = ? ORDER BY rowid;"
+                val command = "SELECT romanization FROM lexicon_core WHERE word = ? ORDER BY rowid;"
                 Elephant.sharedDatabase.rawQuery(command, arrayOf(word)).use { cursor ->
                         while (cursor.moveToNext()) {
                                 val romanization = cursor.getString(0)
@@ -124,7 +124,7 @@ object SearchHelper {
         }
         private fun fetchHomophones(romanization: String): List<String> {
                 val words: MutableList<String> = mutableListOf()
-                val command = "SELECT word FROM core_lexicon WHERE romanization = ? ORDER BY rowid LIMIT 11;"
+                val command = "SELECT word FROM lexicon_core WHERE romanization = ? ORDER BY rowid LIMIT 11;"
                 Elephant.sharedDatabase.rawQuery(command, arrayOf(romanization)).use { cursor ->
                         while (cursor.moveToNext()) {
                                 val word = cursor.getString(0)

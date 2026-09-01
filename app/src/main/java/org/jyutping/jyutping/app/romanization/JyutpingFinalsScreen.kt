@@ -65,7 +65,7 @@ fun JyutpingFinalsScreen() {
                                         .padding(horizontal = 8.dp, vertical = 4.dp),
                                 verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                                FinalLabel(word = "㗎", syllable = "ga3", jyutping = "a", ipa = "[ ɐ ]")
+                                // FinalLabel(word = "㗎", syllable = "ga3", jyutping = "a", ipa = "[ ɐ ]")
                                 FinalLabel(word = "計", syllable = "gai3", jyutping = "ai", ipa = "[ ɐi ]")
                                 FinalLabel(word = "救", syllable = "gau3", jyutping = "au", ipa = "[ ɐu ]")
                                 FinalLabel(word = "禁", syllable = "gam3", jyutping = "am", ipa = "[ ɐm ]")
@@ -175,7 +175,7 @@ fun JyutpingFinalsScreen() {
                         ) {
                                 FinalLabel(word = "鋸", syllable = "goe3", jyutping = "oe", ipa = "[ œː ]")
                                 FinalLabel(word = "姜", syllable = "goeng1", jyutping = "oeng", ipa = "[ œːŋ ]")
-                                FinalLabel(word = "*", syllable = "goet4", jyutping = "oet", ipa = "[ œːt̚ ]")
+                                // FinalLabel(word = "*", syllable = "goet4", jyutping = "oet", ipa = "[ œːt̚ ]")
                                 FinalLabel(word = "腳", syllable = "goek3", jyutping = "oek", ipa = "[ œːk̚ ]")
                         }
                 }
