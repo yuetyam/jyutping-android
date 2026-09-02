@@ -1164,9 +1164,13 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         fun selectCandidate(candidate: Candidate? = null, index: Int = 0) {
                 val item: Candidate = candidate ?: candidates.value.getOrNull(index) ?: return
                 currentInputConnection.commitText(item.text, 1)
+                if (item.isCantonese) {
+                        selectedLexicons.add(item.lexicon)
+                } else {
+                        selectedLexicons.clear()
+                }
                 when (keyboardLayout.value) {
                         KeyboardLayout.Qwerty, KeyboardLayout.TripleStroke -> if (bufferEvents.first().key.isReverseLookupTrigger) {
-                                selectedLexicons.clear()
                                 var tail = bufferEvents.drop(item.lexicon.inputCount + 1)
                                 while (tail.firstOrNull()?.key?.isApostrophe ?: false) {
                                         tail = tail.drop(1)
@@ -1179,11 +1183,6 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                         bufferEvents = bufferEvents.take(1) + bufferEvents.takeLast(tailLength)
                                 }
                         } else {
-                                if (item.isCantonese) {
-                                        selectedLexicons.add(item.lexicon)
-                                } else {
-                                        selectedLexicons.clear()
-                                }
                                 val inputLength: Int = item.lexicon.inputCount
                                 var tail = bufferEvents.drop(inputLength)
                                 while (tail.firstOrNull()?.key?.isApostrophe ?: false) {
@@ -1198,15 +1197,9 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                 }
                         }
                         KeyboardLayout.NineKey -> if (bufferCombos.first().isSpecial) {
-                                selectedLexicons.clear()
                                 val tailLength: Int = (bufferCombos.size - 1) - item.lexicon.inputCount
                                 bufferCombos = if (tailLength < 1) emptyList() else (bufferCombos.take(1) + bufferCombos.takeLast(tailLength))
                         } else {
-                                if (item.isCantonese) {
-                                        selectedLexicons.add(item.lexicon)
-                                } else {
-                                        selectedLexicons.clear()
-                                }
                                 val tailLength: Int = bufferCombos.size - item.lexicon.inputCount
                                 bufferCombos = if (tailLength < 1) emptyList() else bufferCombos.takeLast(tailLength)
                         }
