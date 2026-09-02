@@ -4811,7 +4811,6 @@
 鬧人	nao ren
 加班	jia ban
 擝	meng
-掹	meng
 外國人	wai guo ren
 取得	qu de
 累積	lei ji
@@ -8288,7 +8287,6 @@
 舊式	jiu shi
 當事	dang shi
 揭開	jie kai
-尼斯	ni si
 原地	yuan di
 到此	dao ci
 其所	qi suo
@@ -10653,7 +10651,6 @@
 走難	zou nan
 醜樣	chou yang
 蛇王	she wang
-揦鮓	la zha
 刻薄	ke bao
 管制	guan zhi
 滅亡	mie wang
@@ -27035,6 +27032,10 @@
 谷主	gu zhu
 自媒體	zi mei ti
 搏眼球	bo yan qiu
+我是	wo shi
+你是	ni shi
+他是	ta shi
+她是	ta shi
 簽走	qian zou
 潮汕佬	chao shan lao
 潮州府	chao zhou fu
@@ -32052,6 +32053,14 @@
 音譯詞	yin yi ci
 意譯詞	yi yi ci
 大風歌	da feng ge
+類阿片	lei a pian
+阿片類	a pian lei
+冇乜問題	mao mie wen ti
+冇咩問題	mao mie wen ti
+有乜問題	you mie wen ti
+有咩問題	you mie wen ti
+熔金	rong jin
+落日熔金	luo ri rong jin
 頭頂光環	tou ding guang huan
 得意洋洋	de yi yang yang
 閃閃心	shan shan xin
@@ -57317,7 +57326,6 @@
 每日郵報	mei ri you bao
 望眼欲穿	wang yan yu chuan
 暴風驟雨	bao feng zhou yu
-手扳葫蘆	shou ban hu lu
 從早到晚	cong zao dao wan
 山珍海味	shan zhen hai wei
 孤芳自賞	gu fang zi shang
@@ -75338,7 +75346,6 @@
 探身	tan shen
 拘禮	ju li
 拌種	ban zhong
-扳子	ban zi
 打屁	da pi
 愧色	kui se
 愛奴	ai nu
@@ -83855,7 +83862,6 @@
 折辱	zhe ru
 抗藥	kang yao
 投合	tou he
-扳道	ban dao
 打蟲	da chong
 徵引	zheng yin
 強似	qiang shi
@@ -88830,7 +88836,6 @@
 日耳曼語	ri er man yu
 提前投票	ti qian tou piao
 拉拉隊長	la la dui zhang
-手板葫蘆	shou ban hu lu
 戊戌政變	wu xu zheng bian
 悔恨交加	hui hen jiao jia
 射頻干擾	she pin gan rao
@@ -91307,7 +91312,6 @@
 人人得而誅之	ren ren de er zhu zhi
 過氧苯甲酰	guo yang ben jia xian
 能人所不能	neng ren suo bu neng
-司馬遼太郎	si ma liao tai lang
 靖難之役	jing nan zhi yi
 豺狼當道	chai lang dang dao
 腦袋開花	nao dai kai hua
@@ -92976,7 +92980,6 @@
 大鐮刀	da lian dao
 多伊爾	duo yi er
 唐懿宗	tang yi zong
-司馬談	si ma tan
 受電弓	shou dian gong
 加油工	jia you gong
 出月子	chu yue zi
@@ -93457,7 +93460,6 @@
 標格	biao ge
 採擇	cai ze
 指授	zhi shou
-拿獲	na huo
 拔身	ba shen
 彈膛	dan tang
 平減	ping jian
@@ -96779,7 +96781,6 @@
 整路	zheng lu
 拘執	ju zhi
 拌蒜	ban suan
-扳本	ban ben
 愚意	yu yi
 彩旦	cai dan
 山莓	shan mei
@@ -107271,7 +107272,6 @@
 武山雞	wu shan ji
 柱型圖	zhu xing tu
 曲頸瓶	qu jing ping
-扳道員	ban dao yuan
 扭扭樂	niu niu le
 後車軸	hou che zhou
 堂姊妹	tang zi mei
@@ -108353,7 +108353,6 @@
 氨哮素	an xiao su
 殺螺劑	sha luo ji
 橙色劑	cheng se ji
-扳道岔	ban dao cha
 帝汶海	di wen hai
 增音機	zeng yin ji
 信神者	xin shen zhe
@@ -110249,7 +110248,6 @@
 措舉	cuo ju
 折籮	zhe luo
 抗軍	kang jun
-扳罾	ban zeng
 几凳	ji deng
 倉黃	cang huang
 令慈	ling ci
@@ -117494,7 +117492,6 @@
 狼蜘	lang zhi
 氣阱	qi jing
 搬唆	ban suo
-扳價	ban jia
 徒裼	tu ti
 鷻	tuan
 藚	xu
@@ -117581,7 +117578,6 @@
 數黃道黑	shu huang dao hei
 撒科打諢	sa ke da hun
 抵足而臥	di zu er wo
-扳龍附鳳	ban long fu feng
 戒奢崇儉	jie she chong jian
 尖聲啼哭	jian sheng ti ku
 審度時勢	shen du shi shi
@@ -117951,7 +117947,6 @@
 巴唧巴唧	ba ji ba ji
 妒能害賢	du neng hai xian
 妄生穿鑿	wang sheng chuan zao
-司馬承幀	si ma cheng zheng
 博物多聞	bo wu duo wen
 切骨之仇	qie gu zhi chou
 不終天年	bu zhong tian nian
@@ -120276,6 +120271,7 @@
 尾燈	wei deng
 尾水	wei shui
 尼龍	ni long
+尼斯	ni si
 尼姑	ni gu
 就寢	jiu qin
 尖頂	jian ding
@@ -121713,7 +121709,6 @@
 化學航彈	hua xue hang dan
 加工時序	jia gong shi xu
 加官進位	jia guan jin wei
-劈空扳害	pi kong ban hai
 冷熱度數	leng re du shu
 光磁碟機	guang ci die ji
 元音失讀	yuan yin shi du
@@ -123809,7 +123804,6 @@
 撒西米	sa xi mi
 撈過界	lao guo jie
 撈油水	lao you shui
-摸盲盲	mo mang mang
 摀住臉	wu zhu lian
 搬楦頭	ban xuan tou
 搓麻將	cuo ma jiang
@@ -125754,6 +125748,8 @@
 䟓	cheng
 䟫	cheng
 罉	cheng
+𦉘	cheng
+𥋇	cheng
 𨅝	cheng
 䁎	cheng
 䆑	cheng
@@ -125881,6 +125877,7 @@
 䍱	xu
 䜔	sui
 䢫	sui
+𡃴	sui
 𢊍	chu
 䡅	chun
 𪂹	chun
@@ -126194,6 +126191,7 @@
 㟷	da
 㹺	ta
 䵣	da
+𢴈	da
 䃮	da
 𡐿	da
 𦪭	da
@@ -127499,6 +127497,7 @@
 䬂	xue
 䬄	xu
 𠰋	qiu
+𢯎	yao
 𢲷	sou
 𠯋	yi
 㑜	yi
@@ -128223,6 +128222,7 @@
 䤛	qiu
 䛮	jiu
 䳎	jiu
+𡲢	qie
 𡶐	qie
 㟢	qi
 㥓	qi
@@ -128388,6 +128388,7 @@
 䦼	jue
 㖸	xue
 𤰚	la
+𢲡	na
 㙤	xia
 𦧺	lai
 㜷	mi
@@ -128979,8 +128980,9 @@
 㡈	wen
 㼂	e
 䫤	ming
+掹	meng
 𠵼	meng
-㟿	mang
+𤷪	meng
 㒼	man
 䈍	mang
 䉚	meng
@@ -129095,6 +129097,7 @@
 𩷶	mang
 㓁	wang
 㟐	mang
+㟿	mang
 㬒	mang
 䁳	mang
 䋄	wang
@@ -130103,6 +130106,7 @@
 㓽	chong
 㞞	song
 㹐	chong
+𩻃	chong
 㡏	shu
 䑕	shu
 䵓	li
@@ -130136,6 +130140,7 @@
 㯀	xuan
 䨮	xue
 𦱆	ta
+𧘹	tai
 㑷	tai
 㥭	tai
 㳩	tan
@@ -130382,6 +130387,7 @@
 䨟	wa
 䵷	wa
 䠚	wa
+𢱑	wa
 㦊	hua
 㭉	hua
 䅿	hua
@@ -130762,6 +130768,7 @@
 䧵	qi
 䫈	chen
 䲴	zhen
+𠹻	zhen
 㲀	zhen
 䂦	zhen
 䃌	zhen
@@ -130783,6 +130790,7 @@
 䱢	zheng
 㽪	zeng
 䒏	seng
+𤺧	zeng
 䙢	zeng
 䰝	zeng
 䉅	zhi
@@ -131005,6 +131013,7 @@
 䱼	zhan
 𢅺	zhan
 𣜭	jian
+𦟌	zhan
 𧬆	zhan
 𨫀	zhan
 𩥇	zhan
@@ -133158,9 +133167,13 @@
 瞠目以對	cheng mu yi dui
 橙皮紋	cheng pi wen
 撐場	cheng chang
+𥋇大隻眼	cheng da zhi yan
 撐到恆	cheng dao heng
 撐行	cheng xing
+𥋇開眼	cheng kai yan
+𥋇唔開眼	cheng wu kai yan
 撐牙骹	cheng ya qiao
+𥋇眼	cheng yan
 倀雞	chang ji
 倀雞婆	chang ji po
 插把嘴	cha ba zui
@@ -133504,6 +133517,7 @@
 臭妹	chou mei
 湊女	cou nv
 湊啱	cou yan
+臭尿𡃴	chou niao sui
 臭𪒬	chou nong
 臭屁醋	chou pi cu
 湊細𡀔	cou xi lu
@@ -133807,7 +133821,7 @@
 出門口	chu men kou
 出門靠朋友	chu men kao peng you
 出門無六月	chu men wu liu yue
-出拿渣	chu na zha
+出嗱喳	chu na zha
 出膿	chu nong
 出晒位	chu shai wei
 出世紙	chu shi zhi
@@ -134720,6 +134734,7 @@
 打壁球	da bi qiu
 打錶	da biao
 打玻子	da bo zi
+打煲𧘹	da bao tai
 打簿	da bu
 打本	da ben
 打鑔	da cha
@@ -134883,6 +134898,7 @@
 打豎	da shu
 打算點啫	da suan dian zhe
 打旋風	da xuan feng
+打𧘹	da tai
 打藤	da teng
 打骰	da tou
 打頭鑼	da tou luo
@@ -135434,7 +135450,6 @@
 單襟	dan jin
 單料銅煲	dan liao tong bao
 單撈	dan lao
-丹尼士巨龍	dan ni shi ju long
 單眼檐	dan yan yan
 單眼仔	dan yan zai
 丹寧	dan ning
@@ -135533,10 +135548,20 @@
 沓正	da zheng
 踏正	ta zheng
 踏墊	ta dian
+𢴈餐死	da can si
+𢴈嚫	da chen
+𢴈低	da di
 撻朵	ta duo
+𢴈落	da luo
+𢴈落牀	da luo chuang
+𢴈落地	da luo di
+𢴈落來	da luo lai
 笪𤶸	da na
 笪沙魚	da sha yu
+𢴈生魚	da sheng yu
 撻生魚	ta sheng yu
+𢴈死	da si
+𢴈傷	da shang
 達嚫	da chen
 達德利	da de li
 低波	di bo
@@ -136383,7 +136408,6 @@
 吊尾	diao wei
 吊味	diao wei
 吊門桔	diao men ju
-吊泥鯭	diao ni meng
 釣泥鯭	diao ni meng
 吊片	diao pian
 吊瓶	diao ping
@@ -137238,6 +137262,7 @@
 發矛	fa mao
 發茅	fa mao
 發問問題	fa wen wen ti
+發𤷪𤺧	fa meng zeng
 法網灰灰疏而不漏	fa wang hui hui shu er bu lou
 發木獨	fa mu du
 發懵	fa meng
@@ -137584,7 +137609,6 @@
 火柴人	huo chai ren
 火車未到站	huo che wei dao zhan
 棵草	ke cao
-苴斗貨	ju dou huo
 火地羣島	huo di qun dao
 火灰	huo hui
 火攪米	huo jiao mi
@@ -139125,7 +139149,6 @@
 基圍蝦	ji wei xia
 肌胃	ji wei
 機會率	ji hui lv
-嘰咋柳鶯	ji za liu ying
 機組人員	ji zu ren yuan
 幾歹	ji dai
 幾歹都	ji dai dou
@@ -139497,6 +139520,8 @@
 嗰個字	ge ge zi
 嗰條友仔	ge tiao you zai
 嗰鑊	ge huo
+嗰𠹻𡃴	ge zhen sui
+嗰𠹻味	ge zhen wei
 嗰隻	ge zhi
 嗰隻蟹	ge zhi xie
 嗰隻嘢	ge zhi ye
@@ -139905,7 +139930,6 @@
 沽盤	gu pan
 孤沙錐	gu sha zhui
 沽售	gu shou
-咕臣	gu chen
 姑太	gu tai
 姑仔	gu zai
 估波膽	gu bo dan
@@ -141454,6 +141478,7 @@
 起褶	qi zhe
 起枕	qi zhen
 起字容	qi zi rong
+起𦟌	qi zhan
 起咗	qi zuo
 喜酌	xi zhuo
 起鐘	qi zhong
@@ -142483,12 +142508,17 @@
 廿一點	nian yi dian
 廿四味	nian si wei
 廿四節氣	nian si jie qi
+喫𡲢	chi qie
 喫屎啦	chi shi la
 喫屎啦你	chi shi la ni
 喫蕉	chi jiao
 擪高褲腳	ye gao ku jiao
 擪高衫袖	ye gao shan xiu
 擪屎片	ye shi pian
+𢯎下	yao xia
+𢯎痕	yao hen
+𢯎晒頭	yao shai tou
+𢯎頭	yao tou
 曳貨	ye huo
 曳嘢	ye ye
 曳到死	ye dao si
@@ -143025,6 +143055,10 @@
 一齋兩雜	yi zhai liang za
 一齋三雜	yi zhai san za
 一䁪眼	yi zhan yan
+一𠹻𡃴	yi zhen sui
+一𠹻風	yi zhen feng
+一𠹻煙	yi zhen yan
+一𠹻味	yi zhen wei
 一陣先	yi zhen xian
 一晝一戙	yi zhou yi dong
 一就一二就二	yi jiu yi er jiu er
@@ -143168,6 +143202,7 @@
 油潤	you run
 油耳	you er
 油膉	you yi
+油膉𡃴	you yi sui
 遊刑	you xing
 油淋淋	you lin lin
 油漏	you lou
@@ -143257,7 +143292,7 @@
 有得佢	you de qu
 有得攞	you de luo
 有得賣	you de mai
-有得摱	you de man
+有得挽	you de wan
 有得你睇	you de ni di
 有得選	you de xuan
 有得斟	you de zhen
@@ -143574,9 +143609,8 @@
 咿哈	yi ha
 依起棚牙	yi qi peng ya
 咿唈	yi yi
-咿咿咠咠	yi yi qi qi
-咿咿挹挹	yi yi yi yi
-咿咿呶呶	yi yi nao nao
+咿咿唈唈	yi yi yi yi
+咿咿呦呦	yi yi you you
 咿咿喐喐	yi yi yu yu
 咿咿哦哦	yi yi o o
 衣食足然後知榮辱	yi shi zu ran hou zhi rong ru
@@ -144611,6 +144645,7 @@
 軟笪	ruan da
 軟笪笪	ruan da da
 軟躂躂	ruan da da
+軟𢴈𢴈	ruan da da
 軟碟機	ruan die ji
 遠東經濟評論	yuan dong jing ji ping lun
 遠端轉移	yuan duan zhuan yi
@@ -144764,6 +144799,7 @@
 𢫏被	kan bei
 𢫏數	kan shu
 擒高擒低	qin gao qin di
+擒高𢱑低	qin gao wa di
 擒人節	qin ren jie
 噖日朝	yin ri chao
 擒擒青	qin qin qing
@@ -145159,11 +145195,15 @@
 揦起塊面	la qi kuai mian
 揦脷	la li
 揦埋	la mai
+𢲡埋	na mai
 揦埋口面	la mai kou mian
+𢲡埋口面	na mai kou mian
 俹簁	ya shai
 揦手	la shou
 揦手唔成勢	la shou wu cheng shi
 揦屎上身	la shi shang shen
+揦鮓	la zha
+揦鮓麪	la zha mian
 揦子	la zi
 揦住	la zhu
 喇叭仔	la ba zai
@@ -145175,7 +145215,6 @@
 喇喇聲	la la sheng
 喇喇臨	la la lin
 喇臨	la lin
-揦鮓麪	la zha mian
 拉把	la ba
 拉㞎㞎	la ba ba
 拉差	la cha
@@ -145199,6 +145238,7 @@
 拉開序幕	la kai xu mu
 拉油	la you
 拉爾夫	la er fu
+拉𡲢	la qie
 拉纜	la lan
 拉落水	la luo shui
 拉鉚槍	la mao qiang
@@ -145387,7 +145427,6 @@
 爛銅爛鐵	lan tong lan tie
 爛屋	lan wu
 爛玩	lan wan
-爛苴苴	lan ju ju
 爛仔交	lan zai jiao
 爛仔頭	lan zai tou
 爛酒	lan jiu
@@ -145412,18 +145451,10 @@
 冷靜期	leng jing qi
 擸架撐	lie jia cheng
 擸架生	lie jia sheng
-立架撐	li jia cheng
-立架生	li jia sheng
-擸光晒	lie guang shai
-擸一眼	lie yi yan
+䁽一眼	lie yi yan
 擸嘢	lie ye
-擸炩	lie ling
 擸埋	lie mai
-擸網頂	lie wang ding
 䁽眼	lie yan
-擸眼	lie yan
-擸平嘢	lie ping ye
-擸晒網頂	lie shai wang ding
 立百病毒	li bai bing du
 蠟青	la qing
 蠟青馬路	la qing ma lu
@@ -147503,10 +147534,8 @@
 擘梯	bai ti
 麥豆	mai dou
 摱車邊	man che bian
-扳雞	ban ji
 摱雞	man ji
 摱唔返	man wu fan
-慢下手	man xia shou
 蠻班辦	man ban ban
 蠻鋹	man chang
 晚市	wan shi
@@ -147565,12 +147594,6 @@
 萬梓良	wan zi liang
 慢煮	man zhu
 慢住	man zhu
-掹車邊	meng che bian
-掹雞	meng ji
-掹哈	meng ha
-掹瘕	meng jia
-掹貓尾	meng mao wei
-掹衫尾	meng shan wei
 盲撐	mang cheng
 盲搶	mang qiang
 盲鰽	mang qiu
@@ -147804,6 +147827,7 @@
 問心唔過	wen xin wu guo
 問仙	wen xian
 問題多多	wen ti duo duo
+擝車邊	meng che bian
 擝除	meng chu
 擝出	meng chu
 擝槍	meng qiang
@@ -147811,12 +147835,14 @@
 擝得住	meng de zhu
 擝雞	meng ji
 擝耳仔	meng er zai
+擝貓尾	meng mao wei
 擝牙	meng ya
 擝衫尾	meng shan wei
 擝實	meng shi
 擝繩	meng sheng
 䁅頸	meng jing
-掹炮	meng pao
+𤷪薑	meng jiang
+𤷪𤺧	meng zeng
 盟鼻	meng bi
 盲鼻	mang bi
 盲窿	mang long
@@ -148492,7 +148518,6 @@
 冇膽鬼	mao dan gui
 冇啖好食	mao dan hao shi
 冇搭霎	mao da sha
-冇得扳	mao de ban
 冇得比	mao de bi
 冇得查	mao de cha
 冇得出	mao de chu
@@ -148503,8 +148528,7 @@
 冇得救	mao de jiu
 冇得講	mao de jiang
 冇得撈	mao de lao
-冇得摱	mao de man
-冇得掹	mao de meng
+冇得挽	mao de wan
 冇得試用	mao de shi yong
 冇得斟	mao de zhen
 冇得走趲	mao de zou zan
@@ -148939,15 +148963,15 @@
 嗱手唔成勢	na shou wu cheng shi
 乸聲乸氣	na sheng na qi
 嗱屎上身	na shi shang shen
+嗱喳	na zha
+嗱喳嘢	na zha ye
+嗱喳麪	na zha mian
+嗱喳手段	na zha shou duan
 拿督	na du
 嗱林	na lin
 拿來主義	na lai zhu yi
 拿破侖	na po lun
 拿索	na suo
-嗱喳	na zha
-嗱喳嘢	na zha ye
-嗱喳麪	na zha mian
-嗱喳手段	na zha shou duan
 奶屎眼	nai shi yan
 奶撻	nai ta
 奶膽	nai dan
@@ -149429,6 +149453,7 @@
 瓦背	wa bei
 瓦背頂	wa bei ding
 瓦鐺	wa dang
+瓦𦉘	wa cheng
 瓦都茲	wa dou zi
 雅房	ya fang
 瓦坑	wa keng
@@ -149549,6 +149574,7 @@
 顏色筆	yan se bi
 顏色波	yan se bo
 眼不見心不念	yan bu jian xin bu nian
+眼𥋇唔開	yan cheng wu kai
 眼赤	yan chi
 眼蟲藻	yan chong zao
 眼大大	yan da da
@@ -150129,6 +150155,7 @@
 萘醌	nai kun
 奈洛比	nai luo bi
 內陸機	nei lu ji
+內六角	nei liu jiao
 內六角扳手	nei liu jiao ban shou
 內陸國家	nei lu guo jia
 內櫳	nei long
@@ -150195,6 +150222,7 @@
 屙涿屎	e zhuo shi
 屙啡啡	e fei fei
 娿哿	e ge
+屙𡲢	e qie
 屙爛屎	e lan shi
 屙馬蹄屎	e ma ti shi
 屙渜	e nuan
@@ -150206,6 +150234,7 @@
 屙屎唔出賴地硬	e shi wu chu lai di ying
 屙屎貪高興	e shi tan gao xing
 屙鎖鏈	e suo lian
+屙𭉝𭉝	e shu shu
 痾肚	e du
 哀詞	ai ci
 埃及豆	ai ji dou
@@ -150810,6 +150839,7 @@
 撥爐	bo lu
 沙板	sha ban
 砂煲	sha bao
+砂煲罌𦉘	sha bao ying cheng
 砂煲咁大	sha bao gan da
 砂煲兄弟	sha bao xiong di
 沙埔	sha pu
@@ -151992,7 +152022,6 @@
 收租婆	shou zu po
 手鈪	shou e
 手坳	shou ao
-手扳眼見	shou ban yan jian
 手板眼見	shou ban yan jian
 手板眼見功夫	shou ban yan jian gong fu
 手板心	shou ban xin
@@ -152021,6 +152050,7 @@
 手腳乾淨	shou jiao qian jing
 手腳唔好	shou jiao wu hao
 手工菜	shou gong cai
+手瓜起𦟌	shou gua qi zhan
 手瓜硬	shou gua ying
 手乖	shou guai
 手捲	shou juan
@@ -152485,6 +152515,8 @@
 成頭汗	cheng tou han
 成條街	cheng tiao jie
 成臺機	cheng tai ji
+成𠹻𡃴	cheng zhen sui
+成𠹻味	cheng zhen wei
 成隻病貓噉	cheng zhi bing mao dan
 成隻雀噉	cheng zhi que dan
 成朝早	cheng chao zao
@@ -152763,9 +152795,9 @@
 斯洛文尼亞語	si luo wen ni ya yu
 思樂冰	si le bing
 司馬秤	si ma cheng
+司馬師	si ma shi
 絲米	si mi
 斯文澹定	si wen dan ding
-斯文男子生雞精	si wen nan zi sheng ji jing
 絲苗	si miao
 絲苗米	si miao mi
 絲帽	si mao
@@ -153701,6 +153733,7 @@
 削筆刀	xue bi dao
 削波	xue bo
 削膊	xue bo
+削𢴈𢴈	xue da da
 削梨	xue li
 削胃	xue wei
 削仔	xue zai
@@ -154080,6 +154113,7 @@
 送咗	song zuo
 送鐘	song zhong
 崇基學院	chong ji xue yuan
+𩻃魚	chong yu
 紓壓	shu ya
 舒壓	shu ya
 輸白地	shu bai di
@@ -154125,6 +154159,7 @@
 薯菜	shu cai
 薯蕷	shu yu
 薯嘜	shu ma
+𭉝𭉝	shu shu
 薯頭	shu tou
 薯頭嘜	shu tou ma
 薯頭薯腦	shu tou shu nao
@@ -154254,8 +154289,10 @@
 他日好相見	ta ri hao xiang jian
 他他佻佻	ta ta tiao tiao
 他佻	ta tiao
+𧘹夾	tai jia
 呔氣	dai qi
 呔鈴	dai ling
+𧘹針	tai zhen
 太不要得	tai bu yao de
 太邊	tai bian
 太醜鬼	tai chou gui
@@ -155432,8 +155469,13 @@
 娃娃菜	wa wa cai
 嘩嘩聲	hua hua sheng
 嘩衆取寵	hua zhong qu chong
+𢱑花	wa hua
 畫家帽	hua jia mao
 畫功	hua gong
+𢱑痕	wa hen
+𢱑爛	wa lan
+𢱑水	wa shui
+𢱑損	wa sun
 華比銀行	hua bi yin xing
 華海	hua hai
 華英	hua ying
@@ -155853,7 +155895,6 @@
 雲溪	yun xi
 雲溪區	yun xi qu
 暈浪丸	yun lang wan
-雲尼斯達萊	yun ni si da lai
 魂魄唔齊	hun po wu qi
 雲盤	yun pan
 雲沙	yun sha
@@ -155924,6 +155965,10 @@
 屈仄	qu ze
 屈厔	qu zhi
 屈尊俯就	qu zun fu jiu
+𢱑爛塊面	wa lan kuai mian
+𢱑料	wa liao
+𢱑銀	wa yin
+𢱑着數	wa zhe shu
 榮休	rong xiu
 永凍層	yong dong ceng
 永動	yong dong
@@ -156174,6 +156219,7 @@
 烏垂垂	wu chui chui
 鎢絲膽	wu si dan
 烏瀡瀡	wu sui sui
+烏𢱑	wu wa
 烏嘴	wu zui
 烏黢黢	wu qu qu
 污糟錢	wu zao qian
@@ -156345,16 +156391,8 @@
 揸住雞毛當令箭	zha zhu ji mao dang ling jian
 揸住時機	zha zhu shi ji
 揸住支銤	zha zhu zhi mi
-渣斗	zha dou
-苲斗	zha dou
-苴斗	ju dou
-鮓斗	zha dou
-鮓豆	zha dou
-苴嘢	ju ye
-鮓嘢	zha ye
-渣皮	zha pi
-苴皮	ju pi
-鮓皮	zha pi
+喳斗	zha dou
+喳嘢	zha ye
 咋噃	za fan
 乍青乍白	zha qing zha bai
 苲草	zha cao
@@ -156688,6 +156726,8 @@
 浸浸涼	jin jin liang
 浸酒	jin jiu
 浸豬籠	jin zhu long
+𠹻𡃴	zhen sui
+𠹻味	zhen wei
 沉死	chen si
 珍寶機	zhen bao ji
 珍寶海鮮舫	zhen bao hai xian fang
@@ -156963,7 +157003,6 @@
 走足	zou zu
 走珠筆	zou zhu bi
 晝夜節律	zhou ye jie lv
-皺掹掹	zhou meng meng
 皺紋膠紙	zhou wen jiao zhi
 奏帖	zou tie
 皺紙	zhou zhi
@@ -157533,6 +157572,7 @@
 漸快	jian kuai
 漸稀	jian xi
 煎薄鐺	jian bao dang
+煎薄𦉘	jian bao cheng
 煎堆碌碌	jian dui lu lu
 煎封	jian feng
 氈靴	zhan xue
@@ -167819,7 +167859,6 @@
 你們在哪兒	ni men zai na er
 你們在哪裏	ni men zai na li
 你那	ni na
-你是	ni shi
 你是誰	ni shi shui
 你就是	ni jiu shi
 你這	ni zhe
@@ -167851,7 +167890,6 @@
 我現在	wo xian zai
 我們在	wo men zai
 我那	wo na
-我是	wo shi
 我是誰	wo shi shui
 我就是	wo jiu shi
 我這	wo zhe
@@ -167994,8 +168032,6 @@
 她們在	ta men zai
 他那	ta na
 她那	ta na
-他是	ta shi
-她是	ta shi
 他是誰	ta shi shui
 她是誰	ta shi shui
 他就是	ta jiu shi
@@ -170072,6 +170108,7 @@
 銀行咭	yin xing ji
 涉谷	she gu
 晒士	shai shi
+咕臣	gu chen
 花臣	hua chen
 花臣嘢	hua chen ye
 搞花臣	gao hua chen
@@ -170193,6 +170230,7 @@
 窿窿罅罅	long long xia xia
 蟬蠐	chan qi
 單依純	shan yi chun
+李小璐	li xiao lu
 景甜	jing tian
 孫宇晨	sun yu chen
 李新野	li xin ye
@@ -177413,7 +177451,6 @@
 䟓	zheng
 䟫	shang
 罉	cang
-𦉘	cheng
 䁎	ting
 㛼	sha
 㮑	qi
@@ -177932,7 +177969,6 @@
 㕤	rou
 㤹	jiu
 㭝	ou
-𡲢	qie
 㩻	gui
 㩽	chi
 㩽	e
@@ -178046,7 +178082,6 @@
 䐇	chun
 㡈	men
 㡈	mian
-𤷪	meng
 䈍	meng
 㵥	bi
 䱕	mei
@@ -178298,7 +178333,6 @@
 䆚	dong
 䳋	xiao
 𡱰	du
-𢱑	wa
 䃶	guai
 䃶	gui
 䠿	kui
@@ -178394,7 +178428,6 @@
 䃌	yin
 𨦸	zhen
 䏖	yin
-𤺧	zeng
 㗧	die
 㖄	zhou
 㨄	tiao

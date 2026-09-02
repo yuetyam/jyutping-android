@@ -1,0 +1,4 @@
+1. Added a new setting to display numbers and symbols on letter keys.
+2. Improved the input engine and dictionary structure for a smoother typing experience.
+3. Slightly improved the typing experience on the triple-stroke keyboard.
+4. Slightly improved the visual design of the Jyutping tone chart in the main app.

@@ -6874,7 +6874,6 @@ stamp	stamp
 lotus	lotus
 salmon	salmon
 separated	separated
-proc	proc
 cargo	cargo
 tan	tan
 directive	directive
