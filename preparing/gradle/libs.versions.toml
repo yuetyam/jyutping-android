@@ -1,7 +1,7 @@
 [versions]
-kotlin = "2.4.10"
-slf4j = "2.0.18"
-sqlite-jdbc = "3.53.2.1"
+kotlin = "2.4.20"
+slf4j = "2.0.20"
+sqlite-jdbc = "3.53.4.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
