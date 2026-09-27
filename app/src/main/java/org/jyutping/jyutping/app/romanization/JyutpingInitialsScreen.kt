@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -115,6 +116,16 @@ fun JyutpingInitialsScreen() {
                         ) {
                                 InitialLabel(word = "蛙", syllable = "waa1", jyutping = "w", ipa = "[ w ]")
                                 InitialLabel(word = "也", syllable = "jaa5", jyutping = "j", ipa = "[ j ]")
+                        }
+                }
+                item {
+                        SelectionContainer {
+                                Text(
+                                        text = "本表所用國際音標爲寬式轉寫，旨在輔助粵拼標示，而非精確描述發音。",
+                                        modifier = Modifier.padding(6.dp),
+                                        color = colorScheme.onBackground,
+                                        style = typography.bodySmall
+                                )
                         }
                 }
         }
