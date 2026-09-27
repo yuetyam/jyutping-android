@@ -38,10 +38,10 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -92,7 +92,7 @@ fun SettingsScreen(height: Dp) {
         val needsLeftKey by context.needsLeftKey.collectAsState()
         val needsRightKey by context.needsRightKey.collectAsState()
         val keyHeightOffset by context.keyHeightOffset.collectAsState()
-        var keyHeightSliderPosition by remember { mutableFloatStateOf(keyHeightOffset.toFloat()) }
+        val keyHeightSliderState = rememberSliderState(value = keyHeightOffset.toFloat(), steps = 13, trackRange = (-7f..7f))
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
         val inputKeyStyle by context.inputKeyStyle.collectAsState()
         val preferredInputMode by context.preferredInputMode.collectAsState()
@@ -453,9 +453,9 @@ fun SettingsScreen(height: Dp) {
                                                         }
                                                 }
                                                 Slider(
-                                                        value = keyHeightSliderPosition,
+                                                        state = keyHeightSliderState,
                                                         onValueChange = {
-                                                                keyHeightSliderPosition = it
+                                                                keyHeightSliderState.value = it
                                                                 context.audioFeedback(SoundEffect.Click)
                                                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                                                                         view.performHapticFeedback(HapticFeedbackConstants.SEGMENT_FREQUENT_TICK)
@@ -464,10 +464,8 @@ fun SettingsScreen(height: Dp) {
                                                                 }
                                                         },
                                                         onValueChangeFinished = {
-                                                                context.updateKeyHeightOffset(keyHeightSliderPosition.roundToInt())
-                                                        },
-                                                        steps = 13,
-                                                        valueRange = (-7f..7f)
+                                                                context.updateKeyHeightOffset(keyHeightSliderState.value.roundToInt())
+                                                        }
                                                 )
                                         }
                                 }
