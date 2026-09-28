@@ -48,7 +48,7 @@ val PinyinScheme.previewMark: String
 /** Segments Pinyin input into possible syllable schemes. */
 object PinyinSegmenter {
 
-        private const val TAG: String = "PinyinSegmenter"
+        private const val TAG: String = "org.jyutping.jyutping.PinyinSegmenter"
 
         fun prepare() {
                 if (pinyinSyllableMap.isEmpty()) {

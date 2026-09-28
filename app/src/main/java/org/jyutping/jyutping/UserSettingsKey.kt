@@ -14,6 +14,7 @@ object UserSettingsKey {
         const val KeyboardLayout: String = "keyboard_layout"
         const val NumericLayout: String = "numeric_layout"
         const val StrokeLayout: String = "stroke_layout"
+        const val NumberRow: String = "number_row"
         const val KeyCase: String = "key_case"
         const val KeyTextPreview: String = "key_preview"
         const val HighContrast: String = "high_contrast"

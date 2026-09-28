@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.keyboard.BackspaceKey
 import org.jyutping.jyutping.keyboard.CandidateScrollBar
+import org.jyutping.jyutping.keyboard.CantoneseNumberRow
 import org.jyutping.jyutping.keyboard.ShiftKey
 import org.jyutping.jyutping.keyboard.SimpleBottomKeyRow
 import org.jyutping.jyutping.models.KeyboardForm
@@ -34,6 +35,7 @@ fun StrokeKeyboard(keyHeight: Dp) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
+        val needsNumberRow by context.needsNumberRow.collectAsState()
         val useDedicatedNumberPad by context.useDedicatedNumberPad.collectAsState()
         Column(
                 modifier = Modifier
@@ -55,6 +57,9 @@ fun StrokeKeyboard(keyHeight: Dp) {
                         contentAlignment = Alignment.Center
                 ) {
                         CandidateScrollBar()
+                }
+                if (needsNumberRow) {
+                        CantoneseNumberRow(height = keyHeight)
                 }
                 Row(
                         modifier = Modifier

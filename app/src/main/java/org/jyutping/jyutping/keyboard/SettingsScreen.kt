@@ -85,6 +85,7 @@ fun SettingsScreen(height: Dp) {
         val isHapticFeedbackOn by context.isHapticFeedbackOn.collectAsState()
         val useDedicatedNumberPad by context.useDedicatedNumberPad.collectAsState()
         val useDedicatedStrokeLayout by context.useDedicatedStrokeLayout.collectAsState()
+        val needsNumberRow by context.needsNumberRow.collectAsState()
         val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
         val previewKeyText by context.previewKeyText.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
@@ -269,6 +270,26 @@ fun SettingsScreen(height: Dp) {
                                                                 context.updateDedicatedStrokeLayoutUsage(it)
                                                         },
                                                         thumbContent = { SwitchThumbContent(useDedicatedStrokeLayout) }
+                                                )
+                                        }
+                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                        Row(
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_number_row_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = needsNumberRow,
+                                                        onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(if (it) onHaptic else offHaptic)
+                                                                context.updateNeedsNumberRow(it)
+                                                        },
+                                                        thumbContent = { SwitchThumbContent(needsNumberRow) }
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)

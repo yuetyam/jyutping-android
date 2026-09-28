@@ -34,6 +34,7 @@ fun NumericKeyboard(keyHeight: Dp) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
+        val needsNumberRow by context.needsNumberRow.collectAsState()
         Column(
                 modifier = Modifier
                         .background(
@@ -55,7 +56,10 @@ fun NumericKeyboard(keyHeight: Dp) {
                 ) {
                         ToolBar()
                 }
-                NumberRow(keyHeight)
+                if (needsNumberRow) {
+                        NumberRow(height = keyHeight)
+                }
+                NumberRow(height = keyHeight)
                 Row(
                         modifier = Modifier
                                 .height(keyHeight)

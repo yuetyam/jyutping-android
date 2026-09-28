@@ -15,6 +15,7 @@ import org.jyutping.jyutping.models.KeyModel
 import org.jyutping.jyutping.models.KeySide
 import org.jyutping.jyutping.models.KeyboardForm
 
+// For Cantonese Numeric and Symbolic keyboards
 @Composable
 fun CantoneseAltBottomKeyRow(transform: KeyboardForm, height: Dp) {
         val context = LocalContext.current as JyutpingInputMethodService

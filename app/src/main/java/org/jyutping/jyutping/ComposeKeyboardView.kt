@@ -53,6 +53,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
         @Composable
         override fun Content() {
                 val ctx = context as JyutpingInputMethodService
+                val needsNumberRow by ctx.needsNumberRow.collectAsState()
                 val isHapticFeedbackOn by ctx.isHapticFeedbackOn.collectAsState()
                 LocalView.current.isHapticFeedbackEnabled = isHapticFeedbackOn
 
@@ -80,7 +81,7 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                                 // Expanded mode: show full candidate board
                                 // val screenHeight = LocalConfiguration.current.screenHeightDp.dp
                                 // val expandedHeight = screenHeight * 0.5f // 50% of screen height
-                                val expandedHeight = keyboardHeight(0)
+                                val expandedHeight = keyboardHeight(0, needsNumberRow)
                                 CandidateBoard(height = expandedHeight, isPhysicalKeyboard = true)
                         } else {
                                 // Collapsed mode: show horizontal scrolling candidates
@@ -123,17 +124,17 @@ class ComposeKeyboardView(context: Context) : AbstractComposeView(context) {
                         }
                         KeyboardForm.DedicatedNumbers -> TailoredNumericKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
                         KeyboardForm.DedicatedStroke -> TailoredStrokeKeyboard(keyHeight = responsiveKeyHeight(keyOffset))
-                        KeyboardForm.CandidateBoard -> CandidateBoard(height = keyboardHeight(keyOffset))
-                        KeyboardForm.DetailInspecting -> DetailInspectingScreen(height = keyboardHeight(keyOffset))
-                        KeyboardForm.Settings -> CompactTheme { SettingsScreen(height = keyboardHeight(keyOffset)) }
-                        KeyboardForm.LayoutPicker -> CompactTheme { LayoutPickerScreen(height = keyboardHeight(keyOffset)) }
-                        KeyboardForm.EmojiBoard -> EmojiBoard(height = keyboardHeight(keyOffset))
-                        KeyboardForm.EditingPanel -> EditingPanel(height = keyboardHeight(keyOffset))
+                        KeyboardForm.CandidateBoard -> CandidateBoard(height = keyboardHeight(keyOffset, needsNumberRow))
+                        KeyboardForm.DetailInspecting -> DetailInspectingScreen(height = keyboardHeight(keyOffset, needsNumberRow))
+                        KeyboardForm.Settings -> CompactTheme { SettingsScreen(height = keyboardHeight(keyOffset, needsNumberRow)) }
+                        KeyboardForm.LayoutPicker -> CompactTheme { LayoutPickerScreen(height = keyboardHeight(keyOffset, needsNumberRow)) }
+                        KeyboardForm.EmojiBoard -> EmojiBoard(height = keyboardHeight(keyOffset, needsNumberRow))
+                        KeyboardForm.EditingPanel -> EditingPanel(height = keyboardHeight(keyOffset, needsNumberRow))
                 }
         }
 
         @Composable
-        private fun keyboardHeight(keyOffset: Int): Dp = (responsiveKeyHeight(keyOffset) * 4) + PresetConstant.ToolBarHeight.dp
+        private fun keyboardHeight(keyOffset: Int, needsNumberRow: Boolean): Dp = (responsiveKeyHeight(keyOffset) * (if (needsNumberRow) 5 else 4)) + PresetConstant.ToolBarHeight.dp
 
         @Composable
         private fun responsiveKeyHeight(offset: Int): Dp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) api34ResponsiveKeyHeight(offset) else legacyResponsiveKeyHeight(offset)

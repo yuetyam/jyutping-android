@@ -6,7 +6,7 @@ import org.jyutping.jyutping.Elephant
 /** Segments Jyutping input into possible syllable schemes. */
 object Segmenter {
 
-        private const val TAG: String = "Segmenter"
+        private const val TAG: String = "org.jyutping.jyutping.Segmenter"
 
         fun prepare() {
                 if (syllableCodeMap.isEmpty()) {

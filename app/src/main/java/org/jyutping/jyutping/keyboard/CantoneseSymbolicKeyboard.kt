@@ -34,6 +34,7 @@ fun CantoneseSymbolicKeyboard(keyHeight: Dp) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
+        val needsNumberRow by context.needsNumberRow.collectAsState()
         Column(
                 modifier = Modifier
                         .background(
@@ -54,6 +55,9 @@ fun CantoneseSymbolicKeyboard(keyHeight: Dp) {
                         contentAlignment = Alignment.Center
                 ) {
                         ToolBar()
+                }
+                if (needsNumberRow) {
+                        CantoneseNumberRow(height = keyHeight)
                 }
                 Row(
                         modifier = Modifier

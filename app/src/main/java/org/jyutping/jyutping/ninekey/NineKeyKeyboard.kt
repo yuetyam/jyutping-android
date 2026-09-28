@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.keyboard.CandidateScrollBar
+import org.jyutping.jyutping.keyboard.CantoneseNumberRow
 import org.jyutping.jyutping.keyboard.ToolBar
 import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.presets.AltPresetColor
@@ -35,7 +36,9 @@ fun NineKeyKeyboard(keyHeight: Dp) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
-        val totalHeight: Dp = (keyHeight * 4) + PresetConstant.ToolBarHeight.dp
+        val needsNumberRow by context.needsNumberRow.collectAsState()
+        val rowCount: Float = if (needsNumberRow) 5f else 4f
+        val totalHeight: Dp = (keyHeight * rowCount) + PresetConstant.ToolBarHeight.dp
         val sidebarUnitHeight: Dp = keyHeight * 3f / 4f
         Column(
                 modifier = Modifier
@@ -62,6 +65,9 @@ fun NineKeyKeyboard(keyHeight: Dp) {
                         } else {
                                 ToolBar()
                         }
+                }
+                if (needsNumberRow) {
+                        CantoneseNumberRow(height = keyHeight)
                 }
                 Row(
                         modifier = Modifier.fillMaxSize(),

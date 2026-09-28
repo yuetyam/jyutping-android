@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.keyboard.CandidateScrollBar
+import org.jyutping.jyutping.keyboard.CantoneseNumberRow
 import org.jyutping.jyutping.ninekey.NineKeyBackspaceKey
 import org.jyutping.jyutping.ninekey.NineKeyReturnKey
 import org.jyutping.jyutping.ninekey.NineKeySpaceKey
@@ -33,7 +34,9 @@ fun TailoredStrokeKeyboard(keyHeight: Dp) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
-        val totalHeight = (keyHeight * 4) + PresetConstant.ToolBarHeight.dp
+        val needsNumberRow by context.needsNumberRow.collectAsState()
+        val rowCount: Float = if (needsNumberRow) 5f else 4f
+        val totalHeight = (keyHeight * rowCount) + PresetConstant.ToolBarHeight.dp
         Column(
                 modifier = Modifier
                         .background(
@@ -55,6 +58,9 @@ fun TailoredStrokeKeyboard(keyHeight: Dp) {
                         contentAlignment = Alignment.Center
                 ) {
                         CandidateScrollBar()
+                }
+                if (needsNumberRow) {
+                        CantoneseNumberRow(height = keyHeight)
                 }
                 Row(
                         modifier = Modifier.fillMaxSize(),

@@ -31,6 +31,7 @@ fun CangjieKeyboard(keyHeight: Dp) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
+        val needsNumberRow by context.needsNumberRow.collectAsState()
         val useDedicatedNumberPad by context.useDedicatedNumberPad.collectAsState()
         Column(
                 modifier = Modifier
@@ -56,6 +57,9 @@ fun CangjieKeyboard(keyHeight: Dp) {
                         } else {
                                 ToolBar()
                         }
+                }
+                if (needsNumberRow) {
+                        CantoneseNumberRow(height = keyHeight)
                 }
                 Row(
                         modifier = Modifier

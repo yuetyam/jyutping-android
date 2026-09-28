@@ -23,6 +23,7 @@ import org.jyutping.jyutping.models.KeyElement
 import org.jyutping.jyutping.models.KeyModel
 import org.jyutping.jyutping.models.KeySide
 import org.jyutping.jyutping.models.KeyboardForm
+import org.jyutping.jyutping.numeric.NumberRow
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
@@ -33,6 +34,7 @@ fun SymbolicKeyboard(keyHeight: Dp) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
+        val needsNumberRow by context.needsNumberRow.collectAsState()
         Column(
                 modifier = Modifier
                         .background(
@@ -53,6 +55,9 @@ fun SymbolicKeyboard(keyHeight: Dp) {
                         contentAlignment = Alignment.Center
                 ) {
                         ToolBar()
+                }
+                if (needsNumberRow) {
+                        NumberRow(height = keyHeight)
                 }
                 Row(
                         modifier = Modifier

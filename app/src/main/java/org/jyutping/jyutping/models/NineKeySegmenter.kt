@@ -71,7 +71,7 @@ val NineKeyScheme.serialOriginKeys: List<VirtualInputKey>
 /** Segments 9-key input into possible Jyutping syllable schemes. */
 object NineKeySegmenter {
 
-        private const val TAG: String = "NineKeySegmenter"
+        private const val TAG: String = "org.jyutping.jyutping.NineKeySegmenter"
 
         fun prepare() {
                 if (syllableCodeMap.isEmpty()) {

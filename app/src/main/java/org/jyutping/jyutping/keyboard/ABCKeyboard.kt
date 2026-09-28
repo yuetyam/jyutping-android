@@ -23,6 +23,7 @@ import org.jyutping.jyutping.models.KeyElement
 import org.jyutping.jyutping.models.KeyModel
 import org.jyutping.jyutping.models.KeySide
 import org.jyutping.jyutping.models.VirtualInputKey
+import org.jyutping.jyutping.numeric.NumberRow
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
@@ -33,6 +34,7 @@ fun ABCKeyboard(keyHeight: Dp) {
         val isDarkMode by context.isDarkMode.collectAsState()
         val isHighContrastPreferred by context.isHighContrastPreferred.collectAsState()
         val extraBottomPadding by context.extraBottomPadding.collectAsState()
+        val needsNumberRow by context.needsNumberRow.collectAsState()
         val useDedicatedNumberPad by context.useDedicatedNumberPad.collectAsState()
         val inputKeyStyle by context.inputKeyStyle.collectAsState()
         Column(
@@ -55,6 +57,9 @@ fun ABCKeyboard(keyHeight: Dp) {
                         contentAlignment = Alignment.Center
                 ) {
                         ToolBar()
+                }
+                if (needsNumberRow) {
+                        NumberRow(height = keyHeight)
                 }
                 Row(
                         modifier = Modifier

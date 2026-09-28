@@ -73,6 +73,7 @@
     <string name="keyboard_settings_keyboard_feedback_haptic_switch_title">觸感</string>
     <string name="keyboard_settings_numeric_layout_switch_title">使用九宮格數字鍵盤</string>
     <string name="keyboard_settings_stroke_layout_switch_title">使用九宮格筆畫鍵盤</string>
+    <string name="keyboard_settings_number_row_switch_title">鍵盤上部顯示一行數字鍵</string>
     <string name="keyboard_settings_show_lowercase_keys_switch_title">鍵文字母小寫顯示</string>
     <string name="keyboard_settings_key_text_preview_switch_title">鍵文氣泡預覽</string>
     <string name="keyboard_settings_high_contrast_switch_title">使用黑白高對比度配色</string>

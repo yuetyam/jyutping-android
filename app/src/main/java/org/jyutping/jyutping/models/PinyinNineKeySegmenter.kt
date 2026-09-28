@@ -40,7 +40,7 @@ val PinyinNineKeyScheme.combos: List<Combo>
 /** Segments 9-key Pinyin input into possible syllable schemes. */
 object PinyinNineKeySegmenter {
 
-        private const val TAG: String = "PinyinNineKeySegmenter"
+        private const val TAG: String = "org.jyutping.jyutping.PinyinNineKeySegmenter"
 
         fun prepare() {
                 if (syllableCodeMap.isEmpty()) {

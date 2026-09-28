@@ -523,6 +523,19 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 }
         }
 
+        val needsNumberRow: MutableStateFlow<Boolean> by lazy {
+                val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.NumberRow, 0)
+                val needs: Boolean = (savedValue == 1)
+                MutableStateFlow(needs)
+        }
+        fun updateNeedsNumberRow(needs: Boolean) {
+                needsNumberRow.value = needs
+                val value: Int = if (needs) 1 else 2
+                sharedPreferences.edit {
+                        putInt(UserSettingsKey.NumberRow, value)
+                }
+        }
+
         val showLowercaseKeys: MutableStateFlow<Boolean> by lazy {
                 val savedValue: Int = sharedPreferences.getInt(UserSettingsKey.KeyCase, 1)
                 val isLowercase: Boolean = (savedValue == 1)
@@ -959,11 +972,17 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
         private fun joinedBufferTexts(): String = bufferEvents.joinToString(separator = PresetString.EMPTY) { if (it.case.isLowercased) it.key.text else it.key.text.uppercase() }
         fun handle(key: VirtualInputKey) {
-                val shouldAppendEvent: Boolean = inputMethodMode.value.isCantonese && keyboardForm.value.isBufferable
-                if (shouldAppendEvent) {
+                val isCantoneseComposeMode: Boolean = inputMethodMode.value.isCantonese && keyboardForm.value.isBufferable
+                val shouldAppendEvent: Boolean = key.isLetter || (isBuffering.value && (key.isToneNumber || key.isApostrophe))
+                if (isCantoneseComposeMode && shouldAppendEvent) {
                         val newEvent = BasicInputEvent(key = key, case = keyboardCase.value)
                         inputLengthSequence = inputLengthSequence + 1
                         bufferEvents = bufferEvents + newEvent
+                } else if (isBuffering.value) {
+                        val keyText: String = if (keyboardCase.value.isLowercased) key.text else key.text.uppercase()
+                        val text: String = joinedBufferTexts() + keyText
+                        currentInputConnection.commitText(text, 1)
+                        clearBuffer()
                 } else {
                         val text: String = if (keyboardCase.value.isLowercased) key.text else key.text.uppercase()
                         currentInputConnection.commitText(text, 1)
