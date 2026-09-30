@@ -192,7 +192,7 @@
 1	110000	1F928	面目猙獰	min6 muk6 zang1 ning4
 1	110000	1F928	猙獰	zang1 ning4
 1	110000	1F928	不悅	bat1 jyut6
-1	110000	1F928	憤怒	fan5 nou6
+1	110000	1F928	質疑	zat1 ji4
 1	110000	1F9D0	單片眼鏡	daan1 pin3 ngaan5 geng3
 1	110000	1F9D0	檢查	gim2 caa4
 1	110000	1F9D0	睇過	tai2 gwo3
@@ -327,10 +327,7 @@
 1	110000	1F62D	哭泣	huk1 jap1
 1	110000	1F62D	悲傷	bei1 soeng1
 1	110000	1F62D	牢大	lou4 daai6
-1	110000	1F624	唔忿	m4 fan5
 1	110000	1F624	氣憤	hei3 fan5
-1	110000	1F624	怒	nou6
-1	110000	1F624	惱	nou5
 1	110000	1F624	惱	nau1
 1	110000	1F624	嬲	nau1
 1	110000	1F624	激死	gik1 sei2
@@ -763,13 +760,11 @@
 1	110000	1F91B	打拳	daa2 kyun2
 1	110000	1F91B	拳頭	kyun4 tau4
 1	110000	1F91B	拳擊	kyun4 gik1
-1	110000	1F91B	拳	kyun4
 1	110000	1F91C	左拳	zo2 kyun4
 1	110000	1F91C	打拳	daa2 kyun4
 1	110000	1F91C	打拳	daa2 kyun2
 1	110000	1F91C	拳頭	kyun4 tau4
 1	110000	1F91C	拳擊	kyun4 gik1
-1	110000	1F91C	拳	kyun4
 1	150000	1FAF7	向左推	hoeng3 zo2 teoi1
 1	150000	1FAF8	向右推	hoeng3 jau6 teoi1
 1	110000	1F91E	交叉手指	gaau1 caa1 sau2 zi2
@@ -778,7 +773,6 @@
 1	110000	270C.FE0F	和平手勢	wo4 ping4 sau2 sai3
 1	110000	270C.FE0F	勝利手勢	sing3 lei6 sau2 sai3
 1	110000	270C.FE0F	勝利	sing3 lei6
-1	110000	270C.FE0F	好嘢	hou2 je5
 1	110000	270C.FE0F	手勢二	sau2 sai3 ji6
 1	110000	270C.FE0F	㖿	je1
 1	140000	1FAF0	錢銀	cin2 ngan2
@@ -1436,7 +1430,7 @@
 1	110000	1F9DC.200D.2640.FE0F	人魚	jan4 jyu4
 1	110000	1F9DC.200D.2640.FE0F	魚人	jyu4 jan4
 1	110000	1F9DC	中性人魚	zung1 sing3 jan4 jyu4
-1	110000	1F9DC.200D.2642.FE0F	男人魚	naam4 jan2 jyu4
+1	110000	1F9DC.200D.2642.FE0F	男人魚	naam4 jan4 jyu4
 1	110000	1F9DA.200D.2640.FE0F	仙女	sin1 neoi2
 1	110000	1F9DA.200D.2640.FE0F	仙女	sin1 neoi5
 1	110000	1F9DA.200D.2640.FE0F	女仙人	neoi5 sin1 jan4
@@ -2151,7 +2145,6 @@
 2	110000	1FAB2	甲殼蟲	gaap3 hok3 cung4
 2	110000	1FAB2	金龜子	gam1 gwai1 zi2
 2	110000	1FAB3	曱甴	gaat6 zaat6
-2	110000	1FAB3	曱甴	gaat6 zaat2
 2	110000	1FAB3	蟑螂	zoeng1 long4
 2	110000	1FAB3	蟑	zoeng1
 2	110000	1FAB3	小強	siu2 koeng4
@@ -2295,6 +2288,7 @@
 2	110000	1F402	牯	gu2
 2	110000	1F402	牛	ngau4
 2	110000	1F404	奶牛	naai5 ngau4
+2	110000	1F404	乳牛	jyu5 ngau4
 2	150000	1FACF	驢	leoi4
 2	150000	1FACF	驢	lou4
 2	150000	1FACF	驢仔	leoi4 zai2
@@ -3724,10 +3718,13 @@
 5	110000	1F6B2	單車	daan1 ce1
 5	110000	1F6B2	腳踏車	goek3 daap6 ce1
 5	110000	1F6B2	自行車	zi6 hang4 ce1
+5	110000	1F6B2	人力車	jan4 lik6 ce1
 5	110000	1F6F5	電動單車	din6 dung6 daan1 ce1
 5	110000	1F6F5	電動自行車	din6 dung6 zi6 hang4 ce1
 5	110000	1F6F5	電動車	din6 dung6 ce1
 5	110000	1F6F5	電雞	din6 gai1
+5	110000	1F6F5	電驢	din6 leoi4
+5	110000	1F6F5	電驢	din6 lou4
 5	110000	1F3CD	摩托車	mo1 tok3 ce1
 5	110000	1F3CD	摩托	mo1 tok3
 5	110000	1F3CD	電單車	din6 daan1 ce1
@@ -5211,9 +5208,9 @@
 7	110000	1F6AE	垃圾	laap6 saap3
 7	110000	1F3A6	電影院	din6 jing2 jyun2
 7	110000	1F3A6	睇電影	tai2 din6 jing2
+7	110000	1F3A6	影院	jing2 jyun2
 7	110000	1F3A6	戲院	hei3 jyun2
 7	110000	1F3A6	睇戲	tai2 hei3
-7	110000	1F3A6	戲	hei3
 7	110000	1F3A6	電影	din6 jing2
 7	110000	1F4F6	信號	seon3 hou6
 7	110000	1F4F6	訊號	seon3 hou6
@@ -5486,6 +5483,7 @@
 7	110000	1F3B4	花紙牌	faa1 zi2 paai4
 7	110000	1F3B4	遊戲牌	jau4 hei3 paai4
 7	110000	1F004	紅中	hung4 zung1
+7	110000	1F004	中字	zung1 zi6
 7	110000	1F550	一點正	jat1 dim2 zing3
 7	110000	1F550	一點鐘	jat1 dim2 zung1
 7	110000	1F550	一點	jat1 dim2
@@ -5620,8 +5618,8 @@
 8	110000	1F1E8.1F1E9	剛果	gong1 gwo2
 8	110000	1F1E8.1F1F0	庫克羣島	fu3 hak1 kwan4 dou2
 8	110000	1F1E8.1F1F7	哥斯達黎加	go1 si1 daat6 lai4 gaa1
-8	110000	1F1E8.1F1EE	科特迪瓦	fo1 dak6 dik6 ngaa5
 8	110000	1F1E8.1F1EE	象牙海岸	zoeng6 ngaa4 hoi2 ngon6
+8	110000	1F1E8.1F1EE	科特迪瓦	fo1 dak6 dik6 ngaa5
 8	110000	1F1ED.1F1F7	克羅地亞	hak1 lo4 dei6 aa3
 8	110000	1F1E8.1F1FA	古巴	gu2 baa1
 8	110000	1F1E8.1F1FC	庫拉索	fu3 laai1 sok3
@@ -5768,6 +5766,7 @@
 8	110000	1F1F4.1F1F2	阿曼	aa3 maan6
 8	110000	1F1F5.1F1F0	巴基斯坦	baa1 gei1 si1 taan2
 8	110000	1F1F5.1F1FC	帕勞	paak3 lou4
+8	110000	1F1F5.1F1FC	帛琉	baak6 lau4
 8	110000	1F1F5.1F1F8	巴勒斯坦	baa1 lak6 si1 taan2
 8	110000	1F1F5.1F1E6	巴拿馬	baa1 naa4 maa5
 8	110000	1F1F5.1F1EC	巴布亞新幾內亞	baa1 bou3 aa3 san1 gei2 noi6 aa3
@@ -5954,10 +5953,8 @@
 10	110000	2F04	彎鉤	waan1 ngau1
 10	110000	4E5B	折	zit3
 10	110000	4E5B	彎鉤	waan1 ngau1
-10	110000	4EBB	企人邊	kei5 jan2 bin1
 10	110000	4EBB	企人邊	kei5 jan4 bin1
 10	110000	4EBB	企人旁	kei5 jan4 pong4
-10	110000	4EBB	單企人	daan1 kei5 jan2
 10	110000	4EBB	單企人	daan1 kei5 jan4
 10	110000	4EBB	單人旁	daan1 jan4 pong4
 10	110000	4EBB	單立人	daan1 lap6 jan4
@@ -5978,7 +5975,6 @@
 10	110000	5202	刀字邊	dou1 zi6 bin1
 10	110000	5202	刀字旁	dou1 zi6 pong4
 10	110000	5202	立刀旁	lap6 dou1 pong4
-10	110000	5F73	雙企人	soeng1 kei5 jan2
 10	110000	5F73	雙企人	soeng1 kei5 jan4
 10	110000	5F73	雙人旁	soeng1 jan4 pong4
 10	110000	5F73	雙人邊	soeng1 jan4 bin1
