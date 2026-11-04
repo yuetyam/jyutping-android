@@ -94,8 +94,6 @@ fun AboutScreen() {
                                 AppLinkLabel(icon = Icons.Outlined.CenterFocusStrong, text = stringResource(id = R.string.about_label_instagram), uri = AppMaster.InstagramWebAddress)
                                 EnhancedHorizontalDivider()
                                 AppLinkLabel(icon = Icons.Rounded.AlternateEmail, text = stringResource(id = R.string.about_label_threads), uri = AppMaster.ThreadsAddress)
-                                EnhancedHorizontalDivider()
-                                AppLinkLabel(icon = Icons.Rounded.AlternateEmail, text = stringResource(id = R.string.about_label_twitter), uri = AppMaster.TwitterWebAddress)
                         }
                 }
                 item {

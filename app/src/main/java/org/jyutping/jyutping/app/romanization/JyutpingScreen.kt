@@ -83,6 +83,8 @@ fun JyutpingScreen(navController: NavHostController) {
                                 WebLinkLabel(icon = Icons.Outlined.Public, text = "Zidou - 粵拼版 Wordle", uri = "https://chaaklau.github.io/zidou")
                                 EnhancedHorizontalDivider()
                                 WebLinkLabel(icon = Icons.Outlined.Public, text = "六合 | 粵拼版 Wordle", uri = "https://lukhap.jonathanl.dev")
+                                EnhancedHorizontalDivider()
+                                WebLinkLabel(icon = Icons.Outlined.Public, text = "香港 MTR 粵拼打字遊戲", uri = "https://norushbequick.cantomore.com")
                         }
                 }
         }

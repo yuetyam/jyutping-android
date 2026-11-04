@@ -12,7 +12,6 @@ object AppMaster {
         const val RedNoteAddress: String = "https://www.xiaohongshu.com/user/profile/62ee9df9000000001e01f5d6"
         const val InstagramWebAddress: String = "https://www.instagram.com/jyutping_app"
         const val ThreadsAddress: String = "https://www.threads.net/@jyutping_app"
-        const val TwitterWebAddress: String = "https://x.com/JyutpingApp"
 
         const val GoogleFormsAddress: String = "https://forms.gle/4N9zwpL7KwnfaeXu6"
         const val TencentSurveyAddress: String = "https://wj.qq.com/s2/14037245/fe08"
