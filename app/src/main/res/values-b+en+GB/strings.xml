@@ -71,7 +71,6 @@
     <string name="keyboard_settings_keyboard_feedback_audio_switch_title">Sound</string>
     <string name="keyboard_settings_keyboard_feedback_haptic_switch_title">Haptic</string>
     <string name="keyboard_settings_numeric_layout_switch_title">Use 10 Key Number Pad</string>
-    <string name="keyboard_settings_stroke_layout_switch_title">Use 10 Key Stroke Keyboard</string>
     <string name="keyboard_settings_number_row_switch_title">Top Number Row</string>
     <string name="keyboard_settings_show_lowercase_keys_switch_title">Show Lowercase Keys</string>
     <string name="keyboard_settings_key_text_preview_switch_title">Key Text Preview</string>
@@ -105,7 +104,9 @@
     <string name="keyboard_settings_traditional_character_standard_option9_abp">Mainland China (Ancient Books Publishing)</string>
     <string name="keyboard_settings_traditional_character_standard_option3_inherited">Inherited</string>
     <string name="keyboard_settings_traditional_character_standard_footer">The Inherited option uses rare characters and may have limited compatibility. Use it with caution.</string>
-    <string name="keyboard_settings_cangjie_variant_header">Cangjie / Quick(Sucheng) Reverse Lookup</string>
+    <string name="keyboard_settings_stroke_layout_header">Stroke Reverse Lookup</string>
+    <string name="keyboard_settings_stroke_layout_switch_title">Use 10 Key Stroke Keyboard</string>
+    <string name="keyboard_settings_cangjie_variant_header">Cangjie / Sucheng Reverse Lookup</string>
     <string name="keyboard_settings_cangjie_variant_cangjie5">Cangjie5 (倉頡五代)</string>
     <string name="keyboard_settings_cangjie_variant_cangjie3">Cangjie3 (倉頡三代)</string>
     <string name="keyboard_settings_cangjie_variant_quick5">Quick5 (速成五代)</string>

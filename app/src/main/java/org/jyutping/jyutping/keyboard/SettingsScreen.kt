@@ -29,7 +29,6 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ButtonGroup
 import androidx.compose.material3.ButtonGroupDefaults
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -75,7 +74,6 @@ import java.util.Locale
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.milliseconds
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun SettingsScreen(height: Dp) {
         val view = LocalView.current
@@ -84,7 +82,6 @@ fun SettingsScreen(height: Dp) {
         val isAudioFeedbackOn by context.isAudioFeedbackOn.collectAsState()
         val isHapticFeedbackOn by context.isHapticFeedbackOn.collectAsState()
         val useDedicatedNumberPad by context.useDedicatedNumberPad.collectAsState()
-        val useDedicatedStrokeLayout by context.useDedicatedStrokeLayout.collectAsState()
         val needsNumberRow by context.needsNumberRow.collectAsState()
         val showLowercaseKeys by context.showLowercaseKeys.collectAsState()
         val previewKeyText by context.previewKeyText.collectAsState()
@@ -99,6 +96,7 @@ fun SettingsScreen(height: Dp) {
         val preferredInputMode by context.preferredInputMode.collectAsState()
         val commentStyle by context.commentStyle.collectAsState()
         val preferredTraditionalStandard by context.preferredTraditionalStandard.collectAsState()
+        val useDedicatedStrokeLayout by context.useDedicatedStrokeLayout.collectAsState()
         val cangjieVariant by context.cangjieVariant.collectAsState()
         val isEmojiSuggestionsOn by context.isEmojiSuggestionsOn.collectAsState()
         val isEnglishSuggestionsOn by context.isEnglishSuggestionsOn.collectAsState()
@@ -250,26 +248,6 @@ fun SettingsScreen(height: Dp) {
                                                                 context.updateDedicatedNumberPadUsage(it)
                                                         },
                                                         thumbContent = { SwitchThumbContent(useDedicatedNumberPad) }
-                                                )
-                                        }
-                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
-                                        Row(
-                                                modifier = Modifier.padding(horizontal = 8.dp),
-                                                verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                                Text(
-                                                        text = stringResource(id = R.string.keyboard_settings_stroke_layout_switch_title),
-                                                        color = tintColor
-                                                )
-                                                Spacer(modifier = Modifier.weight(1f))
-                                                Switch(
-                                                        checked = useDedicatedStrokeLayout,
-                                                        onCheckedChange = {
-                                                                context.audioFeedback(SoundEffect.Click)
-                                                                view.performHapticFeedback(if (it) onHaptic else offHaptic)
-                                                                context.updateDedicatedStrokeLayoutUsage(it)
-                                                        },
-                                                        thumbContent = { SwitchThumbContent(useDedicatedStrokeLayout) }
                                                 )
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)
@@ -867,6 +845,40 @@ fun SettingsScreen(height: Dp) {
                                                 color = tintColor,
                                                 style = MaterialTheme.typography.bodySmall
                                         )
+                                }
+                        }
+                        item {
+                                Column(
+                                        verticalArrangement = Arrangement.spacedBy(2.dp)
+                                ) {
+                                        Text(
+                                                text = stringResource(id = R.string.keyboard_settings_stroke_layout_header),
+                                                modifier = Modifier.padding(horizontal = 8.dp),
+                                                color = tintColor,
+                                                style = MaterialTheme.typography.bodySmall
+                                        )
+                                        Row(
+                                                modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .background(color = backColor, shape = CircleShape)
+                                                        .padding(horizontal = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                                Text(
+                                                        text = stringResource(id = R.string.keyboard_settings_stroke_layout_switch_title),
+                                                        color = tintColor
+                                                )
+                                                Spacer(modifier = Modifier.weight(1f))
+                                                Switch(
+                                                        checked = useDedicatedStrokeLayout,
+                                                        onCheckedChange = {
+                                                                context.audioFeedback(SoundEffect.Click)
+                                                                view.performHapticFeedback(if (it) onHaptic else offHaptic)
+                                                                context.updateDedicatedStrokeLayoutUsage(it)
+                                                        },
+                                                        thumbContent = { SwitchThumbContent(useDedicatedStrokeLayout) }
+                                                )
+                                        }
                                 }
                         }
                         item {
