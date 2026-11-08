@@ -146,6 +146,7 @@
     <string name="detail_inspecting_forget_candidate_button_title">從輸入記憶移除</string>
 
     <!-- Input Memory transfer -->
+    <string name="home_label_input_memory">導出／導入輸入記憶</string>
     <string name="input_memory_export_button">導出輸入記憶</string>
     <string name="input_memory_import_button">導入輸入記憶</string>
     <string name="input_memory_export_busy">輸入記憶資料庫正忙。請稍後再試。</string>

@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Keyboard
 import androidx.compose.material.icons.outlined.Public
+import androidx.compose.material.icons.outlined.Topic
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -331,13 +332,6 @@ fun HomeScreen(navController: NavHostController) {
                                                 ) {
                                                         navController.navigate(route = Screen.Introductions.route)
                                                 }
-                                                EnhancedHorizontalDivider()
-                                                NavigationLabel(
-                                                        icon = Icons.Outlined.Keyboard,
-                                                        text = stringResource(id = R.string.input_memory_screen_title)
-                                                ) {
-                                                        navController.navigate(route = Screen.InputMemory.route)
-                                                }
                                                 if (BuildConfig.DEBUG) {
                                                         // TODO: Enhance Display Language Switching
                                                         EnhancedHorizontalDivider()
@@ -347,6 +341,13 @@ fun HomeScreen(navController: NavHostController) {
                                                         ) {
                                                                 navController.navigate(route = Screen.DisplayLanguages.route)
                                                         }
+                                                }
+                                                EnhancedHorizontalDivider()
+                                                NavigationLabel(
+                                                        icon = Icons.Outlined.Topic,
+                                                        text = stringResource(id = R.string.home_label_input_memory)
+                                                ) {
+                                                        navController.navigate(route = Screen.InputMemory.route)
                                                 }
                                         }
                                 }

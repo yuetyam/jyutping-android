@@ -66,6 +66,7 @@ import org.jyutping.jyutping.CharacterStandard
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.MainActivity
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.memory.InputMemoryHelper
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.models.InputKeyStyle
@@ -1077,7 +1078,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 isTryingToClearInputMemory = true
                                                         },
-                                                        enabled = !isTransferringMemory,
+                                                        enabled = isTransferringMemory.negative,
                                                         colors = destructiveButtonColors,
                                                         contentPadding = PaddingValues(end = 12.dp)
                                                 ) {
@@ -1098,13 +1099,15 @@ fun SettingsScreen(height: Dp) {
                                                                 onClick = {
                                                                         context.audioFeedback(SoundEffect.Delete)
                                                                         view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
-                                                                        if (!isTransferringMemory) context.clearInputMemory()
+                                                                        if (isTransferringMemory.negative) {
+                                                                                context.clearInputMemory()
+                                                                        }
                                                                         coroutineScope.launch {
                                                                                 delay(1000L.milliseconds) // 1s
                                                                                 isTryingToClearInputMemory = false
                                                                         }
                                                                 },
-                                                                enabled = !isTransferringMemory,
+                                                                enabled = isTransferringMemory.negative,
                                                                 colors = destructiveButtonColors,
                                                                 contentPadding = PaddingValues(horizontal = 12.dp)
                                                         ) {
@@ -1132,20 +1135,44 @@ fun SettingsScreen(height: Dp) {
                                                 }
                                                 Spacer(modifier = Modifier.weight(1f))
                                         }
-                                        for (title in listOf(R.string.input_memory_export_button, R.string.input_memory_import_button)) {
-                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
-                                                TextButton(
-                                                        onClick = {
-                                                                val intent = Intent(context, MainActivity::class.java).apply {
-                                                                        putExtra(MainActivity.EXTRA_INPUT_MEMORY, true)
-                                                                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                                                                }
-                                                                context.startActivity(intent)
-                                                                context.requestHideSelf(0)
-                                                        },
-                                                        enabled = !isTransferringMemory,
-                                                        modifier = Modifier.padding(horizontal = 8.dp)
-                                                ) { Text(stringResource(title)) }
+                                }
+                        }
+                        item {
+                                Column(
+                                        modifier = Modifier
+                                                .background(color = backColor, shape = sectionShape)
+                                                .fillMaxWidth()
+                                ) {
+                                        TextButton(
+                                                onClick = {
+                                                        val intent = Intent(context, MainActivity::class.java).apply {
+                                                                putExtra(MainActivity.EXTRA_INPUT_MEMORY, true)
+                                                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                                                        }
+                                                        context.startActivity(intent)
+                                                        context.requestHideSelf(0)
+                                                },
+                                                enabled = isTransferringMemory.negative
+                                        ) {
+                                                Text(
+                                                        text = stringResource(R.string.input_memory_export_button)
+                                                )
+                                        }
+                                        ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                        TextButton(
+                                                onClick = {
+                                                        val intent = Intent(context, MainActivity::class.java).apply {
+                                                                putExtra(MainActivity.EXTRA_INPUT_MEMORY, true)
+                                                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                                                        }
+                                                        context.startActivity(intent)
+                                                        context.requestHideSelf(0)
+                                                },
+                                                enabled = isTransferringMemory.negative
+                                        ) {
+                                                Text(
+                                                        text = stringResource(R.string.input_memory_import_button)
+                                                )
                                         }
                                 }
                         }

@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.memory.InputMemoryHelper
 import org.jyutping.jyutping.memory.InputMemoryTransferController
 import org.jyutping.jyutping.memory.InputMemoryTransferController.Operation
@@ -48,7 +49,7 @@ fun InputMemoryScreen() {
                                         }
                                 }
                         },
-                        enabled = !isTransferring,
+                        enabled = isTransferring.negative,
                         modifier = Modifier.fillMaxWidth()
                 ) { Text(stringResource(R.string.input_memory_export_button)) }
                 Button(
@@ -61,7 +62,7 @@ fun InputMemoryScreen() {
                                         }
                                 }
                         },
-                        enabled = !isTransferring,
+                        enabled = isTransferring.negative,
                         modifier = Modifier.fillMaxWidth()
                 ) { Text(stringResource(R.string.input_memory_import_button)) }
                 if (state.isRunning) {

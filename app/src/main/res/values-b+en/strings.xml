@@ -146,6 +146,7 @@
     <string name="detail_inspecting_forget_candidate_button_title">Remove from Input Memory</string>
 
     <!-- Input Memory transfer -->
+    <string name="home_label_input_memory">Export / Import Input Memory</string>
     <string name="input_memory_export_button">Export Input Memory</string>
     <string name="input_memory_import_button">Import Input Memory</string>
     <string name="input_memory_export_busy">The input memory database is busy. Wait a moment and try exporting again.</string>
