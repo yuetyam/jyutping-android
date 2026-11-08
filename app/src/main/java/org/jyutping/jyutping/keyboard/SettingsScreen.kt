@@ -21,7 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.DeleteForever
 import androidx.compose.material.icons.outlined.FileDownload
 import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.material.icons.rounded.ArrowUpward
@@ -1073,7 +1073,7 @@ fun SettingsScreen(height: Dp) {
                                                 verticalAlignment = Alignment.CenterVertically
                                         ) {
                                                 LabelButton(
-                                                        icon = Icons.Outlined.Delete,
+                                                        icon = Icons.Outlined.DeleteForever,
                                                         text = if (isTryingToClearInputMemory) stringResource(id = R.string.keyboard_settings_clear_input_memory_message) else stringResource(id = R.string.keyboard_settings_clear_input_memory),
                                                         tint = Color.Red,
                                                         enable = isTransferringMemory.negative

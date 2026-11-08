@@ -34,12 +34,26 @@ class InputMemoryTransferController internal constructor(
                 fun shared(context: Context): InputMemoryTransferController = instance ?: synchronized(this) {
                         instance ?: InputMemoryTransferController(context.applicationContext).also { instance = it }
                 }
-                fun suggestedFilename(): String = "memory-${SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date())}.sqlite3"
+                fun suggestedFilename(): String {
+                        val prefix: String = "memory-"
+                        val suffix: String = ".sqlite3"
+                        val dateText: String = SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date())
+                        return prefix + dateText + suffix
+                }
                 // Bound provider reads, including providers that do not report a size.
                 internal const val MAX_IMPORT_BYTES = 256L * 1024 * 1024
         }
 
-        enum class Operation { Export, Import }
+        enum class Operation {
+                Export,
+                Import;
+
+                val isExport: Boolean
+                        get() = (this == Export)
+
+                val isImport: Boolean
+                        get() = (this == Import)
+        }
         data class State(val operation: Operation? = null, val isRunning: Boolean = false)
         data class Feedback(val resource: Int, val count: Long? = null)
 
@@ -71,7 +85,7 @@ class InputMemoryTransferController internal constructor(
                 }
                 // ActivityResultRegistry can deliver a result after process recreation.
                 if (mutableState.value.operation == null && !beginPicker(operation)) {
-                        if (operation == Operation.Export) deleteDocument(uri)
+                        if (operation.isExport) deleteDocument(uri)
                         return
                 }
                 if (mutableState.value.operation != operation) return
@@ -82,15 +96,15 @@ class InputMemoryTransferController internal constructor(
                                         Operation.Export -> export(uri)
                                         Operation.Import -> import(uri)
                                 }
-                                mutableFeedback.value = Feedback(if (operation == Operation.Export) R.string.input_memory_export_success else R.string.input_memory_import_success, count)
+                                mutableFeedback.value = Feedback(if (operation.isExport) R.string.input_memory_export_success else R.string.input_memory_import_success, count)
                         } catch (error: CancellationException) {
                                 throw error
                         } catch (error: Exception) {
                                 val message = when {
                                         error is InputMemoryBusyError || error is SQLiteDatabaseLockedException -> busyMessage(operation)
-                                        operation == Operation.Export && error is InputMemoryValidationError -> R.string.input_memory_export_validation_failed
-                                        operation == Operation.Export && error is PublicationError -> R.string.input_memory_export_write_failed
-                                        operation == Operation.Export -> R.string.input_memory_export_failed
+                                        operation.isExport && error is InputMemoryValidationError -> R.string.input_memory_export_validation_failed
+                                        operation.isExport && error is PublicationError -> R.string.input_memory_export_write_failed
+                                        operation.isExport -> R.string.input_memory_export_failed
                                         error is InputMemoryImportError.UnsupportedFormat -> R.string.input_memory_import_unsupported
                                         else -> R.string.input_memory_import_failed
                                 }
@@ -105,7 +119,7 @@ class InputMemoryTransferController internal constructor(
         fun failPicker(operation: Operation) {
                 if (mutableState.value.operation != operation || mutableState.value.isRunning) return
                 finish()
-                mutableFeedback.value = Feedback(if (operation == Operation.Export) R.string.input_memory_export_failed else R.string.input_memory_import_failed)
+                mutableFeedback.value = Feedback(if (operation.isExport) R.string.input_memory_export_failed else R.string.input_memory_import_failed)
         }
 
         fun dismissFeedback() {
@@ -179,6 +193,6 @@ class InputMemoryTransferController internal constructor(
                         // Some providers do not support deletion; preserve the original failure.
                 }
         }
-        private fun busyMessage(operation: Operation): Int = if (operation == Operation.Export) R.string.input_memory_export_busy else R.string.input_memory_import_busy
+        private fun busyMessage(operation: Operation): Int = if (operation.isExport) R.string.input_memory_export_busy else R.string.input_memory_import_busy
         private class PublicationError(cause: Exception) : IOException(cause)
 }
