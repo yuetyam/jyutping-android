@@ -1,6 +1,5 @@
 package org.jyutping.jyutping.keyboard
 
-import android.content.Intent
 import android.os.Build
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
@@ -22,6 +21,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.FileDownload
+import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
@@ -64,7 +66,6 @@ import kotlinx.coroutines.launch
 import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.CharacterStandard
 import org.jyutping.jyutping.JyutpingInputMethodService
-import org.jyutping.jyutping.MainActivity
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.memory.InputMemoryHelper
@@ -1069,30 +1070,17 @@ fun SettingsScreen(height: Dp) {
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                         Row(
-                                                modifier = Modifier.padding(horizontal = 8.dp),
                                                 verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                                TextButton(
-                                                        onClick = {
-                                                                context.audioFeedback(SoundEffect.Delete)
-                                                                view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                                                isTryingToClearInputMemory = true
-                                                        },
-                                                        enabled = isTransferringMemory.negative,
-                                                        colors = destructiveButtonColors,
-                                                        contentPadding = PaddingValues(end = 12.dp)
+                                                LabelButton(
+                                                        icon = Icons.Outlined.Delete,
+                                                        text = if (isTryingToClearInputMemory) stringResource(id = R.string.keyboard_settings_clear_input_memory_message) else stringResource(id = R.string.keyboard_settings_clear_input_memory),
+                                                        tint = Color.Red,
+                                                        enable = isTransferringMemory.negative
                                                 ) {
-                                                        if (isTryingToClearInputMemory) {
-                                                                Text(
-                                                                        text = stringResource(id = R.string.keyboard_settings_clear_input_memory_message),
-                                                                        fontWeight = FontWeight.Normal
-                                                                )
-                                                        } else {
-                                                                Text(
-                                                                        text = stringResource(id = R.string.keyboard_settings_clear_input_memory),
-                                                                        fontWeight = FontWeight.Normal
-                                                                )
-                                                        }
+                                                        context.audioFeedback(SoundEffect.Delete)
+                                                        view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+                                                        isTryingToClearInputMemory = true
                                                 }
                                                 if (isTryingToClearInputMemory) {
                                                         TextButton(
@@ -1108,12 +1096,10 @@ fun SettingsScreen(height: Dp) {
                                                                         }
                                                                 },
                                                                 enabled = isTransferringMemory.negative,
-                                                                colors = destructiveButtonColors,
-                                                                contentPadding = PaddingValues(horizontal = 12.dp)
+                                                                colors = destructiveButtonColors
                                                         ) {
                                                                 Text(
-                                                                        text = stringResource(id = R.string.keyboard_settings_clear_input_memory_confirm),
-                                                                        fontWeight = FontWeight.Normal
+                                                                        text = stringResource(id = R.string.keyboard_settings_clear_input_memory_confirm)
                                                                 )
                                                         }
                                                         TextButton(
@@ -1124,12 +1110,10 @@ fun SettingsScreen(height: Dp) {
                                                                                 delay(300L.milliseconds) // 0.3s
                                                                                 isTryingToClearInputMemory = false
                                                                         }
-                                                                },
-                                                                contentPadding = PaddingValues(horizontal = 12.dp)
+                                                                }
                                                         ) {
                                                                 Text(
-                                                                        text = stringResource(id = R.string.keyboard_settings_clear_input_memory_cancel),
-                                                                        fontWeight = FontWeight.Normal
+                                                                        text = stringResource(id = R.string.keyboard_settings_clear_input_memory_cancel)
                                                                 )
                                                         }
                                                 }
@@ -1143,36 +1127,20 @@ fun SettingsScreen(height: Dp) {
                                                 .background(color = backColor, shape = sectionShape)
                                                 .fillMaxWidth()
                                 ) {
-                                        TextButton(
-                                                onClick = {
-                                                        val intent = Intent(context, MainActivity::class.java).apply {
-                                                                putExtra(MainActivity.EXTRA_INPUT_MEMORY, true)
-                                                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                                                        }
-                                                        context.startActivity(intent)
-                                                        context.requestHideSelf(0)
-                                                },
-                                                enabled = isTransferringMemory.negative
+                                        LabelButton(
+                                                icon = Icons.Outlined.FileUpload,
+                                                text = stringResource(R.string.input_memory_export_button),
+                                                enable = isTransferringMemory.negative
                                         ) {
-                                                Text(
-                                                        text = stringResource(R.string.input_memory_export_button)
-                                                )
+                                                context.openMemoryScreen()
                                         }
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)
-                                        TextButton(
-                                                onClick = {
-                                                        val intent = Intent(context, MainActivity::class.java).apply {
-                                                                putExtra(MainActivity.EXTRA_INPUT_MEMORY, true)
-                                                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                                                        }
-                                                        context.startActivity(intent)
-                                                        context.requestHideSelf(0)
-                                                },
-                                                enabled = isTransferringMemory.negative
+                                        LabelButton(
+                                                icon = Icons.Outlined.FileDownload,
+                                                text = stringResource(R.string.input_memory_import_button),
+                                                enable = isTransferringMemory.negative
                                         ) {
-                                                Text(
-                                                        text = stringResource(R.string.input_memory_import_button)
-                                                )
+                                                context.openMemoryScreen()
                                         }
                                 }
                         }
@@ -1221,4 +1189,37 @@ private fun SwitchThumbContent(isOn: Boolean) {
                 contentDescription = null,
                 modifier = Modifier.size(SwitchDefaults.IconSize)
         )
+}
+
+@Composable
+private fun LabelButton(
+        icon: ImageVector,
+        text: String,
+        tint: Color? = null,
+        enable: Boolean,
+        onClick: () -> Unit
+) {
+        Button(
+                onClick = onClick,
+                enabled = enable,
+                shape = CircleShape,
+                colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = tint ?: ButtonDefaults.textButtonColors().contentColor
+                ),
+                contentPadding = PaddingValues(8.dp)
+        ) {
+                Row(
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                ) {
+                        Icon(
+                                imageVector = icon,
+                                contentDescription = null
+                        )
+                        Text(
+                                text = text
+                        )
+                }
+        }
 }

@@ -3,6 +3,7 @@ package org.jyutping.jyutping
 import android.content.ClipData
 import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
 import android.content.ClipboardManager
+import android.content.Intent
 import android.content.res.Configuration
 import android.media.AudioManager
 import android.os.Build
@@ -1631,6 +1632,17 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 if (isAudioFeedbackOn.value) {
                         audioManager.playSoundEffect(effect.soundId, -1f)
                 }
+        }
+        //endregion
+
+        //region InputMemory Export/Import
+        fun openMemoryScreen() {
+                val intent = Intent(this, MainActivity::class.java).apply {
+                        putExtra(MainActivity.EXTRA_INPUT_MEMORY, true)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                }
+                startActivity(intent)
+                requestHideSelf(0)
         }
         //endregion
 }
