@@ -3,10 +3,10 @@ package org.jyutping.jyutping.app.home
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FileDownload
 import androidx.compose.material.icons.outlined.FileUpload
@@ -45,77 +45,85 @@ fun InputMemoryScreen() {
         val importer = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) {
                 controller.completePicker(Operation.Import, it)
         }
-        Column(
-                modifier = Modifier.padding(16.dp),
+        LazyColumn(
+                contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-                Button(
-                        onClick = {
-                                if (controller.beginPicker(Operation.Export)) {
-                                        try {
-                                                exporter.launch(InputMemoryTransferController.suggestedFilename())
-                                        } catch (_: Exception) {
-                                                controller.failPicker(Operation.Export)
+                item {
+                        Button(
+                                onClick = {
+                                        if (controller.beginPicker(Operation.Export)) {
+                                                try {
+                                                        exporter.launch(InputMemoryTransferController.suggestedFilename())
+                                                } catch (_: Exception) {
+                                                        controller.failPicker(Operation.Export)
+                                                }
                                         }
-                                }
-                        },
-                        enabled = isTransferring.negative
-                ) {
-                        Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(space = 12.dp, alignment = Alignment.CenterHorizontally),
-                                verticalAlignment = Alignment.CenterVertically
+                                },
+                                enabled = isTransferring.negative
                         ) {
-                                Icon(
-                                        imageVector = Icons.Outlined.FileUpload,
-                                        contentDescription = null
-                                )
-                                Text(
-                                        text = stringResource(R.string.input_memory_export_button)
-                                )
-                                Icon(
-                                        imageVector = Icons.Outlined.FileUpload,
-                                        contentDescription = null,
-                                        modifier = Modifier.alpha(0f)
-                                )
+                                Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(space = 12.dp, alignment = Alignment.CenterHorizontally),
+                                        verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                        Icon(
+                                                imageVector = Icons.Outlined.FileUpload,
+                                                contentDescription = null
+                                        )
+                                        Text(
+                                                text = stringResource(R.string.input_memory_export_button)
+                                        )
+                                        Icon(
+                                                imageVector = Icons.Outlined.FileUpload,
+                                                contentDescription = null,
+                                                modifier = Modifier.alpha(0f)
+                                        )
+                                }
                         }
                 }
-                Button(
-                        onClick = {
-                                if (controller.beginPicker(Operation.Import)) {
-                                        try {
-                                                importer.launch(arrayOf("application/vnd.sqlite3", "application/x-sqlite3", "application/octet-stream"))
-                                        } catch (_: Exception) {
-                                                controller.failPicker(Operation.Import)
+                item {
+                        Button(
+                                onClick = {
+                                        if (controller.beginPicker(Operation.Import)) {
+                                                try {
+                                                        importer.launch(arrayOf("application/vnd.sqlite3", "application/x-sqlite3", "application/octet-stream"))
+                                                } catch (_: Exception) {
+                                                        controller.failPicker(Operation.Import)
+                                                }
                                         }
-                                }
-                        },
-                        enabled = isTransferring.negative
-                ) {
-                        Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(space = 12.dp, alignment = Alignment.CenterHorizontally),
-                                verticalAlignment = Alignment.CenterVertically
+                                },
+                                enabled = isTransferring.negative
                         ) {
-                                Icon(
-                                        imageVector = Icons.Outlined.FileDownload,
-                                        contentDescription = null
-                                )
-                                Text(
-                                        text = stringResource(R.string.input_memory_import_button)
-                                )
-                                Icon(
-                                        imageVector = Icons.Outlined.FileDownload,
-                                        contentDescription = null,
-                                        modifier = Modifier.alpha(0f)
-                                )
+                                Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(space = 12.dp, alignment = Alignment.CenterHorizontally),
+                                        verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                        Icon(
+                                                imageVector = Icons.Outlined.FileDownload,
+                                                contentDescription = null
+                                        )
+                                        Text(
+                                                text = stringResource(R.string.input_memory_import_button)
+                                        )
+                                        Icon(
+                                                imageVector = Icons.Outlined.FileDownload,
+                                                contentDescription = null,
+                                                modifier = Modifier.alpha(0f)
+                                        )
+                                }
                         }
                 }
                 if (state.isRunning) {
-                        CircularProgressIndicator()
-                        Text(
-                                text = stringResource(if (state.operation == Operation.Export) R.string.input_memory_export_progress else R.string.input_memory_import_progress)
-                        )
+                        item {
+                                CircularProgressIndicator()
+                        }
+                        item {
+                                Text(
+                                        text = stringResource(if (state.operation == Operation.Export) R.string.input_memory_export_progress else R.string.input_memory_import_progress)
+                                )
+                        }
                 }
         }
         feedback?.let { result ->
