@@ -1,5 +1,6 @@
 package org.jyutping.jyutping.memory
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
@@ -51,7 +52,9 @@ import org.jyutping.jyutping.ninekey.decimalCombinedCode
 import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetString
 
-class InputMemoryHelper internal constructor(val context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class InputMemoryHelper internal constructor(context: Context) : SQLiteOpenHelper(context.applicationContext, DATABASE_NAME, null, DATABASE_VERSION) {
+
+        val context: Context = context.applicationContext
 
         companion object {
                 private const val DATABASE_VERSION = 3
@@ -69,7 +72,10 @@ class InputMemoryHelper internal constructor(val context: Context) : SQLiteOpenH
                 private const val PREVIOUS_MIGRATION_KEY: String = UserSettingsKey.PreviousMemoryMigration
                 private const val PREVIOUS_DEFINED_MIGRATION_VALUE: Int = 2026
 
+                // The helper retains only the application context, which lives for the process lifetime.
+                @SuppressLint("StaticFieldLeak")
                 @Volatile private var instance: InputMemoryHelper? = null
+
                 fun shared(context: Context): InputMemoryHelper = instance ?: synchronized(this) {
                         instance ?: InputMemoryHelper(context.applicationContext).also { instance = it }
                 }
@@ -287,6 +293,7 @@ class InputMemoryHelper internal constructor(val context: Context) : SQLiteOpenH
                 this.writableDatabase.execSQL(command)
         }
         private fun insert(entry: MemoryLexicon) {
+                // language=TEXT
                 val command: String = "INSERT INTO memory2608 (word, romanization, frequency, latest, char_count, letter_count, complexity, anchors, spell, anchors_9key, spell_9key) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (word, romanization) DO UPDATE SET frequency = CASE WHEN frequency < 9223372036854775807 THEN frequency + 1 ELSE frequency END, latest = MAX(latest, excluded.latest);"
                 writableDatabase.compileStatement(command).use { statement ->
                         statement.bindString(1, entry.word)

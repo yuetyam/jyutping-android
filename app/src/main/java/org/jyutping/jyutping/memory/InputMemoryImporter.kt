@@ -11,7 +11,9 @@ import org.jyutping.jyutping.extensions.isCantoneseToneDigit
 import org.jyutping.jyutping.extensions.isLowercaseBasicLatinLetter
 
 sealed class InputMemoryImportError : Exception() {
-        data object UnsupportedFormat : InputMemoryImportError()
+        // Each throw needs a fresh exception with its own stack trace.
+        @Suppress("CanSealedSubClassBeObject")
+        class UnsupportedFormat : InputMemoryImportError()
 }
 
 object InputMemoryImporter {
@@ -41,7 +43,7 @@ object InputMemoryImporter {
                 } catch (error: CancellationException) {
                         throw error
                 } catch (_: Exception) {
-                        throw InputMemoryImportError.UnsupportedFormat
+                        throw InputMemoryImportError.UnsupportedFormat()
                 }
                 return source.use {
                         helper.ensureReady().getOrThrow()

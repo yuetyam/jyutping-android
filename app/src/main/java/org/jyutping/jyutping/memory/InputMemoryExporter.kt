@@ -15,7 +15,7 @@ object InputMemoryExporter {
         }
 
         // The controller retains its reservation until provider publication finishes.
-        internal suspend fun exportReserved(helper: InputMemoryHelper, output: File): Long {
+        internal suspend fun exportReserved(helper: InputMemoryHelper, output: File): Long = withContext(Dispatchers.IO) {
                 require(!output.exists()) { "The export output must be a new file" }
                 val protectedPaths = listOf("", "-journal", "-wal", "-shm").map { File(helper.databasePath.path + it).canonicalFile }
                 require(output.canonicalFile !in protectedPaths) { "The live store and its sidecars cannot be export destinations" }
@@ -24,6 +24,7 @@ object InputMemoryExporter {
                 val workspace = Files.createTempDirectory(helper.context.cacheDir.toPath(), "memory-export-").toFile()
                 try {
                         val snapshot = File(workspace, "snapshot.sqlite3")
+                        // language=TEXT
                         helper.writableDatabase.execSQL("VACUUM INTO ?;", arrayOf(snapshot.path))
                         currentCoroutineContext().ensureActive()
                         val count = InputMemoryFile.open(snapshot).use { source ->
@@ -68,7 +69,7 @@ object InputMemoryExporter {
                                 }
                         }
                         currentCoroutineContext().ensureActive()
-                        return count
+                        count
                 } catch (error: Throwable) {
                         InputMemoryFile.delete(output)
                         throw error

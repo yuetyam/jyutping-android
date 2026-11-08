@@ -21,6 +21,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jyutping.jyutping.R
 
 /** Process lifetime owner: neither rotation nor hiding the IME cancels an in-progress transfer. */
@@ -134,7 +135,7 @@ class InputMemoryTransferController internal constructor(
                 }
         }
 
-        private suspend fun export(uri: Uri): Long {
+        private suspend fun export(uri: Uri): Long = withContext(Dispatchers.IO) {
                 var workspace: File? = null
                 var published = false
                 try {
@@ -153,26 +154,26 @@ class InputMemoryTransferController internal constructor(
                                 throw PublicationError(error)
                         }
                         published = true
-                        return count
+                        count
                 } finally {
                         workspace?.deleteRecursively()
                         if (!published) deleteDocument(uri)
                 }
         }
 
-        private suspend fun import(uri: Uri): Long {
+        private suspend fun import(uri: Uri): Long = withContext(Dispatchers.IO) {
                 val workspace = Files.createTempDirectory(cacheDir.toPath(), "memory-import-").toFile()
                 try {
                         val file = File(workspace, "import.sqlite3")
                         val input = openImportStream(uri) ?: throw IOException("No input stream")
                         input.use { source -> file.outputStream().use { copy(source, it, MAX_IMPORT_BYTES) } }
-                        return InputMemoryImporter.importReserved(helper, file)
+                        InputMemoryImporter.importReserved(helper, file)
                 } finally {
                         workspace.deleteRecursively()
                 }
         }
 
-        private suspend fun copy(source: InputStream, destination: OutputStream, limit: Long = Long.MAX_VALUE) {
+        private suspend fun copy(source: InputStream, destination: OutputStream, limit: Long = Long.MAX_VALUE) = withContext(Dispatchers.IO) {
                 val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
                 var total = 0L
                 while (true) {
@@ -180,7 +181,7 @@ class InputMemoryTransferController internal constructor(
                         val size = source.read(buffer)
                         if (size < 0) break
                         total += size
-                        if (total > limit) throw InputMemoryImportError.UnsupportedFormat
+                        if (total > limit) throw InputMemoryImportError.UnsupportedFormat()
                         destination.write(buffer, 0, size)
                 }
                 currentCoroutineContext().ensureActive()
