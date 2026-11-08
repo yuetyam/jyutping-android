@@ -205,6 +205,10 @@ Launcher search is in `app/home/HomeScreen.kt` and `utilities/SearchHelper.kt`. 
 
 Keep string keys aligned across affected locales and preserve intentional regional wording. Do not treat store metadata as Android runtime resources.
 
+## Code review
+
+- Files under `preparing/src/main/resources/` are resource data. Exclude them from code review by default unless the user specifically asks to review them.
+
 ## Code style and repository hygiene
 
 - Read `.editorconfig` before editing. Kotlin and Kotlin script files use 8-space indentation; XML uses 4 spaces. Files use UTF-8, LF endings, final newlines, and trimmed trailing whitespace.
@@ -222,5 +226,5 @@ Keep string keys aligned across affected locales and preserve intentional region
 - Instrumented-test placeholders: `app/src/androidTest/`
 - Generator source: `preparing/src/main/kotlin/`
 - Generator resources: `preparing/src/main/resources/`
-- Store metadata: `metadata/`
+- F-Droid Store metadata: `metadata/`
 - CI workflow: `.github/workflows/ci.yaml`
