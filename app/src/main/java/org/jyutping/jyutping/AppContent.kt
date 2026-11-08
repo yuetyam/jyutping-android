@@ -9,6 +9,7 @@ import org.jyutping.jyutping.app.cantonese.CantoneseScreen
 import org.jyutping.jyutping.app.cantonese.ConfusionScreen
 import org.jyutping.jyutping.app.cantonese.ExpressionsScreen
 import org.jyutping.jyutping.app.home.DisplayLanguagesScreen
+import org.jyutping.jyutping.app.home.InputMemoryScreen
 import org.jyutping.jyutping.app.home.HomeScreen
 import org.jyutping.jyutping.app.home.IntroductionsScreen
 import org.jyutping.jyutping.app.home.TextToSpeechScreen
@@ -34,6 +35,9 @@ fun AppContent(navController: NavHostController) {
                 }
                 composable(route = Screen.About.route) {
                         AboutScreen()
+                }
+                composable(route = Screen.InputMemory.route) {
+                        InputMemoryScreen()
                 }
                 composable(route = Screen.TextToSpeech.route) {
                         TextToSpeechScreen()

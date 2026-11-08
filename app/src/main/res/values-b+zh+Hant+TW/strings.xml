@@ -144,4 +144,25 @@
     <string name="detail_inspecting_summary_input_count">輸入次數</string>
     <string name="detail_inspecting_summary_latest">最近輸入</string>
     <string name="detail_inspecting_forget_candidate_button_title">從輸入記憶移除</string>
+
+    <!-- Input Memory transfer -->
+    <string name="input_memory_export_button">導出輸入記憶</string>
+    <string name="input_memory_import_button">導入輸入記憶</string>
+    <string name="input_memory_export_busy">輸入記憶資料庫正忙。請稍後再試。</string>
+    <string name="input_memory_export_validation_failed">無法驗證輸入記憶，導出失敗。請再試一次。</string>
+    <string name="input_memory_export_write_failed">未能將導出檔案儲存於所選位置。請確認寫入權限及可用空間，或選擇其他位置。</string>
+    <string name="input_memory_export_failed">未能讀取或導出輸入記憶。請確認可用儲存空間，然後再試。</string>
+    <string name="input_memory_import_busy">輸入記憶資料庫正忙。請稍後再試。</string>
+    <string name="input_memory_import_unsupported">未能讀取所選檔案，或該檔案並非有效的輸入記憶導出檔案。請選擇有效的導出檔案，然後再試。</string>
+    <string name="input_memory_import_failed">未能導入輸入記憶，現有記錄未有更改。請再試一次。</string>
+    <string name="input_memory_screen_title">輸入記憶</string>
+    <string name="input_memory_export_progress">正在導出輸入記憶⋯⋯</string>
+    <string name="input_memory_import_progress">正在導入輸入記憶⋯⋯</string>
+    <string name="input_memory_dismiss">好</string>
+    <plurals name="input_memory_export_success">
+        <item quantity="other">已導出 %1$d 條輸入記憶。</item>
+    </plurals>
+    <plurals name="input_memory_import_success">
+        <item quantity="other">已導入 %1$d 條輸入記憶。</item>
+    </plurals>
 </resources>

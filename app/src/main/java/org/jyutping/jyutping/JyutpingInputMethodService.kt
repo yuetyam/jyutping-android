@@ -121,7 +121,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 savedStateRegistryController.performRestore(null)
                 lifecycleScope.launch(Dispatchers.IO) {
                         DatabasePreparer.prepare(applicationContext)
-                        memoryHelper.prepare()
+                        memoryHelper.ensureReady()
                 }
                 val manufacturer = Build.MANUFACTURER.lowercase()
                 val brand = Build.BRAND.lowercase()
@@ -700,7 +700,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
         }
 
         private val selectedLexicons: MutableList<Lexicon> by lazy { mutableListOf() }
-        private val memoryHelper by lazy { InputMemoryHelper(applicationContext) }
+        private val memoryHelper by lazy { InputMemoryHelper.shared(applicationContext) }
 
         fun forgetCandidate(candidate: Candidate? = null, index: Int? = null) = when {
                 candidate != null -> memoryHelper.forget(candidate.lexicon)
@@ -708,8 +708,11 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 else -> memoryHelper.forget(inspectingCandidate.value.lexicon)
         }
         fun clearInputMemory() {
-                memoryHelper.deleteAll()
-                clearLocalEmojiFrequent()
+                lifecycleScope.launch {
+                        if (memoryHelper.ensureReady().isSuccess) {
+                                memoryHelper.deleteAll { clearLocalEmojiFrequent() }
+                        }
+                }
         }
 
         //region EmojiBoard

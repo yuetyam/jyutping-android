@@ -1,5 +1,6 @@
 package org.jyutping.jyutping
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -36,6 +38,17 @@ val LocalTTSProvider = staticCompositionLocalOf<TTSProvider?> { null }
 
 class MainActivity : ComponentActivity() {
 
+        companion object {
+                const val EXTRA_INPUT_MEMORY = "org.jyutping.jyutping.INPUT_MEMORY"
+        }
+        private var inputMemoryRequest by mutableStateOf(0)
+
+        override fun onNewIntent(intent: Intent) {
+                super.onNewIntent(intent)
+                setIntent(intent)
+                if (intent.getBooleanExtra(EXTRA_INPUT_MEMORY, false)) inputMemoryRequest++
+        }
+
         private var ttsProvider by mutableStateOf<TTSProvider?>(null)
 
         @OptIn(ExperimentalMaterial3Api::class)
@@ -45,8 +58,16 @@ class MainActivity : ComponentActivity() {
                 lifecycleScope.launch(Dispatchers.IO) {
                         DatabasePreparer.prepare(applicationContext)
                 }
+                if (savedInstanceState == null && intent.getBooleanExtra(EXTRA_INPUT_MEMORY, false)) inputMemoryRequest++
                 setContent {
                         val navController = rememberNavController()
+                        LaunchedEffect(inputMemoryRequest) {
+                                if (inputMemoryRequest > 0) {
+                                        navController.navigate(Screen.InputMemory.route) { launchSingleTop = true }
+                                        inputMemoryRequest = 0
+                                        intent.removeExtra(EXTRA_INPUT_MEMORY)
+                                }
+                        }
                         val entry by navController.currentBackStackEntryAsState()
                         val route: String? = entry?.destination?.route
                         val topTitle: String = stringResource(id = titleOf(route = route))
@@ -97,6 +118,7 @@ class MainActivity : ComponentActivity() {
 
         private fun titleOf(route: String?): Int = when (route) {
                 Screen.Home.route -> Screen.Home.title
+                Screen.InputMemory.route -> Screen.InputMemory.title
                 Screen.TextToSpeech.route -> Screen.TextToSpeech.title
                 Screen.Introductions.route -> Screen.Introductions.title
                 Screen.DisplayLanguages.route -> Screen.DisplayLanguages.title

@@ -6,7 +6,17 @@ import android.content.SharedPreferences
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import androidx.core.content.edit
+import java.io.File
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
 import org.jyutping.jyutping.UserSettingsKey
 import org.jyutping.jyutping.extensions.isCantoneseToneDigit
@@ -41,7 +51,7 @@ import org.jyutping.jyutping.ninekey.decimalCombinedCode
 import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetString
 
-class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class InputMemoryHelper internal constructor(val context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
         companion object {
                 private const val DATABASE_VERSION = 3
@@ -59,6 +69,11 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
                 private const val PREVIOUS_MIGRATION_KEY: String = UserSettingsKey.PreviousMemoryMigration
                 private const val PREVIOUS_DEFINED_MIGRATION_VALUE: Int = 2026
 
+                @Volatile private var instance: InputMemoryHelper? = null
+                fun shared(context: Context): InputMemoryHelper = instance ?: synchronized(this) {
+                        instance ?: InputMemoryHelper(context.applicationContext).also { instance = it }
+                }
+
                 @Volatile internal var isMigrating: Boolean = false
         }
 
@@ -73,6 +88,43 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
                 "CREATE INDEX IF NOT EXISTS ix2608_lexicon ON memory2608 (word, romanization);",
         )
         private var isTableEnsured: Boolean = false
+        private val readinessMutex = Mutex()
+        // Clear uses tryLock; transfer reservations include the picker and provider I/O.
+        private val operationMutex = Mutex()
+        private val transferring = MutableStateFlow(false)
+        val isTransferring = transferring.asStateFlow()
+        val databasePath: File get() = context.getDatabasePath(DATABASE_NAME)
+
+        suspend fun ensureReady(): Result<Unit> = withContext(Dispatchers.IO) {
+                readinessMutex.withLock {
+                        try {
+                                prepare()
+                                Result.success(Unit)
+                        } catch (error: CancellationException) {
+                                throw error
+                        } catch (error: Exception) {
+                                Result.failure(error)
+                        }
+                }
+        }
+
+        internal fun beginTransfer(): Boolean {
+                if (!operationMutex.tryLock()) return false
+                transferring.value = true
+                return true
+        }
+        internal fun endTransfer() {
+                transferring.value = false
+                operationMutex.unlock()
+        }
+        internal suspend fun <T> withTransfer(operation: suspend () -> T): T {
+                if (!beginTransfer()) throw InputMemoryBusyError()
+                try {
+                        return operation()
+                } finally {
+                        endTransfer()
+                }
+        }
 
         override fun onConfigure(db: SQLiteDatabase?) {
                 super.onConfigure(db)
@@ -98,12 +150,19 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
 
         //region Memory Migration
 
+        @Synchronized
         fun prepare() {
                 val sharedPreferences = context.getSharedPreferences(UserSettingsKey.PreferencesFileName, MODE_PRIVATE)
                 val isMigrated: Boolean = (sharedPreferences.getInt(KEY_MIGRATION, 0) == DEFINED_MIGRATION_VALUE)
-                if (isMigrated || isMigrating) return
+                // Opening the helper also ensures the current table and indexes exist.
+                writableDatabase
+                if (isMigrated) return
                 isMigrating = true
-                migrateMemory(sharedPreferences = sharedPreferences)
+                try {
+                        migrateMemory(sharedPreferences = sharedPreferences)
+                } finally {
+                        isMigrating = false
+                }
         }
         private fun migrateMemory(sharedPreferences: SharedPreferences) {
                 val didPreviousMigrationCompleted: Boolean = (sharedPreferences.getInt(PREVIOUS_MIGRATION_KEY, 0) == PREVIOUS_DEFINED_MIGRATION_VALUE)
@@ -198,7 +257,6 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
         private fun missionAccomplished(sharedPreferences: SharedPreferences) {
                 sharedPreferences.edit(commit = true) { putInt(KEY_MIGRATION, DEFINED_MIGRATION_VALUE) }
                 cleanupObsoleteObjects(sharedPreferences = sharedPreferences)
-                isMigrating = false
         }
         private fun cleanupObsoleteObjects(sharedPreferences: SharedPreferences) {
                 sharedPreferences.edit { remove(PREVIOUS_MIGRATION_KEY) }
@@ -211,31 +269,25 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
                 if (lexicon.isNotCantonese) return
                 val found = find(word = lexicon.text, romanization = lexicon.romanization)
                 if (found != null) {
-                        update(id = found.first, frequency = found.second + 1)
+                        update(id = found)
                 } else {
                         val newEntry = MemoryLexicon.new(word = lexicon.text, romanization = lexicon.romanization)
                         insert(entry = newEntry)
                 }
         }
-        private fun find(word: String, romanization: String): Pair<Long, Long>? {
-                var id: Long? = null
-                var frequency: Long? = null
-                val command: String = "SELECT id, frequency FROM memory2608 WHERE word = ? AND romanization = ? LIMIT 1;"
-                readableDatabase.rawQuery(command, arrayOf(word, romanization)).use { cursor ->
-                        if (cursor.moveToFirst()) {
-                                id = cursor.getLong(0)
-                                frequency = cursor.getLong(1)
-                        }
+        private fun find(word: String, romanization: String): Long? {
+                val command: String = "SELECT id FROM memory2608 WHERE word = ? AND romanization = ? LIMIT 1;"
+                return readableDatabase.rawQuery(command, arrayOf(word, romanization)).use { cursor ->
+                        if (cursor.moveToFirst()) cursor.getLong(0) else null
                 }
-                return if (id != null && frequency != null) Pair(id, frequency) else null
         }
-        private fun update(id: Long, frequency: Long) {
+        private fun update(id: Long) {
                 val latest: Long = System.currentTimeMillis()
-                val command: String = "UPDATE memory2608 SET frequency = ${frequency}, latest = $latest WHERE id = ${id};"
+                val command: String = "UPDATE memory2608 SET frequency = CASE WHEN frequency < 9223372036854775807 THEN frequency + 1 ELSE frequency END, latest = MAX(latest, $latest) WHERE id = ${id};"
                 this.writableDatabase.execSQL(command)
         }
         private fun insert(entry: MemoryLexicon) {
-                val command: String = "INSERT INTO memory2608 (word, romanization, frequency, latest, char_count, letter_count, complexity, anchors, spell, anchors_9key, spell_9key) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+                val command: String = "INSERT INTO memory2608 (word, romanization, frequency, latest, char_count, letter_count, complexity, anchors, spell, anchors_9key, spell_9key) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (word, romanization) DO UPDATE SET frequency = CASE WHEN frequency < 9223372036854775807 THEN frequency + 1 ELSE frequency END, latest = MAX(latest, excluded.latest);"
                 writableDatabase.compileStatement(command).use { statement ->
                         statement.bindString(1, entry.word)
                         statement.bindString(2, entry.romanization)
@@ -259,11 +311,29 @@ class InputMemoryHelper(val context: Context) : SQLiteOpenHelper(context, DATABA
                 writableDatabase.delete(TABLE_NAME, UNIQUE_WHERE, arrayOf(lexicon.text, lexicon.romanization))
         }
 
-        /** Clear Input Memory */
-        fun deleteAll() {
-                if (isMigrating) return
-                val command: String = "DELETE FROM memory2608;"
-                writableDatabase.execSQL(command)
+        /** Delete on IO, then run [afterClear] in the caller's context while transfers remain excluded. */
+        suspend fun deleteAll(afterClear: suspend () -> Unit = {}): Boolean {
+                currentCoroutineContext().ensureActive()
+                if (!operationMutex.tryLock()) return false
+                try {
+                        // Once deletion starts, complete the associated cleanup even if the caller is cancelled.
+                        return withContext(NonCancellable) {
+                                val didClear = withContext(Dispatchers.IO) {
+                                        synchronized(this@InputMemoryHelper) {
+                                                if (isMigrating) {
+                                                        false
+                                                } else {
+                                                        writableDatabase.execSQL("DELETE FROM memory2608;")
+                                                        true
+                                                }
+                                        }
+                                }
+                                if (didClear) afterClear()
+                                didClear
+                        }
+                } finally {
+                        operationMutex.unlock()
+                }
         }
 
         fun inspect(lexicon: Lexicon): Pair<Long, Long> {

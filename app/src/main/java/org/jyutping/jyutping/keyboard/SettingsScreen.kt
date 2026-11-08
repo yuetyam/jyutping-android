@@ -1,5 +1,6 @@
 package org.jyutping.jyutping.keyboard
 
+import android.content.Intent
 import android.os.Build
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
@@ -63,7 +64,9 @@ import kotlinx.coroutines.launch
 import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.CharacterStandard
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.MainActivity
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.memory.InputMemoryHelper
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.models.InputKeyStyle
 import org.jyutping.jyutping.models.KeyboardForm
@@ -101,6 +104,7 @@ fun SettingsScreen(height: Dp) {
         val isEmojiSuggestionsOn by context.isEmojiSuggestionsOn.collectAsState()
         val isEnglishSuggestionsOn by context.isEnglishSuggestionsOn.collectAsState()
         val isInputMemoryOn by context.isInputMemoryOn.collectAsState()
+        val isTransferringMemory by InputMemoryHelper.shared(context).isTransferring.collectAsState()
         var isTryingToClearInputMemory by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()
         val sectionShape = RoundedCornerShape(16.dp)
@@ -1073,6 +1077,7 @@ fun SettingsScreen(height: Dp) {
                                                                 view.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                                                                 isTryingToClearInputMemory = true
                                                         },
+                                                        enabled = !isTransferringMemory,
                                                         colors = destructiveButtonColors,
                                                         contentPadding = PaddingValues(end = 12.dp)
                                                 ) {
@@ -1093,12 +1098,13 @@ fun SettingsScreen(height: Dp) {
                                                                 onClick = {
                                                                         context.audioFeedback(SoundEffect.Delete)
                                                                         view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
-                                                                        context.clearInputMemory()
+                                                                        if (!isTransferringMemory) context.clearInputMemory()
                                                                         coroutineScope.launch {
                                                                                 delay(1000L.milliseconds) // 1s
                                                                                 isTryingToClearInputMemory = false
                                                                         }
                                                                 },
+                                                                enabled = !isTransferringMemory,
                                                                 colors = destructiveButtonColors,
                                                                 contentPadding = PaddingValues(horizontal = 12.dp)
                                                         ) {
@@ -1125,6 +1131,21 @@ fun SettingsScreen(height: Dp) {
                                                         }
                                                 }
                                                 Spacer(modifier = Modifier.weight(1f))
+                                        }
+                                        for (title in listOf(R.string.input_memory_export_button, R.string.input_memory_import_button)) {
+                                                ResponsiveDivider(isDarkMode, isHighContrastPreferred)
+                                                TextButton(
+                                                        onClick = {
+                                                                val intent = Intent(context, MainActivity::class.java).apply {
+                                                                        putExtra(MainActivity.EXTRA_INPUT_MEMORY, true)
+                                                                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                                                                }
+                                                                context.startActivity(intent)
+                                                                context.requestHideSelf(0)
+                                                        },
+                                                        enabled = !isTransferringMemory,
+                                                        modifier = Modifier.padding(horizontal = 8.dp)
+                                                ) { Text(stringResource(title)) }
                                         }
                                 }
                         }
