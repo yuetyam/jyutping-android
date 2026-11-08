@@ -40,8 +40,18 @@ enum class StrokeVirtualKey(val code: Int) {
                         Wildcard     -> VirtualInputKey.number6
                 }
 
-        val strokeText: String?
-                get() = displayMap[this]
+        val strokeName: String
+                get() = when (this) {
+                        Horizontal   -> "橫"
+                        Vertical     -> "豎"
+                        LeftFalling  -> "撇"
+                        RightFalling -> "點"
+                        Turning      -> "折"
+                        Wildcard     -> "通配"
+                }
+
+        val strokeText: String
+                get() = displayMap[this] ?: PresetString.QUESTION_MARK
 
         companion object {
 

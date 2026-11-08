@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.PresetConstant
-import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
@@ -68,10 +67,37 @@ fun TailoredStrokeKey(key: StrokeVirtualKey, modifier: Modifier) {
                         ),
                 contentAlignment = Alignment.Center
         ) {
+                Box(
+                        modifier = modifier
+                                .padding(1.dp)
+                                .fillMaxSize(),
+                        contentAlignment = Alignment.TopCenter
+                ) {
+                        Text(
+                                text = key.virtualInputKey.text,
+                                modifier = Modifier.alpha(0.66f),
+                                color = if (isDarkMode) Color.White else Color.Black,
+                                fontSize = 12.sp,
+                        )
+                }
+                Box(
+                        modifier = modifier
+                                .padding(horizontal = 2.dp, vertical = 1.dp)
+                                .fillMaxSize(),
+                        contentAlignment = Alignment.BottomEnd
+                ) {
+                        Text(
+                                text = key.strokeName,
+                                modifier = Modifier.alpha(0.66f),
+                                color = if (isDarkMode) Color.White else Color.Black,
+                                fontSize = 12.sp,
+                        )
+                }
                 Text(
-                        text = key.strokeText ?: PresetString.QUESTION_MARK,
+                        text = key.strokeText,
+                        modifier = Modifier.padding(top = 4.dp),
                         color = if (isDarkMode) Color.White else Color.Black,
-                        fontSize = 24.sp,
+                        fontSize = 22.sp,
                 )
         }
 }
