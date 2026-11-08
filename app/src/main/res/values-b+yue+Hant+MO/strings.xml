@@ -156,8 +156,8 @@
     <string name="input_memory_import_unsupported">未能讀取所選檔案，或該檔案並非有效嘅輸入記憶導出檔案。請選擇有效嘅導出檔案，然後再試。</string>
     <string name="input_memory_import_failed">未能導入輸入記憶，現有記錄未有更改。請再試一次。</string>
     <string name="input_memory_screen_title">輸入記憶</string>
-    <string name="input_memory_export_progress">正在導出輸入記憶⋯⋯</string>
-    <string name="input_memory_import_progress">正在導入輸入記憶⋯⋯</string>
+    <string name="input_memory_export_progress">導出緊輸入記憶…</string>
+    <string name="input_memory_import_progress">導入緊輸入記憶…</string>
     <string name="input_memory_dismiss">好</string>
     <string name="input_memory_export_success">導出𠶧當，一共 %1$d 條。</string>
     <string name="input_memory_import_success">導入𠶧當，一共 %1$d 條。</string>
