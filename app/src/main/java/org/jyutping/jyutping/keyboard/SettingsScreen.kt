@@ -1130,18 +1130,16 @@ fun SettingsScreen(height: Dp) {
                                         LabelButton(
                                                 icon = Icons.Outlined.FileUpload,
                                                 text = stringResource(R.string.input_memory_export_button),
-                                                enable = isTransferringMemory.negative
-                                        ) {
-                                                context.openMemoryScreen()
-                                        }
+                                                enable = isTransferringMemory.negative,
+                                                onClick = context::openMemoryScreen
+                                        )
                                         ResponsiveDivider(isDarkMode, isHighContrastPreferred)
                                         LabelButton(
                                                 icon = Icons.Outlined.FileDownload,
                                                 text = stringResource(R.string.input_memory_import_button),
-                                                enable = isTransferringMemory.negative
-                                        ) {
-                                                context.openMemoryScreen()
-                                        }
+                                                enable = isTransferringMemory.negative,
+                                                onClick = context::openMemoryScreen
+                                        )
                                 }
                         }
                         item {
