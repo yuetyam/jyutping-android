@@ -159,12 +159,6 @@
     <string name="input_memory_export_progress">Exporting input memory…</string>
     <string name="input_memory_import_progress">Importing input memory…</string>
     <string name="input_memory_dismiss">OK</string>
-    <plurals name="input_memory_export_success">
-        <item quantity="one">Successfully exported %1$d entry from the input memory.</item>
-        <item quantity="other">Successfully exported %1$d entries from the input memory.</item>
-    </plurals>
-    <plurals name="input_memory_import_success">
-        <item quantity="one">Successfully imported %1$d entry to the input memory.</item>
-        <item quantity="other">Successfully imported %1$d entries to the input memory.</item>
-    </plurals>
+    <string name="input_memory_export_success">Successfully exported from the input memory, entry count: %1$d.</string>
+    <string name="input_memory_import_success">Successfully imported to the input memory, entry count: %1$d.</string>
 </resources>

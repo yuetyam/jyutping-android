@@ -159,10 +159,6 @@
     <string name="input_memory_export_progress">正在導出輸入記憶⋯⋯</string>
     <string name="input_memory_import_progress">正在導入輸入記憶⋯⋯</string>
     <string name="input_memory_dismiss">好</string>
-    <plurals name="input_memory_export_success">
-        <item quantity="other">已導出 %1$d 條輸入記憶。</item>
-    </plurals>
-    <plurals name="input_memory_import_success">
-        <item quantity="other">已導入 %1$d 條輸入記憶。</item>
-    </plurals>
+    <string name="input_memory_export_success">已導出 %1$d 條輸入記憶。</string>
+    <string name="input_memory_import_success">已導入 %1$d 條輸入記憶。</string>
 </resources>

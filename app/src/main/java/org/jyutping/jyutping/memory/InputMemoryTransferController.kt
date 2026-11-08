@@ -82,7 +82,7 @@ class InputMemoryTransferController internal constructor(
                                         Operation.Export -> export(uri)
                                         Operation.Import -> import(uri)
                                 }
-                                mutableFeedback.value = Feedback(if (operation == Operation.Export) R.plurals.input_memory_export_success else R.plurals.input_memory_import_success, count)
+                                mutableFeedback.value = Feedback(if (operation == Operation.Export) R.string.input_memory_export_success else R.string.input_memory_import_success, count)
                         } catch (error: CancellationException) {
                                 throw error
                         } catch (error: Exception) {

@@ -17,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.R
@@ -72,7 +71,7 @@ fun InputMemoryScreen() {
         }
         feedback?.let { result ->
                 val count = result.count
-                val message = if (count == null) stringResource(result.resource) else pluralStringResource(result.resource, count.coerceAtMost(Int.MAX_VALUE.toLong()).toInt(), count)
+                val message = if (count == null) stringResource(result.resource) else stringResource(result.resource, count)
                 AlertDialog(
                         onDismissRequest = controller::dismissFeedback,
                         title = { Text(stringResource(R.string.input_memory_screen_title)) },
