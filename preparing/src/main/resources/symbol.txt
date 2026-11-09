@@ -718,7 +718,6 @@
 1	140000	1FAF6	比心	bei2 sam1
 1	110000	1F450	雙手	soeng1 sau2
 1	110000	1F64C	歡呼	fun1 fu1
-1	110000	1F64C	揚手	joeng4 sau2
 1	110000	1F44F	鼓掌	gu2 zoeng2
 1	110000	1F44F	掌聲	zoeng2 sing1
 1	110000	1F44F	好嘢	hou2 je5
@@ -938,6 +937,8 @@
 1	160000	1FAC6	指紋	zi2 man4
 1	160000	1FAC6	手紋	sau2 man4
 1	160000	1FAC6	手印	sau2 jan3
+1	160000	1FAC6	指模	zi2 mou4
+1	160000	1FAC6	手模	sau2 mou4
 1	110000	1F463	腳印	goek3 jan3
 1	110000	1F463	足印	zuk1 jan3
 1	110000	1F463	足跡	zuk1 zik1
@@ -1904,6 +1905,7 @@
 1	110000	1F392	書包	syu1 baau1
 1	110000	1F392	背包	bui3 baau1
 1	110000	1F392	雙肩包	soeng1 gin1 baau1
+1	110000	1F392	背囊	bui3 nong4
 1	110000	1F9F3	行李	hang4 lei5
 1	110000	1F9F3	行李箱	hang4 lei5 soeng1
 1	110000	1F9F3	篋	gip1
@@ -2547,10 +2549,10 @@
 2	110000	1F33E	五穀	ng5 guk1
 2	110000	1F33E	糧食	loeng4 sik6
 2	110000	1F33E	食糧	sik6 loeng4
-2	110000	1F33E	糧	loeng4
 2	110000	1F33E	稻穗	dou6 seoi6
 2	110000	1F33E	穀穗	guk1 seoi6
 2	110000	1F33E	米穗	mai5 seoi6
+2	110000	1F33E	禾穗	wo4 seoi6
 2	110000	1F33E	穗	seoi6
 2	110000	1F33E	金穗	gam1 seoi6
 2	110000	1F490	花束	faa1 cuk1
@@ -3058,8 +3060,10 @@
 3	140000	1FAD9	空樽	hung1 zeon1
 3	140000	1FAD9	吉樽	gat1 zeon1
 3	140000	1FAD9	玻璃樽	bo1 lei1 zeon1
+3	140000	1FAD9	樽仔	zeon1 zai2
 3	140000	1FAD9	瓶	ping4
 3	140000	1FAD9	罐	gun3
+3	140000	1FAD9	瓶罐	ping4 gun3
 3	140000	1FAD9	空瓶	hung1 ping4
 3	140000	1FAD9	空罐	hung1 gun3
 3	140000	1FAD9	玻璃瓶	bo1 lei1 ping4
@@ -3321,6 +3325,7 @@
 4	110000	1F3C0	籃球	laam4 kau4
 4	110000	1F3C0	打波	daa2 bo1
 4	110000	1F3C0	打球	daa2 kau4
+4	110000	1F3C0	蔡徐坤	coi3 ceoi4 kwan1
 4	110000	1F3C8	美式橄欖球	mei5 sik1 gam2 laam5 kau4
 4	110000	1F3C8	橄欖球	gam2 laam5 kau4
 4	110000	26BE.FE0F	棒球	paang5 kau4
@@ -4029,13 +4034,13 @@
 5	110000	1F307	日暮	jat6 mou6
 5	110000	1F307	落日	lok6 jat6
 5	110000	1F307	日落	jat6 lok6
-5	110000	1F307	傍晚	pong4 maan5
+5	110000	1F307	傍晚	bong6 maan5
 5	110000	1F306	夕陽	zik6 joeng4
 5	110000	1F306	黃昏	wong4 fan1
 5	110000	1F306	日暮	jat6 mou6
 5	110000	1F306	落日	lok6 jat6
 5	110000	1F306	日落	jat6 lok6
-5	110000	1F306	傍晚	pong4 maan5
+5	110000	1F306	傍晚	bong6 maan5
 5	110000	1F3D9	夜晚	je6 maan5
 5	110000	1F3D9	夜晚黑	je6 maan5 hak1
 5	110000	1F3D9	晚黑	maan5 hak1
@@ -4331,6 +4336,8 @@
 6	110000	1F52B	武器	mou5 hei3
 6	110000	1F52B	水槍	seoi2 coeng1
 6	110000	1F4A3	炸彈	zaa3 daan2
+6	110000	1F4A3	手雷	sau2 leoi4
+6	110000	1F4A3	彈	daan6
 6	110000	1F9E8	爆竹	baau3 zuk1
 6	110000	1F9E8	炮仗	paau3 zoeng2
 6	110000	1F9E8	鞭炮	bin1 paau3
@@ -5824,6 +5831,7 @@
 8	110000	1F1F8.1F1F8	南蘇丹	naam4 sou1 daan1
 8	110000	1F1EA.1F1F8	西班牙	sai1 baan1 ngaa4
 8	110000	1F1F1.1F1F0	斯里蘭卡	si1 lei5 laan4 kaa1
+8	110000	1F1F1.1F1F0	錫蘭	sek3 laan4
 8	110000	1F1E7.1F1F1	聖巴泰勒米島	sing3 baa1 taai3 lak6 mai5 dou2
 8	110000	1F1F8.1F1ED	聖赫勒拿	sing3 hak1 lak6 naa4
 8	110000	1F1F0.1F1F3	聖基茨及尼維斯	sing3 gei1 ci4 kap6 nei4 wai4 si1
@@ -5849,7 +5857,7 @@
 8	110000	1F1F9.1F1F0	托克勞	tok3 hak1 lou4
 8	110000	1F1F9.1F1F4	湯加	tong1 gaa1
 8	110000	1F1F9.1F1F9	千里達及多巴哥	cin1 lei5 daat6 kap6 do1 baa1 go1
-8	110000	1F1F9.1F1F3	突尼斯	dat6 nei5 si1
+8	110000	1F1F9.1F1F3	突尼斯	dat6 nei4 si1
 8	110000	1F1F9.1F1F7	土耳其	tou2 ji5 kei4
 8	110000	1F1F9.1F1F2	土庫曼斯坦	tou2 fu3 maan6 si1 taan2
 8	110000	1F1F9.1F1E8	特克斯及凱科斯	dak6 hak1 si1 kap6 hoi2 fo1 si1
@@ -6327,6 +6335,7 @@
 10	110000	26A0.FE0E	小心	siu2 sam1
 10	110000	26A0.FE0E	當心	dong1 sam1
 10	110000	26A0.FE0E	因住	jan1 zyu6
+10	110000	26A0.FE0E	留意	lau4 ji3
 10	110000	2630	乾	kin4
 10	110000	2630	乾卦	kin4 gwaa3
 10	110000	2631	兌	deoi3

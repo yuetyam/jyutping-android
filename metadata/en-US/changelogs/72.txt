@@ -1,0 +1,2 @@
+1. Added input memory import and export features.
+2. Improved Jyutping lookup using Stroke input.

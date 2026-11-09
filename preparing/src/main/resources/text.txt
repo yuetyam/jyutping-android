@@ -199,7 +199,7 @@ homebrew	Homebrew
 homekit	HomeKit
 homepod	HomePod
 homepodmini	HomePod mini
-honda	Honda
+homeview	HomeView
 html	HTML
 http	http
 https	https
@@ -361,6 +361,7 @@ oppo	OPPO
 oracle	Oracle
 originos	OriginOS
 osx	OS X
+ota	OTA
 outlook	Outlook
 outlook	outlook.com
 page	page
@@ -506,10 +507,12 @@ ux	UX
 ventura	Ventura
 vercel	Vercel
 vim	vim
+virtualbox	VirtualBox
 visionkit	VisionKit
 visionos	visionOS
 visionpro	Vision Pro
 vivo	vivo
+vmware	VMware
 vpn	VPN
 vscode	VSCode
 vulkan	Vulkan
@@ -1000,6 +1003,7 @@ wifi	🛜
 wlan	🛜
 wc	WC
 wc	🚾
+zzz	😴
 tm	™
 sm	℠
 command	Command
@@ -4846,6 +4850,7 @@ innovation	innovation
 employers	employers
 grey	grey
 parallel	parallel
+honda	honda
 amended	amended
 operate	operate
 bills	bills
@@ -6680,7 +6685,6 @@ stayed	stayed
 civic	civic
 assignments	assignments
 manuals	manuals
-doug	doug
 sees	sees
 termination	termination
 watched	watched
@@ -14240,7 +14244,6 @@ fearing	fearing
 fluffy	fluffy
 fundraiser	fundraiser
 funniest	funniest
-gaga	gaga
 garment	garment
 geometric	geometric
 gestures	gestures
@@ -14270,7 +14273,6 @@ mackenzie	mackenzie
 madam	madam
 marital	marital
 mayer	mayer
-meds	meds
 multitude	multitude
 muse	muse
 nanny	nanny
@@ -14844,7 +14846,6 @@ insisting	insisting
 intricate	intricate
 irvine	irvine
 jensen	jensen
-kang	kang
 kara	kara
 karate	karate
 kingdoms	kingdoms
@@ -15286,6 +15287,7 @@ disconnected	disconnected
 dishonest	dishonest
 doubtful	doubtful
 dysfunction	dysfunction
+ecosystems	ecosystems
 padding	padding
 cameraman	cameraman
 trillionaire	trillionaire
@@ -15293,4 +15295,8 @@ yosemite	yosemite
 mavericks	mavericks
 astral	astral
 fuckable	fuckable
-ecosystems	ecosystems
+fable	fable
+opus	opus
+sonnet	sonnet
+otter	otter
+sakura	sakura
