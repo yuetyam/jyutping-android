@@ -6,7 +6,6 @@ package org.jyutping.jyutping.ninekey
  * */
 enum class Combo(val digit: Int) {
 
-        Special(1),
         ABC(2),
         DEF(3),
         GHI(4),
@@ -15,9 +14,6 @@ enum class Combo(val digit: Int) {
         PQRS(7),
         TUV(8),
         WXYZ(9);
-
-        val isSpecial: Boolean
-                get() = (this == Special)
 
         /** Key display text */
         val text: String
@@ -29,7 +25,6 @@ enum class Combo(val digit: Int) {
 
         companion object {
                 private val textMap: Map<Combo, String> = mapOf(
-                        Special to "R",
                         ABC  to "ABC",
                         DEF  to "DEF",
                         GHI  to "GHI",
@@ -40,7 +35,6 @@ enum class Combo(val digit: Int) {
                         WXYZ to "WXYZ"
                 )
                 private val letterMap: Map<Combo, List<String>> = mapOf(
-                        Special to listOf("r"),
                         ABC  to listOf("a", "b", "c"),
                         DEF  to listOf("d", "e", "f"),
                         GHI  to listOf("g", "h", "i"),
