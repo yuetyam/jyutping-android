@@ -91,7 +91,7 @@ fun NineKeyKeyboard(keyHeight: Dp) {
                                 Row(
                                         modifier = Modifier.weight(0.25f)
                                 ) {
-                                        NineKeySpecialKey(modifier = Modifier.weight(1f))
+                                        SpecialKey(modifier = Modifier.weight(1f))
                                         NineKeyInputKey(Combo.ABC, modifier = Modifier.weight(1f))
                                         NineKeyInputKey(Combo.DEF, modifier = Modifier.weight(1f))
                                 }

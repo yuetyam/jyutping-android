@@ -1038,8 +1038,18 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 currentInputConnection.commitText(text, 1)
                 adjustKeyboardCase()
         }
-        fun nineKeyProcess(combo: Combo) {
+        fun nineKeyHandle(combo: Combo) {
                 bufferCombos = bufferCombos + combo
+        }
+        fun nineKeyProcess(virtual: VirtualInputKey? = null) {
+                val virtual: VirtualInputKey = virtual ?: VirtualInputKey.letterR
+                if (virtual.isApostrophe) return // Apostrophe support is not yet implemented
+                if (isBuffering.value) return // Needs the InputPulse mechanism
+                if (virtual == VirtualInputKey.letterR) {
+                        bufferCombos = bufferCombos + Combo.Special
+                } else {
+                        // TODO: Handle other virtual keys with the InputPulse mechanism
+                }
         }
         private var bufferCombos: List<Combo> by Delegates.observable(emptyList()) { _, _, newValue ->
                 suggestionJob?.cancel()
