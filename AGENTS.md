@@ -171,7 +171,7 @@ For the normal Cantonese path:
 ```text
 key composable or hardware event
   -> JyutpingInputMethodService.handle()/process()/nineKeyProcess()
-  -> buffered BasicInputEvent or Combo sequence
+  -> buffered InputPulse sequence (basic events or combined keypad groups)
   -> Segmenter/NineKeySegmenter
   -> Researcher/NineKeyResearcher plus optional memory, plain-text, and symbol lookups
   -> Converter.dispatch()
@@ -181,7 +181,7 @@ key composable or hardware event
   -> InputConnection commit and optional InputMemoryHelper update
 ```
 
-QWERTY and Triple Stroke use the regular event buffer. Nine-key input uses a separate `Combo` buffer, caches candidates, and filters them through sidebar selections before publishing them. Nine-key Pinyin reverse lookup starts with `Combo.Special` and uses `PinyinNineKeySegmenter` and `PinyinResearcher.nineKeyReverseLookup()`.
+QWERTY and Triple Stroke use the regular event buffer. Nine-key input uses an `InputPulse` buffer containing `Combined(KeypadCombo)` entries, caches candidates, and filters them through sidebar selections before publishing them. Nine-key Pinyin reverse lookup starts with an `r` basic event followed by keypad combos and uses `PinyinNineKeySegmenter` and `PinyinResearcher.nineKeyReverseLookup()`.
 
 The service cancels the previous suggestion coroutine whenever the buffer changes. Preserve cancellation checks in potentially expensive query paths.
 

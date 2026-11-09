@@ -23,6 +23,7 @@ import org.jyutping.jyutping.keyboard.CandidateScrollBar
 import org.jyutping.jyutping.keyboard.CantoneseNumberRow
 import org.jyutping.jyutping.keyboard.ToolBar
 import org.jyutping.jyutping.models.KeyboardForm
+import org.jyutping.jyutping.models.KeypadCombo
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor
 import org.jyutping.jyutping.presets.PresetConstant
@@ -92,22 +93,22 @@ fun NineKeyKeyboard(keyHeight: Dp) {
                                         modifier = Modifier.weight(0.25f)
                                 ) {
                                         SpecialKey(modifier = Modifier.weight(1f))
-                                        NineKeyInputKey(Combo.ABC, modifier = Modifier.weight(1f))
-                                        NineKeyInputKey(Combo.DEF, modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(KeypadCombo.ABC, modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(KeypadCombo.DEF, modifier = Modifier.weight(1f))
                                 }
                                 Row(
                                         modifier = Modifier.weight(0.25f)
                                 ) {
-                                        NineKeyInputKey(Combo.GHI, modifier = Modifier.weight(1f))
-                                        NineKeyInputKey(Combo.JKL, modifier = Modifier.weight(1f))
-                                        NineKeyInputKey(Combo.MNO, modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(KeypadCombo.GHI, modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(KeypadCombo.JKL, modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(KeypadCombo.MNO, modifier = Modifier.weight(1f))
                                 }
                                 Row(
                                         modifier = Modifier.weight(0.25f)
                                 ) {
-                                        NineKeyInputKey(Combo.PQRS, modifier = Modifier.weight(1f))
-                                        NineKeyInputKey(Combo.TUV, modifier = Modifier.weight(1f))
-                                        NineKeyInputKey(Combo.WXYZ, modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(KeypadCombo.PQRS, modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(KeypadCombo.TUV, modifier = Modifier.weight(1f))
+                                        NineKeyInputKey(KeypadCombo.WXYZ, modifier = Modifier.weight(1f))
                                 }
                                 Row(
                                         modifier = Modifier.weight(0.25f)

@@ -61,12 +61,13 @@ import org.jyutping.jyutping.models.CangjieConverter
 import org.jyutping.jyutping.models.CompositionType
 import org.jyutping.jyutping.models.Converter
 import org.jyutping.jyutping.models.InputKeyStyle
-import org.jyutping.jyutping.models.InputPulse
 import org.jyutping.jyutping.models.InputMethodMode
+import org.jyutping.jyutping.models.InputPulse
 import org.jyutping.jyutping.models.KeyboardCase
 import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.models.KeyboardInterface
 import org.jyutping.jyutping.models.KeyboardLayout
+import org.jyutping.jyutping.models.KeypadCombo
 import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.models.NineKeyResearcher
 import org.jyutping.jyutping.models.NineKeySegmenter
@@ -85,7 +86,6 @@ import org.jyutping.jyutping.models.keypadCombos
 import org.jyutping.jyutping.models.previewMark
 import org.jyutping.jyutping.models.previewMarkNormalized
 import org.jyutping.jyutping.models.schemeLength
-import org.jyutping.jyutping.ninekey.Combo
 import org.jyutping.jyutping.ninekey.SidebarEntry
 import org.jyutping.jyutping.numeric.NumericLayout
 import org.jyutping.jyutping.presets.AltPresetColor
@@ -1135,7 +1135,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                 currentInputConnection.commitText(text, 1)
                 adjustKeyboardCase()
         }
-        fun nineKeyHandle(combo: Combo) {
+        fun nineKeyHandle(combo: KeypadCombo) {
                 pulses = pulses + InputPulse.Combined(combo)
         }
         fun nineKeyProcess(virtual: VirtualInputKey? = null) {

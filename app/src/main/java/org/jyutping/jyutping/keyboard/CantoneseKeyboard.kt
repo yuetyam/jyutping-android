@@ -18,10 +18,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
-import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.models.KeyElement
 import org.jyutping.jyutping.models.KeyModel
 import org.jyutping.jyutping.models.KeySide
+import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.presets.AltPresetColor
 import org.jyutping.jyutping.presets.PresetColor

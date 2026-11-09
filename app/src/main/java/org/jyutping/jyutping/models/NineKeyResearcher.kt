@@ -6,8 +6,6 @@ import org.jyutping.jyutping.Elephant
 import org.jyutping.jyutping.extensions.isSpace
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.extensions.strippedTones
-import org.jyutping.jyutping.ninekey.Combo
-import org.jyutping.jyutping.ninekey.decimalCombinedCode
 import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetString
 
@@ -15,7 +13,7 @@ object NineKeyResearcher {
 
         private suspend fun isActive(): Boolean = currentCoroutineContext().isActive
 
-        suspend fun suggest(combos: List<Combo>, segmentation: NineKeySegmentation): List<Lexicon> {
+        suspend fun suggest(combos: List<KeypadCombo>, segmentation: NineKeySegmentation): List<Lexicon> {
                 val shouldProcessSlices: Boolean = (segmentation.firstOrNull()?.firstOrNull()?.alias?.size ?: 0) == 0
                 return if (shouldProcessSlices) {
                         processSlices(combos = combos)
@@ -24,7 +22,7 @@ object NineKeyResearcher {
                 }
         }
 
-        private suspend fun processSlices(combos: List<Combo>, limit: Int? = null): List<Lexicon> {
+        private suspend fun processSlices(combos: List<KeypadCombo>, limit: Int? = null): List<Lexicon> {
                 if (combos.isEmpty()) return emptyList()
                 return (combos.size downTo 1).flatMap { number ->
                         if (isActive().negative) return@flatMap emptyList<Lexicon>()
@@ -33,7 +31,7 @@ object NineKeyResearcher {
                 }
         }
 
-        private suspend fun search(combos: List<Combo>, segmentation: NineKeySegmentation, limit: Int? = null): List<Lexicon> {
+        private suspend fun search(combos: List<KeypadCombo>, segmentation: NineKeySegmentation, limit: Int? = null): List<Lexicon> {
                 if (isActive().negative) return emptyList()
                 val inputLength: Int = combos.size
                 if (inputLength <= 1) return anchorsMatch(combos = combos, limit = limit)
@@ -48,7 +46,7 @@ object NineKeyResearcher {
                 val firstInputCount: Int = fetched.firstOrNull()?.inputCount
                         ?: return processSlices(combos = combos, limit = limit)
                 if (firstInputCount >= inputLength) return fetched
-                val tailCombos: List<Combo> = combos.drop(firstInputCount)
+                val tailCombos: List<KeypadCombo> = combos.drop(firstInputCount)
                 val tailSegmentation: NineKeySegmentation = NineKeySegmenter.segment(combos = tailCombos)
                 val tailLexicons: List<Lexicon> = search(combos = tailCombos, segmentation = tailSegmentation, limit = 20)
                 if (tailLexicons.isEmpty()) return fetched
@@ -84,7 +82,7 @@ object NineKeyResearcher {
                 }
         }
 
-        fun anchorsMatch(combos: List<Combo>, limit: Int? = null): List<Lexicon> {
+        fun anchorsMatch(combos: List<KeypadCombo>, limit: Int? = null): List<Lexicon> {
                 val charCount: Long = combos.size.toLong()
                 if (charCount > Researcher.MAX_CHAR_COUNT) return emptyList()
                 val anchorsCode: Long = combos.decimalCombinedCode
@@ -105,7 +103,7 @@ object NineKeyResearcher {
                 return items
         }
 
-        fun spellMatch(combos: List<Combo>, complexity: Long, input: String? = null, mark: String? = null, limit: Int? = null): List<Lexicon> {
+        fun spellMatch(combos: List<KeypadCombo>, complexity: Long, input: String? = null, mark: String? = null, limit: Int? = null): List<Lexicon> {
                 val code: Long = combos.decimalCombinedCode
                 val complexityValue: Long = complexity
                 val limitValue: Long = limit?.toLong() ?: -1L

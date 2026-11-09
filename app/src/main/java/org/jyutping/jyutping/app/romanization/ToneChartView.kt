@@ -13,10 +13,10 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jyutping.jyutping.presets.AppleColor
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
-import org.jyutping.jyutping.presets.AppleColor
 
 @Composable
 fun ToneChartView(modifier: Modifier = Modifier, textColor: Color) {

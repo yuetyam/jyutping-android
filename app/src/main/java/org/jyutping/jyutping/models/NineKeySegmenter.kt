@@ -2,8 +2,6 @@ package org.jyutping.jyutping.models
 
 import android.util.Log
 import org.jyutping.jyutping.Elephant
-import org.jyutping.jyutping.ninekey.Combo
-import org.jyutping.jyutping.ninekey.matchedCombos
 
 /** A Jyutping syllable represented by its 9-key alias and origin sequences. */
 class NineKeySyllable(
@@ -13,8 +11,8 @@ class NineKeySyllable(
         val serialOriginCode: Long
 ) : Comparable<NineKeySyllable> {
 
-        val alias: List<Combo> = aliasCode.matchedCombos
-        val origin: List<Combo> = originCode.matchedCombos
+        val alias: List<KeypadCombo> = aliasCode.matchedCombos
+        val origin: List<KeypadCombo> = originCode.matchedCombos
         val serialAlias: List<VirtualInputKey> = serialAliasCode.matchedVirtualInputKeys
         val serialOrigin: List<VirtualInputKey> = serialOriginCode.matchedVirtualInputKeys
 
@@ -57,11 +55,11 @@ val NineKeyScheme.complexity: Long
         get() = this.map { it.origin.size }.decimalOverflowed()
 
 /** Alias combos conjoined as a sequence */
-val NineKeyScheme.aliasCombos: List<Combo>
+val NineKeyScheme.aliasCombos: List<KeypadCombo>
         get() = this.flatMap { it.alias }
 
 /** Origin combos conjoined as a sequence */
-val NineKeyScheme.originCombos: List<Combo>
+val NineKeyScheme.originCombos: List<KeypadCombo>
         get() = this.flatMap { it.origin }
 
 /** Serial origin keys conjoined as a sequence */
@@ -108,7 +106,7 @@ object NineKeySegmenter {
         private class SplitEdge(val syllable: NineKeySyllable, val endIndex: Int)
         private class SplitNode(val syllable: NineKeySyllable, val previousIndex: Int, val length: Int)
 
-        private fun splitEdges(combos: List<Combo>): Array<MutableList<SplitEdge>> {
+        private fun splitEdges(combos: List<KeypadCombo>): Array<MutableList<SplitEdge>> {
                 val inputLength = combos.size
                 val edges = Array(inputLength) { mutableListOf<SplitEdge>() }
                 for (startIndex in 0 until inputLength) {
@@ -135,7 +133,7 @@ object NineKeySegmenter {
                 return syllables
         }
 
-        private fun split(combos: List<Combo>): NineKeySegmentation {
+        private fun split(combos: List<KeypadCombo>): NineKeySegmentation {
                 val inputLength = combos.size
                 if (inputLength <= 0) return emptyList()
                 val edges = splitEdges(combos)
@@ -173,7 +171,7 @@ object NineKeySegmenter {
         }
 
         /** Returns possible syllable schemes ordered by consumed input length, then syllable count. */
-        fun segment(combos: List<Combo>): NineKeySegmentation {
+        fun segment(combos: List<KeypadCombo>): NineKeySegmentation {
                 return split(combos)
         }
 }

@@ -5,8 +5,6 @@ import kotlinx.coroutines.isActive
 import org.jyutping.jyutping.Elephant
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.extensions.strippedSpaces
-import org.jyutping.jyutping.ninekey.Combo
-import org.jyutping.jyutping.ninekey.decimalCombinedCode
 import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetString
 
@@ -195,12 +193,12 @@ object PinyinResearcher {
                 return instances
         }
 
-        suspend fun nineKeyReverseLookup(combos: List<Combo>, segmentation: PinyinNineKeySegmentation): List<Lexicon> {
+        suspend fun nineKeyReverseLookup(combos: List<KeypadCombo>, segmentation: PinyinNineKeySegmentation): List<Lexicon> {
                 return pinyinNineKeySearch(combos = combos, segmentation = segmentation)
                         .flatMap { Elephant.reveresLookup(text = it.text, input = it.input, mark = it.mark) }
         }
 
-        private suspend fun pinyinNineKeySearch(combos: List<Combo>, segmentation: PinyinNineKeySegmentation, limit: Int? = null): List<PinyinLexicon> {
+        private suspend fun pinyinNineKeySearch(combos: List<KeypadCombo>, segmentation: PinyinNineKeySegmentation, limit: Int? = null): List<PinyinLexicon> {
                 val inputLength: Int = combos.size
                 if (segmentation.isEmpty()) {
                         return processPinyinNineKeySlices(combos = combos, limit = limit)
@@ -213,7 +211,7 @@ object PinyinResearcher {
                 if (firstInputCount >= inputLength) return fetched
                 val headInputLengths: List<Int> = fetched.map { it.inputCount }.distinct()
                 val concatenated: List<PinyinLexicon> = headInputLengths.mapNotNull { headLength ->
-                        val tailCombos: List<Combo> = combos.drop(headLength)
+                        val tailCombos: List<KeypadCombo> = combos.drop(headLength)
                         val tailSegmentation: PinyinNineKeySegmentation = PinyinNineKeySegmenter.segment(combos = tailCombos)
                         val tailLexicon: PinyinLexicon = pinyinNineKeySearch(combos = tailCombos, segmentation = tailSegmentation, limit = 20).firstOrNull() ?: return@mapNotNull null
                         val headLexicon: PinyinLexicon = fetched.first { it.inputCount == headLength }
@@ -225,9 +223,9 @@ object PinyinResearcher {
                 return concatenated + fetched
         }
 
-        private fun processPinyinNineKeySlices(combos: List<Combo>, limit: Int? = null): List<PinyinLexicon> {
+        private fun processPinyinNineKeySlices(combos: List<KeypadCombo>, limit: Int? = null): List<PinyinLexicon> {
                 return (0 until combos.size).flatMap { number ->
-                        val leadingCombos: List<Combo> = combos.dropLast(number)
+                        val leadingCombos: List<KeypadCombo> = combos.dropLast(number)
                         val code: Long = leadingCombos.decimalCombinedCode
                         val length: Long = leadingCombos.size.toLong()
                         pinyinNineKeyCodeMatch(code = code, complexity = length, limit = limit) + pinyinNineKeyAnchorsMatch(code = code, charCount = length, limit = limit)

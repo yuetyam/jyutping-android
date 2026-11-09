@@ -1,11 +1,11 @@
 package org.jyutping.jyutping.memory
 
-import java.io.File
-import java.nio.file.Files
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.nio.file.Files
 
 /** Writes the same standalone version-1 SQLite format as the iOS and macOS input methods. */
 object InputMemoryExporter {

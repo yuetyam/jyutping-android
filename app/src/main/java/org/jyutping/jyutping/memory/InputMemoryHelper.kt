@@ -7,18 +7,17 @@ import android.content.SharedPreferences
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import androidx.core.content.edit
-import java.io.File
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.isActive
 import org.jyutping.jyutping.UserSettingsKey
 import org.jyutping.jyutping.extensions.isCantoneseToneDigit
 import org.jyutping.jyutping.extensions.isLowercaseBasicLatinLetter
@@ -28,6 +27,7 @@ import org.jyutping.jyutping.extensions.strippedSpaces
 import org.jyutping.jyutping.extensions.strippedTones
 import org.jyutping.jyutping.extensions.toneConverted
 import org.jyutping.jyutping.extensions.toneDigitOnly
+import org.jyutping.jyutping.models.KeypadCombo
 import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.models.NineKeyScheme
 import org.jyutping.jyutping.models.NineKeySegmentation
@@ -40,6 +40,7 @@ import org.jyutping.jyutping.models.aliasText
 import org.jyutping.jyutping.models.anchorNormalized
 import org.jyutping.jyutping.models.complexity
 import org.jyutping.jyutping.models.conjoinedCode
+import org.jyutping.jyutping.models.decimalCombinedCode
 import org.jyutping.jyutping.models.isIrregular
 import org.jyutping.jyutping.models.originCombos
 import org.jyutping.jyutping.models.originKeys
@@ -47,10 +48,9 @@ import org.jyutping.jyutping.models.previewMark
 import org.jyutping.jyutping.models.schemeLength
 import org.jyutping.jyutping.models.serialOriginKeys
 import org.jyutping.jyutping.models.syllableText
-import org.jyutping.jyutping.ninekey.Combo
-import org.jyutping.jyutping.ninekey.decimalCombinedCode
 import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetString
+import java.io.File
 
 class InputMemoryHelper internal constructor(context: Context) : SQLiteOpenHelper(context.applicationContext, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -609,7 +609,7 @@ private fun InputMemoryHelper.spellMatch(keys: List<VirtualInputKey>, complexity
         return items
 }
 
-fun InputMemoryHelper.nineKeySearch(combos: List<Combo>, segmentation: NineKeySegmentation): List<Lexicon> {
+fun InputMemoryHelper.nineKeySearch(combos: List<KeypadCombo>, segmentation: NineKeySegmentation): List<Lexicon> {
         if (InputMemoryHelper.isMigrating) return emptyList()
         if (combos.isEmpty()) return emptyList()
         val inputLength: Int = combos.size
@@ -653,7 +653,7 @@ private fun InputMemoryHelper.nineKeyPerform(scheme: NineKeyScheme, limit: Int =
                 nineKeySpellMatch(combos = scheme.originCombos, complexity = scheme.complexity, limit = limit)
         }
 }
-private fun InputMemoryHelper.nineKeyAnchorsMatch(combos: List<Combo>, limit: Int = 50): List<InternalLexicon> {
+private fun InputMemoryHelper.nineKeyAnchorsMatch(combos: List<KeypadCombo>, limit: Int = 50): List<InternalLexicon> {
         val code: Long = combos.decimalCombinedCode
         val charCount: Long = combos.size.toLong()
         val items: MutableList<InternalLexicon> = mutableListOf()
@@ -671,7 +671,7 @@ private fun InputMemoryHelper.nineKeyAnchorsMatch(combos: List<Combo>, limit: In
         }
         return items
 }
-private fun InputMemoryHelper.nineKeySpellMatch(combos: List<Combo>, complexity: Long, limit: Int = 50): List<InternalLexicon> {
+private fun InputMemoryHelper.nineKeySpellMatch(combos: List<KeypadCombo>, complexity: Long, limit: Int = 50): List<InternalLexicon> {
         val code: Long = combos.decimalCombinedCode
         val letterCount: Long = combos.size.toLong()
         val items: MutableList<InternalLexicon> = mutableListOf()

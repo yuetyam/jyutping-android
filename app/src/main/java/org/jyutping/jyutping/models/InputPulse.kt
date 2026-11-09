@@ -1,7 +1,5 @@
 package org.jyutping.jyutping.models
 
-import org.jyutping.jyutping.ninekey.Combo
-
 /** A single input carrying a definite key or a keypad letter group. */
 sealed interface InputPulse {
 
@@ -9,7 +7,7 @@ sealed interface InputPulse {
         data class Basic(val event: BasicInputEvent) : InputPulse
 
         /** A nine-key keypad letter group without keyboard-case information. */
-        data class Combined(val combo: Combo) : InputPulse
+        data class Combined(val combo: KeypadCombo) : InputPulse
 
         /** Whether this pulse identifies a reverse-lookup trigger (`r`, `v`, `x`, or `q`), regardless of keyboard case. Keypad combos always return `false`. */
         val isReverseLookupTrigger: Boolean
@@ -38,5 +36,5 @@ val List<InputPulse>.basicEvents: List<BasicInputEvent>
         get() = mapNotNull { (it as? InputPulse.Basic)?.event }
 
 /** Only the combined keypad letter groups, in list order. */
-val List<InputPulse>.keypadCombos: List<Combo>
+val List<InputPulse>.keypadCombos: List<KeypadCombo>
         get() = mapNotNull { (it as? InputPulse.Combined)?.combo }

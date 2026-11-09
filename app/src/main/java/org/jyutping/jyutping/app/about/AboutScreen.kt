@@ -49,11 +49,11 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.app.AppMaster
 import org.jyutping.jyutping.app.common.AppLinkLabel
 import org.jyutping.jyutping.app.common.EnhancedHorizontalDivider
 import org.jyutping.jyutping.app.common.WebLinkLabel
 import org.jyutping.jyutping.presets.PresetColor
-import org.jyutping.jyutping.app.AppMaster
 
 @Composable
 fun AboutScreen() {

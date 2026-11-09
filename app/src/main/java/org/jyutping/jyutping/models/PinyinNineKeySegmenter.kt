@@ -2,13 +2,11 @@ package org.jyutping.jyutping.models
 
 import android.util.Log
 import org.jyutping.jyutping.Elephant
-import org.jyutping.jyutping.ninekey.Combo
-import org.jyutping.jyutping.ninekey.matchedCombos
 
 data class PinyinNineKeySyllable(
         val code: Long
 ) {
-        val combos: List<Combo> = code.matchedCombos
+        val combos: List<KeypadCombo> = code.matchedCombos
 
         override fun equals(other: Any?): Boolean {
                 if (this === other) return true
@@ -34,7 +32,7 @@ val PinyinNineKeyScheme.complexity: Long
         get() = this.map { it.combos.size }.decimalOverflowed()
 
 /** Input combos conjoined as a sequence */
-val PinyinNineKeyScheme.combos: List<Combo>
+val PinyinNineKeyScheme.combos: List<KeypadCombo>
         get() = this.flatMap { it.combos }
 
 /** Segments 9-key Pinyin input into possible syllable schemes. */
@@ -66,7 +64,7 @@ object PinyinNineKeySegmenter {
         private class SplitEdge(val syllable: PinyinNineKeySyllable, val endIndex: Int)
         private class SplitNode(val syllable: PinyinNineKeySyllable, val previousIndex: Int, val length: Int)
 
-        private fun splitEdges(combos: List<Combo>): Array<MutableList<SplitEdge>> {
+        private fun splitEdges(combos: List<KeypadCombo>): Array<MutableList<SplitEdge>> {
                 val inputLength = combos.size
                 val edges = Array(inputLength) { mutableListOf<SplitEdge>() }
                 for (startIndex in 0 until inputLength) {
@@ -93,7 +91,7 @@ object PinyinNineKeySegmenter {
                 return syllables
         }
 
-        private fun split(combos: List<Combo>): PinyinNineKeySegmentation {
+        private fun split(combos: List<KeypadCombo>): PinyinNineKeySegmentation {
                 val inputLength = combos.size
                 if (inputLength <= 0) return emptyList()
                 val edges = splitEdges(combos)
@@ -130,7 +128,7 @@ object PinyinNineKeySegmenter {
                 return schemes
         }
 
-        fun segment(combos: List<Combo>): PinyinNineKeySegmentation {
+        fun segment(combos: List<KeypadCombo>): PinyinNineKeySegmentation {
                 return split(combos)
         }
 }

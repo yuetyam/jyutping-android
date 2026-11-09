@@ -4,12 +4,12 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.isActive
 import org.jyutping.jyutping.Elephant
 import org.jyutping.jyutping.extensions.isCantoneseToneDigit
+import org.jyutping.jyutping.extensions.latinLetterOnly
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.extensions.strippedSpaces
 import org.jyutping.jyutping.extensions.strippedTones
 import org.jyutping.jyutping.extensions.toneConverted
 import org.jyutping.jyutping.extensions.toneDigitOnly
-import org.jyutping.jyutping.extensions.latinLetterOnly
 import org.jyutping.jyutping.presets.PresetCharacter
 import org.jyutping.jyutping.presets.PresetString
 

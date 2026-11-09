@@ -4,14 +4,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabaseLockedException
 import android.net.Uri
 import android.provider.DocumentsContract
-import java.io.File
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
-import java.nio.file.Files
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.Date
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +15,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jyutping.jyutping.R
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
+import java.nio.file.Files
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 /** Process lifetime owner: neither rotation nor hiding the IME cancels an in-progress transfer. */
 class InputMemoryTransferController internal constructor(

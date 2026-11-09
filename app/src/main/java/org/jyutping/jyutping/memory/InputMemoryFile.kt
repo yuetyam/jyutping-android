@@ -2,10 +2,10 @@ package org.jyutping.jyutping.memory
 
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteStatement
-import java.io.File
-import java.io.IOException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
+import java.io.File
+import java.io.IOException
 
 internal class InputMemoryBusyError : IOException()
 internal class InputMemoryValidationError : IOException()

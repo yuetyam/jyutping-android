@@ -1,7 +1,6 @@
 package org.jyutping.jyutping.memory
 
 import android.database.Cursor
-import java.io.File
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
@@ -9,6 +8,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import org.jyutping.jyutping.extensions.isCantoneseToneDigit
 import org.jyutping.jyutping.extensions.isLowercaseBasicLatinLetter
+import java.io.File
 
 sealed class InputMemoryImportError : Exception() {
         // Each throw needs a fresh exception with its own stack trace.

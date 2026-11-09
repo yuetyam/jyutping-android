@@ -25,11 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.feedback.SoundEffect
+import org.jyutping.jyutping.models.KeypadCombo
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
-fun NineKeyInputKey(key: Combo, modifier: Modifier) {
+fun NineKeyInputKey(key: KeypadCombo, modifier: Modifier) {
         val view = LocalView.current
         val context = LocalContext.current as JyutpingInputMethodService
         val isDarkMode by context.isDarkMode.collectAsState()

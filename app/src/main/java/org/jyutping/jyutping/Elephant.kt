@@ -6,6 +6,7 @@ import org.jyutping.jyutping.emoji.Emoji
 import org.jyutping.jyutping.emoji.EmojiCategory
 import org.jyutping.jyutping.extensions.characterCount
 import org.jyutping.jyutping.extensions.generateSymbol
+import org.jyutping.jyutping.models.KeypadCombo
 import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.models.LexiconType
 import org.jyutping.jyutping.models.NineKeySegmentation
@@ -13,11 +14,10 @@ import org.jyutping.jyutping.models.Segmentation
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.complexity
 import org.jyutping.jyutping.models.conjoinedCode
+import org.jyutping.jyutping.models.decimalCombinedCode
 import org.jyutping.jyutping.models.originCombos
 import org.jyutping.jyutping.models.originKeys
 import org.jyutping.jyutping.models.schemeLength
-import org.jyutping.jyutping.ninekey.Combo
-import org.jyutping.jyutping.ninekey.decimalCombinedCode
 import org.jyutping.jyutping.presets.PresetString
 import org.jyutping.jyutping.utilities.DatabasePreparer
 import org.jyutping.jyutping.utilities.InheritedDatabaseHelper
@@ -116,7 +116,7 @@ object Elephant {
                 return entries.map { Lexicon(type = LexiconType.Text, text = it, romanization = input, input = input) }
         }
 
-        fun queryPlainTexts(combos: List<Combo>): List<Lexicon> {
+        fun queryPlainTexts(combos: List<KeypadCombo>): List<Lexicon> {
                 val code: Long = combos.decimalCombinedCode
                 val letterCount: Long = combos.size.toLong()
                 val entries: MutableList<Lexicon> = mutableListOf()
@@ -166,14 +166,14 @@ object Elephant {
                 }
         }
 
-        fun nineKeySearchSymbols(combos: List<Combo>, segmentation: NineKeySegmentation): List<Lexicon> {
+        fun nineKeySearchSymbols(combos: List<KeypadCombo>, segmentation: NineKeySegmentation): List<Lexicon> {
                 val inputLength: Int = combos.size
                 return segmentation.filter { it.schemeLength == inputLength }
                         .flatMap { nineKeySymbolMatch(combos = it.originCombos, complexity = it.complexity) }
                         .distinct()
         }
 
-        private fun nineKeySymbolMatch(combos: List<Combo>, complexity: Long): List<Lexicon> {
+        private fun nineKeySymbolMatch(combos: List<KeypadCombo>, complexity: Long): List<Lexicon> {
                 val code: Long = combos.decimalCombinedCode
                 val complexityValue: Long = complexity
                 val emojis: MutableList<Emoji> = mutableListOf()

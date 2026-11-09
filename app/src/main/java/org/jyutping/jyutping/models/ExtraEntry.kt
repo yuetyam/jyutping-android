@@ -2,8 +2,6 @@ package org.jyutping.jyutping.models
 
 import org.jyutping.jyutping.extensions.latinLetterOnly
 import org.jyutping.jyutping.extensions.strippedTones
-import org.jyutping.jyutping.ninekey.Combo
-import org.jyutping.jyutping.ninekey.decimalCombinedCode
 import org.jyutping.jyutping.presets.PresetString
 
 data class ExtraEntry(
@@ -40,7 +38,7 @@ data class ExtraEntry(
                                 .map { Lexicon(text = it.word, romanization = it.romanization, input = input, mark = it.romanization.strippedTones()) }
                 }
 
-                fun nineKeySearch(combos: List<Combo>): List<Lexicon> {
+                fun nineKeySearch(combos: List<KeypadCombo>): List<Lexicon> {
                         val code: Long = combos.decimalCombinedCode
                         val letterCount: Int = combos.size
                         return entries.filter { (it.nineKey == code) && (it.complex == letterCount) }

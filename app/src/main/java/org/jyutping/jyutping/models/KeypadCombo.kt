@@ -1,10 +1,9 @@
-package org.jyutping.jyutping.ninekey
+package org.jyutping.jyutping.models
 
-/**
- * 10-key / T9 keyboard element
- * @param digit Key number; identified code
- * */
-enum class Combo(val digit: Int) {
+/** 9-key / T9 keyboard element
+ * @param digit Keypad number; identifier
+ */
+enum class KeypadCombo(val digit: Int) {
 
         ABC(2),
         DEF(3),
@@ -24,7 +23,7 @@ enum class Combo(val digit: Int) {
                 get() = letterMap[this] ?: listOf("a")
 
         companion object {
-                private val textMap: Map<Combo, String> = mapOf(
+                private val textMap: Map<KeypadCombo, String> = mapOf(
                         ABC  to "ABC",
                         DEF  to "DEF",
                         GHI  to "GHI",
@@ -34,7 +33,7 @@ enum class Combo(val digit: Int) {
                         TUV  to "TUV",
                         WXYZ to "WXYZ"
                 )
-                private val letterMap: Map<Combo, List<String>> = mapOf(
+                private val letterMap: Map<KeypadCombo, List<String>> = mapOf(
                         ABC  to listOf("a", "b", "c"),
                         DEF  to listOf("d", "e", "f"),
                         GHI  to listOf("g", "h", "i"),
@@ -45,16 +44,16 @@ enum class Combo(val digit: Int) {
                         WXYZ to listOf("w", "y", "z")
                 )
 
-                fun comboOf(digit: Int): Combo? = entries.find { it.digit == digit }
+                fun elementOf(digit: Int): KeypadCombo? = entries.find { it.digit == digit }
         }
 }
 
 /** Combines the decimal digit codes using wrapping arithmetic. */
-val List<Combo>.decimalCombinedCode: Long
+val List<KeypadCombo>.decimalCombinedCode: Long
         get() = this.fold(0L) { acc, combo -> acc * 10L + combo.digit.toLong() }
 
 /** Decomposes a decimal combined code into the matched combos sequence. */
-val Long.matchedCombos: List<Combo>
+val Long.matchedCombos: List<KeypadCombo>
         get() {
                 var number = this
                 val digits = mutableListOf<Int>()
@@ -62,5 +61,5 @@ val Long.matchedCombos: List<Combo>
                         digits.add((number % 10L).toInt())
                         number /= 10L
                 }
-                return digits.reversed().mapNotNull { Combo.comboOf(it) }
+                return digits.reversed().mapNotNull { KeypadCombo.elementOf(it) }
         }

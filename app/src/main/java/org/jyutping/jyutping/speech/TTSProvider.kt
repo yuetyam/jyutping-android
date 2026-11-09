@@ -5,10 +5,10 @@ import android.os.Handler
 import android.os.Looper
 import android.speech.tts.TextToSpeech
 import android.util.Log
-import java.util.Locale
-import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.util.Locale
+import kotlin.uuid.Uuid
 
 class TTSProvider(private val context: Context?) : TextToSpeech.OnInitListener {
 
