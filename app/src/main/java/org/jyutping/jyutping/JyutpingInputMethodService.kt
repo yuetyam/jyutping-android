@@ -892,7 +892,7 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                                                 }
                                         }
                                         VirtualInputKey.letterQ -> if (keyboardLayout.value.isNineKey) {
-                                                nineKeyStructureReverseLookup()
+                                                nineKeyStructureReverseLookup(newValue, sessionState)
                                         } else {
                                                 suggestionJob = CoroutineScope(Dispatchers.Default).launch {
                                                         val allKeys = newValue.basicEvents.map { it.key }
@@ -1048,12 +1048,21 @@ class JyutpingInputMethodService: LifecycleInputMethodService(),
                         }
                 }
         }
-        /** 拆字反查 using component syllables entered on the nine-key keypad. Not yet supported. */
-        private fun nineKeyStructureReverseLookup() {
-                // TODO: Implement structure reverse lookup for NineKey Keyboards
-                currentInputConnection.setComposingText(joinedBufferTexts(), 1)
-                candidates.value = emptyList()
-                updateInputSessionStates()
+        /** 拆字反查 using component syllables entered on the nine-key keypad. */
+        private fun nineKeyStructureReverseLookup(newValue: List<InputPulse>, sessionState: Long) {
+                suggestionJob = CoroutineScope(Dispatchers.Default).launch {
+                        val combos = newValue.drop(1).keypadCombos
+                        val segmentation = NineKeySegmenter.segment(combos)
+                        val queried = Structure.nineKeyReverseLookup(combos, segmentation)
+                        val suggestions = Converter.transformed(lexicons = queried, commentForm = RomanizationForm.Full, charset = characterStandard.value, sessionState = sessionState)
+                        val tailMark: String = suggestions.firstOrNull()?.lexicon?.mark ?: combos.joinToString(separator = PresetString.EMPTY) { it.letters.first() }
+                        val mark: String = if (combos.isEmpty()) VirtualInputKey.letterQ.text else (VirtualInputKey.letterQ.text + PresetString.SPACE + tailMark)
+                        withContext(Dispatchers.Main) {
+                                currentInputConnection.setComposingText(mark, 1)
+                                candidates.value = suggestions
+                                updateInputSessionStates()
+                        }
+                }
         }
         private fun updateInputSessionStates() {
                 if (isBuffering.value.negative) {

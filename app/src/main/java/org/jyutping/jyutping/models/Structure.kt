@@ -1,5 +1,7 @@
 package org.jyutping.jyutping.models
 
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import org.jyutping.jyutping.Elephant
 import org.jyutping.jyutping.extensions.isCantoneseToneDigit
 import org.jyutping.jyutping.extensions.isSpace
@@ -79,19 +81,38 @@ object Structure {
                 }
         }
 
+        /** 拆字反查 from complete nine-key component syllables, retaining the entered key count and component pre-edit mark. */
+        suspend fun nineKeyReverseLookup(combos: List<KeypadCombo>, segmentation: NineKeySegmentation): List<Lexicon> {
+                if (combos.isEmpty()) return emptyList()
+                val input = combos.joinToString(separator = PresetString.EMPTY) { it.letters.first() }
+                return segmentation.filter { it.schemeLength == combos.size }
+                        .flatMap { scheme ->
+                                currentCoroutineContext().ensureActive()
+                                val isRegular = scheme.none { it.isIrregular }
+                                val code = if (isRegular) scheme.originCombos.decimalCombinedCode else scheme.serialOriginKeys.conjoinedCode
+                                match(code = code, complexity = scheme.complexity, input = input, isNineKey = isRegular)
+                        }
+                        .distinct()
+                        .flatMap { item ->
+                                currentCoroutineContext().ensureActive()
+                                Elephant.reveresLookup(text = item.text, input = input, mark = item.romanization.strippedTones())
+                        }
+                        .distinct()
+        }
+
         private fun search(keys: List<VirtualInputKey>, segmentation: Segmentation): List<Lexicon> {
                 val inputLength: Int = keys.size
                 val input: String = keys.joinToString(separator = PresetString.EMPTY) { it.text }
                 return segmentation.filter { it.schemeLength == inputLength }
-                        .flatMap { scheme -> match(keys = scheme.originKeys, complexity = scheme.complexity, input = input) }
+                        .flatMap { scheme -> match(code = scheme.originKeys.conjoinedCode, complexity = scheme.complexity, input = input) }
                         .distinct()
         }
 
-        private fun match(keys: List<VirtualInputKey>, complexity: Long, input: String): List<Lexicon> {
-                val spell: Long = keys.conjoinedCode
+        private fun match(code: Long, complexity: Long, input: String, isNineKey: Boolean = false): List<Lexicon> {
+                val column: String = if (isNineKey) "spell_9key" else "spell"
                 val complexityValue: Long = complexity
                 val items: MutableList<Lexicon> = mutableListOf()
-                val command: String = "SELECT word, romanization FROM structure_table WHERE spell = $spell AND complexity = $complexityValue ORDER BY rowid LIMIT -1;"
+                val command: String = "SELECT word, romanization FROM structure_table WHERE $column = $code AND complexity = $complexityValue ORDER BY rowid LIMIT -1;"
                 Elephant.sharedDatabase.rawQuery(command, null).use { cursor ->
                         while (cursor.moveToNext()) {
                                 val word = cursor.getString(0)
