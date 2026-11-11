@@ -46,9 +46,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.delay
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.cangjie.CangjieVariant
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.keyboard.CangjieVariant
 import org.jyutping.jyutping.models.KeySide
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.presets.PresetColor

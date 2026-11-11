@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.keyboard
+package org.jyutping.jyutping.cangjie
 
 /// 倉頡／速成版本
 enum class CangjieVariant(val identifier: Int) {

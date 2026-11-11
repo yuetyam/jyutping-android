@@ -35,6 +35,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jyutping.jyutping.cangjie.Cangjie
+import org.jyutping.jyutping.cangjie.CangjieVariant
 import org.jyutping.jyutping.emoji.Emoji
 import org.jyutping.jyutping.emoji.EmojiCategory
 import org.jyutping.jyutping.extensions.convertedS2T
@@ -46,8 +48,6 @@ import org.jyutping.jyutping.extensions.markFormatted
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.extensions.toneConverted
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.keyboard.Cangjie
-import org.jyutping.jyutping.keyboard.CangjieVariant
 import org.jyutping.jyutping.keyboard.CommentStyle
 import org.jyutping.jyutping.keyboard.ExtraBottomPadding
 import org.jyutping.jyutping.keyboard.ReturnKeyForm

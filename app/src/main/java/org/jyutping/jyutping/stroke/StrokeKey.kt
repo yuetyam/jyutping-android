@@ -99,7 +99,7 @@ fun StrokeKey(virtual: VirtualInputKey, modifier: Modifier) {
                         if (keyStroke != null) {
                                 Box(
                                         modifier = modifier
-                                                .padding(2.dp)
+                                                .padding(horizontal = 2.dp, vertical = 1.dp)
                                                 .fillMaxSize(),
                                         contentAlignment = Alignment.TopEnd
                                 ) {

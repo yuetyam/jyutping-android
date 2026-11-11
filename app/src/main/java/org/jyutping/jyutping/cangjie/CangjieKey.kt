@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.keyboard
+package org.jyutping.jyutping.cangjie
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
@@ -101,7 +101,7 @@ fun CangjieKey(virtual: VirtualInputKey, modifier: Modifier, position: Alignment
                 ) {
                         Box (
                                 modifier = modifier
-                                        .padding(2.dp)
+                                        .padding(horizontal = 2.dp, vertical = 1.dp)
                                         .fillMaxSize(),
                                 contentAlignment = Alignment.TopEnd
                         ) {

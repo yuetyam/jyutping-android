@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.keyboard
+package org.jyutping.jyutping.cangjie
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,6 +18,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.keyboard.BackspaceKey
+import org.jyutping.jyutping.keyboard.CandidateScrollBar
+import org.jyutping.jyutping.keyboard.CantoneseNumberRow
+import org.jyutping.jyutping.keyboard.ShiftKey
+import org.jyutping.jyutping.keyboard.SimpleBottomKeyRow
+import org.jyutping.jyutping.keyboard.ToolBar
 import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.presets.AltPresetColor
@@ -53,13 +59,13 @@ fun CangjieKeyboard(keyHeight: Dp) {
                         contentAlignment = Alignment.Center
                 ) {
                         if (isBuffering) {
-                                CandidateScrollBar()
+                            CandidateScrollBar()
                         } else {
-                                ToolBar()
+                            ToolBar()
                         }
                 }
                 if (needsNumberRow) {
-                        CantoneseNumberRow(height = keyHeight)
+                    CantoneseNumberRow(height = keyHeight)
                 }
                 Row(
                         modifier = Modifier
@@ -109,11 +115,11 @@ fun CangjieKeyboard(keyHeight: Dp) {
                         CangjieKey(virtual = VirtualInputKey.letterN, modifier = Modifier.weight(1f))
                         CangjieKey(virtual = VirtualInputKey.letterM, modifier = Modifier.weight(1f))
                         Spacer(modifier = Modifier.weight(0.1f))
-                        BackspaceKey(modifier = Modifier.weight(1.4f))
+                    BackspaceKey(modifier = Modifier.weight(1.4f))
                 }
-                SimpleBottomKeyRow(
-                        transform = if (useDedicatedNumberPad) KeyboardForm.DedicatedNumbers else KeyboardForm.Numeric,
-                        height = keyHeight
-                )
+            SimpleBottomKeyRow(
+                transform = if (useDedicatedNumberPad) KeyboardForm.DedicatedNumbers else KeyboardForm.Numeric,
+                height = keyHeight
+            )
         }
 }

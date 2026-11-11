@@ -1,6 +1,7 @@
-package org.jyutping.jyutping.keyboard
+package org.jyutping.jyutping.cangjie
 
 import org.jyutping.jyutping.Elephant
+import org.jyutping.jyutping.keyboard.ShapeLexicon
 import org.jyutping.jyutping.models.Lexicon
 import org.jyutping.jyutping.models.VirtualInputKey
 import org.jyutping.jyutping.models.conjoinedCode

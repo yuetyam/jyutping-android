@@ -17,11 +17,11 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import org.jyutping.jyutping.cangjie.CangjieKeyboard
 import org.jyutping.jyutping.editingpanel.EditingPanel
 import org.jyutping.jyutping.emoji.EmojiBoard
 import org.jyutping.jyutping.keyboard.ABCKeyboard
 import org.jyutping.jyutping.keyboard.CandidateBoard
-import org.jyutping.jyutping.keyboard.CangjieKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseNumericKeyboard
 import org.jyutping.jyutping.keyboard.CantoneseSymbolicKeyboard

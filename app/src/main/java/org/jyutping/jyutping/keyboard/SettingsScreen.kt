@@ -67,6 +67,7 @@ import org.jyutping.jyutping.BuildConfig
 import org.jyutping.jyutping.CharacterStandard
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
+import org.jyutping.jyutping.cangjie.CangjieVariant
 import org.jyutping.jyutping.extensions.negative
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.memory.InputMemoryHelper
