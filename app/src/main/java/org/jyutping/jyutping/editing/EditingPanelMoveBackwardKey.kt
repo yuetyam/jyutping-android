@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.editingpanel
+package org.jyutping.jyutping.editing
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background

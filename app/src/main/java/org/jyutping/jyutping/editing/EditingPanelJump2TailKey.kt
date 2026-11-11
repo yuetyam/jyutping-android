@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.editingpanel
+package org.jyutping.jyutping.editing
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
@@ -12,11 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ContentCut
+import androidx.compose.material.icons.automirrored.rounded.KeyboardTab
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,18 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
-import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
-fun EditingPanelCutKey(modifier: Modifier) {
+fun EditingPanelJump2TailKey(modifier: Modifier) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
         val view = LocalView.current
@@ -50,7 +44,7 @@ fun EditingPanelCutKey(modifier: Modifier) {
                         .clickable(interactionSource = interactionSource, indication = null) {
                                 context.audioFeedback(SoundEffect.Click)
                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                context.cutAllText()
+                                context.jump2tail()
                         }
                         .fillMaxSize()
                         .padding(if (isPressed) 1.dp else 3.dp)
@@ -67,18 +61,10 @@ fun EditingPanelCutKey(modifier: Modifier) {
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
                 Icon(
-                        imageVector = Icons.Outlined.ContentCut,
+                        imageVector = Icons.AutoMirrored.Rounded.KeyboardTab,
                         contentDescription = null,
                         modifier = Modifier.size(22.dp),
                         tint = if (isDarkMode) Color.White else Color.Black
-                )
-                Text(
-                        text = stringResource(id = R.string.editing_panel_key_cut),
-                        color = if (isDarkMode) Color.White else Color.Black,
-                        autoSize = TextAutoSize.StepBased(minFontSize = 5.sp, maxFontSize = 11.sp),
-                        fontSize = 11.sp,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
                 )
         }
 }

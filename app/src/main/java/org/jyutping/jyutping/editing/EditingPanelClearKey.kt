@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.editingpanel
+package org.jyutping.jyutping.editing
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +37,7 @@ import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
-fun EditingPanelCopyKey(modifier: Modifier) {
+fun EditingPanelClearKey(modifier: Modifier) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
         val view = LocalView.current
@@ -50,7 +50,7 @@ fun EditingPanelCopyKey(modifier: Modifier) {
                         .clickable(interactionSource = interactionSource, indication = null) {
                                 context.audioFeedback(SoundEffect.Click)
                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                context.copyAllText()
+                                context.clearAllText()
                         }
                         .fillMaxSize()
                         .padding(if (isPressed) 1.dp else 3.dp)
@@ -67,13 +67,13 @@ fun EditingPanelCopyKey(modifier: Modifier) {
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
                 Icon(
-                        imageVector = Icons.Outlined.ContentCopy,
+                        imageVector = Icons.Rounded.Clear,
                         contentDescription = null,
                         modifier = Modifier.size(22.dp),
                         tint = if (isDarkMode) Color.White else Color.Black
                 )
                 Text(
-                        text = stringResource(id = R.string.editing_panel_key_copy),
+                        text = stringResource(id = R.string.editing_panel_key_clear),
                         color = if (isDarkMode) Color.White else Color.Black,
                         autoSize = TextAutoSize.StepBased(minFontSize = 5.sp, maxFontSize = 11.sp),
                         fontSize = 11.sp,

@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import org.jyutping.jyutping.cangjie.CangjieKeyboard
-import org.jyutping.jyutping.editingpanel.EditingPanel
+import org.jyutping.jyutping.editing.EditingPanel
 import org.jyutping.jyutping.emoji.EmojiBoard
 import org.jyutping.jyutping.keyboard.ABCKeyboard
 import org.jyutping.jyutping.keyboard.CandidateBoard

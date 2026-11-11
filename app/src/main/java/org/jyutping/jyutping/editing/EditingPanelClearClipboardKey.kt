@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.editingpanel
+package org.jyutping.jyutping.editing
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowUpward
+import androidx.compose.material.icons.rounded.ContentPasteOff
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,14 +26,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
+import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
-fun EditingPanelMoveUpwardKey(modifier: Modifier) {
+fun EditingPanelClearClipboardKey(modifier: Modifier) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
         val view = LocalView.current
@@ -44,7 +50,7 @@ fun EditingPanelMoveUpwardKey(modifier: Modifier) {
                         .clickable(interactionSource = interactionSource, indication = null) {
                                 context.audioFeedback(SoundEffect.Click)
                                 view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                context.moveUpward()
+                                context.clearClipboard()
                         }
                         .fillMaxSize()
                         .padding(if (isPressed) 1.dp else 3.dp)
@@ -61,10 +67,18 @@ fun EditingPanelMoveUpwardKey(modifier: Modifier) {
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
                 Icon(
-                        imageVector = Icons.Rounded.ArrowUpward,
+                        imageVector = Icons.Rounded.ContentPasteOff,
                         contentDescription = null,
                         modifier = Modifier.size(22.dp),
                         tint = if (isDarkMode) Color.White else Color.Black
+                )
+                Text(
+                        text = stringResource(id = R.string.editing_panel_key_clear_clipboard),
+                        color = if (isDarkMode) Color.White else Color.Black,
+                        autoSize = TextAutoSize.StepBased(minFontSize = 5.sp, maxFontSize = 11.sp),
+                        fontSize = 11.sp,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
                 )
         }
 }

@@ -1,4 +1,4 @@
-package org.jyutping.jyutping.editingpanel
+package org.jyutping.jyutping.editing
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.background
@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.TextAutoSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,21 +22,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jyutping.jyutping.JyutpingInputMethodService
 import org.jyutping.jyutping.R
 import org.jyutping.jyutping.feedback.SoundEffect
-import org.jyutping.jyutping.models.KeyboardForm
 import org.jyutping.jyutping.presets.PresetConstant
 import org.jyutping.jyutping.utilities.ToolBox
 
 @Composable
-fun EditingPanelBackKey(modifier: Modifier) {
+fun EditingPanelReturnKey(modifier: Modifier) {
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
         val view = LocalView.current
@@ -49,9 +48,9 @@ fun EditingPanelBackKey(modifier: Modifier) {
         Column(
                 modifier = modifier
                         .clickable(interactionSource = interactionSource, indication = null) {
-                                context.audioFeedback(SoundEffect.Back)
-                                view.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-                                context.transformTo(KeyboardForm.Primary)
+                                context.audioFeedback(SoundEffect.Return)
+                                view.performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+                                context.performReturn()
                         }
                         .fillMaxSize()
                         .padding(if (isPressed) 1.dp else 3.dp)
@@ -68,13 +67,13 @@ fun EditingPanelBackKey(modifier: Modifier) {
                 horizontalAlignment = Alignment.CenterHorizontally
         ) {
                 Icon(
-                        imageVector = Icons.Rounded.ArrowUpward,
+                        imageVector = ImageVector.vectorResource(id = R.drawable.key_return),
                         contentDescription = null,
-                        modifier = Modifier.size(22.dp),
+                        modifier = Modifier.size(20.dp),
                         tint = if (isDarkMode) Color.White else Color.Black
                 )
                 Text(
-                        text = stringResource(id = R.string.editing_panel_key_back),
+                        text = stringResource(id = R.string.editing_panel_key_return),
                         color = if (isDarkMode) Color.White else Color.Black,
                         autoSize = TextAutoSize.StepBased(minFontSize = 5.sp, maxFontSize = 11.sp),
                         fontSize = 11.sp,
