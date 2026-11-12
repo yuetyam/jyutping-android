@@ -29159,13 +29159,8 @@
 絲血反殺	si xue fan sha
 黑神話	hei shen hua
 黑神話悟空	hei shen hua wu kong
-黑馬騮	hei ma liu
 定身	ding shen
 定身術	ding shen shu
-棍式	gun shi
-劈棍	pi gun
-立棍	li gun
-戳棍	chuo gun
 影之刃	ying zhi ren
 影之刃零	ying zhi ren ling
 永劫無間	yong jie wu jian
@@ -32224,6 +32219,7 @@
 勤力音	qin li yin
 唔撚係	wu nian xi
 唔撚係啩	wu nian xi gua
+質押	zhi ya
 頭頂光環	tou ding guang huan
 得意洋洋	de yi yang yang
 閃閃心	shan shan xin
@@ -59030,6 +59026,7 @@
 劉毅	liu yi
 刪改	shan gai
 刀刺	dao ci
+出浴	chu yu
 冰棒	bing bang
 促膝	cu xi
 來港	lai gang
@@ -66438,6 +66435,7 @@
 進度表	jin du biao
 跨年度	kua nian du
 贍養費	shan yang fei
+賣狗肉	mai gou rou
 費孝通	fei xiao tong
 豆芽菜	dou ya cai
 調味劑	diao wei ji
@@ -66688,6 +66686,7 @@
 核裁軍	he cai jun
 松北區	song bei qu
 晉文公	jin wen gong
+掛羊頭	gua yang tou
 山茱萸	shan zhu yu
 封閉性	feng bi xing
 安源區	an yuan qu
@@ -120225,6 +120224,7 @@
 挑燈	tiao deng
 按理	an li
 指派	zhi pai
+指公	zhi gong
 拼盤	pin pan
 拼寫	pin xie
 拱衛	gong wei
@@ -133370,12 +133370,12 @@
 炒嘢	chao ye
 吵耳	chao er
 炒業	chao ye
-炒粒粒	chao li li
 炒老闆魷魚	chao lao ban you yu
 炒老細魷魚	chao lao xi you yu
 炒孖展	chao ma zhan
 炒埋一碟	chao mai yi die
 炒米餅	chao mi bing
+炒粒粒	chao li li
 炒燶咗	chao nong zuo
 炒餸	chao song
 炒鑊	chao huo
@@ -134728,7 +134728,6 @@
 重秤	zhong cheng
 重稱	zhong cheng
 重𢱕𢱕	zhong da da
-重粒粒	zhong li li
 重立立	zhong li li
 重𣲷𣲷	zhong ni ni
 重案組	zhong an zu
@@ -139060,7 +139059,6 @@
 吃口吃舌	chi kou chi she
 趷起	ke qi
 趷起身	ke qi shen
-趷起手指公	ke qi shou zhi gong
 趷起條尾	ke qi tiao wei
 趌開	ji kai
 趷路	ke lu
@@ -139712,6 +139710,7 @@
 腳掣	jiao che
 腳枕	jiao zhen
 腳震震	jiao zhen zhen
+腳指公	jiao zhi gong
 腳趾公	jiao zhi gong
 腳趾罅	jiao zhi xia
 腳趾尾	jiao zhi wei
@@ -144450,12 +144449,12 @@
 育兒袋	yu er dai
 浴液	yu ye
 浴球	yu qiu
-肉粒	rou li
 育齡期	yu ling qi
 肉麻骨痹	rou ma gu bi
 玉米赤霉烯酮	yu mi chi mei xi tong
 玉米卷	yu mi juan
 肉沫	rou mo
+肉粒	rou li
 肉眼牛扒	rou yan niu ba
 肉眼扒	rou yan ba
 浴屏	yu ping
@@ -144775,9 +144774,9 @@
 原子杯	yuan zi bei
 原子褲	yuan zi ku
 原子印	yuan zi yin
-原子粒	yuan zi li
 原子襪	yuan zi wa
 原子物理學	yuan zi wu li xue
+原子粒	yuan zi li
 完整包	wan zheng bao
 元組	yuan zu
 原盅	yuan zhong
@@ -170804,8 +170803,12 @@
 閃身步	shan shen bu
 奶龍	nai long
 奶蛙	nai wa
+張雪	zhang xue
+張雪峯	zhang xue feng
+巧樂茲	qiao le zi
 低精力	di jing li
 低精力人羣	di jing li ren qun
+小饞貓	xiao chan mao
 變現	bian xian
 匪諜	fei die
 美妝	mei zhuang

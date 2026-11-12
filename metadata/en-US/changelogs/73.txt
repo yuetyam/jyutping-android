@@ -1,0 +1,1 @@
+Added more reverse lookup methods for Jyutping on the 9-key keyboard, including Cangjie, Quick (Sucheng), Stroke, and character decomposition.
